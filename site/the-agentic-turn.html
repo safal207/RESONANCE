@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="The Agentic Turn — RESONANCE analysis of why AI is moving from answers to actions, and why verification must move from outputs to trajectories." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="The Agentic Turn | RESONANCE" />
+  <meta property="og:description" content="The infrastructure around AI is shifting toward execution, tools, sandboxes, interoperability and containment." />
+  <meta property="og:type" content="article" />
+  <title>The Agentic Turn | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#article">Skip to article</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="index.html#intelligence">AI</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="index.html#economy">Startups & Economy</a><a href="index.html#human">Human</a><a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="article">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Analysis · Intelligence / Trust</p><p class="article-status">Verified · 11 Aug 2026</p></div>
+      <h1 class="article-title">The Agentic Turn</h1>
+      <p class="article-dek">The strongest evidence that AI is moving beyond chat is not a benchmark. It is the infrastructure now being built around execution, tools, sandboxes, interoperability, containment and long-running work.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Editorial</strong></p><p>Issue 001 · Founding Edition</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Verification summary">
+        <div class="rail-card"><p class="section-label">Evidence status</p><strong>5 material claims</strong><span>8 primary sources</span><span>Counter-evidence included</span><span>Last verified 2026-08-11</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">Core chain</p><code>intent → action → state transition → invariant → evidence</code></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">A meaningful change has become visible across major AI platforms: the product surface is moving from systems that mainly return answers toward systems that can pursue tasks across tools, files, code, applications and time.</p>
+        <p>OpenAI’s 2026 Agents SDK update added native sandbox execution for agents that inspect files, run commands, edit code and work on long-horizon tasks. Anthropic describes agent products that write and execute code, manage files and span multiple applications, while its economic research says usage increasingly contains long-running agentic tasks. Google continues to develop Agent2Agent as an interoperability layer for agents that coordinate and hand work across systems.</p>
+        <p>None of this proves that autonomous agents are ready for every domain. It does show that the center of engineering effort is shifting.</p>
+        <div class="trajectory-box"><span>intent</span><i>→</i><span>plan</span><i>→</i><span>tool</span><i>→</i><span>state change</span><i>→</i><span>observation</span><i>→</i><span>next action</span></div>
+
+        <h2>Conversation becomes consequence.</h2>
+        <p>A chatbot can be wrong and leave behind a bad paragraph. An agent with access to a shell, repository, browser, wallet, ticketing system or internal application can leave behind a changed world.</p>
+        <p>That creates a different engineering problem. The questions expand from <em>Was the answer useful?</em> to: Was the action authorized? Did it happen in the correct phase and order? Which state transition did it cause? Were invariants preserved? Can the system recover from partial failure? Can an independent observer reconstruct what happened?</p>
+        <p>This is what we call the <strong>agentic turn</strong>: intelligence becomes operational.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Claim map</p>
+          <div><b>C1</b><p>Major platforms are building first-class infrastructure for tool-using and executing agents. <span>High confidence</span></p></div>
+          <div><b>C2</b><p>Containment and blast-radius control are now explicit production concerns. <span>High confidence</span></p></div>
+          <div><b>C3</b><p>Interoperability is becoming a standards problem, not merely a vendor feature. <span>High confidence</span></p></div>
+          <div><b>C4</b><p>Verification therefore has to shift from isolated outputs toward trajectories, permissions, recovery and evidence. <span>Inference · medium-high confidence</span></p></div>
+          <div><b>C5</b><p>Adoption is uneven; agents should not be confused with universal replacement of chat or human workflows. <span>High confidence</span></p></div>
+        </section>
+
+        <h2>The infrastructure is the evidence.</h2>
+        <p>The word <em>agent</em> is elastic enough to be abused. So the useful evidence is not how frequently companies use the term. It is what they are spending engineering effort to build.</p>
+        <h3>Execution</h3>
+        <p>OpenAI’s updated Agents SDK treats a controlled workspace as part of the agent stack: files, dependencies, commands and tools can be exposed inside a sandbox. In a separate engineering account of agentic workflows, OpenAI describes repeated loops in which the model selects an action, a tool executes it, the result returns to the model and the cycle repeats.</p>
+        <h3>Containment</h3>
+        <p>Anthropic makes the risk boundary explicit. As agents receive more access, their theoretical blast radius grows. The engineering task is not only to reduce the probability of failure but to cap what a failure can affect.</p>
+        <h3>Interoperability</h3>
+        <p>Google’s A2A work addresses a world in which agents communicate, delegate and hand off tasks across vendor and application boundaries. The Linux Foundation’s Agentic AI Foundation is another signal: protocols and agent infrastructure are being treated as shared ecosystem concerns.</p>
+        <div class="pull-quote">The important boundary is not whether software is “truly autonomous.” It is whether a probabilistic model is selecting actions across changing state and tools.</div>
+
+        <h2>The causal model</h2>
+        <div class="causal-stack" aria-label="Causal model"><div>Better reasoning + structured tool use</div><span>↓</span><div>Models select and sequence external actions</div><span>↓</span><div>Execution environments make those actions operational</div><span>↓</span><div>Longer tasks require state, memory and orchestration</div><span>↓</span><div>More access increases both value and blast radius</div><span>↓</span><div>Permissions, containment, observability and recovery become mandatory</div></div>
+        <p>This is why the shift is structural. Capability improvements alone are not enough. The surrounding system must become capable of safely carrying action.</p>
+
+        <h2>Counter-signal: the age of agents is not here equally.</h2>
+        <p>Evidence-first journalism has to preserve evidence that weakens its own headline. Anthropic’s 2026 survey of 1,260 social scientists found broad experimentation with AI chatbots, but only 20% reported adopting coding agents. That does not invalidate the infrastructure shift; it constrains it. Adoption remains domain-dependent and uneven.</p>
+        <p>The stronger claim is therefore not “everyone now uses autonomous agents.” It is narrower: <strong>the leading AI stack is being redesigned for systems that can act, and this introduces engineering requirements that simple chat did not force into the foreground.</strong></p>
+
+        <h2>The verification shift</h2>
+        <p>For a model response, we can inspect the output. For an agent, the output may be the least interesting part.</p>
+        <div class="verification-chain"><div><small>01</small><strong>Actor</strong><p>Which identity initiated the trajectory?</p></div><div><small>02</small><strong>Permission</strong><p>Was this action allowed here and now?</p></div><div><small>03</small><strong>State</strong><p>What was true before the action?</p></div><div><small>04</small><strong>Transition</strong><p>What changed, in what phase and order?</p></div><div><small>05</small><strong>Invariant</strong><p>What must remain true throughout?</p></div><div><small>06</small><strong>Recovery</strong><p>What happens after partial failure?</p></div><div><small>07</small><strong>Evidence</strong><p>What can another observer independently check?</p></div></div>
+        <h3>State becomes first-class.</h3><p>Repeated or out-of-order actions can be harmful even when each individual tool call is valid. Long-running systems need explicit state models rather than only good prompts.</p>
+        <h3>Permissions become contextual.</h3><p>Traditional access control asks whether a principal may use a resource. Agent systems increasingly need to ask whether this action, in this context, during this phase, for this goal, is allowed.</p>
+        <h3>Recovery becomes part of correctness.</h3><p>Networks fail. External tools return ambiguous states. Actions partially succeed. A trustworthy system needs explicit return paths rather than assuming every sequence ends cleanly.</p>
+        <h3>Evidence becomes a product surface.</h3><p>If an agent changed production state, “the model said it worked” is not evidence. Logs, artifacts, diffs, receipts, state snapshots and independently checkable invariants matter.</p>
+
+        <h2>What builders should do now</h2>
+        <p>The useful question is no longer simply: <em>How do we make the agent more capable?</em></p>
+        <p>Ask instead: <strong>What is the smallest safe action surface that creates value — and what evidence proves every important transition?</strong></p>
+        <ol class="action-list"><li><strong>State graph.</strong> What states can the system occupy?</li><li><strong>Action policy.</strong> Who or what may cause each transition?</li><li><strong>Invariant set.</strong> What must remain true throughout the trajectory?</li><li><strong>Recovery map.</strong> How does the system return from partial or incorrect execution?</li><li><strong>Evidence bundle.</strong> What can an independent reviewer inspect afterward?</li></ol>
+        <p class="closing-line">Capability makes agents interesting. <strong>Verification is what will make them dependable.</strong></p>
+
+        <section class="sources-block" id="sources">
+          <p class="section-label">Primary sources</p>
+          <ol>
+            <li><a href="https://openai.com/index/the-next-evolution-of-the-agents-sdk/" target="_blank" rel="noreferrer">OpenAI — The next evolution of the Agents SDK</a> · Apr 15, 2026</li>
+            <li><a href="https://openai.com/index/speeding-up-agentic-workflows-with-websockets/" target="_blank" rel="noreferrer">OpenAI — Speeding up agentic workflows with WebSockets</a> · Apr 22, 2026</li>
+            <li><a href="https://www.anthropic.com/research/economic-index-june-2026-report" target="_blank" rel="noreferrer">Anthropic Economic Index — Cadences</a> · Jun 26, 2026</li>
+            <li><a href="https://www.anthropic.com/research/trustworthy-agents" target="_blank" rel="noreferrer">Anthropic — Trustworthy agents in practice</a> · Apr 9, 2026</li>
+            <li><a href="https://www.anthropic.com/engineering/how-we-contain-claude" target="_blank" rel="noreferrer">Anthropic — How we contain Claude across products</a> · May 25, 2026</li>
+            <li><a href="https://developers.googleblog.com/how-a2a-is-building-a-world-of-collaborative-agents/" target="_blank" rel="noreferrer">Google Developers — How A2A is Building a World of Collaborative Agents</a> · Jun 18, 2026</li>
+            <li><a href="https://www.linuxfoundation.org/press/agentic-ai-foundation-adds-43-new-members-as-enterprise-and-government-adoption-of-open-agent-standards-accelerates" target="_blank" rel="noreferrer">Linux Foundation — Agentic AI Foundation membership expansion</a> · May 18, 2026</li>
+            <li><a href="https://www.anthropic.com/research/coding-agents-social-sciences" target="_blank" rel="noreferrer">Anthropic — Coding agents in the social sciences</a> · May 27, 2026</li>
+          </ol>
+          <p class="source-note">Vendor sources establish what systems and infrastructure their publishers are building or reporting. They do not independently prove economy-wide outcomes. Counter-evidence is included to constrain the adoption thesis.</p>
+        </section>
+        <div class="article-end"><p><strong>RESONANCE verification chain</strong></p><p>Signal → Claim → Source → Evidence → Cause → Timeline → Uncertainty → Verification → Implication → Action</p><a class="button" href="issue-001.html">Continue Issue 001</a></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Issue 001</p><p>THE AGE OF AGENTS</p></div><div><a href="https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/01-the-agentic-turn.md">Evidence file ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
