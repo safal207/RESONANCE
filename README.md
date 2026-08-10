@@ -41,7 +41,19 @@ RESONANCE focuses on five connected domains:
 
 The first issue explores the transition from passive models to systems that plan, act, use tools, transact, coordinate, recover from failure, and interact with real infrastructure.
 
-See [`issues/001-age-of-agents/`](issues/001-age-of-agents/).
+See [`issues/001-age-of-agents/`](issues/001-age-of-agents/) and the web edition at [`site/issue-001.html`](site/issue-001.html).
+
+## Website
+
+`site/` contains the v0.2 static publication:
+
+- `site/index.html` — magazine homepage;
+- `site/issue-001.html` — Issue 001 web edition;
+- `site/styles.css` — editorial design system;
+- `site/app.js` — lightweight responsive navigation;
+- `.github/workflows/pages.yml` — GitHub Pages deployment workflow.
+
+The site intentionally uses no framework or build step. The goal of v0.2 is a fast, durable, inspectable publication surface that can later evolve into a larger publishing stack.
 
 ## Repository structure
 
@@ -56,9 +68,17 @@ RESONANCE/
 ├── issues/
 │   └── 001-age-of-agents/
 │       ├── README.md
+│       ├── SOURCES.md
 │       └── editorial.md
-└── topics/
-    └── README.md
+├── topics/
+│   └── README.md
+├── site/
+│   ├── index.html
+│   ├── issue-001.html
+│   ├── styles.css
+│   └── app.js
+└── .github/workflows/
+    └── pages.yml
 ```
 
 ## Publishing philosophy
@@ -77,9 +97,9 @@ We believe the future deserves journalism that can be inspected, challenged, rep
 
 ## Status
 
-**v0.1 — Founding Edition**
+**v0.2 — Web Edition**
 
-RESONANCE is currently in its founding phase. The editorial system, first issue, contributor model, website, and evidence format are being built in public.
+The founding editorial system, first issue structure, contribution model and first static website are now in the repository. The next milestone is to publish the first fully researched, source-backed feature and establish the recurring editorial pipeline.
 
 ---
 
