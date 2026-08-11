@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'site/**'
+      - 'scripts/build-seo-site.mjs'
+      - 'scripts/verify-seo.mjs'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -27,6 +29,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Build SEO-ready publication
+        run: node scripts/build-seo-site.mjs
+
+      - name: Verify SEO contract
+        run: node scripts/verify-seo.mjs
+
       - name: Configure Pages
         uses: actions/configure-pages@v6
         with:
@@ -35,7 +48,7 @@ jobs:
       - name: Upload static site
         uses: actions/upload-pages-artifact@v5
         with:
-          path: site
+          path: dist
 
       - name: Deploy to GitHub Pages
         id: deployment
