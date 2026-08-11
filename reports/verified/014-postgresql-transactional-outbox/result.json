@@ -1,0 +1,88 @@
+{
+  "benchmark": "RESONANCE PostgreSQL Transactional Outbox Boundary",
+  "benchmark_version": "1.0",
+  "protocol": "RESONANCE Transactional Trust Protocol v1.0",
+  "executed_at": "2026-08-11T06:06:08.627973+00:00",
+  "database": {
+    "server_version": "17.6",
+    "server_version_num": 170006,
+    "container_image": "postgres:17.6-alpine",
+    "container_digest": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94"
+  },
+  "score": 10,
+  "max_score": 10,
+  "classification": "Transactional outbox cross-boundary protocol passes",
+  "unsafe": {
+    "business_state": "committed",
+    "business_version": 101,
+    "first_delivery": "applied",
+    "synthetic_failure": "crash_after_external_commit_before_ack",
+    "retry_identity_reused": false,
+    "retry_delivery": "applied",
+    "external_effect_count": 2,
+    "external_idempotency_keys": [
+      "unsafe:attempt:1",
+      "unsafe:attempt:2"
+    ]
+  },
+  "transactional_outbox_atomicity": {
+    "precommit_crash": {
+      "rolled_back": true,
+      "business_state": "absent",
+      "business_version": 100,
+      "outbox_rows": 0
+    },
+    "successful_commit": {
+      "business_state": "committed",
+      "business_version": 101,
+      "outbox_rows": 1,
+      "outbox_status": "pending",
+      "idempotency_key": "op-1:external-effect:v1"
+    }
+  },
+  "safe_redelivery": {
+    "attempt_1": 1,
+    "first_delivery": "applied",
+    "synthetic_failure": "ack_lost_after_external_commit",
+    "outbox_after_ack_loss": "pending",
+    "attempt_2": 2,
+    "second_delivery": "deduplicated",
+    "reconciled_external_status": "committed",
+    "final_outbox_status": "delivered",
+    "external_effect_count": 1
+  },
+  "safe_reconcile_before_retry": {
+    "attempt_1": 1,
+    "first_delivery": "applied",
+    "synthetic_failure": "ack_lost_after_external_commit",
+    "reconciled_external_status": "committed",
+    "second_external_call_made": false,
+    "final_outbox_status": "delivered",
+    "external_effect_count": 1
+  },
+  "checks": [
+    {"id": "unsafe_db_external_boundary_duplicate_reproduced", "pass": true, "points": 2},
+    {"id": "business_state_and_outbox_intent_are_atomic", "pass": true, "points": 2},
+    {"id": "stable_idempotency_key_dedupes_redelivery", "pass": true, "points": 2},
+    {"id": "ambiguous_ack_reconciles_before_external_retry", "pass": true, "points": 2},
+    {"id": "final_cross_boundary_invariant_proved", "pass": true, "points": 2}
+  ],
+  "invariants": [
+    "Business-state commit and durable delivery intent must share one database transaction.",
+    "DB COMMITTED does not imply external effect acknowledged or absent.",
+    "External redelivery must reuse a stable idempotency identity or equivalent deduplication boundary.",
+    "Ambiguous external acknowledgement must reconcile external state before business re-execution.",
+    "One logical business transition should prove at most one external committed effect under the declared adapter contract."
+  ],
+  "github_actions": {
+    "run_id": 31463869740,
+    "head_sha": "9c1dfd863115036797e41a29dcfd85e6f150b751",
+    "conclusion": "success",
+    "artifact_id": 9090766696,
+    "artifact_name": "resonance-postgresql-transactional-outbox-v1.0",
+    "artifact_digest": "sha256:7732375332cfee2507eda5ec72df190cbe94c1ee18bd3f1bc86ec1a5884562e2"
+  },
+  "scope": "Real PostgreSQL service container; business/outbox state in PostgreSQL; synthetic external service ledger reached through separate database transactions to model the DB-to-external-effect boundary.",
+  "external_safety_certification": false,
+  "vulnerability_claim": false
+}
