@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="RESONANCE Transactional Trust Protocol v1.0 — an experimental protocol for consequential agent actions across state, delivery, memory, recovery and proof." />
+  <meta name="description" content="RESONANCE Transactional Trust Protocol v1.0 — an experimental protocol for consequential agent actions across state, delivery, memory, time, recovery and proof." />
   <meta name="theme-color" content="#f7f3ea" />
   <meta property="og:title" content="Transactional Trust Protocol v1.0 | RESONANCE" />
   <meta property="og:description" content="OBSERVE → VERIFY → AUTHORIZE → BIND → COMPARE → COMMIT → RECONCILE → PROVE." />
@@ -30,8 +30,8 @@
       <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
       <div class="article-meta-row"><p class="section-label">Protocol · v1.0</p><p class="article-status">Experimental · 11 Aug 2026</p></div>
       <h1 class="article-title">Transactional Trust Protocol</h1>
-      <p class="article-dek">A framework-agnostic execution protocol for consequential agent actions: keep evidence, authority, shared state, transport outcomes, execution memory, recovery and final proof connected across the whole transition.</p>
-      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>Derived from Verified Reports #003–#016</p></div>
+      <p class="article-dek">A framework-agnostic execution protocol for consequential agent actions: keep evidence, authority, shared state, transport outcomes, execution memory, temporal history, recovery and final proof connected across the whole transition.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>Derived from Verified Reports #003–#019</p></div>
     </header>
 
     <div class="article-layout wrap">
@@ -66,10 +66,10 @@
 
         <h2>7 · Reconcile ambiguity, conflicts, transport failures and restarts.</h2>
         <div class="trajectory-box"><span>UNKNOWN / CONFLICT / ACK UNKNOWN / RESTART</span><i>→</i><span>RECONCILE</span></div>
-        <p>A timeout, serialization failure, dropped connection, lost acknowledgement or service restart does not prove the intended effect is absent. Recovery must establish current state and whether safety-relevant execution memory survived before replay.</p>
+        <p>A timeout, serialization failure, dropped connection, lost acknowledgement, service restart or temporal conflict does not prove the intended effect is absent. Recovery must establish current state, current execution history and whether safety-relevant memory remains valid before replay.</p>
 
         <h2>8 · Prove the trajectory.</h2>
-        <p>Preserve state and trust versions, database conflicts, outbox/delivery identity, transport outcome, process/restart identity, execution-memory durability, remote reconciliation evidence and the final invariant result.</p>
+        <p>Preserve state and trust versions, database conflicts, outbox/delivery identity, transport outcome, process/restart identity, execution-memory durability, time/retention evidence, temporal epoch or watermark, remote reconciliation evidence and the final invariant result.</p>
 
         <section class="claim-panel">
           <p class="section-label">TTP v1.0 invariants</p>
@@ -82,10 +82,10 @@
           <div><b>I7</b><p><strong>STABLE KEY + VOLATILE MEMORY ≠ IDEMPOTENCE</strong><span>The consumer must remember the key across the failure window.</span></p></div>
           <div><b>I8</b><p><strong>EFFECT DURABILITY ≠ DEDUPE-MEMORY DURABILITY</strong><span>Both properties must be explicit.</span></p></div>
           <div><b>I9</b><p><strong>SERVICE RESTART IS A TRUST-MEMORY TRANSITION</strong><span>Restart evidence belongs in the trajectory.</span></p></div>
-          <div><b>I10</b><p><strong>PROOF COVERS THE TRAJECTORY</strong><span>Transport, restart and remote status belong in the evidence trail.</span></p></div>
+          <div><b>I10</b><p><strong>PROOF COVERS THE TRAJECTORY</strong><span>Transport, restart, time and remote status belong in the evidence trail.</span></p></div>
         </section>
 
-        <div class="pull-quote">A consequential transition is trustworthy only when evidence, authority, state, delivery identity, transport outcome, execution memory, recovery and proof remain connected across the whole path.</div>
+        <div class="pull-quote">A consequential transition is trustworthy only when evidence, authority, state, delivery identity, transport outcome, execution memory, temporal history, recovery and proof remain connected across the whole path.</div>
 
         <h2>Database adapter rule</h2>
         <div class="trajectory-box"><span>OBSERVE vN</span><i>→</i><span>BIND vN</span><i>→</i><span>MUTATION AUTHORITY CHECKS vN</span></div>
@@ -112,15 +112,31 @@
         <p>Verified Report #016 destroyed and recreated the HTTP container while keeping a persistent SQLite effect ledger. With process-local dedupe memory, the same stable key created a second effect after restart. With durable idempotency state, the same real redelivery returned <code>deduplicated</code> and preserved one effect. A third path used authoritative remote status after restart and made no second POST.</p>
         <p><strong>Safety memory must survive the failure window it claims to protect.</strong> A stable key is necessary but not sufficient if the execution authority forgets that it already processed it.</p>
 
+        <h2>Idempotency retention rule</h2>
+        <div class="trajectory-box"><span>DURABLE MEMORY</span><i>+</i><span>RETENTION WINDOW</span><i>→</i><span>RECOVERY DECISION</span></div>
+        <p>Verified Report #017 showed that durable safety memory can still expire before delayed recovery arrives. A 60-second record failed to protect a replay at +120 seconds, while a 300-second retention window deduplicated the same delayed request. After expiry, authoritative reconciliation preserved one effect without replay.</p>
+        <p><a class="text-link" href="ttp-idempotency-retention.html">Read the Idempotency Retention Rule →</a></p>
+
+        <h2>Clock authority / skew rule</h2>
+        <div class="trajectory-box"><span>NODE-LOCAL TIME</span><i>→</i><span>AUTHORITY / SKEW MODEL</span><i>→</i><span>ACTIVE / EXPIRED / TIME_UNKNOWN</span></div>
+        <p>Verified Report #018 showed that one durable record can be ACTIVE for one clock and EXPIRED for another while the underlying effect remains unchanged. A declared clock authority produced one decision; a bounded uncertainty interval crossing expiry preserved <code>TIME_UNKNOWN</code> and forced reconciliation.</p>
+        <p><a class="text-link" href="ttp-clock-authority.html">Read the Clock Authority / Skew Rule →</a></p>
+
+        <h2>Temporal ABA / monotonic-time rule</h2>
+        <div class="trajectory-box"><span>ACTIVE</span><i>→</i><span>EXPIRED</span><i>→</i><span>WALL-CLOCK ROLLBACK</span><i>→</i><span>DO NOT RESURRECT</span></div>
+        <p>Verified Report #019 showed that the same retention record can visibly return <code>ACTIVE → EXPIRED → ACTIVE</code> when a reversible wall clock moves backward. After expiry cleanup advanced a temporal epoch, an un-fenced same-key retry created a second effect. A stale epoch was rejected with <code>HTTP 409 / fenced_out</code>, while a monotonic time watermark preserved <code>EXPIRED</code> and reconciled without another POST.</p>
+        <p><strong>The clock value may return; execution history must not.</strong></p>
+        <p><a class="text-link" href="ttp-temporal-aba.html">Read the Temporal ABA / Monotonic Time Rule →</a></p>
+
         <h2>Three conformance profiles</h2>
         <div class="verification-chain">
           <div><small>FAST</small><strong>TTP-Fast</strong><p>Low-impact reversible actions: observe, minimal verify, state-version binding, compare/commit, basic proof.</p></div>
-          <div><small>STD</small><strong>TTP-Standard</strong><p>All eight stages, explicit UNKNOWN/CONFLICT, durable evidence, stable external identity, transport evidence and declared durability for safety-relevant execution memory.</p></div>
+          <div><small>STD</small><strong>TTP-Standard</strong><p>All eight stages, explicit UNKNOWN/CONFLICT, durable evidence, stable external identity, transport evidence and declared durability/time semantics for safety-relevant execution memory.</p></div>
           <div><small>DEEP</small><strong>TTP-Deep</strong><p>Independent verification, stronger provenance, isolated execution, replayable evidence and explicit escalation.</p></div>
         </div>
 
         <h2>Interpretation boundary</h2>
-        <p>TTP v1.0 is a RESONANCE experimental protocol synthesis. It is not a replacement for database transactions or consensus, not an exactly-once delivery claim, not a PKI/IAM standard, not an OpenAI Agents SDK feature claim and not an external security certification.</p>
+        <p>TTP v1.0 is a RESONANCE experimental protocol synthesis. It is not a replacement for database transactions or consensus, not an exactly-once delivery claim, not a PKI/IAM or clock-synchronization standard, not an OpenAI Agents SDK feature claim and not an external security certification.</p>
 
         <section class="sources-block">
           <p class="section-label">Inspect / reproduce</p>
@@ -132,13 +148,15 @@
             <li><a href="verified-014-postgresql-transactional-outbox.html">Verified Report #014 · transactional outbox boundary</a></li>
             <li><a href="verified-015-http-idempotency-boundary.html">Verified Report #015 · HTTP idempotency boundary</a></li>
             <li><a href="verified-016-idempotency-state-durability.html">Verified Report #016 · idempotency state durability</a></li>
-            <li><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified" target="_blank" rel="noreferrer">Full verified evidence trail</a></li>
+            <li><a href="verified-017-idempotency-ttl-replay.html">Verified Report #017 · retention validity</a></li>
+            <li><a href="verified-018-idempotency-clock-skew.html">Verified Report #018 · clock authority / skew</a></li>
+            <li><a href="verified-019-idempotency-clock-rollback.html">Verified Report #019 · Temporal ABA / monotonic history</a></li>
           </ol>
         </section>
 
         <p class="closing-line"><strong>Canonical short form:</strong> OBSERVE → VERIFY → AUTHORIZE → BIND → COMPARE → COMMIT → RECONCILE → PROVE.</p>
 
-        <div class="article-end"><p><strong>RESONANCE Transactional Trust Protocol v1.0</strong></p><p>trajectory correctness → execution binding → durable memory → recoverable proof.</p><a class="button" href="verified-016-idempotency-state-durability.html">Open latest restart verification</a></div>
+        <div class="article-end"><p><strong>RESONANCE Transactional Trust Protocol v1.0</strong></p><p>trajectory correctness → execution binding → durable memory → temporal history → recoverable proof.</p><a class="button" href="verified-019-idempotency-clock-rollback.html">Open latest temporal verification</a></div>
       </article>
     </div>
   </main>
