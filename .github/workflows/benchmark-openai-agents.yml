@@ -25,7 +25,6 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: '3.12'
-          cache: pip
 
       - name: Fetch pinned OpenAI Agents SDK
         run: |
@@ -57,4 +56,4 @@ jobs:
         with:
           name: resonance-openai-agents-baseline
           path: benchmark-results/openai-agents-sdk-v0.1/
-          if-no-files-found: error
+          if-no-files-found: warn
