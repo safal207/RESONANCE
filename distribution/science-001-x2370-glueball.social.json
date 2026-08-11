@@ -1,0 +1,67 @@
+{
+  "signal": "science-001",
+  "slug": "x2370-glueball",
+  "canonical": "https://safal207.github.io/RESONANCE/x2370-glueball.html",
+  "goal": "Turn a physics headline into a falsifiable scientific dialogue with the researchers.",
+  "editorialVerdict": "Strong evidence; correct 'new elementary particle' to 'glueball-dominated composite hadron'.",
+  "targets": [
+    {
+      "name": "BESIII Collaboration",
+      "role": "Primary experimental collaboration",
+      "verifiedSocialHandle": null
+    },
+    {
+      "name": "Yanping Huang",
+      "affiliation": "Institute of High Energy Physics, Chinese Academy of Sciences",
+      "role": "arXiv submitter / BESIII speaker on X(2370)",
+      "verifiedSocialHandle": null
+    },
+    {
+      "name": "Shan Jin",
+      "affiliation": "Nanjing University",
+      "role": "X(2370) program contributor / synthesis author",
+      "verifiedSocialHandle": null
+    },
+    {
+      "name": "Peng Zhang",
+      "affiliation": "Institute of High Energy Physics, Chinese Academy of Sciences",
+      "role": "X(2370) synthesis co-author",
+      "verifiedSocialHandle": null
+    }
+  ],
+  "hotQuestion": {
+    "en": "Your 2026 analysis makes a dominant 0^-+ glueball component the cleanest current explanation of X(2370), while the exact non-gluonic admixture remains open. If you had to choose one next measurement that could actually falsify — not merely strengthen — the glueball-dominant interpretation, which observable would you choose, and what result would make you abandon the claim?",
+    "ru": "Ваш анализ 2026 года делает доминирующий компонент глюбола 0^-+ наиболее цельным объяснением X(2370), но точная неглюонная примесь остаётся открытым вопросом. Если выбрать одно следующее измерение, способное именно опровергнуть, а не просто усилить glueball-dominant интерпретацию, какой observable вы бы выбрали и какой результат заставил бы вас отказаться от этой гипотезы?",
+    "zh-CN": "你们2026年的分析使“X(2370)主要由最轻的0^-+胶球成分构成”成为目前最完整的解释，但非胶子成分的精确混合比例仍未确定。如果只能选择一个下一步测量，要求它能够真正证伪而不只是进一步支持胶球主导解释，你们会选择哪个可观测量？什么样的结果会让你们放弃这一判断？"
+  },
+  "languages": {
+    "en": {
+      "url": "https://safal207.github.io/RESONANCE/x2370-glueball.html",
+      "x": "BESIII's X(2370) result is stronger than the headline — and more precise. This is not a new elementary particle: the evidence favors a composite hadron dominated by the lightest 0^-+ glueball. The interesting question is falsification. Prof. Yanping Huang, Prof. Shan Jin, BESIII: which single next observable could make you abandon the glueball-dominant interpretation?",
+      "linkedin": "A media headline called X(2370) a new elementary particle. We traced the claim back through the BESIII data. The result is real, but the precise statement is more interesting: the collaboration argues that the lightest pseudoscalar glueball is the dominant constituent of X(2370), a composite hadron. RESONANCE mapped the evidence chain from the 2011 observation to the 2024 0^-+ quantum-number result and the 2026 flavor-singlet constraint. Our question to the researchers is deliberately falsification-first: which single next observable could force you to abandon the glueball-dominant interpretation?",
+      "reddit": "BESIII's 2026 X(2370) result: strong glueball evidence, but not a 'new elementary particle'. What measurement would actually falsify the glueball-dominant interpretation?",
+      "telegram": "Science Signal 001: X(2370). The headline says 'new elementary particle'; the primary paper says something more precise — a composite hadron whose dominant constituent is likely the lightest 0^-+ glueball. We traced the evidence and wrote down what could falsify it. Open question to BESIII: what single next measurement could make you abandon the glueball-dominant interpretation?"
+    },
+    "ru": {
+      "url": "https://safal207.github.io/RESONANCE/x2370-glueball.ru.html",
+      "telegram": "RESONANCE Science Signal 001. В новости X(2370) назвали новым типом элементарной частицы. Проверка по первичным источникам показывает более точную и не менее сильную картину: речь о составном адроне, в котором, по данным BESIII, вероятно доминирует самый лёгкий псевдоскалярный глюбол 0^-+. Мы восстановили цепочку доказательств и задали исследователям главный вопрос: какое одно следующее измерение способно не подтвердить, а опровергнуть эту интерпретацию?",
+      "vk": "X(2370): сенсация реальна, формулировка — неточная. Это не новая элементарная частица, а сильнейший на сегодня кандидат на glueball-dominated адрон. RESONANCE проверил первичные данные BESIII и сформулировал falsification question авторам: какой observable заставил бы вас отказаться от этой гипотезы?",
+      "habr": "Как проверить громкий заголовок про 'новую элементарную частицу': разбираем X(2370) через цепочку Signal → Source → Measurement → Alternative → Falsifier."
+    },
+    "zh-CN": {
+      "url": "https://safal207.github.io/RESONANCE/x2370-glueball.zh.html",
+      "weibo": "RESONANCE Science Signal 001｜X(2370)。媒体称其为“新型基本粒子”，但BESIII原始论文给出的表述更准确：X(2370)是一个复合强子，最轻的0^-+胶球成分很可能占主导。我们沿着2011发现→2024量子数→2026味单态约束重新核查证据。想请教BESIII、黄艳萍教授、金山教授：如果只能选一个真正能证伪胶球主导解释的下一步可观测量，你们会选什么？什么结果会让你们放弃这一判断？",
+      "wechat": "X(2370)并不是2026年才出现的“新基本粒子”。BESIII的新结果真正推进的是身份判断：多个生产与衰变性质共同指向最轻0^-+胶球成分占主导。RESONANCE不只问‘证据有多强’，还问‘什么结果会证明我们错了’。这也是我们希望向研究团队公开提出的问题。",
+      "zhihu": "从媒体标题到可证伪科学问题：为什么X(2370)更准确地说是‘胶球主导的复合强子’，以及哪一个下一步测量最有机会推翻这一解释？"
+    }
+  },
+  "responseProtocol": {
+    "ifScientistReplies": [
+      "Extract the named discriminating observable.",
+      "Record the predicted range or qualitative outcome.",
+      "Ask for the result that would count as falsification.",
+      "Publish a prediction card with timestamped acceptance/falsification conditions.",
+      "Revisit when new BESIII or independent data arrive."
+    ]
+  }
+}
