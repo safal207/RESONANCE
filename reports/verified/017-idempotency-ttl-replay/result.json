@@ -1,0 +1,52 @@
+{
+  "benchmark": "RESONANCE Idempotency TTL / Replay After Expiry",
+  "benchmark_version": "1.0",
+  "protocol": "RESONANCE Transactional Trust Protocol v1.0",
+  "github_actions_run": 31467526532,
+  "benchmark_commit": "197627397a9f57db202db99944f80d733ba233d2",
+  "evidence_artifact": "resonance-idempotency-ttl-replay-v1.0",
+  "artifact_id": 9092068450,
+  "artifact_digest": "sha256:9e3da946190c6ab6e3b9ab26d0b18d0f5856c740a3f532bae70b7ca0dbdbfc26",
+  "score": 10,
+  "max_score": 10,
+  "classification": "Idempotency-retention window protocol passes",
+  "database": "PostgreSQL 17.6",
+  "http_service_image": "python:3.12-slim",
+  "http_service_image_digest": "python@sha256:229a2c5bfa27522db7815ea81f9bed70af17ccb9de9fc7ad142b1877b5830d36",
+  "clock_model": "deterministic logical epoch supplied over HTTP; no wall-clock waiting",
+  "recovery_window_seconds": 120,
+  "unsafe_ttl_seconds": 60,
+  "safe_ttl_seconds": 300,
+  "unsafe": {
+    "idempotency_key": "ttl-unsafe-op:effect:v1",
+    "initial_active_idempotency_records": 1,
+    "after_expiry_active_idempotency_records": 0,
+    "effect_count_before_delayed_retry": 1,
+    "delayed_retry_delivery": "applied",
+    "final_effect_count": 2,
+    "final_status": "conflict"
+  },
+  "safe_retention": {
+    "idempotency_key": "ttl-safe-retention-op:effect:v1",
+    "active_idempotency_records_at_retry": 1,
+    "delayed_retry_delivery": "deduplicated",
+    "final_effect_count": 1,
+    "final_status": "committed"
+  },
+  "safe_reconcile_after_expiry": {
+    "idempotency_key": "ttl-safe-reconcile-op:effect:v1",
+    "active_idempotency_records_at_recovery": 0,
+    "authoritative_remote_status": "committed",
+    "second_post_made": false,
+    "final_effect_count": 1
+  },
+  "invariants": [
+    "Idempotency retention must cover the maximum recovery/replay window it is expected to protect.",
+    "Expired dedupe state does not imply the original external effect is absent.",
+    "Stable identity plus expired memory can still duplicate a durable effect.",
+    "After idempotency expiry, authoritative effect reconciliation should precede consequential replay.",
+    "Time, memory and recovery policy must be verified as one trajectory."
+  ],
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
