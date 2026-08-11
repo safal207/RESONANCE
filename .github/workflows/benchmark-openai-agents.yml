@@ -1,0 +1,60 @@
+name: RESONANCE — OpenAI Agents SDK Baseline
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'benchmarks/openai-agents-sdk-v0.1/**'
+      - '.github/workflows/benchmark-openai-agents.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      UPSTREAM_SHA: 2231eb5d40cd4a9d6b86f79492e984eeb3301263
+    steps:
+      - name: Checkout RESONANCE
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Fetch pinned OpenAI Agents SDK
+        run: |
+          git clone https://github.com/openai/openai-agents-python.git upstream
+          git -C upstream checkout "$UPSTREAM_SHA"
+          test "$(git -C upstream rev-parse HEAD)" = "$UPSTREAM_SHA"
+
+      - name: Install target and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ./upstream pytest pytest-asyncio
+
+      - name: Run RESONANCE framework baseline
+        run: |
+          python benchmarks/openai-agents-sdk-v0.1/run_baseline.py \
+            --upstream upstream \
+            --out benchmark-results/openai-agents-sdk-v0.1
+
+      - name: Publish run summary
+        if: always()
+        run: |
+          if [ -f benchmark-results/openai-agents-sdk-v0.1/RESULT.md ]; then
+            cat benchmark-results/openai-agents-sdk-v0.1/RESULT.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload evidence bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-openai-agents-baseline
+          path: benchmark-results/openai-agents-sdk-v0.1/
+          if-no-files-found: error
