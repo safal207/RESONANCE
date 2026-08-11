@@ -1,0 +1,55 @@
+{
+  "version": "0.1.0",
+  "generatedAt": "2026-08-11",
+  "evidencePolicy": {
+    "realSignalCount": 0,
+    "syntheticSignalCount": 3,
+    "syntheticExcludedFromMetrics": true,
+    "note": "Illustrative nodes validate the graph structure only. They are not market evidence."
+  },
+  "nodes": [
+    {
+      "id": "DEMO-001",
+      "type": "problem",
+      "synthetic": true,
+      "label": "Unknown commit after payment timeout",
+      "domain": "agentic payments",
+      "failureCoordinate": ["State", "Time", "Recovery", "Verification", "Evidence"],
+      "impact": "duplicate payment risk",
+      "missingCapability": "authoritative reconciliation before retry"
+    },
+    {
+      "id": "DEMO-002",
+      "type": "problem",
+      "synthetic": true,
+      "label": "Approval expires before execution",
+      "domain": "delegated authorization",
+      "failureCoordinate": ["Phase", "Time", "Transition"],
+      "impact": "execution outside valid authority",
+      "missingCapability": "fresh authority check bound to execution"
+    },
+    {
+      "id": "DEMO-003",
+      "type": "problem",
+      "synthetic": true,
+      "label": "Tool success conflicts with authoritative state",
+      "domain": "agent operations",
+      "failureCoordinate": ["State", "Verification", "Evidence"],
+      "impact": "false success declaration",
+      "missingCapability": "independent postcondition verification"
+    }
+  ],
+  "clusters": [],
+  "openProblems": [],
+  "productHypotheses": [],
+  "metrics": {
+    "meaningfulResponses": 0,
+    "realWorkflows": 0,
+    "qualifiedProblems": 0,
+    "productSignals": 0,
+    "pilotCandidates": 0,
+    "paidPilots": 0,
+    "verifiedProductRequests": 0,
+    "productsBorn": 0
+  }
+}

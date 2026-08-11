@@ -1,9 +1,13 @@
-name: RESONANCE SEO Contract
+name: RESONANCE Publication Contract
 
 on:
   pull_request:
     paths:
       - 'site/**'
+      - 'market/**'
+      - 'distribution/**'
+      - 'protocols/**'
+      - '.github/ISSUE_TEMPLATE/market-workflow.yml'
       - 'scripts/build-seo-site.mjs'
       - 'scripts/verify-seo.mjs'
       - '.github/workflows/seo.yml'
@@ -12,6 +16,10 @@ on:
     branches: [main]
     paths:
       - 'site/**'
+      - 'market/**'
+      - 'distribution/**'
+      - 'protocols/**'
+      - '.github/ISSUE_TEMPLATE/market-workflow.yml'
       - 'scripts/build-seo-site.mjs'
       - 'scripts/verify-seo.mjs'
       - '.github/workflows/seo.yml'
@@ -22,7 +30,7 @@ permissions:
   contents: read
 
 jobs:
-  verify-seo:
+  verify-publication:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -33,6 +41,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+
+      - name: Test Market OS scoring and evidence boundaries
+        run: node --test market/tests/*.test.mjs
 
       - name: Build SEO-ready publication
         run: node scripts/build-seo-site.mjs

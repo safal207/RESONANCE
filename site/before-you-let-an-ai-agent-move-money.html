@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Before You Let an AI Agent Move Money — RESONANCE examines why authorization is not enough: financial agents also need state, recovery, verification and evidence across the full execution trajectory." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <title>Before You Let an AI Agent Move Money | RESONANCE</title>
+  <link rel="alternate" hreflang="en" href="https://safal207.github.io/RESONANCE/before-you-let-an-ai-agent-move-money.html" />
+  <link rel="alternate" hreflang="ru" href="https://safal207.github.io/RESONANCE/before-you-let-an-ai-agent-move-money.ru.html" />
+  <link rel="alternate" hreflang="zh-CN" href="https://safal207.github.io/RESONANCE/before-you-let-an-ai-agent-move-money.zh.html" />
+  <link rel="alternate" hreflang="x-default" href="https://safal207.github.io/RESONANCE/before-you-let-an-ai-agent-move-money.html" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+  <link rel="stylesheet" href="market.css" />
+</head>
+<body data-share-text="AI agents are starting to move money. Authorization is not verification. What must be provably true before you trust an agent with a real financial workflow?">
+  <a class="skip-link" href="#article">Skip to article</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="ai-agents.html">AI</a>
+      <a href="index.html#science">Science</a>
+      <a href="index.html#trust">Trust</a>
+      <a href="open-problems.html">Open Problems</a>
+      <a href="verified-workflow.html">Verified Workflow</a>
+      <a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="article">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="language-switcher" aria-label="Language">
+        <a href="before-you-let-an-ai-agent-move-money.html" hreflang="en" aria-current="page">EN</a>
+        <a href="before-you-let-an-ai-agent-move-money.ru.html" hreflang="ru">RU</a>
+        <a href="before-you-let-an-ai-agent-move-money.zh.html" hreflang="zh-CN">中文</a>
+      </div>
+      <div class="article-meta-row">
+        <p class="section-label">Market Experiment 001 · Agentic Commerce / Trust</p>
+        <p class="article-status">Published · 11 Aug 2026</p>
+      </div>
+      <h1 class="article-title">Before You Let an AI Agent Move Money</h1>
+      <p class="article-dek">Authorization is necessary. It is not sufficient. Once an agent can transact, trust depends on whether the whole execution trajectory remains valid through timeouts, retries, changing state, recovery and verification.</p>
+      <div class="byline-row">
+        <p>By <strong>RESONANCE Editorial</strong></p>
+        <p>Issue 001 · Article 004</p>
+      </div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Article summary">
+        <div class="rail-card">
+          <p class="section-label">Core claim</p>
+          <strong>Authorization ≠ verification</strong>
+          <span>Verify the trajectory, not only the final response.</span>
+        </div>
+        <div class="rail-card rail-dark">
+          <p class="section-label">Trust coordinates</p>
+          <code>S · C · P · T · τ · R · V · E</code>
+        </div>
+        <div class="rail-card">
+          <p class="section-label">Experiment KPI</p>
+          <strong>Real workflows</strong>
+          <span>Product signals, not page views.</span>
+        </div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">AI systems are moving from recommending actions to participating in commerce. Google describes UCP as an open standard for agentic commerce and AP2 as a compatible authorization layer built around typed mandates, guardrails and an auditable proof of intent. OpenAI and Stripe have separately developed the Agentic Commerce Protocol for transactions between users, agents and businesses.</p>
+
+        <p>This infrastructure matters because a new boundary is appearing: an agent may not merely suggest a purchase. It may help initiate, negotiate, authorize or execute a consequential economic action.</p>
+
+        <p>Anthropic's Project Deal offers another signal. In an experimental marketplace, AI representatives negotiated real items on behalf of people and closed 186 deals with a total value above $4,000. The experiment was not a production payment network, but it demonstrates that delegated economic action is no longer a purely theoretical interaction pattern.</p>
+
+        <div class="pull-quote">The next trust question is not only: <em>was the agent allowed to act?</em> It is: <strong>can we prove the action followed a valid trajectory?</strong></div>
+
+        <h2>Consider one ordinary distributed-systems failure.</h2>
+
+        <p>An agent is instructed to pay a supplier. The payment request is sent. The network times out before the agent receives a definitive response.</p>
+
+        <div class="trajectory-box">
+          <span>payment</span><i>→</i><span>timeout</span><i>→</i><span>unknown commit</span><i>→</i><span>?</span>
+        </div>
+
+        <p>If the payment failed, retrying may be correct. If it committed and only the acknowledgement was lost, an uncontrolled retry may create a duplicate payment.</p>
+
+        <p>The second request can return <code>200 OK</code>. The agent can report success. The final state can even look superficially plausible. Yet the path may already have violated the business invariant.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Candidate financial invariant</p>
+          <div><b>1</b><p><strong>One authorized payment intent</strong></p></div>
+          <div><b>≤1</b><p><strong>One committed external payment</strong></p></div>
+        </section>
+
+        <h2>Authorization solves only one part of trust.</h2>
+
+        <p>Protocols such as AP2 are valuable because they make delegated intent and spending constraints more explicit. Google's developer guidance describes an intent mandate, a payment mandate bound to a specific cart and amount, and a receipt that closes the authorization trail.</p>
+
+        <p>But a production application still has to preserve correctness across its own state machine, provider behavior, retries, concurrent changes and recovery logic.</p>
+
+        <p>For a consequential financial workflow, we want answers to eight questions:</p>
+
+        <section class="claim-panel">
+          <p class="section-label">RESONANCE trajectory coordinates</p>
+          <div><b>S</b><p><strong>State:</strong> what is the authoritative financial state now?</p></div>
+          <div><b>C</b><p><strong>Causality:</strong> which legitimate intent caused this action?</p></div>
+          <div><b>P</b><p><strong>Phase:</strong> is the workflow in authorization, execution, settlement or recovery?</p></div>
+          <div><b>T</b><p><strong>Transition:</strong> is this state edge actually legal?</p></div>
+          <div><b>τ</b><p><strong>Time:</strong> are authority and state assumptions still fresh?</p></div>
+          <div><b>R</b><p><strong>Recovery:</strong> what happens after partial or ambiguous failure?</p></div>
+          <div><b>V</b><p><strong>Verification:</strong> was the real postcondition independently checked?</p></div>
+          <div><b>E</b><p><strong>Evidence:</strong> can another observer reconstruct the material path?</p></div>
+        </section>
+
+        <h2>The trust contract should survive the model.</h2>
+
+        <p>A useful financial-agent contract is not “GPT/Claude/Gemini should behave carefully.” It defines conditions that remain testable regardless of which planner selected the action.</p>
+
+        <div class="market-kpi"><pre>INTENT
+User approved supplier payment ≤ $1,000
+
+STATE
+Invoice is unpaid
+
+TIME
+Authority remains valid at execution
+
+TRANSITION
+UNPAID → PAYMENT_PENDING → PAID
+
+RECOVERY
+Unknown commit triggers reconciliation, not blind retry
+
+VERIFICATION
+Provider state and authoritative ledger agree
+
+EVIDENCE
+Intent + authority + attempts + reconciliation + decision survive</pre></div>
+
+        <p>Now the engineering question becomes sharper:</p>
+
+        <div class="pull-quote">Can the execution satisfy a verifiable trust contract regardless of which model performed it?</div>
+
+        <h2>A safer ambiguous-failure path.</h2>
+
+        <div class="trajectory-box">
+          <span>timeout</span><i>→</i><span>reconcile authoritative state</span><i>→</i><span>verify invariant</span><i>→</i><span>retry / stop</span><i>→</i><span>preserve evidence</span>
+        </div>
+
+        <p>That path is not universal. Some payment systems provide idempotency primitives; some expose reconciliation differently; some business processes have delayed settlement or multi-party authority. The point is not that RESONANCE has invented a universal payments algorithm.</p>
+
+        <p>The point is that <strong>the recovery path itself needs to be explicit, testable and evidenced</strong>.</p>
+
+        <h2>And this is where we need the market.</h2>
+
+        <p>We can generate synthetic failure cases forever. Real production constraints will teach us more.</p>
+
+        <section class="market-question" id="open-question">
+          <p class="section-label">The Open Question</p>
+          <h2>This article is deliberately unfinished.</h2>
+          <p class="hot-question"><strong>What would have to be provably true before you would allow an AI agent to move money in your real system?</strong></p>
+          <p>Describe one safely generalized workflow:</p>
+          <ul class="market-prompts">
+            <li><strong>Agent:</strong> What does it do?</li>
+            <li><strong>Failure:</strong> What could go wrong?</li>
+            <li><strong>Impact:</strong> What happens if it fails?</li>
+            <li><strong>Current workaround:</strong> How do you handle it today?</li>
+            <li><strong>Trust condition:</strong> What would you need to verify before trusting it?</li>
+          </ul>
+          <div class="market-actions">
+            <a class="button" href="https://github.com/safal207/RESONANCE/issues/new?template=market-workflow.yml" target="_blank" rel="noreferrer">Describe your workflow →</a>
+            <a class="text-link" href="verified-workflow.html">See the Verified Workflow pilot →</a>
+          </div>
+          <p class="market-note">Do not send credentials, private keys, personal data, customer-confidential information or identifying production details. Generalize the case when necessary.</p>
+        </section>
+
+        <p>If you submit a useful case, our first goal is not to sell you a platform. It is to isolate the missing guarantee, map the trajectory and return one concrete verification hypothesis. If multiple independent teams reveal the same missing capability, that becomes evidence for what should be built next.</p>
+
+        <div class="protocol-flow" aria-label="Market loop">
+          <span>Teach</span><i>→</i><span>Ask</span><i>→</i><span>Listen</span><i>→</i><span>Diagnose</span><i>→</i><span>Give value</span><i>→</i><span>Specify</span><i>→</i><span>Pilot</span><i>→</i><span>Prove</span>
+        </div>
+
+        <h2>What happens to the answers?</h2>
+
+        <p>Meaningful submissions become structured Problem Cards: workflow → failure → impact → workaround → missing capability → acceptance condition. They are scored as product signals and clustered in a Demand Graph. Synthetic examples are marked as synthetic and excluded from real market metrics.</p>
+
+        <p>Article #005 will not be called “market-selected” until the evidence threshold is reached. The current rule requires at least ten meaningful external workflows and at least three real cases in the winning cluster. Until then, the next topic remains open.</p>
+
+        <p class="closing-line"><strong>Don't ask the market whether it likes our product. Build a conversation in which the market reveals the product it needs.</strong></p>
+
+        <section class="share-panel" aria-label="Share this research">
+          <p class="section-label">Distribution</p>
+          <h3>Share the question, not just the link.</h3>
+          <div class="share-actions">
+            <button type="button" data-share="native">Share</button>
+            <button type="button" data-share="x">X</button>
+            <button type="button" data-share="linkedin">LinkedIn</button>
+            <button type="button" data-share="reddit">Reddit</button>
+            <button type="button" data-share="telegram">Telegram</button>
+            <button type="button" data-share="copy">Copy link</button>
+          </div>
+        </section>
+
+        <section class="sources-block" id="sources">
+          <p class="section-label">Primary references</p>
+          <ol>
+            <li><a href="https://developers.googleblog.com/en/developers-guide-to-ai-agent-protocols/" target="_blank" rel="noreferrer">Google Developers Blog — Developer's Guide to AI Agent Protocols (AP2)</a> · 18 Mar 2026</li>
+            <li><a href="https://developers.googleblog.com/under-the-hood-universal-commerce-protocol-ucp/" target="_blank" rel="noreferrer">Google Developers Blog — Under the Hood: Universal Commerce Protocol</a> · 11 Jan 2026</li>
+            <li><a href="https://openai.com/index/buy-it-in-chatgpt/" target="_blank" rel="noreferrer">OpenAI — Instant Checkout and the Agentic Commerce Protocol</a> · 29 Sep 2025</li>
+            <li><a href="https://stripe.com/resources/more/agentic-commerce" target="_blank" rel="noreferrer">Stripe — Agentic commerce: how AI agents are changing buying and selling</a> · updated 22 Apr 2026</li>
+            <li><a href="https://www.anthropic.com/features/project-deal" target="_blank" rel="noreferrer">Anthropic — Project Deal: Claude-run marketplace experiment</a> · 2026</li>
+          </ol>
+          <p class="source-note">The protocol and marketplace references establish that delegated/agentic commerce is becoming a real engineering surface. The proposed trajectory-verification layer and trust-contract framing are RESONANCE analysis, not claims made by those sources.</p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div>
+      <div><p class="footer-title">Market OS</p><p>Article → Dialogue → Problem → Pilot → Evidence → Product.</p></div>
+      <div><p class="footer-title">Open publication</p><a href="https://github.com/safal207/RESONANCE">GitHub repository ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+  <script src="market.js"></script>
+</body>
+</html>

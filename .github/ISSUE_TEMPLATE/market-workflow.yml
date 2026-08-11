@@ -1,0 +1,85 @@
+name: Market workflow / failure case
+description: Share a real AI-agent workflow or failure pattern for RESONANCE market research.
+title: "[Market Signal] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing a real workflow. Please do **not** include secrets, personal data, customer-confidential information, credentials, private keys, or production-sensitive details. Generalize names and amounts when needed.
+  - type: dropdown
+    id: source_article
+    attributes:
+      label: Source
+      description: Where did this conversation start?
+      options:
+        - Article #004 — Before You Let an AI Agent Move Money
+        - Other RESONANCE article
+        - Social post / discussion
+        - Direct referral
+    validations:
+      required: true
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      options:
+        - English
+        - Русский
+        - 中文
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: agent
+    attributes:
+      label: What does the agent do?
+      description: Describe the actor, workflow and the action it is allowed to take.
+      placeholder: "Example: A procurement agent prepares and executes supplier payments after approval."
+    validations:
+      required: true
+  - type: textarea
+    id: failure
+    attributes:
+      label: What could go wrong?
+      description: Give one concrete failure path rather than a general concern.
+      placeholder: "Example: After a timeout the agent cannot determine whether the payment committed and may retry."
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: What happens if it fails?
+      description: Operational, financial, security, compliance or trust impact.
+    validations:
+      required: true
+  - type: textarea
+    id: workaround
+    attributes:
+      label: How do you handle it today?
+      description: Manual checks, guardrails, retries, reconciliation, approvals, monitoring, or no current solution.
+    validations:
+      required: true
+  - type: textarea
+    id: trust_condition
+    attributes:
+      label: What would you need to verify before trusting it?
+      description: Describe the invariant, proof, state, evidence or guarantee that would make the workflow acceptable.
+    validations:
+      required: true
+  - type: dropdown
+    id: pilot_interest
+    attributes:
+      label: Would you like RESONANCE to map this workflow with you?
+      options:
+        - Yes — I am open to a small verification pilot
+        - Maybe — first send a problem map / hypothesis
+        - No — research contribution only
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Submission check
+      options:
+        - label: I have removed confidential data, credentials, secrets and identifying production details.
+          required: true

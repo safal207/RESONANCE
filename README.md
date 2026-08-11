@@ -23,6 +23,62 @@ This means we separate:
 - short-term noise from structural change;
 - interesting information from actionable consequences.
 
+## Market OS
+
+RESONANCE also treats selected articles as structured market-learning experiments:
+
+```text
+PUBLISH
+  ↓
+TEACH
+  ↓
+ASK
+  ↓
+LISTEN
+  ↓
+DIAGNOSE
+  ↓
+GIVE VALUE
+  ↓
+SPECIFY
+  ↓
+PILOT
+  ↓
+PROVE
+  ↓
+PRODUCTIZE
+  ↓
+PUBLISH AGAIN
+```
+
+The goal is not to build products first and then search for demand. A strong article should create a useful conversation in which a real workflow, failure, business impact, missing capability and acceptance condition can become visible.
+
+The North Star is **Verified Product Requests**, not page views.
+
+Market infrastructure:
+
+- [`market/README.md`](market/README.md) — Demand Log and evidence rules;
+- [`market/problem-card.schema.json`](market/problem-card.schema.json) — structured Problem Card;
+- [`market/market-os.mjs`](market/market-os.mjs) — deterministic Product Signal scoring and clustering;
+- [`market/demand-graph.json`](market/demand-graph.json) — public demand-graph state;
+- [`protocols/MARKET_DIALOGUE_PROTOCOL.md`](protocols/MARKET_DIALOGUE_PROTOCOL.md) — value-first conversation protocol;
+- [`protocols/VERIFIED_WORKFLOW_PILOT.md`](protocols/VERIFIED_WORKFLOW_PILOT.md) — one-workflow pilot;
+- [`protocols/ARTICLE_005_SELECTION_RULE.md`](protocols/ARTICLE_005_SELECTION_RULE.md) — evidence gate for the next market-driven article;
+- [`protocols/PRODUCTIZATION_PROTOCOL.md`](protocols/PRODUCTIZATION_PROTOCOL.md) — custom → pattern → service → software heuristic;
+- [`distribution/`](distribution/) — multilingual social/distribution packs.
+
+Synthetic examples are permitted only for testing the data model and **must never count as market evidence**. The Demand Graph starts at zero real signals.
+
+## Languages
+
+The publication now has first-class entry points for:
+
+- **English** — `site/index.html`;
+- **Русский** — `site/index.ru.html`;
+- **简体中文** — `site/index.zh.html`.
+
+Article #004 is published in all three languages with `hreflang`, localized structured data, localized Open Graph locale metadata, share tools and a common market-intake path.
+
 ## Research protocol
 
 ### Transactional Trust Protocol v1.0
@@ -113,13 +169,18 @@ Machine-readable evidence and reports live under [`reports/verified/`](reports/v
 
 `site/` contains the static publication, including:
 
-- `site/index.html` — magazine homepage;
+- `site/index.html` — English magazine homepage;
+- `site/index.ru.html` — Russian homepage;
+- `site/index.zh.html` — Simplified Chinese homepage;
+- `site/before-you-let-an-ai-agent-move-money*.html` — Article #004 in EN/RU/ZH;
+- `site/open-problems.html` — public Demand Graph / Open Problems view;
+- `site/verified-workflow.html` — service-first verification pilot;
 - `site/issue-001.html` — Issue 001 web edition;
 - `site/transactional-trust-protocol-v1.html` — TTP v1.0 publication;
-- `site/verified-011-transactional-trust-e2e.html` — end-to-end verification;
-- `site/styles.css` — editorial design system;
-- `site/app.js` — lightweight responsive navigation;
-- `.github/workflows/pages.yml` — GitHub Pages deployment workflow.
+- `site/styles.css`, `site/article.css`, `site/market.css` — editorial/market UI;
+- `site/app.js`, `site/market.js` — responsive navigation and share helpers;
+- `.github/workflows/pages.yml` — GitHub Pages deployment workflow;
+- `.github/workflows/seo.yml` — publication contract: Market OS tests + SEO validation.
 
 ## Repository structure
 
@@ -130,6 +191,8 @@ RESONANCE/
 ├── EDITORIAL_PRINCIPLES.md
 ├── CONTRIBUTING.md
 ├── content/
+├── distribution/
+├── market/
 ├── protocols/
 │   └── transactional-trust-v1.0/
 ├── benchmarks/
@@ -139,7 +202,9 @@ RESONANCE/
 │   └── 001-age-of-agents/
 ├── topics/
 ├── site/
-└── .github/workflows/
+└── .github/
+    ├── ISSUE_TEMPLATE/
+    └── workflows/
 ```
 
 ## Publishing philosophy
@@ -160,7 +225,7 @@ We believe the future deserves journalism and research artifacts that can be ins
 
 **Founding research edition — active.**
 
-Issue 001 is now both an editorial issue and an executable research program: claims become hypotheses, hypotheses become deterministic tests, tests become evidence bundles, and repeated invariants are consolidated into protocols.
+Issue 001 is now both an editorial issue and an executable research program: claims become hypotheses, hypotheses become deterministic tests, tests become evidence bundles, repeated invariants are consolidated into protocols, and selected articles can now feed a separate evidence-bounded market discovery loop.
 
 ---
 

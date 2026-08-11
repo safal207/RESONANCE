@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safal207.github.io/RESONANCE/schemas/problem-card.schema.json",
+  "title": "RESONANCE Problem Card",
+  "type": "object",
+  "required": ["id", "synthetic", "source", "workflow", "failure", "currentSolution", "trustRequirement", "productDiscovery"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^RES-[0-9]{3}-[0-9]{3,}$" },
+    "synthetic": { "type": "boolean" },
+    "source": {
+      "type": "object",
+      "required": ["article", "language", "channel"],
+      "properties": {
+        "article": { "type": "string" },
+        "language": { "type": "string" },
+        "channel": { "type": "string" },
+        "url": { "type": "string" }
+      }
+    },
+    "clientContext": {
+      "type": "object",
+      "properties": {
+        "companyType": { "type": "string" },
+        "role": { "type": "string" },
+        "domain": { "type": "string" }
+      }
+    },
+    "workflow": {
+      "type": "object",
+      "required": ["actor", "action"],
+      "properties": {
+        "actor": { "type": "string" },
+        "action": { "type": "string" },
+        "trigger": { "type": "string" },
+        "currentState": { "type": "string" },
+        "expectedTransition": { "type": "string" }
+      }
+    },
+    "failure": {
+      "type": "object",
+      "required": ["scenario", "impact"],
+      "properties": {
+        "scenario": { "type": "string" },
+        "cause": { "type": "string" },
+        "recovery": { "type": "string" },
+        "impact": { "type": "string" }
+      }
+    },
+    "currentSolution": {
+      "type": "object",
+      "properties": {
+        "workaround": { "type": "string" },
+        "limitation": { "type": "string" }
+      }
+    },
+    "trustRequirement": {
+      "type": "object",
+      "properties": {
+        "desiredState": { "type": "string" },
+        "invariant": { "type": "string" },
+        "verification": { "type": "string" },
+        "evidence": { "type": "string" }
+      }
+    },
+    "productDiscovery": {
+      "type": "object",
+      "required": ["signalScore"],
+      "properties": {
+        "missingCapability": { "type": "string" },
+        "hypothesis": { "type": "string" },
+        "clientValidation": { "enum": ["unknown", "no", "partial", "yes"] },
+        "signalScore": { "type": "integer", "minimum": 0, "maximum": 10 },
+        "pilotInterest": { "enum": ["unknown", "no", "maybe", "yes"] }
+      }
+    },
+    "conversation": {
+      "type": "object",
+      "properties": {
+        "clientLanguage": { "type": "string" },
+        "nextQuestion": { "type": "string" }
+      }
+    }
+  }
+}
