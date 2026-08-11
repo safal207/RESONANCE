@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified Report #003 — Recovery Under Ambiguity: blind retry duplicates a synthetic side effect; reconciliation prevents it." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Verified Report #003 — Recovery Under Ambiguity | RESONANCE" />
+  <meta property="og:description" content="Blind retry: 2 effects. Reconcile before retry: 1 effect. A reproducible application recovery run on a pinned OpenAI Agents SDK revision." />
+  <meta property="og:type" content="article" />
+  <title>Verified Report #003 — Recovery Under Ambiguity | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="index.html#intelligence">AI</a>
+      <a href="index.html#science">Science</a>
+      <a href="index.html#trust">Trust</a>
+      <a href="index.html#economy">Startups & Economy</a>
+      <a href="index.html#human">Human</a>
+      <a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row">
+        <p class="section-label">Verified Report #003 · Recovery under ambiguity</p>
+        <p class="article-status">Executed · 11 Aug 2026</p>
+      </div>
+      <h1 class="article-title">Reconcile Before Retry</h1>
+      <p class="article-dek">A timeout does not prove an action failed. In a deterministic run through a pinned OpenAI Agents SDK tool loop, blind retry duplicated a synthetic side effect; reconciling durable state first preserved exactly one effect.</p>
+      <div class="byline-row">
+        <p>By <strong>RESONANCE Research</strong></p>
+        <p>Target · OpenAI Agents SDK v0.19.4 · SHA 2231eb5d</p>
+      </div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Report summary">
+        <div class="rail-card">
+          <p class="section-label">Recovery score</p>
+          <strong>10 / 10</strong>
+          <span>3 deterministic trajectories</span>
+          <span>Blind retry → 2 effects</span>
+          <span>Reconcile paths → 1 effect</span>
+        </div>
+        <div class="rail-card rail-dark">
+          <p class="section-label">Rule</p>
+          <code>UNKNOWN → RECONCILE → DECIDE</code>
+          <span>not an SDK safety certification</span>
+        </div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">The dangerous part of a timeout is not the error message. It is the missing fact. Did the operation fail before committing — or did it commit and lose the response? Treating those two states as the same can duplicate durable actions.</p>
+
+        <div class="trajectory-box"><span>attempt</span><i>→</i><span>timeout</span><i>→</i><span>UNKNOWN</span><i>→</i><span>reconcile</span><i>→</i><span>decide</span></div>
+
+        <h2>Blind retry reproduced the failure.</h2>
+        <p>The first synthetic charge committed successfully, then deliberately raised a timeout before the caller received the response. The deterministic model then called the charge tool again without reconciling state.</p>
+
+        <div class="verification-chain">
+          <div><small>01</small><strong>Charge attempt</strong><p>The backend accepts one intended synthetic operation.</p></div>
+          <div><small>02</small><strong>Commit</strong><p>The durable effect is recorded.</p></div>
+          <div><small>03</small><strong>Response lost</strong><p>The caller sees a timeout and cannot infer commit state.</p></div>
+          <div><small>04</small><strong>Blind retry</strong><p>A second tool call commits a second effect.</p></div>
+        </div>
+
+        <div class="pull-quote">A timeout is a statement about what the caller observed — not necessarily about what the system committed.</div>
+
+        <section class="claim-panel">
+          <p class="section-label">Comparative result</p>
+          <div><b>×2</b><p><strong>Blind retry after timeout-after-commit</strong><span>2 effects from one intended operation.</span></p></div>
+          <div><b>×1</b><p><strong>Reconcile after timeout-after-commit</strong><span>Status returned committed; retry was suppressed.</span></p></div>
+          <div><b>×1</b><p><strong>Reconcile after timeout-before-commit</strong><span>Status returned absent; one retry was then allowed.</span></p></div>
+        </section>
+
+        <h2>The safe path makes UNKNOWN a real state.</h2>
+        <p>Instead of mapping an error directly to retry, the recovery-aware trajectory maps the ambiguous result to <strong>UNKNOWN</strong>. That state has only one legal next step in this protocol: reconcile durable state.</p>
+
+        <div class="causal-stack">
+          <div><span>UNKNOWN</span> outcome</div>
+          <div>↓</div>
+          <div><span>RECONCILE</span> durable operation state</div>
+          <div>↓</div>
+          <div><span>COMMITTED</span> → complete, no retry</div>
+          <div><span>ABSENT</span> → retry allowed</div>
+          <div><span>UNKNOWN</span> → keep reconciling / escalate</div>
+        </div>
+
+        <h2>Scenario A: the commit already happened.</h2>
+        <p>The first call committed, then lost its response. The next tool call queried operation state and observed <code>committed</code>. The run stopped without issuing another charge.</p>
+
+        <p><strong>Observed:</strong> one attempt, one commit, one reconcile, one final effect.</p>
+
+        <h2>Scenario B: the commit never happened.</h2>
+        <p>The first call timed out before commit. Recovery still did not assume failure. It reconciled first, observed <code>absent</code>, and only then issued one retry. The retry committed exactly once.</p>
+
+        <p><strong>Observed:</strong> two attempts, one reconcile, one commit, one final effect.</p>
+
+        <h2>What the SDK did — and did not do.</h2>
+        <p>The pinned OpenAI Agents SDK tool loop faithfully executed all three deterministic trajectories using the upstream <code>FakeModel</code>. That is important because it separates framework capability from application policy.</p>
+
+        <p>The benchmark does <strong>not</strong> claim the SDK automatically enforces idempotency, reconciliation or retry safety. It demonstrates that an application can encode either an unsafe or safe recovery trajectory on top of the same framework primitives.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Recovery protocol score · 10/10</p>
+          <div><b>01</b><p><strong>Ambiguity hazard reproduced · 2/2</strong><span>Blind retry created two effects.</span></p></div>
+          <div><b>02</b><p><strong>Reconcile before retry · 2/2</strong><span>Unknown-after-commit transitioned to status check, not retry.</span></p></div>
+          <div><b>03</b><p><strong>No duplicate after confirmed commit · 2/2</strong><span>One attempt, one effect.</span></p></div>
+          <div><b>04</b><p><strong>Retry only after confirmed absence · 2/2</strong><span>Retry occurred only after durable state returned absent.</span></p></div>
+          <div><b>05</b><p><strong>Pinned reproducible evidence · 2/2</strong><span>Exact upstream SHA + synthetic local effects + durable artifact.</span></p></div>
+        </section>
+
+        <h2>The engineering implication</h2>
+        <p>For payments, orders, deployments, messages, access changes and resource creation, the application should not equate transport failure with state failure. A robust design can combine durable operation IDs, service-side idempotency, read-after-error reconciliation, explicit UNKNOWN states and evidence showing why a retry was permitted or blocked.</p>
+
+        <p>The next interesting failure is one layer deeper: <strong>what if reconciliation itself is ambiguous?</strong> A mature state machine should not collapse that condition back into blind retry. It should preserve uncertainty until stronger evidence arrives or a human takes over.</p>
+
+        <h2>Interpretation boundary</h2>
+        <p>This is an application-level recovery experiment using synthetic local side effects. It is not a payment-processor test, not a vulnerability claim, not evidence that every timeout requires this exact policy, and not a safety certification for applications built with the SDK.</p>
+
+        <section class="sources-block">
+          <p class="section-label">Reproduce / inspect</p>
+          <ol>
+            <li><a href="https://github.com/openai/openai-agents-python/commit/2231eb5d40cd4a9d6b86f79492e984eeb3301263" target="_blank" rel="noreferrer">Pinned upstream commit</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/actions/runs/31454264702" target="_blank" rel="noreferrer">Canonical GitHub Actions run</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/benchmarks/openai-agents-recovery-v0.3/run_recovery.py" target="_blank" rel="noreferrer">Recovery harness</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/003-openai-agents-recovery/result.json" target="_blank" rel="noreferrer">Machine-readable result</a></li>
+          </ol>
+          <p class="source-note">Evidence artifact digest: <code>sha256:9d0141eb981822e14e14ca51721e5b01affd4a3fb26efbe73128b5e199ecfb8d</code>. No production API key, live model, real payment rail or external service was used.</p>
+        </section>
+
+        <p class="closing-line"><strong>Verdict:</strong> blind retry reproduced a duplicate side effect; reconciling durable state before deciding whether retry was legal preserved exactly one intended effect in both ambiguous branches.</p>
+
+        <div class="article-end">
+          <p><strong>RESONANCE Verified Report #003</strong></p>
+          <p>attempt → ambiguity → reconciliation → legal transition → evidence.</p>
+          <a class="button" href="issue-001.html">Back to Issue 001</a>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div>
+      <div><p class="footer-title">Verified Report #003</p><p>Recovery Under Ambiguity · 10/10</p></div>
+      <div><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified/003-openai-agents-recovery">Evidence files ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
