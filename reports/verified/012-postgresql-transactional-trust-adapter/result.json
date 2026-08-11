@@ -1,0 +1,63 @@
+{
+  "benchmark": "RESONANCE PostgreSQL Transactional Trust Adapter",
+  "benchmark_version": "1.0",
+  "protocol": "RESONANCE Transactional Trust Protocol v1.0",
+  "executed_at": "2026-08-11T05:15:10.980190+00:00",
+  "github_actions_run": 31461002473,
+  "artifact_id": 9089776304,
+  "artifact_name": "resonance-postgresql-transactional-trust-adapter-v1.0",
+  "artifact_digest": "sha256:4a9ed5a039c624acd1f0f5c0feef07c47ade79128a62050977089b0109cebaf1",
+  "database": {
+    "server_version": "17.6",
+    "server_version_num": 170006,
+    "container_image": "postgres:17.6-alpine",
+    "container_image_digest": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94"
+  },
+  "score": 10,
+  "max_score": 10,
+  "classification": "PostgreSQL atomic state-version adapter passes",
+  "unsafe": {
+    "initial_observations": [
+      {"node": "A", "state": "absent", "version": 100},
+      {"node": "B", "state": "absent", "version": 100}
+    ],
+    "transitions": ["unconditional_commit", "unconditional_commit"],
+    "final_state": "committed",
+    "final_version": 102,
+    "effect_count": 2,
+    "effect_nodes": ["A", "B"]
+  },
+  "safe": {
+    "initial_observations": [
+      {"node": "A", "state": "absent", "version": 100},
+      {"node": "B", "state": "absent", "version": 100}
+    ],
+    "winner": {
+      "node": "A",
+      "transition": "commit_winner",
+      "returned_state": "committed",
+      "returned_version": 101
+    },
+    "stale_writer": {
+      "node": "B",
+      "transition": "precondition_failed",
+      "reconciled_state": "committed",
+      "reconciled_version": 101,
+      "reconciled_effects": 1
+    },
+    "final_state": "committed",
+    "final_version": 101,
+    "effect_count": 1,
+    "effect_nodes": ["A"]
+  },
+  "checks": [
+    {"id": "real_postgresql_service_observed", "points": 2, "pass": true},
+    {"id": "unsafe_two_connection_duplicate_reproduced", "points": 2, "pass": true},
+    {"id": "conditional_update_allows_single_winner", "points": 2, "pass": true},
+    {"id": "stale_writer_reconciles_committed_state", "points": 2, "pass": true},
+    {"id": "final_database_invariant_proved", "points": 2, "pass": true}
+  ],
+  "invariant": "Two independent readers may observe the same legal snapshot, but at most one version-bound mutation may commit an effect.",
+  "scope": "Real PostgreSQL service container and two independent client connections; local synthetic operation/effects tables only.",
+  "external_safety_certification": false
+}
