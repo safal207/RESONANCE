@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Transactional Trust Protocol v1.0 — an experimental protocol for consequential agent actions across evidence, authority, state, commit, recovery and proof." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Transactional Trust Protocol v1.0 | RESONANCE" />
+  <meta property="og:description" content="OBSERVE → VERIFY → AUTHORIZE → BIND → COMPARE → COMMIT → RECONCILE → PROVE." />
+  <meta property="og:type" content="article" />
+  <title>Transactional Trust Protocol v1.0 | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#protocol">Skip to protocol</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="index.html#intelligence">AI</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="index.html#economy">Startups & Economy</a><a href="index.html#human">Human</a><a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="protocol">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Protocol · v1.0</p><p class="article-status">Experimental · 11 Aug 2026</p></div>
+      <h1 class="article-title">Transactional Trust Protocol</h1>
+      <p class="article-dek">A framework-agnostic execution protocol for consequential agent actions: keep evidence, authority, shared state, commit preconditions, recovery and final proof connected across the whole transition.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>Derived from Verified Reports #003–#010</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Protocol summary">
+        <div class="rail-card"><p class="section-label">Canonical chain</p><strong>8 stages</strong><span>Observe · Verify · Authorize · Bind</span><span>Compare · Commit · Reconcile · Prove</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">Core invariant</p><code>trajectory trust &gt; output trust</code><span>bind proof to the mutation</span></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Agent correctness becomes transactional when software can change shared state, call external systems, retry ambiguous operations and act under permissions that may change while work is in flight.</p>
+
+        <div class="trajectory-box"><span>OBSERVE</span><i>→</i><span>VERIFY</span><i>→</i><span>AUTHORIZE</span><i>→</i><span>BIND</span></div>
+        <div class="trajectory-box"><span>COMPARE</span><i>→</i><span>COMMIT</span><i>→</i><span>RECONCILE</span><i>→</i><span>PROVE</span></div>
+
+        <h2>1 · Observe the state that makes the action legal.</h2>
+        <p>Record actor, intent, operation identity, observed state, observed state version and time. A read is a snapshot — not permanent permission.</p>
+
+        <h2>2 · Verify the evidence behind the observation.</h2>
+        <p>Check value, source, integrity, provenance and freshness. Keep <code>UNKNOWN</code>, <code>ABSENT</code>, <code>COMMITTED</code> and <code>CONFLICT</code> distinct.</p>
+
+        <h2>3 · Authorize against current trust.</h2>
+        <p>Verify authority identity and binding, activation/revocation lifecycle, trust-registry version and trust-registry freshness. A valid signature can still belong to an authority that is no longer trusted.</p>
+
+        <h2>4 · Bind the decision to versions.</h2>
+        <p>Carry the observed state version, trust epoch, verification time and invariants into the execution decision. <strong>Verified then is not authorized now.</strong></p>
+
+        <h2>5 · Compare at the mutation boundary.</h2>
+        <p>Require the state version and trust version that authorized the action to still be current. The compare and irreversible transition must be atomic, transactional or otherwise enforced by the mutation authority.</p>
+
+        <h2>6 · Commit once.</h2>
+        <p>Execute only while all bound preconditions hold. Idempotency keys, compare-and-swap, transactions, leases or equivalent mechanisms can implement this property; the protocol does not prescribe one storage technology.</p>
+
+        <h2>7 · Reconcile ambiguity before retry.</h2>
+        <div class="trajectory-box"><span>UNKNOWN</span><i>→</i><span>RECONCILE</span><i>→</i><span>COMMITTED / ABSENT / CONFLICT / UNKNOWN</span></div>
+        <p>A timeout is not proof of failure. Retry must re-enter verification and execution binding rather than reuse an old authorization automatically.</p>
+
+        <h2>8 · Prove the trajectory.</h2>
+        <p>Preserve state observations, trust observations, verification decisions, precondition results, commit/conflict outcomes, reconciliation evidence and the final invariant result.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">TTP v1.0 invariants</p>
+          <div><b>I1</b><p><strong>TIMEOUT ≠ FAILURE</strong><span>Ambiguous outcome requires reconciliation.</span></p></div>
+          <div><b>I2</b><p><strong>UNKNOWN ≠ ABSENT</strong><span>Uncertainty is not retry permission.</span></p></div>
+          <div><b>I3</b><p><strong>VALID SIGNATURE ≠ CURRENT TRUST</strong><span>Authority has a lifecycle.</span></p></div>
+          <div><b>I4</b><p><strong>READ WAS CORRECT ≠ WRITE IS STILL LEGAL</strong><span>Bind action to state version.</span></p></div>
+          <div><b>I5</b><p><strong>CHECK + WRITE SHARE ONE PRECONDITION</strong><span>Make mutation boundary enforce the version.</span></p></div>
+          <div><b>I6</b><p><strong>PROOF COVERS THE TRAJECTORY</strong><span>Tool success alone is not sufficient evidence.</span></p></div>
+        </section>
+
+        <div class="pull-quote">A consequential transition is trustworthy only when evidence, authority, state, commit preconditions, recovery and proof remain connected across the whole path.</div>
+
+        <h2>Three conformance profiles</h2>
+        <div class="verification-chain">
+          <div><small>FAST</small><strong>TTP-Fast</strong><p>Low-impact reversible actions: observe, minimal verify, state-version binding, compare/commit, basic proof.</p></div>
+          <div><small>STD</small><strong>TTP-Standard</strong><p>All eight stages, explicit UNKNOWN/CONFLICT, authority lifecycle, trust freshness and durable evidence.</p></div>
+          <div><small>DEEP</small><strong>TTP-Deep</strong><p>Independent verification, stronger provenance, isolated execution, replayable evidence and explicit escalation.</p></div>
+        </div>
+
+        <h2>Interpretation boundary</h2>
+        <p>TTP v1.0 is a RESONANCE experimental protocol synthesis. It is not a replacement for database transactions or consensus, not a PKI/IAM standard, not an OpenAI Agents SDK feature claim and not an external security certification.</p>
+
+        <section class="sources-block">
+          <p class="section-label">Inspect / reproduce</p>
+          <ol>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/protocols/transactional-trust-v1.0/README.md" target="_blank" rel="noreferrer">Canonical protocol specification</a></li>
+            <li><a href="verified-011-transactional-trust-e2e.html">Verified Report #011 · end-to-end adversarial run</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified" target="_blank" rel="noreferrer">Verified Reports #003–#010 evidence trail</a></li>
+          </ol>
+        </section>
+
+        <p class="closing-line"><strong>Canonical short form:</strong> OBSERVE → VERIFY → AUTHORIZE → BIND → COMPARE → COMMIT → RECONCILE → PROVE.</p>
+
+        <div class="article-end"><p><strong>RESONANCE Transactional Trust Protocol v1.0</strong></p><p>trajectory correctness → execution binding → recoverable proof.</p><a class="button" href="verified-011-transactional-trust-e2e.html">Open the end-to-end verification</a></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Protocol v1.0</p><p>Transactional Trust</p></div><div><a href="https://github.com/safal207/RESONANCE/tree/main/protocols/transactional-trust-v1.0">Specification ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
