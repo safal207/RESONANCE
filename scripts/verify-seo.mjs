@@ -70,6 +70,7 @@ for (const file of pages) {
   if (!sitemap.includes(`<loc>${expectedCanonical}</loc>`)) fail(`${file}: missing from sitemap.xml`);
   if (/noindex/i.test(html)) fail(`${file}: unexpected noindex`);
   if (/href=["'](?:index\.html)?#intelligence["']/i.test(html)) fail(`${file}: AI nav still points to fragment instead of topic hub`);
+  if (/href=["']index\.html(?:#[^"']*)?["']/i.test(html)) fail(`${file}: internal navigation exposes non-canonical index.html URL`);
 }
 
 if (!robots.includes(`Sitemap: ${BASE}sitemap.xml`)) fail('robots.txt does not advertise sitemap.xml');
