@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="RESONANCE Site Health explains the publication, Lighthouse, UI geometry, image, accessibility, SEO and live-deployment checks used to keep the journal measurable and evidence-first." />
+  <meta name="description" content="RESONANCE Site Health explains the publication, Lighthouse, UI geometry, visual regression, image, accessibility, SEO and live-deployment checks used to keep the journal measurable and evidence-first." />
   <meta name="theme-color" content="#f4f0e8" />
   <title>Site Health & Quality | RESONANCE</title>
   <link rel="stylesheet" href="styles.css" />
@@ -29,14 +29,14 @@
     <header class="article-hero wrap">
       <p class="section-label">Site Health · Quality Contract</p>
       <h1 class="article-title">Measure the publication, not just the content.</h1>
-      <p class="article-dek">RESONANCE treats the website itself as a verifiable system: structure is checked before release, browser experience and UI geometry are measured in CI, and the deployed GitHub Pages site is measured again after publication.</p>
+      <p class="article-dek">RESONANCE treats the website itself as a verifiable system: structure is checked before release, browser experience and UI geometry are measured in CI, multilingual screenshots are compared against public main, and the deployed GitHub Pages site is measured again after publication.</p>
     </header>
 
     <div class="article-layout wrap">
       <aside class="article-rail">
         <div class="rail-card">
-          <p class="section-label">Four layers</p>
-          <strong>Build → Geometry → Browser → Live</strong>
+          <p class="section-label">Five layers</p>
+          <strong>Build → Geometry → Browser → Visual → Live</strong>
           <span>Different checks answer different questions.</span>
         </div>
         <div class="rail-card rail-dark">
@@ -46,7 +46,7 @@
       </aside>
 
       <article class="article-body">
-        <div class="status-chip ready">RESONANCE Site Health v0.2</div>
+        <div class="status-chip ready">RESONANCE Site Health v0.3</div>
 
         <h2>1. Publication Contract</h2>
         <p>The deterministic publication contract builds the journal and checks canonical URLs, structured data, multilingual metadata, sitemap coverage, Market OS evidence boundaries and other release invariants before deployment.</p>
@@ -56,7 +56,7 @@
         <table class="market-table">
           <thead><tr><th>Element</th><th>Initial rule</th><th>Why it matters</th></tr></thead>
           <tbody>
-            <tr><td>Primary CTA</td><td>44 px minimum design target</td><td>Keep important controls comfortably actionable on touch interfaces.</td></tr>
+            <tr><td>Primary CTA</td><td>44 × 44 px minimum target</td><td>Keep important controls comfortably actionable on touch interfaces.</td></tr>
             <tr><td>Buttons</td><td>Explicit valid <code>type</code></td><td>Avoid accidental behavior changes when controls move into forms.</td></tr>
             <tr><td>Images</td><td><code>alt</code> + positive intrinsic <code>width</code>/<code>height</code></td><td>Reserve layout space and keep media understandable to assistive technology.</td></tr>
             <tr><td>Local image source</td><td>≤ 750 KiB per image</td><td>Prevent a single editorial asset from becoming a hidden payload regression.</td></tr>
@@ -81,26 +81,35 @@
           </tbody>
         </table>
 
-        <h2>4. Live Experience Audit</h2>
-        <p>After a successful GitHub Pages deployment, Lighthouse measures the public site again. UI geometry is re-checked against the deployed pages, and the result is stored as an immutable workflow artifact with the audited commit/run context.</p>
+        <h2>4. Multilingual Visual Regression</h2>
+        <p>Visual Regression v0.3 captures the homepage, Article #004 EN/RU/中文, Article #005 EN/RU/中文 and this Quality page at three fixed viewports. That gives us 24 candidate screenshots per PR plus public-main baselines and pixel-diff images.</p>
+        <table class="market-table">
+          <thead><tr><th>Profile</th><th>Viewport</th><th>Release use</th></tr></thead>
+          <tbody>
+            <tr><td>Phone</td><td>390 × 844</td><td>Touch targets, compact wrapping and horizontal overflow.</td></tr>
+            <tr><td>Tablet</td><td>768 × 1024</td><td>Mid-width breakpoints and long translated copy.</td></tr>
+            <tr><td>Desktop</td><td>1440 × 900</td><td>Wide editorial composition, cards and article rails.</td></tr>
+          </tbody>
+        </table>
+        <p>The hard gate blocks horizontal overflow, clipped key text/controls, watched elements outside the viewport and visible primary button targets below 44 × 44 px. Raw pixel-diff percentage remains advisory in v0.3 because legitimate editorial edits also change screenshots.</p>
 
-        <h2>Next: multilingual visual regression</h2>
-        <p>Category scores cannot reliably tell us that a Russian headline wrapped into an ugly extra line, Chinese copy clipped a control, or a media block overflowed its column. The next layer will use stable screenshots around three reference viewports: approximately <strong>390 × 844</strong> phone, <strong>768 × 1024</strong> tablet and <strong>1440 × 900</strong> desktop.</p>
+        <h2>5. Live Experience Audit</h2>
+        <p>After a successful GitHub Pages deployment, Lighthouse measures the public site again. UI geometry is re-checked against the deployed pages, and the result is stored as an immutable workflow artifact with the audited commit/run context.</p>
 
         <h2>Evidence produced</h2>
         <div class="signal-grid-market">
-          <div class="signal-card"><strong>Readable summaries</strong><p>Compact Lighthouse, UI Geometry and UI Markup results are written into GitHub Actions and the PR conversation.</p></div>
-          <div class="signal-card"><strong>Raw reports</strong><p>JSON and HTML Lighthouse reports plus machine-readable geometry/markup summaries are retained as workflow artifacts.</p></div>
-          <div class="signal-card"><strong>Versioned rules</strong><p>Performance, accessibility, image and control requirements live in the repository rather than in tribal memory.</p></div>
+          <div class="signal-card"><strong>Readable summaries</strong><p>Compact Lighthouse, UI Geometry, UI Markup and Visual Regression results are written into GitHub Actions and the PR conversation.</p></div>
+          <div class="signal-card"><strong>Visual evidence</strong><p>Candidate, public-main baseline and diff PNGs are retained so layout changes can be inspected rather than guessed.</p></div>
+          <div class="signal-card"><strong>Versioned rules</strong><p>Performance, accessibility, image, control and viewport requirements live in the repository rather than in tribal memory.</p></div>
         </div>
 
         <h2>What the numbers do not prove</h2>
-        <p>Lighthouse and UI geometry checks are controlled lab evidence. A high score does not prove Google ranking, real-user Core Web Vitals, conversion, visual taste, or identical rendering on every device and network. Those claims require their own evidence.</p>
+        <p>Lighthouse, UI geometry and screenshot diffs are controlled evidence. A high score does not prove Google ranking, real-user Core Web Vitals, conversion, visual taste, or identical rendering on every device and network. Those claims require their own evidence.</p>
 
         <section class="market-question">
           <p class="section-label">Inspect the evidence</p>
           <h2>Every health result should be traceable to a run.</h2>
-          <p>Use GitHub Actions for the latest Publication Contract, Experience Contract and Live Experience Audit evidence.</p>
+          <p>Use GitHub Actions for the latest Publication Contract, Experience Contract, Visual Regression Contract and Live Experience Audit evidence.</p>
           <div class="market-actions">
             <a class="button" href="https://github.com/safal207/RESONANCE/actions" target="_blank" rel="noreferrer">Open Actions →</a>
             <a class="text-link" href="https://github.com/safal207/RESONANCE" target="_blank" rel="noreferrer">Inspect repository →</a>
