@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified Report #001 — a reproducible framework trust baseline of OpenAI Agents SDK v0.19.4 at a pinned commit." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Verified Report #001 — OpenAI Agents SDK | RESONANCE" />
+  <meta property="og:description" content="597 upstream tests. 95/100 structural baseline. Containment remains the explicit gap." />
+  <meta property="og:type" content="article" />
+  <title>Verified Report #001 — OpenAI Agents SDK | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="index.html#intelligence">AI</a>
+      <a href="index.html#science">Science</a>
+      <a href="index.html#trust">Trust</a>
+      <a href="index.html#economy">Startups & Economy</a>
+      <a href="index.html#human">Human</a>
+      <a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row">
+        <p class="section-label">Verified Report #001 · External framework baseline</p>
+        <p class="article-status">Executed · 11 Aug 2026</p>
+      </div>
+      <h1 class="article-title">OpenAI Agents SDK</h1>
+      <p class="article-dek">A reproducible RESONANCE run against a pinned open-source framework revision: 597 upstream tests across seven suites, mapped to the Trust Graph and preserved as an evidence artifact.</p>
+      <div class="byline-row">
+        <p>By <strong>RESONANCE Research</strong></p>
+        <p>Target · v0.19.4 · SHA 2231eb5d</p>
+      </div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Report summary">
+        <div class="rail-card">
+          <p class="section-label">Baseline score</p>
+          <strong>95 / 100</strong>
+          <span>Strong structural baseline</span>
+          <span>597 upstream tests passed</span>
+          <span>7 unique test suites</span>
+        </div>
+        <div class="rail-card rail-dark">
+          <p class="section-label">Important boundary</p>
+          <code>not a safety certification</code>
+          <span>Containment: partial · 5/10</span>
+        </div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">The first external RESONANCE benchmark run produced a strong result — and an equally important limit. OpenAI Agents SDK passed every executable framework probe we mapped to State, Causality, Phase, Transition, Time, Recovery, Verification and Evidence. The score stops at 95 because this run did not exercise a real sandbox or network containment boundary.</p>
+
+        <div class="trajectory-box"><span>pinned SHA</span><i>→</i><span>install</span><i>→</i><span>597 tests</span><i>→</i><span>score</span><i>→</i><span>evidence artifact</span></div>
+
+        <h2>95 is not “95% safe.”</h2>
+        <p>The benchmark is a framework capability baseline. It asks whether the tested revision exposes and executes mechanisms that matter for trustworthy action trajectories. It does not certify a particular model, application, tool policy, business invariant, credential boundary or production deployment.</p>
+
+        <p>That distinction is the point. A verification system becomes less useful the moment a score outruns the evidence behind it.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Scorecard</p>
+          <div><b>S</b><p><strong>State · 10/10</strong><span>348 upstream tests passed · run state, serialization and resume coverage.</span></p></div>
+          <div><b>C</b><p><strong>Causality · 10/10</strong><span>53 upstream tests passed · run-item and tool/action correlation structures.</span></p></div>
+          <div><b>P</b><p><strong>Phase · 10/10</strong><span>2 HITL scenarios passed · approval interruption, persistence and resume.</span></p></div>
+          <div><b>T</b><p><strong>Transition · 10/10</strong><span>108 run-step tests passed · execution, interruptions and step outcomes.</span></p></div>
+          <div><b>τ</b><p><strong>Time · 10/10</strong><span>25 soft-cancel tests passed · immediate vs after-turn timing semantics.</span></p></div>
+          <div><b>R</b><p><strong>Recovery · 10/10</strong><span>5 run-error-handler tests passed.</span></p></div>
+          <div><b>V</b><p><strong>Verification · 10/10</strong><span>Guardrail and execution-result paths exercised in the run-step suite.</span></p></div>
+          <div><b>E</b><p><strong>Evidence · 10/10</strong><span>56 trace-processor tests passed.</span></p></div>
+          <div><b>B</b><p><strong>Containment · 5/10</strong><span>Partial by design: no live sandbox, OS privilege or network boundary in this baseline.</span></p></div>
+          <div><b>X</b><p><strong>Reproducibility · 10/10</strong><span>Exact target SHA + offline/deterministic framework tests + durable artifact digest.</span></p></div>
+        </section>
+
+        <h2>What actually ran</h2>
+        <p>The canonical GitHub Actions workflow cloned <code>openai/openai-agents-python</code> at commit <code>2231eb5d40cd4a9d6b86f79492e984eeb3301263</code>, installed that revision, and executed seven unique upstream suites. The framework's own deterministic test machinery means the baseline did not need a production API key or live model call.</p>
+
+        <div class="verification-chain">
+          <div><small>348</small><strong>State</strong><p><code>test_run_state.py</code></p></div>
+          <div><small>53</small><strong>Causality</strong><p><code>test_run_internal_items.py</code></p></div>
+          <div><small>2</small><strong>Phase</strong><p><code>test_hitl_session_scenario.py</code></p></div>
+          <div><small>108</small><strong>Transition + Verification</strong><p><code>test_run_step_execution.py</code></p></div>
+          <div><small>25</small><strong>Time</strong><p><code>test_soft_cancel.py</code></p></div>
+          <div><small>5</small><strong>Recovery</strong><p><code>test_run_internal_error_handlers.py</code></p></div>
+          <div><small>56</small><strong>Evidence</strong><p><code>test_trace_processor.py</code></p></div>
+          <div><small>597</small><strong>Total unique tests</strong><p>All passed in the canonical run.</p></div>
+        </div>
+
+        <div class="pull-quote">The strongest result is not the number 95. It is that the score has a reproducible path back to executable evidence.</div>
+
+        <h2>The missing five points matter most.</h2>
+        <p>A framework can manage state, approvals, traces and error paths correctly while an application still exposes too much filesystem, shell, credential, network or production access. That is why RESONANCE deliberately withheld half of the containment points.</p>
+
+        <p>The next run should introduce a real declared sandbox boundary and attempt safe, synthetic overreach: filesystem escape, unauthorized network access and privilege expansion. The desired result is not merely a blocked request; it is a preserved evidence chain explaining what was attempted, which boundary stopped it and what state survived.</p>
+
+        <h2>Interpretation boundary</h2>
+        <p>This report verifies framework capability coverage at one pinned revision. It does <strong>not</strong> verify prompt-injection resistance of arbitrary applications, correctness of user-defined tools, financial authorization, domain invariants, production credential isolation, network containment or the safety of every agent built with the SDK.</p>
+
+        <section class="sources-block">
+          <p class="section-label">Reproduce / inspect</p>
+          <ol>
+            <li><a href="https://github.com/openai/openai-agents-python/commit/2231eb5d40cd4a9d6b86f79492e984eeb3301263" target="_blank" rel="noreferrer">Pinned upstream commit</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/actions/runs/31449604425" target="_blank" rel="noreferrer">Canonical GitHub Actions run</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/benchmarks/openai-agents-sdk-v0.1/run_baseline.py" target="_blank" rel="noreferrer">Benchmark runner</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/001-openai-agents-sdk/result.json" target="_blank" rel="noreferrer">Durable result JSON</a></li>
+          </ol>
+          <p class="source-note">Artifact digest: <code>sha256:d0759dc612a299abc976bc45fe4a45aec8da6bfbcbd50c7194a95c464e39c3bb</code>. Score scope: structural framework baseline, not external safety certification.</p>
+        </section>
+
+        <p class="closing-line"><strong>Verdict:</strong> OpenAI Agents SDK v0.19.4 at the tested revision demonstrates a strong structural baseline for building verifiable agent workflows. The next verification frontier is containment plus application-specific invariants under injected faults.</p>
+
+        <div class="article-end">
+          <p><strong>RESONANCE Verified Report #001</strong></p>
+          <p>Target → pinned revision → executable probes → evidence artifact → bounded claim.</p>
+          <a class="button" href="issue-001.html">Back to Issue 001</a>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div>
+      <div><p class="footer-title">Verified Report #001</p><p>OpenAI Agents SDK · 95/100</p></div>
+      <div><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified/001-openai-agents-sdk">Evidence files ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
