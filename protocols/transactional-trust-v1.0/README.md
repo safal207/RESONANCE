@@ -125,10 +125,10 @@ Rules:
 
 ### 7. RECONCILE
 
-After ambiguous outcomes, determine what actually happened before retrying.
+After ambiguous outcomes or concurrency conflicts, determine what actually happened before retrying.
 
 ```text
-UNKNOWN
+UNKNOWN / CONFLICT / DB CONFLICT SIGNAL
    ↓
 RECONCILE
    ├─ COMMITTED → COMPLETE
@@ -141,7 +141,8 @@ Rules:
 
 - `UNKNOWN ─X→ RETRY` without evidence.
 - `CONFLICT ─X→ RETRY` without resolution.
-- Retry must re-enter verification and execution binding; a prior authorization is not automatically reusable.
+- A database-level retry signal is not business-level permission to replay a consequential effect.
+- Retry must re-enter observation, verification, authorization and execution binding; a prior authorization is not automatically reusable.
 
 ### 8. PROVE
 
@@ -182,6 +183,8 @@ I9  CHECK + WRITE MUST SHARE ONE STATE PRECONDITION
 I10 AMBIGUOUS OUTCOME → RECONCILE BEFORE RETRY
 I11 PRECONDITION FAILURE MAY BE A SAFETY SUCCESS
 I12 PROOF MUST COVER THE TRAJECTORY, NOT ONLY THE FINAL OUTPUT
+I13 RETRYABLE TRANSACTION ≠ RETRYABLE BUSINESS ACTION
+I14 DATABASE CONFLICT SIGNAL → RECONCILE BUSINESS STATE BEFORE RE-EXECUTION
 ```
 
 ## Reference state machine
@@ -198,7 +201,7 @@ AUTHORIZED
 BOUND
   ↓
 COMPARE
-  ├─ mismatch → CONFLICT → RECONCILE
+  ├─ mismatch / database conflict → CONFLICT → RECONCILE
   └─ match
        ↓
      COMMIT
@@ -276,6 +279,27 @@ MUTATION AUTHORITY evaluates N atomically
 
 Report #012 validates this shape against a real PostgreSQL service using two independent connections. The successful adapter used a conditional `UPDATE ... WHERE state='absent' AND version=N` and inserted the effect only for the winning transaction.
 
+## Retry classification rule
+
+Storage engines can expose different conflict signals for the same stale business decision. TTP classifies those signals as inputs to recovery, not as direct permission to replay the effect.
+
+```text
+DATABASE SIGNAL
+   ├─ conditional mutation matched 0 rows
+   ├─ serialization failure / 40001
+   └─ other concurrency conflict
+          ↓
+END / ABORT STALE TRANSACTION
+          ↓
+RE-OBSERVE AUTHORITATIVE STATE
+          ↓
+RE-VERIFY + RE-AUTHORIZE + RE-BIND
+          ↓
+RETRY ONLY IF OPERATION IS STILL ABSENT + LEGAL
+```
+
+Report #013 validates this rule across PostgreSQL 17.6 `READ COMMITTED`, `REPEATABLE READ` and `SERIALIZABLE` for one deterministic two-writer race. `READ COMMITTED` returned a zero-row precondition failure; the stronger snapshot levels returned SQLSTATE `40001`. All losing paths reconciled to `COMMITTED / version=101 / effects=1`.
+
 ## Non-goals
 
 TTP v1.0 is not:
@@ -304,6 +328,7 @@ Validation then moved from isolated invariants into composed and concrete execut
 
 - **#011 TTP v1.0 End-to-End Adversarial Run** — compounded timeout, stale evidence, revoked authority, stale trust and a competing writer in one trajectory; unsafe path produced three effects, TTP preserved one while covering all eight stages.
 - **#012 PostgreSQL Transactional Trust Adapter** — two independent real PostgreSQL connections read the same `ABSENT / version=100` snapshot; unconditional writes produced two effects, while a version-bound conditional mutation produced one winner, one precondition failure and one final effect.
+- **#013 PostgreSQL Isolation-Level Matrix** — the same stale-writer race was executed at `READ COMMITTED`, `REPEATABLE READ` and `SERIALIZABLE`; storage signals differed, but fresh reconciliation preserved one effect and prevented a transaction-retry signal from becoming a blind business replay.
 
 These reports validate specific protocol properties under their declared scope; they are not general production safety certifications.
 
