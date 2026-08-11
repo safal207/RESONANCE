@@ -18,7 +18,7 @@
 
 ## v0.2 — Publishable Journal
 
-**Goal:** make RESONANCE readable, discoverable and reusable outside GitHub.
+**Goal:** make RESONANCE readable, discoverable, measurable and reusable outside GitHub.
 
 - [x] Web design system
 - [x] Home page
@@ -27,14 +27,20 @@
 - [x] Evidence / sources panels
 - [x] SEO and social metadata
 - [x] Sitemap / robots / canonical contract
+- [x] Internal publication-link integrity contract
+- [x] Lighthouse Experience Contract for representative mobile/desktop routes
+- [x] Post-deployment Lighthouse audit of the live GitHub Pages site
+- [x] Public Site Health / Quality page and versioned performance budgets
 - [x] EN / RU / Simplified Chinese entry points
 - [x] Localized Article #004 with `hreflang` and structured-language metadata
 - [x] Reusable Distribution Engine and social packs
+- [ ] Multilingual visual-regression checks for EN / RU / Simplified Chinese
 - [ ] Author pages
 - [ ] Corrections and version-history UI
 - [ ] RSS / newsletter feed
 - [ ] Privacy-aware analytics
 - [ ] Automated translation-review workflow beyond the initial three-language implementation
+- [ ] Privacy-safe field Web Vitals only when traffic is sufficient for responsible interpretation
 
 ## v0.25 — Market OS v0.1
 
