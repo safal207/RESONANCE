@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="在让 AI Agent 支配资金之前：RESONANCE 讨论为什么授权并不等于验证，以及如何在状态、超时、恢复、重试、验证和证据层面检查完整执行轨迹。" />
+  <meta name="theme-color" content="#f7f3ea" />
+  <title>在让 AI Agent 支配资金之前 | RESONANCE</title>
+  <link rel="alternate" hreflang="en" href="https://safal207.github.io/RESONANCE/before-you-let-an-ai-agent-move-money.html" />
+  <link rel="alternate" hreflang="ru" href="https://safal207.github.io/RESONANCE/before-you-let-an-ai-agent-move-money.ru.html" />
+  <link rel="alternate" hreflang="zh-CN" href="https://safal207.github.io/RESONANCE/before-you-let-an-ai-agent-move-money.zh.html" />
+  <link rel="alternate" hreflang="x-default" href="https://safal207.github.io/RESONANCE/before-you-let-an-ai-agent-move-money.html" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+  <link rel="stylesheet" href="market.css" />
+</head>
+<body data-share-text="AI Agent 正在从回答问题走向执行真实交易。授权并不等于验证。在你的真实系统中，在允许 Agent 支配资金之前，哪些条件必须是可证明的？">
+  <a class="skip-link" href="#article">跳到文章</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.zh.html" aria-label="RESONANCE">RESONANCE</a>
+      <p class="masthead-line">智能、技术与人类进步的全球期刊</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">菜单</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="主导航">
+      <a href="ai-agents.html">AI</a>
+      <a href="open-problems.html">开放问题</a>
+      <a href="verified-workflow.html">Verified Workflow</a>
+      <a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="article">
+    <header class="article-hero wrap">
+      <a class="back-link" href="index.zh.html">← RESONANCE · 中文版</a>
+      <div class="language-switcher" aria-label="语言">
+        <a href="before-you-let-an-ai-agent-move-money.html" hreflang="en">EN</a>
+        <a href="before-you-let-an-ai-agent-move-money.ru.html" hreflang="ru">RU</a>
+        <a href="before-you-let-an-ai-agent-move-money.zh.html" hreflang="zh-CN" aria-current="page">中文</a>
+      </div>
+      <div class="article-meta-row">
+        <p class="section-label">Market Experiment 001 · Agentic Commerce / Trust</p>
+        <p class="article-status">Published · 11 Aug 2026</p>
+      </div>
+      <h1 class="article-title">在让 AI Agent 支配资金之前</h1>
+      <p class="article-dek">授权是必要条件，但并不充分。当 Agent 可以执行交易时，真正的信任取决于整个执行轨迹能否在超时、重试、状态变化、恢复和验证过程中保持正确。</p>
+      <div class="byline-row"><p>作者：<strong>RESONANCE Editorial</strong></p><p>Issue 001 · Article 004</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="文章摘要">
+        <div class="rail-card"><p class="section-label">核心观点</p><strong>Authorization ≠ verification</strong><span>验证完整轨迹，而不仅仅看最终响应。</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">信任坐标</p><code>S · C · P · T · τ · R · V · E</code></div>
+        <div class="rail-card"><p class="section-label">实验 KPI</p><strong>真实工作流</strong><span>Product signals，而不是 page views。</span></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">AI 系统正在从“给出建议”走向“参与商业执行”。Google 将 UCP 描述为面向 agentic commerce 的开放标准，并将 AP2 描述为与之兼容的授权层，通过结构化 mandate、约束和可审计的意图证明来表达授权。OpenAI 与 Stripe 也共同开发了 Agentic Commerce Protocol，用于连接用户、AI Agent 与商家之间的交易流程。</p>
+
+        <p>这意味着一个新的工程边界正在形成：Agent 不再只是告诉用户“可以买什么”，而可能参与选择、协商、授权甚至执行具有经济后果的动作。</p>
+
+        <p>Anthropic 的 Project Deal 提供了另一个现实信号。在这个实验市场中，AI 代表用户协商真实物品并达成 186 笔交易，总交易价值超过 4,000 美元。这不是生产级支付网络，但它说明“把经济行为委托给 Agent”已经不是纯理论问题。</p>
+
+        <div class="pull-quote">下一步的信任问题不只是：<em>“Agent 是否被允许执行？”</em>而是：<strong>“我们能否证明它走过了一条有效的执行轨迹？”</strong></div>
+
+        <h2>先看一个很普通的分布式系统故障。</h2>
+
+        <p>Agent 被要求向供应商付款。支付请求已经发送，但在收到确定响应之前发生网络超时。</p>
+
+        <div class="trajectory-box"><span>payment</span><i>→</i><span>timeout</span><i>→</i><span>unknown commit</span><i>→</i><span>?</span></div>
+
+        <p>如果第一次付款确实失败，那么重试可能是正确行为；但如果付款已经提交，只是 acknowledgement 丢失，那么盲目 retry 可能造成重复付款。</p>
+
+        <p>第二次 API 调用甚至可能返回 <code>200 OK</code>，Agent 也可能报告“付款成功”。最终答案看起来没有问题，但业务不变量已经被破坏。</p>
+
+        <section class="claim-panel">
+          <p class="section-label">一个候选金融不变量</p>
+          <div><b>1</b><p><strong>一个已授权的付款意图</strong></p></div>
+          <div><b>≤1</b><p><strong>最多产生一个已提交的外部付款</strong></p></div>
+        </section>
+
+        <h2>授权只解决了信任的一部分。</h2>
+
+        <p>AP2 的价值在于把委托意图和消费约束表达得更加明确。Google 的开发者说明展示了 IntentMandate、绑定具体购物车和金额的 PaymentMandate，以及用于结束授权审计链路的 PaymentReceipt。</p>
+
+        <p>但应用系统仍然必须处理自己的状态机、支付提供商行为、并发变化、retry、settlement 与 recovery。一个“授权正确”的请求，仍然可能经过一条错误的执行路径。</p>
+
+        <section class="claim-panel">
+          <p class="section-label">RESONANCE 八维轨迹模型</p>
+          <div><b>S</b><p><strong>State：</strong>当前权威的金融状态是什么？</p></div>
+          <div><b>C</b><p><strong>Causality：</strong>哪个合法意图导致了这个动作？</p></div>
+          <div><b>P</b><p><strong>Phase：</strong>当前处于授权、执行、结算还是恢复阶段？</p></div>
+          <div><b>T</b><p><strong>Transition：</strong>这个状态转换是否合法？</p></div>
+          <div><b>τ</b><p><strong>Time：</strong>授权和状态假设是否仍然有效？</p></div>
+          <div><b>R</b><p><strong>Recovery：</strong>面对部分失败或不确定状态时如何恢复？</p></div>
+          <div><b>V</b><p><strong>Verification：</strong>真实 postcondition 是否被独立验证？</p></div>
+          <div><b>E</b><p><strong>Evidence：</strong>另一个观察者能否重建关键执行路径？</p></div>
+        </section>
+
+        <h2>Trust contract 应该独立于具体模型。</h2>
+
+        <p>一个可靠的金融 Agent 合约不应该只是“模型要小心”。它应该定义一组可以被外部验证的条件，无论执行动作的是哪一种模型或 planner。</p>
+
+        <div class="market-kpi"><pre>INTENT
+用户授权向供应商付款 ≤ $1,000
+
+STATE
+发票仍处于未付款状态
+
+TIME
+执行时授权仍然有效
+
+TRANSITION
+UNPAID → PAYMENT_PENDING → PAID
+
+RECOVERY
+Unknown commit 必须先 reconciliation，而不是 blind retry
+
+VERIFICATION
+Provider state 与 authoritative ledger 一致
+
+EVIDENCE
+Intent + authority + attempts + reconciliation + decision 被保存</pre></div>
+
+        <p>这样，问题就从“我们相信哪一个模型”变成：</p>
+
+        <div class="pull-quote">无论由哪一种模型执行，这个 workflow 是否都能满足一个可验证的 trust contract？</div>
+
+        <h2>一种更安全的不确定状态恢复路径。</h2>
+
+        <div class="trajectory-box"><span>timeout</span><i>→</i><span>reconcile authoritative state</span><i>→</i><span>verify invariant</span><i>→</i><span>retry / stop</span><i>→</i><span>preserve evidence</span></div>
+
+        <p>这不是适用于所有支付系统的统一算法。有些系统提供 idempotency，有些 reconciliation 机制不同，有些业务还包含延迟结算和多方授权。重点不是“RESONANCE 发明了万能支付方案”，而是：<strong>recovery path 本身必须显式、可测试、并且留下证据。</strong></p>
+
+        <h2>这正是我们需要市场参与的地方。</h2>
+
+        <p>我们可以无限生成 synthetic failure cases，但真实生产环境中的限制会告诉我们哪些 missing capability 真正值得构建。</p>
+
+        <section class="market-question" id="open-question">
+          <p class="section-label">向市场提出的问题</p>
+          <h2>这篇文章故意不以“结论”结束。</h2>
+          <p class="hot-question"><strong>在你的真实业务系统中，在允许 AI Agent 支配资金之前，哪些条件必须是可验证并且可证明的？</strong></p>
+          <p>请描述一个经过安全抽象的真实工作流：</p>
+          <ul class="market-prompts">
+            <li><strong>Agent：</strong>它在做什么？</li>
+            <li><strong>Failure：</strong>具体什么情况可能出错？</li>
+            <li><strong>Impact：</strong>失败会造成什么后果？</li>
+            <li><strong>Current workaround：</strong>你们现在如何处理？</li>
+            <li><strong>Trust condition：</strong>在真正信任它之前，你需要验证什么？</li>
+          </ul>
+          <div class="market-actions">
+            <a class="button" href="https://github.com/safal207/RESONANCE/issues/new?template=market-workflow.yml" target="_blank" rel="noreferrer">描述你的工作流 →</a>
+            <a class="text-link" href="verified-workflow.html">查看 Verified Workflow pilot →</a>
+          </div>
+          <p class="market-note">请勿提交凭证、private key、个人数据、客户机密信息或可识别的生产环境细节。必要时请抽象或匿名化案例。</p>
+        </section>
+
+        <p>对于有价值的案例，我们的第一步不是销售大型平台，而是找出 missing guarantee，绘制执行轨迹，并返回一个具体的 verification hypothesis。如果同一种 missing capability 在多个独立团队中重复出现，它才会成为下一步产品化的证据。</p>
+
+        <div class="protocol-flow"><span>Teach</span><i>→</i><span>Ask</span><i>→</i><span>Listen</span><i>→</i><span>Diagnose</span><i>→</i><span>Give value</span><i>→</i><span>Specify</span><i>→</i><span>Pilot</span><i>→</i><span>Prove</span></div>
+
+        <h2>市场回答会去哪里？</h2>
+
+        <p>有意义的回答会被转化为结构化 Problem Card：workflow → failure → impact → workaround → missing capability → acceptance condition。随后进行 Product Signal Score，并进入 Demand Graph。所有 synthetic 示例都会明确标记，并从真实 market metrics 中排除。</p>
+
+        <p>Article #005 在达到证据阈值之前不会被称为“由市场选择”。当前规则要求至少 10 个有意义的外部 workflow，并且获胜 cluster 中至少有 3 个真实案例。</p>
+
+        <p class="closing-line"><strong>不要先造产品，再问市场喜不喜欢。创造有价值的对话，让市场自己暴露真正需要存在的产品。</strong></p>
+
+        <section class="share-panel" aria-label="分享研究">
+          <p class="section-label">Distribution</p>
+          <h3>分享问题，而不仅仅分享链接。</h3>
+          <div class="share-actions">
+            <button type="button" data-share="native">分享</button>
+            <button type="button" data-share="weibo">微博</button>
+            <button type="button" data-share="copy-text" data-copy-text="RESONANCE #004｜在让 AI Agent 支配资金之前。授权不等于验证。真正的问题是：在你的真实业务系统中，在允许 AI Agent 支配资金之前，哪些条件必须是可验证并且可证明的？\nhttps://safal207.github.io/RESONANCE/before-you-let-an-ai-agent-move-money.zh.html" data-copied-label="已复制">复制微信文案</button>
+            <button type="button" data-share="copy-text" data-copy-text="当 AI Agent 可以执行付款时，我们能否证明整个执行轨迹正确？RESONANCE 用 State / Causality / Phase / Transition / Time / Recovery / Verification / Evidence 八个维度分析，并征集真实工作流。\nhttps://safal207.github.io/RESONANCE/before-you-let-an-ai-agent-move-money.zh.html" data-copied-label="已复制">复制知乎文案</button>
+            <button type="button" data-share="copy" data-copied-label="已复制">复制链接</button>
+          </div>
+        </section>
+
+        <section class="sources-block" id="sources">
+          <p class="section-label">主要来源</p>
+          <ol>
+            <li><a href="https://developers.googleblog.com/en/developers-guide-to-ai-agent-protocols/" target="_blank" rel="noreferrer">Google Developers Blog — Developer's Guide to AI Agent Protocols (AP2)</a> · 18 Mar 2026</li>
+            <li><a href="https://developers.googleblog.com/under-the-hood-universal-commerce-protocol-ucp/" target="_blank" rel="noreferrer">Google Developers Blog — Universal Commerce Protocol</a> · 11 Jan 2026</li>
+            <li><a href="https://openai.com/index/buy-it-in-chatgpt/" target="_blank" rel="noreferrer">OpenAI — Instant Checkout and Agentic Commerce Protocol</a> · 29 Sep 2025</li>
+            <li><a href="https://stripe.com/resources/more/agentic-commerce" target="_blank" rel="noreferrer">Stripe — Agentic commerce</a> · updated 22 Apr 2026</li>
+            <li><a href="https://www.anthropic.com/features/project-deal" target="_blank" rel="noreferrer">Anthropic — Project Deal</a> · 2026</li>
+          </ol>
+          <p class="source-note">这些来源用于说明 agentic/delegated commerce 正在成为真实工程场景。Trajectory verification 与 trust-contract framing 属于 RESONANCE 的分析模型。</p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>找到信号。验证路径。理解未来。</p></div><div><p class="footer-title">Market OS</p><p>Article → Dialogue → Problem → Pilot → Evidence → Product.</p></div><div><p class="footer-title">Open publication</p><a href="https://github.com/safal207/RESONANCE">GitHub ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+  <script src="market.js"></script>
+</body>
+</html>
