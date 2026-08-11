@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified Report #008 — Stale Trust Registry: fresh evidence cannot safely authorize action when trust state is stale." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Verified Report #008 — Stale Trust Registry | RESONANCE" />
+  <meta property="og:description" content="A stale trust snapshot kept a revoked key apparently active and enabled a duplicate side effect. Refresh or TRUST_UNKNOWN prevented it." />
+  <meta property="og:type" content="article" />
+  <title>Verified Report #008 — Stale Trust Registry | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="index.html#intelligence">AI</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="index.html#economy">Startups & Economy</a><a href="index.html#human">Human</a><a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Verified Report #008 · Trust-state freshness</p><p class="article-status">Executed · 11 Aug 2026</p></div>
+      <h1 class="article-title">Fresh Evidence, Stale Trust</h1>
+      <p class="article-dek">A signature can be valid and an evidence record fresh while the verifier's knowledge of who is trusted is already obsolete. In a deterministic run through a pinned OpenAI Agents SDK tool loop, a stale trust snapshot enabled a duplicate side effect.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>Target · OpenAI Agents SDK v0.19.4 · SHA 2231eb5d</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Report summary">
+        <div class="rail-card"><p class="section-label">Trust-state score</p><strong>10 / 10</strong><span>4 deterministic trajectories</span><span>Stale cache → 2 effects</span><span>Safe paths → 1 effect</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">Invariant</p><code>FRESH EVIDENCE + STALE TRUST ≠ TRUSTED</code><span>refresh or hold TRUST_UNKNOWN</span></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Report #007 established that authority has a lifecycle. Report #008 tests what happens when that lifecycle has changed at the source of truth, but the action node has not learned about the change yet.</p>
+
+        <div class="trajectory-box"><span>source of truth</span><i>→</i><span>REVOKED</span><i>≠</i><span>stale cache</span><i>→</i><span>ACTIVE</span></div>
+
+        <h2>The stale cache reproduced a duplicate.</h2>
+        <p>The synthetic side effect committed once and lost its response. A correctly signed, still-fresh <code>ABSENT</code> record arrived from the old <code>primary-v1</code> key. The local trust cache was 600 seconds old while the benchmark freshness budget was 120 seconds.</p>
+
+        <div class="verification-chain">
+          <div><small>01</small><strong>Commit</strong><p>The intended effect exists.</p></div>
+          <div><small>02</small><strong>Fresh evidence</strong><p>Signature and evidence validity pass.</p></div>
+          <div><small>03</small><strong>Stale registry</strong><p>Old snapshot still says the revoked key is active.</p></div>
+          <div><small>04</small><strong>Bad decision</strong><p>Registry age is ignored; retry creates a second effect.</p></div>
+        </div>
+
+        <div class="pull-quote">The failure is not stale evidence. It is stale knowledge about who is trusted.</div>
+
+        <section class="claim-panel">
+          <p class="section-label">Comparative result</p>
+          <div><b>×2</b><p><strong>Unsafe stale cache</strong><span>600-second-old registry still marked the revoked key active; retry duplicated the effect.</span></p></div>
+          <div><b>×1</b><p><strong>Safe refresh</strong><span>Refreshing the registry exposed the revocation and blocked retry.</span></p></div>
+          <div><b>×1</b><p><strong>Refresh unavailable</strong><span>The system preserved TRUST_UNKNOWN rather than inheriting stale permission.</span></p></div>
+          <div><b>×1</b><p><strong>Fresh current cache</strong><span>A 30-second-old registry trusted current primary-v2 and accepted COMMITTED.</span></p></div>
+        </section>
+
+        <h2>Evidence freshness and trust freshness are different clocks.</h2>
+        <div class="causal-stack">
+          <div><span>EVIDENCE TIME</span> Is the signed observation still valid?</div>
+          <div>+</div>
+          <div><span>TRUST TIME</span> Is the registry used to evaluate the signer current enough?</div>
+          <div>+</div>
+          <div><span>AUTHORITY LIFECYCLE</span> Is that signer active for this decision?</div>
+        </div>
+
+        <h2>Refresh can change the legal next transition.</h2>
+        <p>Before refresh, the cache said <code>primary-v1</code> was active. After refresh, registry age became zero and the same key was correctly marked inactive. The evidence therefore remained untrusted and no second side effect was issued.</p>
+
+        <h2>When refresh fails, trust becomes unknown.</h2>
+        <div class="trajectory-box"><span>STALE TRUST</span><i>→</i><span>REFRESH</span><i>→</i><span>UNAVAILABLE</span><i>→</i><span>TRUST_UNKNOWN</span></div>
+        <p>The safe policy did not reinterpret infrastructure failure as permission. Final effect count stayed one.</p>
+
+        <h2>A fresh current registry can close the trajectory.</h2>
+        <p>The control path used a 30-second-old snapshot containing the current rotated <code>primary-v2</code> authority. Fresh signed <code>COMMITTED</code> evidence evaluated to trusted, so the application completed without retry.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Trust-registry freshness score · 10/10</p>
+          <div><b>01</b><p><strong>Unsafe hazard reproduced · 2/2</strong><span>Stale trust state enabled a duplicate.</span></p></div>
+          <div><b>02</b><p><strong>Refresh reveals revocation · 2/2</strong><span>Current registry state blocked the old key.</span></p></div>
+          <div><b>03</b><p><strong>TRUST_UNKNOWN fallback · 2/2</strong><span>Unavailable refresh did not inherit stale permission.</span></p></div>
+          <div><b>04</b><p><strong>Fresh registry acceptance · 2/2</strong><span>Current active key and COMMITTED evidence closed safely.</span></p></div>
+          <div><b>05</b><p><strong>Pinned evidence · 2/2</strong><span>Exact upstream SHA, deterministic FakeModel, synthetic effects only.</span></p></div>
+        </section>
+
+        <h2>The trust-state freshness invariant</h2>
+        <div class="trajectory-box"><span>FRESH EVIDENCE</span><i>+</i><span>STALE TRUST STATE</span><i>≠</i><span>TRUSTED EVIDENCE</span></div>
+        <p>The benchmark uses a synthetic maximum registry age of <strong>120 seconds</strong>. That number is not a universal recommendation; the point is that the freshness budget must be explicit, measurable and appropriate to the risk of the transition.</p>
+
+        <h2>The evidence model gains trust-state freshness.</h2>
+        <p>RESONANCE now models an evidence decision as value, source, authority, evidence freshness, provenance, integrity, authority lifecycle and the freshness of the trust state used to evaluate all of them.</p>
+
+        <div class="trajectory-box"><span>STATE</span><i>↔</i><span>TIME τ</span><i>↔</i><span>EVIDENCE</span><i>↔</i><span>RECOVERY</span></div>
+
+        <h2>Interpretation boundary</h2>
+        <p>This experiment uses synthetic local side effects, toy HMAC keys and in-memory trust registries. It is not a production PKI, CRL, OCSP, Sigstore, IAM, cache-consistency or security certification. The OpenAI Agents SDK executes the application protocol; it does not automatically impose this trust-state freshness rule.</p>
+
+        <section class="sources-block">
+          <p class="section-label">Reproduce / inspect</p>
+          <ol>
+            <li><a href="https://github.com/openai/openai-agents-python/commit/2231eb5d40cd4a9d6b86f79492e984eeb3301263" target="_blank" rel="noreferrer">Pinned upstream commit</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/actions/runs/31458757238" target="_blank" rel="noreferrer">Canonical GitHub Actions run</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/benchmarks/openai-agents-stale-trust-registry-v0.8/run_stale_trust_registry.py" target="_blank" rel="noreferrer">Benchmark harness</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/008-openai-agents-stale-trust-registry/result.json" target="_blank" rel="noreferrer">Machine-readable result</a></li>
+          </ol>
+          <p class="source-note">Evidence artifact digest: <code>sha256:1877e7bf2847420f98c885f0bf7485970a5edd9cc3f4072c46945caf4565f14c</code>. No live model, production credential or external side-effecting service was used.</p>
+        </section>
+
+        <p class="closing-line"><strong>Verdict:</strong> fresh signed evidence evaluated against stale trust state reproduced a duplicate. Requiring registry freshness — or preserving TRUST_UNKNOWN when refresh was unavailable — prevented unsafe retry in every safe trajectory.</p>
+
+        <div class="article-end"><p><strong>RESONANCE Verified Report #008</strong></p><p>evidence → trust-state freshness → authority lifecycle → trusted decision → legal action.</p><a class="button" href="issue-001.html">Back to Issue 001</a></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Verified Report #008</p><p>Stale Trust Registry · 10/10</p></div><div><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified/008-openai-agents-stale-trust-registry">Evidence files ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
