@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="A RESONANCE research hub for AI agent reliability, security, failure taxonomy, containment, recovery, evidence and verification." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <title>AI Agent Reliability, Security & Verification | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="ai-agents.html">AI Agents</a>
+      <a href="index.html#science">Science</a>
+      <a href="index.html#trust">Trust</a>
+      <a href="index.html#economy">Startups & Economy</a>
+      <a href="index.html#human">Human</a>
+      <a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <header class="article-hero wrap">
+      <a class="back-link" href="index.html">← RESONANCE</a>
+      <div class="article-meta-row">
+        <p class="section-label">Topic hub · AI Agents</p>
+        <p class="article-status">Evidence-first research map</p>
+      </div>
+      <h1 class="article-title">AI Agents: Reliability, Security & Verification</h1>
+      <p class="article-dek">A map of RESONANCE research on what happens when AI systems move from answering to acting: state, causality, containment, recovery, uncertainty, evidence and authority.</p>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Topic map">
+        <div class="rail-card">
+          <p class="section-label">Core path</p>
+          <strong>Action → Evidence</strong>
+          <span>State</span><span>Causality</span><span>Recovery</span><span>Verification</span>
+        </div>
+        <div class="rail-card rail-dark">
+          <p class="section-label">Issue 001</p>
+          <code>THE AGE OF AGENTS</code>
+        </div>
+      </aside>
+
+      <article class="article-body">
+        <h2>Start with the shift.</h2>
+        <p>Agentic systems matter because actions can change external state. RESONANCE follows that shift from capability to consequence and asks what evidence is required before an action should be trusted.</p>
+        <div class="claim-panel">
+          <div><b>01</b><p><strong><a href="the-agentic-turn.html">The Agentic Turn</a></strong><span>Why AI is moving from chat toward execution, tools and persistent workflows.</span></p></div>
+          <div><b>02</b><p><strong><a href="the-missing-trust-layer.html">The Missing Trust Layer</a></strong><span>A verification model spanning state, causality, phase, transition, time, recovery, verification and evidence.</span></p></div>
+          <div><b>03</b><p><strong><a href="when-agents-fail.html">When Agents Fail</a></strong><span>An eight-axis failure taxonomy paired with a reproducible benchmark seed.</span></p></div>
+        </div>
+
+        <h2>Verified research.</h2>
+        <p>The verified-report series turns abstract trust claims into bounded, reproducible tests. Each report separates what was observed from what is inferred.</p>
+        <div class="verification-chain">
+          <div><small>001</small><strong><a href="verified-001-openai-agents-sdk.html">SDK baseline</a></strong><p>Structural verification against a pinned OpenAI Agents SDK revision.</p></div>
+          <div><small>002</small><strong><a href="verified-002-openai-agents-containment.html">Containment</a></strong><p>Tests of filesystem, workspace and Docker control-plane boundaries.</p></div>
+          <div><small>003</small><strong><a href="verified-003-openai-agents-recovery.html">Recovery</a></strong><p>Reconcile-before-retry under timeout-after-commit ambiguity.</p></div>
+          <div><small>004</small><strong><a href="verified-004-openai-agents-ambiguous-reconciliation.html">Ambiguous reconciliation</a></strong><p>Preserving UNKNOWN instead of treating uncertainty as retry permission.</p></div>
+          <div><small>005</small><strong><a href="verified-005-openai-agents-conflicting-evidence.html">Conflicting evidence</a></strong><p>Authority and freshness when sources disagree.</p></div>
+          <div><small>006</small><strong><a href="verified-006-openai-agents-evidence-authority.html">Evidence authority</a></strong><p>Why claimed authority is not verified authority.</p></div>
+          <div><small>007</small><strong><a href="verified-007-openai-agents-revoked-authority.html">Revoked authority</a></strong><p>Why formerly valid authority can become invalid before action.</p></div>
+        </div>
+
+        <h2>The research question.</h2>
+        <div class="trajectory-box"><span>intent</span><i>→</i><span>state</span><i>→</i><span>action</span><i>→</i><span>effect</span><i>→</i><span>evidence</span><i>→</i><span>verification</span></div>
+        <p>The central question is not simply whether an agent produced the desired final output. It is whether the trajectory can be independently inspected: what caused the action, whether the transition was allowed, what happened under failure, and whether the surviving evidence deserves trust.</p>
+
+        <p><a class="button" href="issue-001.html">Read Issue 001 · The Age of Agents</a></p>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div>
+      <div><p class="footer-title">Method</p><p>Observation · Evidence · Causality · Uncertainty · Verification</p></div>
+      <div><p class="footer-title">Open publication</p><a href="https://github.com/safal207/RESONANCE">GitHub repository ↗</a></div>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
