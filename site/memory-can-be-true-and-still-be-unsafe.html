@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Memory Can Be True and Still Be Unsafe — RESONANCE examines why AI agents need current-state applicability checks before recovered memory can regain authority to drive action." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Memory Can Be True and Still Be Unsafe | RESONANCE" />
+  <meta property="og:description" content="AI memory needs expiration of authority, not expiration of truth." />
+  <meta property="og:type" content="article" />
+  <title>Memory Can Be True and Still Be Unsafe | RESONANCE</title>
+  <link rel="alternate" hreflang="en" href="https://safal207.github.io/RESONANCE/memory-can-be-true-and-still-be-unsafe.html" />
+  <link rel="alternate" hreflang="ru" href="https://safal207.github.io/RESONANCE/memory-can-be-true-and-still-be-unsafe.ru.html" />
+  <link rel="alternate" hreflang="zh-CN" href="https://safal207.github.io/RESONANCE/memory-can-be-true-and-still-be-unsafe.zh.html" />
+  <link rel="alternate" hreflang="x-default" href="https://safal207.github.io/RESONANCE/memory-can-be-true-and-still-be-unsafe.html" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+  <link rel="stylesheet" href="market.css" />
+</head>
+<body data-share-text="AI memory can stay historically true while becoming unsafe to act on. What should invalidate a recovered memory before an agent is allowed to act?">
+  <a class="skip-link" href="#article">Skip to article</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="ai-agents.html">AI</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="open-problems.html">Open Problems</a><a href="verified-workflow.html">Verified Workflow</a><a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="article">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="language-switcher" aria-label="Language">
+        <a href="memory-can-be-true-and-still-be-unsafe.html" hreflang="en" aria-current="page">EN</a>
+        <a href="memory-can-be-true-and-still-be-unsafe.ru.html" hreflang="ru">RU</a>
+        <a href="memory-can-be-true-and-still-be-unsafe.zh.html" hreflang="zh-CN">中文</a>
+      </div>
+      <div class="article-meta-row">
+        <p class="section-label">Research · Agent Memory / Trust</p>
+        <p class="article-status">Published · 11 Aug 2026</p>
+      </div>
+      <h1 class="article-title">Memory Can Be True and Still Be Unsafe</h1>
+      <p class="article-dek">AI memory needs expiration of authority, not expiration of truth. A recovered fact can remain historically correct while no longer being safe to use in the current repository, policy, tenant, resource state or time window.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Editorial</strong></p><p>Issue 001 · Article 005</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Article summary">
+        <div class="rail-card"><p class="section-label">Core invariant</p><strong>Historical truth ≠ current authority</strong><span>Revalidate before action.</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">Deterministic outcomes</p><code>MATCH · DRIFT · ORPHAN · UNRESOLVABLE · REJECT · REVALIDATE</code></div>
+        <div class="rail-card"><p class="section-label">Reference implementation</p><strong>CML PR #270</strong><span>Merged · CI + CodeQL green</span></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Persistent memory changes the failure surface of AI agents. A system that can recover prior decisions, facts, approvals and plans can work across sessions — but it can also confidently resume from evidence that was correct yesterday and wrong for the action it is about to take now.</p>
+
+        <div class="pull-quote">The dangerous memory is not always false. Sometimes it is perfectly true — and no longer authorized to drive the next action.</div>
+
+        <h2>The signal came from a provenance discussion.</h2>
+        <p>In a Claude Code memory discussion, contributor <strong>DanceNitra</strong> separated apparent provenance coverage from actual source reachability. In the reported store, roughly 98.3% of records carried a populated <code>source</code> field, but only 24 records — about 0.01% — used identifiers that could actually be re-fetched. Most values behaved more like writer identities such as <code>agent:scholar</code> than durable origin locators.</p>
+
+        <p>That distinction matters. A field named <code>source</code> is not evidence that the source can still be revisited, enumerated, compared for drift or checked for deletion.</p>
+
+        <p>The same discussion exposed a second class of failure: caller-controlled metadata can become dangerous when a library later interprets that metadata as if it had been produced by its own trusted verification path.</p>
+
+        <div class="trajectory-box"><span>memory recovered</span><i>→</i><span>source appears valid</span><i>→</i><span>environment changed</span><i>→</i><span>action?</span></div>
+
+        <h2>Provenance is necessary. It is not enough.</h2>
+        <p>Suppose an agent remembers that a pull request was reviewed at commit <code>A</code>. The review may be genuine. The evidence may be intact. But the branch can now point to commit <code>B</code>. A policy may have changed. A tenant may differ. An API contract may have moved. An authorization may have expired.</p>
+
+        <p>If the agent asks only <em>“Was this memory valid?”</em>, it can answer yes and still make the wrong decision.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Two independent questions</p>
+          <div><b>1</b><p><strong>Historical validity:</strong> Was this memory valid evidence of what happened?</p></div>
+          <div><b>2</b><p><strong>Current applicability:</strong> Is that historical evidence safe to use here, now, for this action?</p></div>
+        </section>
+
+        <div class="pull-quote"><strong>Historical evidence valid + current environment changed ≠ current authority.</strong></div>
+
+        <h2>From discussion to executable contract.</h2>
+        <p>We implemented the distinction in the open-source <strong>Causal Memory Layer (CML)</strong> as a deterministic Current-State Applicability layer. The implementation was reviewed, tightened against stale-SHA and cross-repository substitution, merged, and passed Python test lanes, deterministic-contract checks, package validation, secret scanning, dependency audit and CodeQL.</p>
+
+        <p>The evaluator produces six explicit outcomes:</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Applicability verdicts</p>
+          <div><b>M</b><p><strong>MATCH:</strong> source integrity and required environment bindings still match.</p></div>
+          <div><b>D</b><p><strong>DRIFT:</strong> the re-fetchable source exists but its digest changed.</p></div>
+          <div><b>O</b><p><strong>ORPHAN:</strong> the source was deleted or disappeared.</p></div>
+          <div><b>U</b><p><strong>UNRESOLVABLE:</strong> the source cannot be deterministically re-verified.</p></div>
+          <div><b>X</b><p><strong>REJECT:</strong> untrusted input attempted to manufacture reserved trust state.</p></div>
+          <div><b>R</b><p><strong>REVALIDATE:</strong> historical evidence is intact, but the current environment no longer matches.</p></div>
+        </section>
+
+        <p>The fail-closed precedence is:</p>
+        <div class="trajectory-box"><span>REJECT</span><i>→</i><span>UNRESOLVABLE</span><i>→</i><span>ORPHAN</span><i>→</i><span>DRIFT</span><i>→</i><span>REVALIDATE</span><i>→</i><span>MATCH</span></div>
+
+        <h2>Why repository and commit binding became stricter.</h2>
+        <p>During review, an important edge case appeared: if historical evidence never bound itself to a repository or commit SHA, a matching source digest could still look safe in a new code context. That would allow evidence detached from the exact pull-request head to acquire current authority.</p>
+
+        <p>The implementation now treats repository and commit context more strictly: when current authoritative state provides those values, missing historical bindings force <code>REVALIDATE</code> instead of silently returning <code>MATCH</code>.</p>
+
+        <p>This is a small rule with a large implication: <strong>absence of historical context is not permission to assume continuity.</strong></p>
+
+        <h2>Environment should be purpose-bound, not globally hashed.</h2>
+        <p>Not every change should invalidate every memory. Changing an unrelated README should not necessarily revoke a memory about a tenant-scoped billing rule. Applicability therefore needs a purpose-bound context fingerprint: only dimensions relevant to the action should participate in the decision.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Candidate current-state dimensions</p>
+          <div><b>R</b><p>Repository / commit / branch</p></div>
+          <div><b>W</b><p>Workspace / target resource state</p></div>
+          <div><b>A</b><p>Actor / tenant / authority</p></div>
+          <div><b>P</b><p>Policy digest / permissions</p></div>
+          <div><b>I</b><p>API / model / interface version</p></div>
+          <div><b>τ</b><p>Observed time / TTL / validity window</p></div>
+        </section>
+
+        <h2>The category shift: expire authority, not truth.</h2>
+        <p>Traditional caches often ask when data becomes stale. Agent memory needs an additional question: when does a memory stop being allowed to influence an action without fresh verification?</p>
+
+        <p>A past approval should remain part of the audit trail even after it expires. A historical commit review should remain true even after the branch moves. A deleted source should not be rewritten as if it never existed. History should remain history.</p>
+
+        <div class="pull-quote">Do not erase the past because the present changed. Revoke the past's automatic authority over the present.</div>
+
+        <h2>This should not become a vendor moat.</h2>
+        <p>We shared the proposal with both Anthropic and OpenAI. The reason is deliberate: memory revalidation is more valuable as an interoperable safety primitive than as a vendor-specific trick. Different agent systems should be able to disagree about models while still exchange evidence about source integrity, environment binding and continuation safety.</p>
+
+        <p>A possible common contract is simple:</p>
+        <div class="market-kpi"><pre>memory
+→ provenance verification
+→ source re-fetch / integrity
+→ current environment comparison
+→ applicability verdict
+→ current authority
+→ action</pre></div>
+
+        <p>The useful metric split also becomes clearer:</p>
+        <ol class="action-list">
+          <li><strong>Locator coverage:</strong> can we identify the origin?</li>
+          <li><strong>Re-fetch verification coverage:</strong> can we revisit and digest-compare it?</li>
+          <li><strong>Source enumeration coverage:</strong> can we detect deletion/orphaning?</li>
+          <li><strong>Environment binding coverage:</strong> do we know enough about the context in which reuse is safe?</li>
+        </ol>
+
+        <section class="market-question" id="open-question">
+          <p class="section-label">The Open Question</p>
+          <h2>Where should memory lose action authority?</h2>
+          <p class="hot-question"><strong>What should invalidate an AI agent's recovered memory before it is allowed to act — code revision, policy or authority, tenant, resource state, API/model version, time, or something else?</strong></p>
+          <p>Describe one safely generalized case where a remembered fact can remain true while becoming unsafe to reuse.</p>
+          <ul class="market-prompts">
+            <li><strong>Memory:</strong> What did the agent recover?</li>
+            <li><strong>Change:</strong> What changed in the current environment?</li>
+            <li><strong>Risk:</strong> What could happen if the old memory drives action?</li>
+            <li><strong>Revalidation:</strong> What evidence would make reuse safe again?</li>
+          </ul>
+          <div class="market-actions"><a class="button" href="https://github.com/safal207/RESONANCE/issues/new?template=market-workflow.yml" target="_blank" rel="noreferrer">Describe your workflow →</a><a class="text-link" href="verified-workflow.html">See the Verified Workflow pilot →</a></div>
+          <p class="market-note">Do not submit credentials, private keys, customer-confidential data or identifying production details. Generalize when necessary.</p>
+        </section>
+
+        <p class="closing-line"><strong>Memory tells an agent what was true. Applicability tells it whether that truth may still drive action.</strong></p>
+
+        <section class="share-panel" aria-label="Share this research">
+          <p class="section-label">Distribution</p><h3>Share the question, not just the link.</h3>
+          <div class="share-actions"><button type="button" data-share="native">Share</button><button type="button" data-share="x">X</button><button type="button" data-share="linkedin">LinkedIn</button><button type="button" data-share="reddit">Reddit</button><button type="button" data-share="telegram">Telegram</button><button type="button" data-share="copy">Copy link</button></div>
+        </section>
+
+        <section class="sources-block" id="sources">
+          <p class="section-label">Primary / inspectable references</p>
+          <ol>
+            <li><a href="https://github.com/anthropics/claude-code/issues/34556#issuecomment-5244228930" target="_blank" rel="noreferrer">Anthropic Claude Code issue #34556 — DanceNitra provenance / reconciliation discussion</a></li>
+            <li><a href="https://github.com/safal207/Causal-Memory-Layer/pull/270" target="_blank" rel="noreferrer">CML PR #270 — Current-State Applicability and REVALIDATE</a></li>
+            <li><a href="https://github.com/safal207/Causal-Memory-Layer/blob/main/cml/integrations/memory_applicability.py" target="_blank" rel="noreferrer">Merged CML implementation — memory_applicability.py</a></li>
+            <li><a href="https://github.com/safal207/Causal-Memory-Layer/blob/main/docs/integrations/MEMORY_APPLICABILITY_V0_1.md" target="_blank" rel="noreferrer">CML Memory Current-State Applicability v0.1 specification</a></li>
+          </ol>
+          <p class="source-note">The provenance measurements are attributed to the linked Claude Code discussion. The applicability model, verdicts and reference implementation are RESONANCE/CML work and are presented as an open engineering proposal, not as an Anthropic or OpenAI product commitment.</p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Market OS</p><p>Article → Dialogue → Problem → Pilot → Evidence → Product.</p></div><div><p class="footer-title">Open publication</p><a href="https://github.com/safal207/RESONANCE">GitHub repository ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script><script src="market.js"></script>
+</body>
+</html>
