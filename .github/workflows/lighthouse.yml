@@ -7,7 +7,9 @@ on:
       - 'site/**'
       - 'scripts/build-seo-site.mjs'
       - 'scripts/verify-seo.mjs'
+      - 'scripts/verify-ui-markup.mjs'
       - 'scripts/lighthouse-summary.mjs'
+      - 'scripts/lighthouse-ui-contract.mjs'
       - '.github/workflows/lighthouse.yml'
       - '.github/workflows/lighthouse-live.yml'
   workflow_dispatch:
@@ -41,6 +43,11 @@ jobs:
 
       - name: Verify publication before browser audit
         run: node scripts/verify-seo.mjs
+
+      - name: Enforce static UI/media markup contract
+        run: |
+          node scripts/verify-ui-markup.mjs dist
+          cat ui-markup-summary.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Install exact Lighthouse version
         run: npm install --global lighthouse@12.8.2
@@ -103,6 +110,14 @@ jobs:
           audit_desktop home ''
           audit_desktop article-en 'before-you-let-an-ai-agent-move-money.html'
 
+      - name: Enforce rendered UI geometry contract
+        run: |
+          node scripts/lighthouse-ui-contract.mjs \
+            --input lighthouse-results \
+            --output ui-geometry-summary \
+            --enforce
+          cat ui-geometry-summary.md >> "$GITHUB_STEP_SUMMARY"
+
       - name: Enforce Lighthouse budgets and build readable summary
         run: |
           node scripts/lighthouse-summary.mjs \
@@ -120,6 +135,10 @@ jobs:
             lighthouse-results/
             lighthouse-summary.json
             lighthouse-summary.md
+            ui-markup-summary.json
+            ui-markup-summary.md
+            ui-geometry-summary.json
+            ui-geometry-summary.md
           if-no-files-found: warn
           retention-days: 90
 
@@ -130,9 +149,12 @@ jobs:
           script: |
             const fs = require('fs');
             const marker = '<!-- resonance-site-health -->';
-            const summaryPath = 'lighthouse-summary.md';
-            const fallback = '# RESONANCE Lighthouse Site Health\n\nThe audit did not produce a summary. Inspect the workflow artifacts/logs.';
-            const body = `${marker}\n${fs.existsSync(summaryPath) ? fs.readFileSync(summaryPath, 'utf8') : fallback}`;
+            const parts = [];
+            for (const file of ['lighthouse-summary.md', 'ui-geometry-summary.md', 'ui-markup-summary.md']) {
+              if (fs.existsSync(file)) parts.push(fs.readFileSync(file, 'utf8'));
+            }
+            const fallback = '# RESONANCE Site Health\n\nThe audit did not produce a summary. Inspect the workflow artifacts/logs.';
+            const body = `${marker}\n${parts.length ? parts.join('\n---\n\n') : fallback}`;
             const { owner, repo } = context.repo;
             const issue_number = context.issue.number;
             const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number, per_page: 100 });
