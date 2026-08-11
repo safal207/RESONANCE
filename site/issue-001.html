@@ -75,11 +75,16 @@
           <p><strong>Published · 10/10 recovery protocol.</strong> Blind retry after a synthetic timeout-after-commit produced two side effects; reconcile-before-retry preserved exactly one effect whether the first attempt committed or not.</p>
           <a class="text-link" href="verified-003-openai-agents-recovery.html">Open recovery report →</a>
         </article>
+        <article>
+          <h3>Verified Report #004 — Ambiguous Reconciliation</h3>
+          <p><strong>Published · 10/10 uncertainty-preservation protocol.</strong> When reconciliation itself timed out or returned stale UNKNOWN, treating uncertainty as retry permission duplicated the effect; preserving UNKNOWN prevented it.</p>
+          <a class="text-link" href="verified-004-openai-agents-ambiguous-reconciliation.html">Open ambiguous reconciliation report →</a>
+        </article>
         <article><h3>Compute Becomes Strategy</h3><p>How model capability increasingly depends on the infrastructure beneath it.</p></article>
         <article><h3>Security Beyond the Prompt</h3><p>Why agent safety expands into tools, credentials, environments and persistent state.</p></article>
         <article id="science"><h3>Science After Generation</h3><p>When hypotheses get cheaper, verification, reproducibility and attribution matter more.</p></article>
         <article><h3>Human + Agent Work</h3><p>Designing collaboration so automation increases human agency rather than obscuring it.</p></article>
-        <article><h3>Recovery Is a Product Feature</h3><p>Report #003 turns recovery into an executable rule: an UNKNOWN outcome must reconcile durable state before retry becomes legal.</p></article>
+        <article><h3>Recovery Is a Product Feature</h3><p>Reports #003 and #004 turn recovery into executable rules: reconcile before retry, and preserve UNKNOWN when reconciliation is inconclusive.</p></article>
         <article><h3>What Builders Should Measure</h3><p>Beyond success rate: invariant violations, evidence completeness, intervention and recovery.</p></article>
         <article><h3>What to Build Now</h3><p>A practical map of verification, observability, identity, policy and agent infrastructure.</p></article>
       </div>
@@ -87,8 +92,8 @@
 
     <section class="section human-section">
       <div class="wrap editorial-grid">
-        <div><p class="section-label">Editorial standard</p><h2>This issue now tests failure, boundary and recovery.</h2></div>
-        <p>Issue 001 moves through analysis → framework → benchmark → external verification → containment → recovery. Report #003 reproduces a duplicate side effect under blind retry, then shows the legal recovery trajectory: UNKNOWN → reconcile → committed/absent → stop or retry.</p>
+        <div><p class="section-label">Editorial standard</p><h2>This issue now tests failure, boundary, recovery and uncertainty.</h2></div>
+        <p>Issue 001 moves through analysis → framework → benchmark → external verification → containment → recovery → uncertainty preservation. Report #004 shows that a recovery check can fail too: timeout, stale evidence or an inconclusive status must keep the state UNKNOWN rather than silently authorizing another side effect.</p>
       </div>
     </section>
 
