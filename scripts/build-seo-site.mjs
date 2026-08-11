@@ -28,7 +28,7 @@ const metadata = {
     keywords: ['AI agents', 'agentic AI', 'AI infrastructure', 'agent verification'],
   },
   'the-missing-trust-layer.html': {
-    title: 'AI Agent Trust & Verification Framework — The Missing Trust Layer | RESONANCE',
+    title: 'AI Agent Trust & Verification — The Missing Trust Layer | RESONANCE',
     kind: 'article',
     keywords: ['AI agent trust', 'agent verification', 'AI reliability', 'agent safety'],
   },
@@ -73,10 +73,6 @@ const metadata = {
     keywords: ['revoked authority', 'AI agent authorization', 'agent verification'],
   },
 };
-
-function escapeRegExp(value) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
 
 function canonicalFor(file) {
   return file === 'index.html' ? BASE : `${BASE}${file}`;
