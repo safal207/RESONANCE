@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Site Health explains the publication, Lighthouse, accessibility, SEO and live-deployment checks used to keep the journal measurable and evidence-first." />
+  <meta name="theme-color" content="#f4f0e8" />
+  <title>Site Health & Quality | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+  <link rel="stylesheet" href="market.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="./">RESONANCE</a>
+      <p class="masthead-line">Publication health · measurable quality</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav">
+      <a href="./">Journal</a>
+      <a href="ai-agents.html">AI Agents</a>
+      <a href="open-problems.html">Open Problems</a>
+      <a href="verified-workflow.html">Verified Workflow</a>
+    </nav>
+  </header>
+
+  <main id="article">
+    <header class="article-hero wrap">
+      <p class="section-label">Site Health · Quality Contract</p>
+      <h1 class="article-title">Measure the publication, not just the content.</h1>
+      <p class="article-dek">RESONANCE treats the website itself as a verifiable system: structure is checked before release, browser experience is measured in CI, and the deployed GitHub Pages site is measured again after publication.</p>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail">
+        <div class="rail-card">
+          <p class="section-label">Three layers</p>
+          <strong>Build → Browser → Live</strong>
+          <span>Different checks answer different questions.</span>
+        </div>
+        <div class="rail-card rail-dark">
+          <p class="section-label">Principle</p>
+          <strong>No score without run evidence.</strong>
+        </div>
+      </aside>
+
+      <article class="article-body">
+        <div class="status-chip open">RESONANCE Site Health v0.1</div>
+
+        <h2>1. Publication Contract</h2>
+        <p>The deterministic publication contract builds the journal and checks canonical URLs, structured data, multilingual metadata, sitemap coverage, Market OS evidence boundaries and other release invariants before deployment.</p>
+
+        <h2>2. Experience Contract</h2>
+        <p>Pull requests that change the publication run Lighthouse against a local build. Representative pages are measured on mobile, with key pages also measured on desktop.</p>
+        <table class="market-table">
+          <thead><tr><th>Signal</th><th>Initial budget</th><th>Why it matters</th></tr></thead>
+          <tbody>
+            <tr><td>Performance</td><td>≥ 80 mobile / ≥ 90 desktop</td><td>Detect meaningful regressions without pretending a lab score is field data.</td></tr>
+            <tr><td>Accessibility</td><td>≥ 95</td><td>Keep the journal usable across assistive technologies and input modes.</td></tr>
+            <tr><td>Best Practices</td><td>≥ 95</td><td>Catch browser/platform regressions and unsafe defaults.</td></tr>
+            <tr><td>SEO</td><td>≥ 95</td><td>Complement the deterministic SEO contract with browser-level checks.</td></tr>
+            <tr><td>LCP</td><td>≤ 3.5 s mobile / ≤ 2.5 s desktop</td><td>Budget the largest visible content render in the Lighthouse lab profile.</td></tr>
+            <tr><td>TBT</td><td>≤ 300 ms mobile / ≤ 200 ms desktop</td><td>Detect main-thread blocking that can make pages feel unresponsive.</td></tr>
+            <tr><td>CLS</td><td>≤ 0.10</td><td>Protect readers from unstable layouts.</td></tr>
+          </tbody>
+        </table>
+
+        <h2>3. Live Experience Audit</h2>
+        <p>After a successful GitHub Pages deployment, Lighthouse measures the public site again. The result is stored as an immutable workflow artifact with the audited commit/run context.</p>
+
+        <h2>Evidence produced</h2>
+        <div class="signal-grid-market">
+          <div class="signal-card"><strong>Readable summary</strong><p>A compact score table is written into the GitHub Actions job summary and PR conversation.</p></div>
+          <div class="signal-card"><strong>Raw reports</strong><p>JSON and HTML Lighthouse reports are retained as workflow artifacts for inspection.</p></div>
+          <div class="signal-card"><strong>Budgets</strong><p>Performance, accessibility, best-practice and SEO thresholds are versioned in the repository.</p></div>
+        </div>
+
+        <h2>What the numbers do not prove</h2>
+        <p>Lighthouse is controlled lab evidence. A high score does not prove Google ranking, real-user Core Web Vitals, conversion, or identical performance on every device and network. Those claims require their own evidence.</p>
+
+        <section class="market-question">
+          <p class="section-label">Inspect the evidence</p>
+          <h2>Every health result should be traceable to a run.</h2>
+          <p>Use GitHub Actions for the latest Publication Contract, Experience Contract and Live Experience Audit evidence.</p>
+          <div class="market-actions">
+            <a class="button" href="https://github.com/safal207/RESONANCE/actions" target="_blank" rel="noreferrer">Open Actions →</a>
+            <a class="text-link" href="https://github.com/safal207/RESONANCE" target="_blank" rel="noreferrer">Inspect repository →</a>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div><div class="brand footer-brand">RESONANCE</div><p>Evidence-first publishing includes the publication itself.</p></div>
+      <div><p class="footer-title">Quality</p><a href="https://github.com/safal207/RESONANCE/actions">Workflow evidence ↗</a></div>
+      <div><p class="footer-title">Market OS</p><a href="open-problems.html">Open Problems →</a></div>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
