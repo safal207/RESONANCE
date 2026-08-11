@@ -30,7 +30,7 @@ def _decode(data: bytes | str | None) -> str:
 async def _read_blocked(session, path: Path) -> tuple[bool, str]:
     try:
         handle = await session.read(path)
-    except Exception as exc:  # exact type is preserved in evidence
+    except Exception as exc:
         name = type(exc).__name__
         text = str(exc)
         expected = (
@@ -74,7 +74,6 @@ async def main() -> int:
     started = time.monotonic()
 
     try:
-        # Local-only peer target for the network probe. No port is published to the internet.
         peer = docker.containers.run(
             IMAGE,
             ["python", "-m", "http.server", "8080", "--bind", "0.0.0.0"],
@@ -101,20 +100,18 @@ async def main() -> int:
         )
 
         async with sandbox:
-            # 1. Host filesystem read isolation: same absolute /tmp path must not expose host data.
-            read_probe = await sandbox.exec(
-                [
-                    "python",
-                    "-c",
-                    (
-                        "from pathlib import Path; "
-                        f"p=Path({str(host_sentinel)!r}); "
-                        "print(p.read_text() if p.exists() else 'NOT_VISIBLE')"
-                    ),
-                ]
+            read_code = (
+                "from pathlib import Path; "
+                f"p=Path({str(host_sentinel)!r}); "
+                "print(p.read_text() if p.exists() else 'NOT_VISIBLE')"
             )
+            read_probe = await sandbox.exec("python", "-c", read_code)
             read_text = _decode(read_probe.stdout).strip()
-            host_read_isolated = fake_secret not in read_text and read_text == "NOT_VISIBLE"
+            host_read_isolated = (
+                read_probe.exit_code == 0
+                and fake_secret not in read_text
+                and read_text == "NOT_VISIBLE"
+            )
             checks.append(
                 {
                     "id": "host_read_isolation",
@@ -125,25 +122,20 @@ async def main() -> int:
                     "evidence": {
                         "exit_code": read_probe.exit_code,
                         "stdout": read_text,
+                        "stderr": _decode(read_probe.stderr)[-1000:],
                         "host_path": str(host_sentinel),
                     },
                 }
             )
 
-            # 2. Host filesystem write isolation: writing the same path in-container must not alter host.
-            write_probe = await sandbox.exec(
-                [
-                    "python",
-                    "-c",
-                    (
-                        "from pathlib import Path; "
-                        f"p=Path({str(host_sentinel)!r}); "
-                        "p.write_text('CONTAINER_WRITE'); print(p.read_text())"
-                    ),
-                ]
+            write_code = (
+                "from pathlib import Path; "
+                f"p=Path({str(host_sentinel)!r}); "
+                "p.write_text('CONTAINER_WRITE'); print(p.read_text())"
             )
+            write_probe = await sandbox.exec("python", "-c", write_code)
             host_after = host_sentinel.read_text(encoding="utf-8")
-            host_write_isolated = host_after == fake_secret
+            host_write_isolated = write_probe.exit_code == 0 and host_after == fake_secret
             checks.append(
                 {
                     "id": "host_write_isolation",
@@ -154,12 +146,12 @@ async def main() -> int:
                     "evidence": {
                         "container_exit_code": write_probe.exit_code,
                         "container_stdout": _decode(write_probe.stdout).strip(),
-                        "host_value_unchanged": host_write_isolated,
+                        "container_stderr": _decode(write_probe.stderr)[-1000:],
+                        "host_value_unchanged": host_after == fake_secret,
                     },
                 }
             )
 
-            # 3. Workspace path API boundary: file API should reject path traversal/outside absolute paths.
             relative_blocked, relative_evidence = await _read_blocked(sandbox, Path("../etc/passwd"))
             absolute_blocked, absolute_evidence = await _read_blocked(sandbox, Path("/etc/passwd"))
             workspace_score = int(relative_blocked) + int(absolute_blocked)
@@ -179,12 +171,13 @@ async def main() -> int:
                 }
             )
 
-            # 4. Control-plane isolation: Docker socket must not be mounted inside the sandbox.
             socket_probe = await sandbox.exec(
-                ["sh", "-c", "if [ -S /var/run/docker.sock ]; then echo PRESENT; else echo ABSENT; fi"]
+                "sh",
+                "-c",
+                "if [ -S /var/run/docker.sock ]; then echo PRESENT; else echo ABSENT; fi",
             )
             socket_text = _decode(socket_probe.stdout).strip()
-            docker_socket_absent = socket_text == "ABSENT"
+            docker_socket_absent = socket_probe.exit_code == 0 and socket_text == "ABSENT"
             checks.append(
                 {
                     "id": "docker_control_plane",
@@ -192,22 +185,20 @@ async def main() -> int:
                     "points": 2,
                     "awarded": 2 if docker_socket_absent else 0,
                     "status": "pass" if docker_socket_absent else "fail",
-                    "evidence": {"stdout": socket_text, "exit_code": socket_probe.exit_code},
+                    "evidence": {
+                        "stdout": socket_text,
+                        "stderr": _decode(socket_probe.stderr)[-1000:],
+                        "exit_code": socket_probe.exit_code,
+                    },
                 }
             )
 
-            # 5. Network egress: probe only the ephemeral local peer container.
-            network_probe = await sandbox.exec(
-                [
-                    "python",
-                    "-c",
-                    (
-                        "import urllib.request; "
-                        f"u='http://{peer_ip}:8080/'; "
-                        "print(urllib.request.urlopen(u, timeout=2).status)"
-                    ),
-                ]
+            network_code = (
+                "import urllib.request; "
+                f"u='http://{peer_ip}:8080/'; "
+                "print(urllib.request.urlopen(u, timeout=2).status)"
             )
+            network_probe = await sandbox.exec("python", "-c", network_code)
             network_text = _decode(network_probe.stdout).strip()
             peer_reachable = network_probe.exit_code == 0 and network_text.endswith("200")
             network_blocked = not peer_reachable
