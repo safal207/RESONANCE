@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified Report #014 tests a PostgreSQL transactional outbox, stable idempotency and reconciliation across an ambiguous external effect boundary." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Verified Report #014 — Transactional Outbox Boundary | RESONANCE" />
+  <meta property="og:description" content="One database commit. One durable delivery intent. One external effect." />
+  <meta property="og:type" content="article" />
+  <title>Verified Report #014 — Transactional Outbox Boundary | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="index.html#intelligence">AI</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="index.html#economy">Startups & Economy</a><a href="index.html#human">Human</a><a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Verified Report #014 · Transactional outbox</p><p class="article-status">Executed · 11 Aug 2026</p></div>
+      <h1 class="article-title">One Commit. One Intent. One External Effect.</h1>
+      <p class="article-dek">A database transaction can commit correctly while an external acknowledgement disappears. The safe path combines a transactional outbox, stable idempotency identity and reconciliation before re-execution.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>PostgreSQL 17.6 · synthetic external effect boundary</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Report summary">
+        <div class="rail-card"><p class="section-label">Boundary score</p><strong>10 / 10</strong><span>Unsafe → 2 external effects</span><span>Safe → 1 external effect</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">New rule</p><code>DB COMMIT ≠ EXTERNAL ACK</code><span>reconcile the boundary</span></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Reports #012 and #013 validated TTP inside a real PostgreSQL mutation boundary. Report #014 moves one step outward: business state can be committed while an external effect is executed separately and its acknowledgement is lost.</p>
+
+        <div class="trajectory-box"><span>BUSINESS DB</span><i>→</i><span>OUTBOX</span><i>→</i><span>WORKER</span><i>→</i><span>EXTERNAL EFFECT</span></div>
+
+        <h2>The unsafe boundary duplicated the external effect.</h2>
+        <p>The business transition committed once at <code>COMMITTED / version=101</code>. The first external request then committed its effect, but a synthetic crash removed the acknowledgement. Recovery created a new request identity and sent again.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Unsafe control</p>
+          <div><b>01</b><p><strong>Business commit</strong><span>One PostgreSQL state transition reached version 101.</span></p></div>
+          <div><b>02</b><p><strong>External effect #1</strong><span>Request key unsafe:attempt:1 was applied.</span></p></div>
+          <div><b>03</b><p><strong>ACK lost</strong><span>Recovery could not prove whether the effect happened.</span></p></div>
+          <div><b>04</b><p><strong>New identity</strong><span>unsafe:attempt:2 was treated as a new request and applied again.</span></p></div>
+        </section>
+
+        <div class="pull-quote">The database was correct. The cross-boundary trajectory was not: one business commit became two external effects.</div>
+
+        <h2>Transactional outbox closes the database-side gap.</h2>
+        <p>The safe adapter writes the business transition and the durable delivery intent in the same PostgreSQL transaction.</p>
+        <div class="trajectory-box"><span>state → COMMITTED/v101</span><i>+</i><span>outbox → PENDING</span><i>→</i><span>ONE DB COMMIT</span></div>
+        <p>A synthetic crash before that commit rolled both pieces back: <code>ABSENT / v100 / 0 outbox rows</code>. A successful commit persisted both together, including the stable key <code>op-1:external-effect:v1</code>.</p>
+
+        <h2>Stable identity makes redelivery safe.</h2>
+        <p>The first worker delivery was applied by the synthetic external service, but its acknowledgement was lost, so the outbox remained pending.</p>
+        <div class="trajectory-box"><span>attempt 1 → APPLIED</span><i>→</i><span>ACK LOST</span><i>→</i><span>PENDING</span></div>
+        <p>The worker then delivered the same logical message again with the same idempotency key. The external boundary returned <code>DEDUPLICATED</code>. The final external effect count remained one and the outbox moved to <code>DELIVERED</code>.</p>
+
+        <div class="trajectory-box"><span>attempt 2</span><i>→</i><span>same stable key</span><i>→</i><span>DEDUPLICATED</span><i>→</i><span>1 effect</span></div>
+
+        <h2>Reconciliation can avoid even the duplicate call.</h2>
+        <p>The stronger recovery path queried the external ledger after the acknowledgement disappeared. It found <code>COMMITTED</code>, marked the outbox delivered and made no second external call.</p>
+        <div class="trajectory-box"><span>UNKNOWN ACK</span><i>→</i><span>RECONCILE</span><i>→</i><span>COMMITTED</span><i>→</i><span>NO RE-EXECUTION</span></div>
+
+        <h2>The cross-boundary TTP rule</h2>
+        <div class="trajectory-box"><span>BUSINESS TX</span><i>→</i><span>OUTBOX INTENT</span><i>→</i><span>COMMIT</span></div>
+        <div class="trajectory-box"><span>DELIVER WITH STABLE ID</span><i>→</i><span>ACK / UNKNOWN</span><i>→</i><span>RECONCILE</span><i>→</i><span>PROVE</span></div>
+
+        <section class="claim-panel">
+          <p class="section-label">Score · 10/10</p>
+          <div><b>01</b><p><strong>Unsafe boundary duplicate · 2/2</strong><span>One DB transition produced two external effects when retry identity changed.</span></p></div>
+          <div><b>02</b><p><strong>Atomic outbox intent · 2/2</strong><span>State and outbox rolled back or committed together.</span></p></div>
+          <div><b>03</b><p><strong>Stable-key redelivery · 2/2</strong><span>Second delivery was deduplicated; one effect remained.</span></p></div>
+          <div><b>04</b><p><strong>Reconcile before retry · 2/2</strong><span>External COMMITTED was discovered before any second external call.</span></p></div>
+          <div><b>05</b><p><strong>Cross-boundary proof · 2/2</strong><span>Safe trajectories ended with one business transition and one external effect.</span></p></div>
+        </section>
+
+        <h2>New invariants</h2>
+        <div class="trajectory-box"><span>DB COMMITTED</span><i>≠</i><span>EXTERNAL ACKNOWLEDGED</span></div>
+        <div class="trajectory-box"><span>REDELIVERY</span><i>→</i><span>PRESERVE LOGICAL EFFECT IDENTITY</span></div>
+        <p>Transactional outbox removes a lost-intent gap. Stable idempotency and reconciliation address ambiguous delivery. None of these mechanisms should be advertised as universal exactly-once delivery.</p>
+
+        <h2>Interpretation boundary</h2>
+        <p>The external service is a synthetic ledger reached through a separate PostgreSQL transaction. That creates a real transaction boundary but does not reproduce a production payment rail, broker, blockchain, SaaS API, network partition, failover topology or arbitrary distributed system.</p>
+
+        <section class="sources-block">
+          <p class="section-label">Reproduce / inspect</p>
+          <ol>
+            <li><a href="transactional-trust-protocol-v1.html">Transactional Trust Protocol v1.0</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/actions/runs/31463869740" target="_blank" rel="noreferrer">Canonical GitHub Actions run</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/benchmarks/postgresql-transactional-outbox-v1.0/run_transactional_outbox.py" target="_blank" rel="noreferrer">Benchmark harness</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/014-postgresql-transactional-outbox/result.json" target="_blank" rel="noreferrer">Machine-readable result</a></li>
+          </ol>
+          <p class="source-note">Evidence artifact digest: <code>sha256:7732375332cfee2507eda5ec72df190cbe94c1ee18bd3f1bc86ec1a5884562e2</code>.</p>
+        </section>
+
+        <p class="closing-line"><strong>Verdict:</strong> one committed business transition became two external effects when acknowledgement loss was followed by a new request identity. Transactional outbox, stable idempotency and external reconciliation preserved one effect in both safe recovery paths.</p>
+
+        <div class="article-end"><p><strong>RESONANCE Verified Report #014</strong></p><p>commit intent → deliver → reconcile → prove.</p><a class="button" href="transactional-trust-protocol-v1.html">Read TTP v1.0</a></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Verified Report #014</p><p>Transactional outbox · 10/10</p></div><div><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified/014-postgresql-transactional-outbox">Evidence files ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
