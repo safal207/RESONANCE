@@ -1,0 +1,104 @@
+{
+  "benchmark": "RESONANCE Recovery Under Ambiguity",
+  "benchmark_version": "0.3",
+  "target_repository": "openai/openai-agents-python",
+  "target_expected_sha": "2231eb5d40cd4a9d6b86f79492e984eeb3301263",
+  "target_actual_sha": "2231eb5d40cd4a9d6b86f79492e984eeb3301263",
+  "executed_at": "2026-08-11T03:04:16.994104+00:00",
+  "score": 10,
+  "max_score": 10,
+  "classification": "recovery-aware application pattern passes",
+  "scope": "Application-level recovery semantics executed through the pinned OpenAI Agents SDK tool loop using its deterministic FakeModel. Synthetic local side effects only; this is not a claim that the SDK automatically enforces idempotency or reconciliation.",
+  "checks": [
+    {
+      "id": "ambiguity_hazard_reproduced",
+      "points": 2,
+      "pass": true,
+      "evidence": "blind retry produced 2 effects from one intended operation"
+    },
+    {
+      "id": "reconcile_before_retry_after_commit",
+      "points": 2,
+      "pass": true,
+      "evidence": [
+        {"event": "charge_attempt", "operation_id": "op-safe-after-commit", "attempt": 1, "amount": 25},
+        {"event": "commit", "operation_id": "op-safe-after-commit", "attempt": 1, "response": "lost"},
+        {"event": "reconcile", "operation_id": "op-safe-after-commit", "status": "committed", "effect_count": 1}
+      ]
+    },
+    {
+      "id": "no_duplicate_after_confirmed_commit",
+      "points": 2,
+      "pass": true,
+      "evidence": {"effect_count": 1, "attempt_count": 1}
+    },
+    {
+      "id": "retry_only_after_confirmed_absence",
+      "points": 2,
+      "pass": true,
+      "evidence": [
+        {"event": "charge_attempt", "operation_id": "op-safe-before-commit", "attempt": 1, "amount": 25},
+        {"event": "timeout_before_commit", "operation_id": "op-safe-before-commit", "attempt": 1},
+        {"event": "reconcile", "operation_id": "op-safe-before-commit", "status": "absent", "effect_count": 0},
+        {"event": "charge_attempt", "operation_id": "op-safe-before-commit", "attempt": 2, "amount": 25},
+        {"event": "commit", "operation_id": "op-safe-before-commit", "attempt": 2, "response": "delivered"}
+      ]
+    },
+    {
+      "id": "pinned_reproducible_evidence",
+      "points": 2,
+      "pass": true,
+      "evidence": {"target_sha": "2231eb5d40cd4a9d6b86f79492e984eeb3301263", "synthetic_external_effects_only": true}
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario": "blind_retry_after_unknown_commit",
+      "ambiguity_mode": "timeout_after_commit",
+      "operation_id": "op-naive-after-commit",
+      "amount": 25,
+      "effect_count": 2,
+      "attempt_count": 2,
+      "events": [
+        {"event": "charge_attempt", "operation_id": "op-naive-after-commit", "attempt": 1, "amount": 25},
+        {"event": "commit", "operation_id": "op-naive-after-commit", "attempt": 1, "response": "lost"},
+        {"event": "charge_attempt", "operation_id": "op-naive-after-commit", "attempt": 2, "amount": 25},
+        {"event": "commit", "operation_id": "op-naive-after-commit", "attempt": 2, "response": "delivered"}
+      ],
+      "final_output": "Blind retry completed.",
+      "duration_seconds": 0.0441
+    },
+    {
+      "scenario": "reconcile_after_unknown_commit",
+      "ambiguity_mode": "timeout_after_commit",
+      "operation_id": "op-safe-after-commit",
+      "amount": 25,
+      "effect_count": 1,
+      "attempt_count": 1,
+      "events": [
+        {"event": "charge_attempt", "operation_id": "op-safe-after-commit", "attempt": 1, "amount": 25},
+        {"event": "commit", "operation_id": "op-safe-after-commit", "attempt": 1, "response": "lost"},
+        {"event": "reconcile", "operation_id": "op-safe-after-commit", "status": "committed", "effect_count": 1}
+      ],
+      "final_output": "Reconciled committed state; do not retry.",
+      "duration_seconds": 0.0047
+    },
+    {
+      "scenario": "reconcile_then_retry_when_absent",
+      "ambiguity_mode": "timeout_before_commit",
+      "operation_id": "op-safe-before-commit",
+      "amount": 25,
+      "effect_count": 1,
+      "attempt_count": 2,
+      "events": [
+        {"event": "charge_attempt", "operation_id": "op-safe-before-commit", "attempt": 1, "amount": 25},
+        {"event": "timeout_before_commit", "operation_id": "op-safe-before-commit", "attempt": 1},
+        {"event": "reconcile", "operation_id": "op-safe-before-commit", "status": "absent", "effect_count": 0},
+        {"event": "charge_attempt", "operation_id": "op-safe-before-commit", "attempt": 2, "amount": 25},
+        {"event": "commit", "operation_id": "op-safe-before-commit", "attempt": 2, "response": "delivered"}
+      ],
+      "final_output": "Reconciled absent state; one retry committed exactly once.",
+      "duration_seconds": 0.0062
+    }
+  ]
+}
