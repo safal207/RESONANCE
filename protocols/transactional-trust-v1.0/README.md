@@ -258,6 +258,24 @@ For high-impact or adversarial environments:
 - replayable evidence
 - explicit recovery/escalation path
 
+## Adapter rule
+
+A storage or execution adapter conforms to the atomic transition requirement only when the mutation authority itself enforces the state precondition. A prior application-side check is insufficient.
+
+For a versioned relational record, the reference shape is:
+
+```text
+OBSERVE state/version N
+      ↓
+BIND expected_version=N
+      ↓
+MUTATION AUTHORITY evaluates N atomically
+   ├─ match    → transition + effect commit
+   └─ mismatch → PRECONDITION_FAILED → reread / reconcile
+```
+
+Report #012 validates this shape against a real PostgreSQL service using two independent connections. The successful adapter used a conditional `UPDATE ... WHERE state='absent' AND version=N` and inserted the effect only for the winning transaction.
+
 ## Non-goals
 
 TTP v1.0 is not:
@@ -282,7 +300,12 @@ TTP v1.0 is a RESONANCE synthesis derived from the reproducible experiments in V
 - #009 Revocation Race / TOCTOU
 - #010 Distributed Commit Race
 
-The next validation step is an end-to-end adversarial benchmark that composes these hazards in one trajectory rather than testing each invariant separately.
+Validation then moved from isolated invariants into composed and concrete execution layers:
+
+- **#011 TTP v1.0 End-to-End Adversarial Run** — compounded timeout, stale evidence, revoked authority, stale trust and a competing writer in one trajectory; unsafe path produced three effects, TTP preserved one while covering all eight stages.
+- **#012 PostgreSQL Transactional Trust Adapter** — two independent real PostgreSQL connections read the same `ABSENT / version=100` snapshot; unconditional writes produced two effects, while a version-bound conditional mutation produced one winner, one precondition failure and one final effect.
+
+These reports validate specific protocol properties under their declared scope; they are not general production safety certifications.
 
 ## Canonical short form
 
