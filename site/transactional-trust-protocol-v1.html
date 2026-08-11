@@ -31,7 +31,7 @@
       <div class="article-meta-row"><p class="section-label">Protocol · v1.0</p><p class="article-status">Experimental · 11 Aug 2026</p></div>
       <h1 class="article-title">Transactional Trust Protocol</h1>
       <p class="article-dek">A framework-agnostic execution protocol for consequential agent actions: keep evidence, authority, shared state, commit preconditions, recovery and final proof connected across the whole transition.</p>
-      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>Derived from Verified Reports #003–#010</p></div>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>Derived from Verified Reports #003–#013</p></div>
     </header>
 
     <div class="article-layout wrap">
@@ -64,12 +64,12 @@
         <h2>6 · Commit once.</h2>
         <p>Execute only while all bound preconditions hold. Idempotency keys, compare-and-swap, transactions, leases or equivalent mechanisms can implement this property; the protocol does not prescribe one storage technology.</p>
 
-        <h2>7 · Reconcile ambiguity before retry.</h2>
-        <div class="trajectory-box"><span>UNKNOWN</span><i>→</i><span>RECONCILE</span><i>→</i><span>COMMITTED / ABSENT / CONFLICT / UNKNOWN</span></div>
-        <p>A timeout is not proof of failure. Retry must re-enter verification and execution binding rather than reuse an old authorization automatically.</p>
+        <h2>7 · Reconcile ambiguity and database conflicts before retry.</h2>
+        <div class="trajectory-box"><span>UNKNOWN / CONFLICT / DB SIGNAL</span><i>→</i><span>RECONCILE</span><i>→</i><span>COMMITTED / ABSENT / CONFLICT / UNKNOWN</span></div>
+        <p>A timeout is not proof of failure. A zero-row conditional mutation or a serialization failure is not proof that the business effect is absent. Retry must re-enter observation, verification, authorization and execution binding rather than reuse an old decision automatically.</p>
 
         <h2>8 · Prove the trajectory.</h2>
-        <p>Preserve state observations, trust observations, verification decisions, precondition results, commit/conflict outcomes, reconciliation evidence and the final invariant result.</p>
+        <p>Preserve state observations, trust observations, verification decisions, precondition results, database conflict signals, commit/conflict outcomes, reconciliation evidence and the final invariant result.</p>
 
         <section class="claim-panel">
           <p class="section-label">TTP v1.0 invariants</p>
@@ -78,10 +78,20 @@
           <div><b>I3</b><p><strong>VALID SIGNATURE ≠ CURRENT TRUST</strong><span>Authority has a lifecycle.</span></p></div>
           <div><b>I4</b><p><strong>READ WAS CORRECT ≠ WRITE IS STILL LEGAL</strong><span>Bind action to state version.</span></p></div>
           <div><b>I5</b><p><strong>CHECK + WRITE SHARE ONE PRECONDITION</strong><span>Make mutation boundary enforce the version.</span></p></div>
-          <div><b>I6</b><p><strong>PROOF COVERS THE TRAJECTORY</strong><span>Tool success alone is not sufficient evidence.</span></p></div>
+          <div><b>I6</b><p><strong>RETRYABLE TRANSACTION ≠ RETRYABLE BUSINESS ACTION</strong><span>Storage retry signals must re-enter fresh verification.</span></p></div>
+          <div><b>I7</b><p><strong>PROOF COVERS THE TRAJECTORY</strong><span>Tool success alone is not sufficient evidence.</span></p></div>
         </section>
 
         <div class="pull-quote">A consequential transition is trustworthy only when evidence, authority, state, commit preconditions, recovery and proof remain connected across the whole path.</div>
+
+        <h2>Database adapter rule</h2>
+        <div class="trajectory-box"><span>OBSERVE vN</span><i>→</i><span>BIND vN</span><i>→</i><span>MUTATION AUTHORITY CHECKS vN</span></div>
+        <p>Verified Report #012 moved this rule into a real PostgreSQL service: two connections read the same <code>ABSENT / v100</code>, but a conditional update allowed one writer and converted the stale writer into a safe conflict.</p>
+
+        <h2>Retry classification rule</h2>
+        <div class="trajectory-box"><span>0 ROWS / 40001 / OTHER CONFLICT</span><i>→</i><span>END STALE TX</span><i>→</i><span>RE-OBSERVE</span></div>
+        <div class="trajectory-box"><span>RE-VERIFY</span><i>→</i><span>RE-BIND</span><i>→</i><span>RETRY ONLY IF STILL LEGAL</span></div>
+        <p>Verified Report #013 ran the same two-writer race on PostgreSQL 17.6 at three isolation levels. READ COMMITTED produced a zero-row precondition failure; REPEATABLE READ and SERIALIZABLE produced <code>SQLSTATE 40001</code>. Every losing path reconciled to <code>COMMITTED / v101 / effects=1</code>.</p>
 
         <h2>Three conformance profiles</h2>
         <div class="verification-chain">
@@ -98,13 +108,15 @@
           <ol>
             <li><a href="https://github.com/safal207/RESONANCE/blob/main/protocols/transactional-trust-v1.0/README.md" target="_blank" rel="noreferrer">Canonical protocol specification</a></li>
             <li><a href="verified-011-transactional-trust-e2e.html">Verified Report #011 · end-to-end adversarial run</a></li>
-            <li><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified" target="_blank" rel="noreferrer">Verified Reports #003–#010 evidence trail</a></li>
+            <li><a href="verified-012-postgresql-transactional-trust-adapter.html">Verified Report #012 · PostgreSQL adapter</a></li>
+            <li><a href="verified-013-postgresql-isolation-matrix.html">Verified Report #013 · isolation-level matrix</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified" target="_blank" rel="noreferrer">Full verified evidence trail</a></li>
           </ol>
         </section>
 
         <p class="closing-line"><strong>Canonical short form:</strong> OBSERVE → VERIFY → AUTHORIZE → BIND → COMPARE → COMMIT → RECONCILE → PROVE.</p>
 
-        <div class="article-end"><p><strong>RESONANCE Transactional Trust Protocol v1.0</strong></p><p>trajectory correctness → execution binding → recoverable proof.</p><a class="button" href="verified-011-transactional-trust-e2e.html">Open the end-to-end verification</a></div>
+        <div class="article-end"><p><strong>RESONANCE Transactional Trust Protocol v1.0</strong></p><p>trajectory correctness → execution binding → conflict classification → recoverable proof.</p><a class="button" href="verified-013-postgresql-isolation-matrix.html">Open latest database verification</a></div>
       </article>
     </div>
   </main>
