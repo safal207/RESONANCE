@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified Report #013 — PostgreSQL isolation-level matrix: READ COMMITTED returned a zero-row conflict while REPEATABLE READ and SERIALIZABLE returned SQLSTATE 40001; TTP reconciliation preserved one effect across all three." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Verified Report #013 — PostgreSQL Isolation-Level Matrix | RESONANCE" />
+  <meta property="og:description" content="Same race, different database signals. One TTP recovery law." />
+  <meta property="og:type" content="article" />
+  <title>Verified Report #013 — PostgreSQL Isolation-Level Matrix | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="index.html#intelligence">AI</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="index.html#economy">Startups & Economy</a><a href="index.html#human">Human</a><a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Verified Report #013 · PostgreSQL isolation matrix</p><p class="article-status">Executed · 11 Aug 2026</p></div>
+      <h1 class="article-title">Same Race. Different Signals.</h1>
+      <p class="article-dek">READ COMMITTED, REPEATABLE READ and SERIALIZABLE exposed different stale-writer outcomes. Transactional Trust Protocol v1.0 converted all of them into the same safe recovery discipline: reconcile business state before any re-execution.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>PostgreSQL 17.6 · 2 concurrent connections per level</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Report summary">
+        <div class="rail-card"><p class="section-label">Matrix score</p><strong>10 / 10</strong><span>Unsafe baseline → 2 effects</span><span>Every safe level → 1 effect</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">New rule</p><code>DB RETRY ≠ BUSINESS RETRY</code><span>reconcile first</span></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Report #012 proved that a version-bound PostgreSQL mutation can allow one writer while rejecting a stale competitor. Report #013 keeps the race identical and changes only the isolation level.</p>
+
+        <div class="trajectory-box"><span>READ COMMITTED</span><i>·</i><span>REPEATABLE READ</span><i>·</i><span>SERIALIZABLE</span></div>
+
+        <h2>The control still duplicates.</h2>
+        <p>Two independent READ COMMITTED connections both observed <code>ABSENT / version=100</code>. With unconditional writes, both committed: final state <code>COMMITTED / version=102 / effects=2</code>.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Observed safe matrix</p>
+          <div><b>RC</b><p><strong>READ COMMITTED</strong><span>Winner committed. Loser received a zero-row conditional update / precondition failure. Final effects: 1.</span></p></div>
+          <div><b>RR</b><p><strong>REPEATABLE READ</strong><span>Winner committed. Loser received serialization failure, SQLSTATE 40001. Final effects: 1.</span></p></div>
+          <div><b>S</b><p><strong>SERIALIZABLE</strong><span>Winner committed. Loser received serialization failure, SQLSTATE 40001. Final effects: 1.</span></p></div>
+        </section>
+
+        <h2>READ COMMITTED · conflict as zero rows.</h2>
+        <p>Both workers first observed <code>ABSENT / v100</code>. One transaction won the conditional update and committed <code>v101</code>. The losing conditional update matched no row and was classified as <code>PRECONDITION_FAILED</code>.</p>
+        <div class="trajectory-box"><span>expected v100</span><i>→</i><span>0 rows</span><i>→</i><span>REREAD</span><i>→</i><span>COMMITTED v101</span></div>
+
+        <h2>REPEATABLE READ · conflict as 40001.</h2>
+        <p>Under REPEATABLE READ, the stale transaction did not return a zero-row result. PostgreSQL aborted it with <code>serialization_failure / SQLSTATE 40001</code>. After rollback, a fresh connection reconciled <code>COMMITTED / v101 / effects=1</code>.</p>
+
+        <h2>SERIALIZABLE · conflict as 40001.</h2>
+        <p>The SERIALIZABLE race produced the same losing signal in this run: <code>serialization_failure / SQLSTATE 40001</code>. Again, reconciliation from a fresh transaction showed the intended effect was already committed.</p>
+
+        <div class="pull-quote">A transaction may be retryable while the business action is no longer legal to repeat.</div>
+
+        <h2>The TTP retry law</h2>
+        <div class="trajectory-box"><span>DB CONFLICT</span><i>→</i><span>ABORT STALE TX</span><i>→</i><span>RE-OBSERVE</span></div>
+        <div class="trajectory-box"><span>RE-VERIFY</span><i>→</i><span>RE-BIND</span><i>→</i><span>RETRY ONLY IF ABSENT + LEGAL</span></div>
+
+        <p>PostgreSQL documentation requires applications using Repeatable Read or Serializable to be prepared to retry transactions after serialization failures. TTP adds the application-level boundary: replay starts from fresh state and fresh authorization, not from the old mutation payload.</p>
+
+        <h2>New invariant</h2>
+        <div class="trajectory-box"><span>RETRYABLE TRANSACTION</span><i>≠</i><span>RETRYABLE BUSINESS ACTION</span></div>
+        <p>A zero-row conditional update and SQLSTATE <code>40001</code> are different database signals, but neither proves that the intended consequential effect is absent.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Score · 10/10</p>
+          <div><b>01</b><p><strong>Real PostgreSQL + unsafe baseline · 2/2</strong><span>Unconditional concurrent writes reproduced two effects.</span></p></div>
+          <div><b>02</b><p><strong>READ COMMITTED · 2/2</strong><span>One winner, one zero-row stale writer, one final effect.</span></p></div>
+          <div><b>03</b><p><strong>REPEATABLE READ · 2/2</strong><span>One winner, one SQLSTATE 40001, one final effect.</span></p></div>
+          <div><b>04</b><p><strong>SERIALIZABLE · 2/2</strong><span>One winner, one SQLSTATE 40001, one final effect.</span></p></div>
+          <div><b>05</b><p><strong>TTP recovery law · 2/2</strong><span>Every loser reconciled COMMITTED / v101 / effects=1 before any retry decision.</span></p></div>
+        </section>
+
+        <h2>Interpretation boundary</h2>
+        <p>This is one deterministic concurrency shape on PostgreSQL 17.6. It does not certify every isolation-level anomaly, PostgreSQL configuration, failover topology, distributed transaction, external API side effect or arbitrary agent system.</p>
+
+        <section class="sources-block">
+          <p class="section-label">Reproduce / inspect</p>
+          <ol>
+            <li><a href="transactional-trust-protocol-v1.html">Transactional Trust Protocol v1.0</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/actions/runs/31463056442" target="_blank" rel="noreferrer">Canonical GitHub Actions run</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/benchmarks/postgresql-isolation-matrix-v1.0/run_isolation_matrix.py" target="_blank" rel="noreferrer">Benchmark harness</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/013-postgresql-isolation-matrix/result.json" target="_blank" rel="noreferrer">Machine-readable result</a></li>
+            <li><a href="https://www.postgresql.org/docs/17/transaction-iso.html" target="_blank" rel="noreferrer">PostgreSQL 17 transaction isolation documentation</a></li>
+          </ol>
+          <p class="source-note">Evidence artifact digest: <code>sha256:b22f5d36ed8a8aee6d751c639f48f8b760b2237ed7edf0e86c4a455f449743a0</code>.</p>
+        </section>
+
+        <p class="closing-line"><strong>Verdict:</strong> the database signal changed with isolation level, but the safe application rule did not: end the stale transaction, reconcile current business state, and only re-execute if the action is still absent and legal.</p>
+
+        <div class="article-end"><p><strong>RESONANCE Verified Report #013</strong></p><p>conflict signal → reconcile → fresh decision.</p><a class="button" href="transactional-trust-protocol-v1.html">Read TTP v1.0</a></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Verified Report #013</p><p>PostgreSQL isolation matrix · 10/10</p></div><div><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified/013-postgresql-isolation-matrix">Evidence files ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
