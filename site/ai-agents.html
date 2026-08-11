@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="A RESONANCE research hub for AI agent reliability, security, recovery, transactional trust, HTTP ambiguity and durable execution memory." />
+  <meta name="description" content="A RESONANCE research hub for AI agent reliability, recovery, transactional trust, HTTP ambiguity, durable memory and idempotency retention." />
   <meta name="theme-color" content="#f7f3ea" />
   <title>AI Agent Reliability, Security & Verification | RESONANCE</title>
   <link rel="stylesheet" href="styles.css" />
@@ -35,7 +35,7 @@
         <p class="article-status">Evidence-first research map</p>
       </div>
       <h1 class="article-title">AI Agents: Reliability, Security & Verification</h1>
-      <p class="article-dek">A map of RESONANCE research on what happens when AI systems move from answering to acting: state, causality, containment, recovery, evidence, authority, transactional trust and durable execution memory.</p>
+      <p class="article-dek">A map of RESONANCE research on what happens when AI systems move from answering to acting: state, causality, containment, recovery, evidence, authority, transactional trust, durable execution memory and time-bounded replay protection.</p>
     </header>
 
     <div class="article-layout wrap">
@@ -61,7 +61,7 @@
         </div>
 
         <h2>Verified research.</h2>
-        <p>The verified-report series turns abstract trust claims into bounded, reproducible tests. The sequence now runs from framework checks into real PostgreSQL concurrency, transactional outbox, HTTP acknowledgement ambiguity and execution-memory durability across service restart.</p>
+        <p>The verified-report series turns abstract trust claims into bounded, reproducible tests. The sequence now runs from framework checks into real PostgreSQL concurrency, transactional outbox, HTTP acknowledgement ambiguity, execution-memory durability across restart and time-bounded idempotency retention.</p>
         <div class="verification-chain">
           <div><small>001</small><strong><a href="verified-001-openai-agents-sdk.html">SDK baseline</a></strong><p>Structural verification against a pinned OpenAI Agents SDK revision.</p></div>
           <div><small>002</small><strong><a href="verified-002-openai-agents-containment.html">Containment</a></strong><p>Tests of filesystem, workspace and Docker control-plane boundaries.</p></div>
@@ -79,11 +79,12 @@
           <div><small>014</small><strong><a href="verified-014-postgresql-transactional-outbox.html">Transactional outbox</a></strong><p>Durable delivery intent, stable idempotency and reconciliation across an external-effect boundary.</p></div>
           <div><small>015</small><strong><a href="verified-015-http-idempotency-boundary.html">HTTP idempotency boundary</a></strong><p>A separate service commits remotely, drops the response, then proves same-key redelivery and remote-status reconciliation.</p></div>
           <div><small>016</small><strong><a href="verified-016-idempotency-state-durability.html">Idempotency state durability</a></strong><p>A durable effect survives service restart while volatile dedupe memory disappears; persistent safety memory or reconciliation prevents replay.</p></div>
+          <div><small>017</small><strong><a href="verified-017-idempotency-ttl-replay.html">Idempotency TTL / replay after expiry</a></strong><p>A durable dedupe record can expire before delayed recovery. Short retention duplicated a same-key replay; sufficient retention or authoritative reconciliation preserved one effect.</p></div>
         </div>
 
         <h2>The research question.</h2>
-        <div class="trajectory-box"><span>intent</span><i>→</i><span>state</span><i>→</i><span>action</span><i>→</i><span>effect</span><i>→</i><span>memory</span><i>→</i><span>evidence</span></div>
-        <p>The central question is not simply whether an agent produced the desired final output. It is whether the trajectory can be independently inspected: what caused the action, whether the transition was allowed, what survived failure or restart, and whether the surviving evidence and execution memory deserve trust.</p>
+        <div class="trajectory-box"><span>intent</span><i>→</i><span>state</span><i>→</i><span>action</span><i>→</i><span>effect</span><i>→</i><span>memory</span><i>→</i><span>time</span><i>→</i><span>evidence</span></div>
+        <p>The central question is not simply whether an agent produced the desired final output. It is whether the trajectory can be independently inspected: what caused the action, whether the transition was allowed, what survived failure or restart, whether safety memory remains valid at recovery time, and whether the surviving evidence deserves trust.</p>
 
         <p><a class="button" href="issue-001.html">Read Issue 001 · The Age of Agents</a></p>
       </article>
