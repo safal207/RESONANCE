@@ -61,7 +61,7 @@
         </div>
 
         <h2>Verified research.</h2>
-        <p>The verified-report series turns abstract trust claims into bounded, reproducible tests. The sequence now runs from framework checks into real PostgreSQL concurrency and a database-to-external-effect boundary.</p>
+        <p>The verified-report series turns abstract trust claims into bounded, reproducible tests. The sequence now runs from framework checks into real PostgreSQL concurrency, transactional outbox and a real HTTP acknowledgement boundary.</p>
         <div class="verification-chain">
           <div><small>001</small><strong><a href="verified-001-openai-agents-sdk.html">SDK baseline</a></strong><p>Structural verification against a pinned OpenAI Agents SDK revision.</p></div>
           <div><small>002</small><strong><a href="verified-002-openai-agents-containment.html">Containment</a></strong><p>Tests of filesystem, workspace and Docker control-plane boundaries.</p></div>
@@ -77,6 +77,7 @@
           <div><small>012</small><strong><a href="verified-012-postgresql-transactional-trust-adapter.html">PostgreSQL adapter</a></strong><p>The state-version invariant moved from model to a real PostgreSQL service.</p></div>
           <div><small>013</small><strong><a href="verified-013-postgresql-isolation-matrix.html">Isolation matrix</a></strong><p>0-row conflicts and SQLSTATE 40001 mapped into one business recovery law.</p></div>
           <div><small>014</small><strong><a href="verified-014-postgresql-transactional-outbox.html">Transactional outbox</a></strong><p>Durable delivery intent, stable idempotency and reconciliation across an external-effect boundary.</p></div>
+          <div><small>015</small><strong><a href="verified-015-http-idempotency-boundary.html">HTTP idempotency boundary</a></strong><p>A separate service commits remotely, drops the response, then proves same-key redelivery and remote-status reconciliation.</p></div>
         </div>
 
         <h2>The research question.</h2>

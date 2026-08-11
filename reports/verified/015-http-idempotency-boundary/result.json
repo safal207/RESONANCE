@@ -1,0 +1,117 @@
+{
+  "benchmark": "RESONANCE HTTP Idempotency Boundary",
+  "benchmark_version": "1.0",
+  "protocol": "RESONANCE Transactional Trust Protocol v1.0",
+  "executed_at": "2026-08-11T06:25:32.129718+00:00",
+  "database": {
+    "server_version": "17.6",
+    "server_version_num": 170006,
+    "container_image": "postgres:17.6-alpine",
+    "container_image_digest": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94"
+  },
+  "http_service": {
+    "service": "resonance-external-http",
+    "service_instance": "external-http-container",
+    "hostname": "3f9f87866627",
+    "pid": 1,
+    "status": "ok",
+    "image": "python:3.12-slim",
+    "image_digest": "python@sha256:229a2c5bfa27522db7815ea81f9bed70af17ccb9de9fc7ad142b1877b5830d36"
+  },
+  "score": 10,
+  "max_score": 10,
+  "classification": "HTTP idempotency boundary protocol passes",
+  "unsafe": {
+    "operation": "http-unsafe-op",
+    "business_state": "committed",
+    "business_version": 101,
+    "logical_outbox_key": "http-unsafe-op:effect:v1",
+    "first_post": {
+      "idempotency_key": "http-unsafe:attempt:1",
+      "outcome": "ack_unknown",
+      "error_type": "RemoteDisconnected"
+    },
+    "retry_post": {
+      "idempotency_key": "http-unsafe:attempt:2",
+      "outcome": "acknowledged",
+      "delivery": "applied",
+      "http_status": 200
+    },
+    "remote_status": "conflict",
+    "remote_post_requests": 2,
+    "remote_effect_count": 2,
+    "retry_identity_reused": false
+  },
+  "safe_redelivery": {
+    "operation": "http-safe-redelivery-op",
+    "business_state": "committed",
+    "business_version": 101,
+    "stable_key": "http-safe-redelivery-op:effect:v1",
+    "first_post": {
+      "outcome": "ack_unknown",
+      "error_type": "RemoteDisconnected"
+    },
+    "status_after_ack_loss": {
+      "status": "committed",
+      "effect_count": 1,
+      "post_requests": 1,
+      "ack_drops": 1
+    },
+    "second_post": {
+      "outcome": "acknowledged",
+      "http_status": 200,
+      "delivery": "deduplicated"
+    },
+    "final_http_status": {
+      "status": "committed",
+      "effect_count": 1,
+      "post_requests": 2,
+      "ack_drops": 1
+    },
+    "final_outbox": {
+      "status": "delivered",
+      "delivery_attempts": 2
+    }
+  },
+  "safe_reconcile_before_retry": {
+    "operation": "http-safe-reconcile-op",
+    "business_state": "committed",
+    "business_version": 101,
+    "stable_key": "http-safe-reconcile-op:effect:v1",
+    "first_post": {
+      "outcome": "ack_unknown",
+      "error_type": "RemoteDisconnected"
+    },
+    "reconciled_http_status": {
+      "status": "committed",
+      "effect_count": 1,
+      "post_requests": 1,
+      "ack_drops": 1
+    },
+    "second_post_made": false,
+    "final_outbox": {
+      "status": "delivered",
+      "delivery_attempts": 1
+    }
+  },
+  "checks": [
+    {"id": "real_postgresql_and_separate_http_service_boundary", "pass": true, "points": 2},
+    {"id": "unsafe_http_ack_loss_new_identity_duplicates_remote_effect", "pass": true, "points": 2},
+    {"id": "stable_idempotency_key_dedupes_real_http_redelivery", "pass": true, "points": 2},
+    {"id": "http_status_reconciliation_avoids_second_post", "pass": true, "points": 2},
+    {"id": "ttp_http_boundary_final_invariant", "pass": true, "points": 2}
+  ],
+  "invariants": [
+    "HTTP ACK loss does not imply remote effect absence.",
+    "A retry of the same logical effect must preserve one stable idempotency identity when the remote contract supports it.",
+    "A real HTTP redelivery may occur more than once while the remote committed effect remains one.",
+    "If remote status can be queried authoritatively, reconcile before making another consequential POST after an ambiguous acknowledgement.",
+    "Database state, outbox state, HTTP request identity, remote status and final effect count belong in one proof trajectory."
+  ],
+  "scope": "Real PostgreSQL service container plus a separate Dockerized HTTP service; remote effect state is in the HTTP service process and is outside the PostgreSQL transaction boundary.",
+  "github_actions_run": 31465000594,
+  "evidence_artifact": "resonance-http-idempotency-boundary-v1.0",
+  "artifact_id": 9091169764,
+  "artifact_digest": "sha256:afd38661d64ccc3e04f1fa663c0c45a536e564fa872153d03424bc2c0d8b3afd",
+  "external_safety_certification": false
+}
