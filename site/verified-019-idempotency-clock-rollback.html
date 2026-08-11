@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified #019 tests clock rollback and Temporal ABA: old wall-clock values can reappear after expiry history has already advanced." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Verified #019 — Clock Rollback / Temporal ABA | RESONANCE" />
+  <meta property="og:description" content="A reversible clock value must not resurrect a retired execution state. Temporal epochs and monotonic watermarks fence the replay." />
+  <meta property="og:type" content="article" />
+  <title>Verified #019 — Clock Rollback / Temporal ABA | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header">
+    <div class="masthead wrap"><a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a><p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button></div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation"><a href="ai-agents.html">AI Agents</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="index.html#economy">Startups & Economy</a><a href="index.html#human">Human</a><a href="issue-001.html">Issue 001</a></nav>
+  </header>
+
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Verified Report · 019</p><p class="article-status">Reproducible · 10/10 · 11 Aug 2026</p></div>
+      <h1 class="article-title">Clock Rollback / Temporal ABA</h1>
+      <p class="article-dek">A wall clock can return to an old value after expiry history has already advanced. TTP tests whether a retired execution state can be accidentally resurrected — and how monotonic epochs or time watermarks prevent it.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>TTP v1.0 · Time × Memory × History</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Verification summary">
+        <div class="rail-card"><p class="section-label">Result</p><strong>10 / 10</strong><span>Temporal ABA controls pass</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">Core invariant</p><code>same clock value ≠ same temporal state</code></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Verified #018 established that different clocks can disagree about expiry. #019 asks a harder question: what if one clock first crosses expiry and later moves backward, making the old time value appear valid again after the execution history has changed?</p>
+
+        <div class="trajectory-box"><span>ACTIVE</span><i>→</i><span>EXPIRED</span><i>→</i><span>CLOCK ROLLBACK</span><i>→</i><span>ACTIVE?</span></div>
+
+        <h2>The same record visibly performs a Temporal ABA.</h2>
+        <p>With one durable idempotency record expiring at <code>7,000,060</code>, the service was queried at three logical wall-clock values:</p>
+        <section class="claim-panel">
+          <div><b>A</b><p><strong>7,000,050 → ACTIVE</strong><span>The record is before expiry.</span></p></div>
+          <div><b>B</b><p><strong>7,000,070 → EXPIRED</strong><span>The expiry boundary has been crossed.</span></p></div>
+          <div><b>A</b><p><strong>7,000,050 → ACTIVE again</strong><span>The scalar returned to its old value.</span></p></div>
+        </section>
+        <p>Across all three observations the remote effect remained <code>COMMITTED / effect_count=1</code>. The value returned; the history did not.</p>
+        <div class="pull-quote">Same wall-clock value ≠ same temporal state after history advances.</div>
+
+        <h2>Unsafe · cleanup advances history, rollback resurrects replay permission.</h2>
+        <p>The unsafe case committed one remote effect, lost the acknowledgement, then crossed expiry. Maintenance removed the expired dedupe record and advanced a monotonic temporal epoch:</p>
+        <div class="trajectory-box"><span>EXPIRED</span><i>→</i><span>GC removes record</span><i>→</i><span>epoch 1 → 2</span></div>
+        <p>The wall clock then rolled back from <code>8,000,070</code> to <code>8,000,050</code>, numerically before the original expiry. An un-fenced worker treated the old TTL window as safe replay territory and sent the same Idempotency-Key again.</p>
+        <div class="trajectory-box"><span>same key</span><i>→</i><span>rolled-back time</span><i>→</i><span>APPLIED</span><i>→</i><span>2 EFFECTS</span></div>
+        <p>Final remote state: <strong>effect_count=2 / CONFLICT</strong>.</p>
+
+        <h2>Safe A · monotonic temporal epoch fences the old decision.</h2>
+        <p>Recovery bound itself to temporal epoch <code>2</code>. Expiry cleanup advanced the service to epoch <code>3</code>. After wall-clock rollback, the same-key retry still carried the old execution epoch.</p>
+        <div class="trajectory-box"><span>expected epoch 2</span><i>≠</i><span>current epoch 3</span><i>→</i><span>HTTP 409</span><i>→</i><span>FENCED OUT</span></div>
+        <p>The service returned <code>temporal_epoch_mismatch</code>, preserved <code>effect_count=1</code>, and recovery reconciled authoritative <code>COMMITTED</code>.</p>
+
+        <h2>Safe B · monotonic time watermark refuses to move backward.</h2>
+        <p>The second safe control retained the largest time already observed in the trajectory:</p>
+        <div class="trajectory-box"><span>seen 10,000,070</span><i>→</i><span>wall clock 10,000,050</span><i>→</i><span>effective now 10,000,070</span></div>
+        <p>The temporal state remained <code>EXPIRED</code>. Recovery reconciled the committed remote effect and made <strong>no second POST</strong>.</p>
+
+        <h2>What #019 adds to TTP.</h2>
+        <section class="claim-panel">
+          <div><b>I35</b><p><strong>SAME WALL-CLOCK VALUE ≠ SAME TEMPORAL STATE AFTER HISTORY ADVANCES</strong><span>A timestamp is not a history identifier.</span></p></div>
+          <div><b>I36</b><p><strong>RETIRED SAFETY EPOCH MUST NOT BE RESURRECTED BY CLOCK ROLLBACK</strong><span>Past permission does not return with an old time value.</span></p></div>
+          <div><b>I37</b><p><strong>TIME-BASED EXECUTION SHOULD BIND TO MONOTONIC HISTORY</strong><span>Use a temporal epoch, fence or monotonic watermark.</span></p></div>
+          <div><b>I38</b><p><strong>CLOCK ROLLBACK AFTER IRREVERSIBLE TEMPORAL TRANSITION IS EVIDENCE CONFLICT</strong><span>Fence or reconcile instead of replaying.</span></p></div>
+        </section>
+
+        <h2>Evidence.</h2>
+        <p>GitHub Actions run <code>31470122034</code> completed successfully. Artifact <code>resonance-idempotency-clock-rollback-v1.0</code> has ID <code>9093020263</code> and digest <code>sha256:6132fb3a357952eedcd54aac4d15b48cd429684f9630ed152f3c3b65674b9dce</code>.</p>
+        <p>The run used PostgreSQL 17.6, psycopg 3.2.9 and a separate <code>python:3.12-slim</code> HTTP service with persistent SQLite effect/idempotency state. The container image digest was <code>python@sha256:229a2c5bfa27522db7815ea81f9bed70af17ccb9de9fc7ad142b1877b5830d36</code>.</p>
+
+        <h2>Interpretation boundary.</h2>
+        <p>The clock sequence is deterministic logical benchmark time. The experiment does not test operating-system clock rollback, NTP/PTP/chrony, leap seconds, hardware drift, distributed consensus time, multi-region timing or universal exactly-once guarantees. The TTL and timestamps are benchmark parameters, not production recommendations.</p>
+
+        <section class="sources-block"><p class="section-label">Inspect / reproduce</p><ol><li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/019-idempotency-clock-rollback/REPORT.md" target="_blank" rel="noreferrer">Canonical report</a></li><li><a href="https://github.com/safal207/RESONANCE/tree/main/benchmarks/idempotency-clock-rollback-v1.0" target="_blank" rel="noreferrer">Benchmark harness</a></li><li><a href="ttp-temporal-aba.html">TTP Temporal ABA rule</a></li><li><a href="verified-018-idempotency-clock-skew.html">Previous · Verified Report #018</a></li></ol></section>
+
+        <p class="closing-line"><strong>Verdict:</strong> a reversible clock value must not be allowed to resurrect an execution state whose temporal history has already advanced.</p>
+        <div class="article-end"><p><strong>RESONANCE Verified #019</strong></p><p>clock rollback → temporal ABA → monotonic history → safe recovery.</p><a class="button" href="transactional-trust-protocol-v1.html">Read TTP v1.0</a></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Verified #019</p><p>Clock Rollback / Temporal ABA</p></div><div><a href="https://github.com/safal207/RESONANCE">GitHub repository ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
