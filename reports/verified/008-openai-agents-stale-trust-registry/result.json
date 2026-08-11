@@ -1,0 +1,57 @@
+{
+  "report": "RESONANCE Verified Report #008",
+  "benchmark": "RESONANCE Stale Trust Registry",
+  "benchmark_version": "0.8",
+  "target_repository": "openai/openai-agents-python",
+  "target_version": "0.19.4",
+  "target_sha": "2231eb5d40cd4a9d6b86f79492e984eeb3301263",
+  "executed_at": "2026-08-11T04:32:17.374082+00:00",
+  "github_actions_run": 31458757238,
+  "artifact": "resonance-openai-agents-stale-trust-registry-v0.8",
+  "artifact_digest": "sha256:1877e7bf2847420f98c885f0bf7485970a5edd9cc3f4072c46945caf4565f14c",
+  "decision_epoch": 1786423200,
+  "max_registry_age_seconds": 120,
+  "score": 10,
+  "max_score": 10,
+  "classification": "trust-registry freshness protocol passes",
+  "invariant": "Fresh evidence must not authorize irreversible retry when the trust registry is stale or unavailable; refresh or preserve TRUST_UNKNOWN.",
+  "scenarios": [
+    {
+      "id": "unsafe_stale_registry_allows_revoked_key",
+      "signature_valid": true,
+      "evidence_fresh": true,
+      "registry_age_seconds": 600,
+      "registry_fresh": false,
+      "key_active_according_to_stale_snapshot": true,
+      "final_effects": 2
+    },
+    {
+      "id": "safe_refresh_reveals_revocation",
+      "registry_age_before_seconds": 600,
+      "registry_fresh_before": false,
+      "registry_age_after_seconds": 0,
+      "registry_fresh_after": true,
+      "key_active_after_refresh": false,
+      "trusted_after_refresh": false,
+      "final_effects": 1
+    },
+    {
+      "id": "safe_refresh_unavailable_holds_trust_unknown",
+      "registry_refresh": "unavailable",
+      "decision": "TRUST_UNKNOWN",
+      "final_effects": 1
+    },
+    {
+      "id": "safe_fresh_registry_accepts_current_key",
+      "key_id": "primary-v2",
+      "registry_age_seconds": 30,
+      "registry_fresh": true,
+      "status": "committed",
+      "trusted": true,
+      "final_effects": 1
+    }
+  ],
+  "scope": "Application-level trust-registry freshness handling executed through the pinned OpenAI Agents SDK tool loop with upstream FakeModel. Synthetic local effects, toy HMAC keys and in-memory trust registries only.",
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
