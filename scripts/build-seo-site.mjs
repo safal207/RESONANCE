@@ -12,6 +12,16 @@ const metadata = {
     description: 'RESONANCE is an independent evidence-first journal covering AI agents, trust, verification, technology, science and human progress.',
     kind: 'website',
   },
+  'index.ru.html': {
+    title: 'RESONANCE — журнал об AI-агентах, доверии и верификации',
+    description: 'Русское издание RESONANCE — независимого evidence-first журнала об AI-агентах, trust infrastructure, верификации, технологиях, науке и человеческом прогрессе.',
+    kind: 'website',
+  },
+  'index.zh.html': {
+    title: 'RESONANCE 中文版 — AI Agent、信任、验证与未来技术',
+    description: 'RESONANCE 中文版是一份以证据为先的独立全球期刊，持续研究 AI Agent、信任基础设施、执行验证、科学、技术与人类进步，并把文章连接到真实市场问题与可验证的产品需求。',
+    kind: 'website',
+  },
   'issue-001.html': {
     title: 'The Age of Agents — AI Agent Trust, Safety & Verification | RESONANCE',
     description: 'RESONANCE Issue 001 explores AI agents, trust, failure, containment, recovery, verification and evidence through analysis, benchmarks and reproducible reports.',
@@ -21,6 +31,35 @@ const metadata = {
     title: 'AI Agent Reliability, Security & Verification | RESONANCE',
     description: 'A RESONANCE research hub for AI agent reliability, security, failure taxonomy, containment, recovery, evidence and verification.',
     kind: 'collection',
+  },
+  'open-problems.html': {
+    title: 'AI Agent Open Problems & Demand Graph | RESONANCE',
+    description: 'RESONANCE Open Problems tracks recurring evidence-backed AI-agent failures and missing capabilities discovered through real market dialogue, excluding synthetic examples from demand metrics.',
+    kind: 'collection',
+  },
+  'verified-workflow.html': {
+    title: 'AI Agent Verified Workflow Pilot | RESONANCE',
+    description: 'RESONANCE Verified Workflow maps one consequential AI-agent workflow across state, causality, phase, transition, time, recovery, verification and evidence before productization.',
+    kind: 'article',
+    keywords: ['AI agent audit', 'agent verification', 'workflow verification', 'AI reliability'],
+  },
+  'before-you-let-an-ai-agent-move-money.html': {
+    title: 'AI Agent Payments: Authorization vs Verification | RESONANCE',
+    description: 'Before you let an AI agent move money, verify more than permission: model state, timing, recovery, reconciliation, invariants and evidence across the full financial execution trajectory.',
+    kind: 'article',
+    keywords: ['agentic payments', 'AI agent payments', 'agentic commerce', 'reconciliation', 'AI verification'],
+  },
+  'before-you-let-an-ai-agent-move-money.ru.html': {
+    title: 'AI-агенты и деньги: авторизация и верификация | RESONANCE',
+    description: 'Прежде чем доверить AI-агенту деньги, недостаточно проверить разрешение: RESONANCE моделирует состояние, время, recovery, reconciliation, инварианты и evidence всей финансовой траектории.',
+    kind: 'article',
+    keywords: ['AI-агенты', 'agentic payments', 'верификация', 'reconciliation', 'финансовые агенты'],
+  },
+  'before-you-let-an-ai-agent-move-money.zh.html': {
+    title: 'AI Agent 资金执行：授权、恢复与验证 | RESONANCE 中文版',
+    description: '在允许 AI Agent 支配资金之前，仅验证授权还不够。RESONANCE 从状态、时间、恢复、对账、不变量、独立验证与证据链检查完整金融执行轨迹，并通过真实工作流发现下一步应构建的能力。',
+    kind: 'article',
+    keywords: ['AI Agent', 'agentic payments', '智能体支付', '验证', '对账', '信任基础设施'],
   },
   'the-agentic-turn.html': {
     title: 'AI Agents: From Chat to Action — The Agentic Turn | RESONANCE',
@@ -78,6 +117,16 @@ function canonicalFor(file) {
   return file === 'index.html' ? BASE : `${BASE}${file}`;
 }
 
+function languageFor(file) {
+  if (file === 'index.ru.html' || file.endsWith('.ru.html')) return 'ru';
+  if (file === 'index.zh.html' || file.endsWith('.zh.html')) return 'zh-CN';
+  return 'en';
+}
+
+function ogLocaleFor(language) {
+  return ({ en: 'en_US', ru: 'ru_RU', 'zh-CN': 'zh_CN' })[language] || 'en_US';
+}
+
 function textContent(value = '') {
   return value
     .replace(/<script[\s\S]*?<\/script>/gi, ' ')
@@ -114,7 +163,7 @@ function stripExistingSeo(html) {
   return html
     .replace(/\n?\s*<!-- SEO:START -->[\s\S]*?<!-- SEO:END -->\s*\n?/i, '\n')
     .replace(/\s*<link\s+rel=["']canonical["'][^>]*>\s*/gi, '\n')
-    .replace(/\s*<meta\s+property=["']og:(?:title|description|type|url)["'][^>]*>\s*/gi, '\n')
+    .replace(/\s*<meta\s+property=["']og:(?:title|description|type|url|locale|locale:alternate)["'][^>]*>\s*/gi, '\n')
     .replace(/\s*<meta\s+name=["']twitter:(?:card|title|description)["'][^>]*>\s*/gi, '\n')
     .replace(/\s*<script\s+type=["']application\/ld\+json["']\s+data-resonance-seo=["']true["'][^>]*>[\s\S]*?<\/script>\s*/gi, '\n');
 }
@@ -137,6 +186,7 @@ function replaceDescription(html, description) {
 
 function buildSchema(file, html, cfg, canonical, description) {
   const headline = readH1(html) || cfg.title.replace(/\s*\|\s*RESONANCE.*$/i, '');
+  const language = languageFor(file);
   const organization = {
     '@type': 'Organization',
     name: 'RESONANCE',
@@ -152,10 +202,10 @@ function buildSchema(file, html, cfg, canonical, description) {
         {
           '@type': 'WebSite',
           name: 'RESONANCE',
-          url: BASE,
+          url: canonical,
           description,
           publisher: { '@type': 'Organization', name: 'RESONANCE', url: BASE },
-          inLanguage: 'en',
+          inLanguage: language,
         },
       ],
     };
@@ -174,7 +224,7 @@ function buildSchema(file, html, cfg, canonical, description) {
       isPartOf: { '@type': 'WebSite', name: 'RESONANCE', url: BASE },
       publisher: organization,
       hasPart: articleFiles,
-      inLanguage: 'en',
+      inLanguage: language,
     };
   }
 
@@ -188,7 +238,7 @@ function buildSchema(file, html, cfg, canonical, description) {
     isPartOf: { '@type': 'CreativeWorkSeries', name: 'RESONANCE Issue 001 — The Age of Agents', url: canonicalFor('issue-001.html') },
     author: { '@type': 'Organization', name: readAuthor(html), url: BASE },
     publisher: organization,
-    inLanguage: 'en',
+    inLanguage: language,
   };
   const published = readPublishedDate(html);
   if (published) schema.datePublished = published;
@@ -204,6 +254,7 @@ function injectSeo(file, source) {
   let html = stripExistingSeo(source);
   const description = cfg.description || readMetaDescription(html) || readH1(html);
   const canonical = canonicalFor(file);
+  const language = languageFor(file);
   html = replaceTitle(html, cfg.title);
   html = replaceDescription(html, description);
 
@@ -217,7 +268,9 @@ function injectSeo(file, source) {
   const schema = buildSchema(file, html, cfg, canonical, description);
   const safeDescription = description.replace(/"/g, '&quot;');
   const safeTitle = cfg.title.replace(/"/g, '&quot;');
-  const seoBlock = `\n  <!-- SEO:START -->\n  <link rel="canonical" href="${canonical}" />\n  <meta property="og:title" content="${safeTitle}" />\n  <meta property="og:description" content="${safeDescription}" />\n  <meta property="og:type" content="${cfg.kind === 'article' ? 'article' : 'website'}" />\n  <meta property="og:url" content="${canonical}" />\n  <meta name="twitter:card" content="summary" />\n  <meta name="twitter:title" content="${safeTitle}" />\n  <meta name="twitter:description" content="${safeDescription}" />\n  <script type="application/ld+json" data-resonance-seo="true">${JSON.stringify(schema)}</script>\n  <!-- SEO:END -->\n`;
+  const ogLocale = ogLocaleFor(language);
+  const alternateLocales = ['en_US', 'ru_RU', 'zh_CN'].filter((value) => value !== ogLocale);
+  const seoBlock = `\n  <!-- SEO:START -->\n  <link rel="canonical" href="${canonical}" />\n  <meta property="og:title" content="${safeTitle}" />\n  <meta property="og:description" content="${safeDescription}" />\n  <meta property="og:type" content="${cfg.kind === 'article' ? 'article' : 'website'}" />\n  <meta property="og:url" content="${canonical}" />\n  <meta property="og:locale" content="${ogLocale}" />\n  ${alternateLocales.map((value) => `<meta property="og:locale:alternate" content="${value}" />`).join('\n  ')}\n  <meta name="twitter:card" content="summary" />\n  <meta name="twitter:title" content="${safeTitle}" />\n  <meta name="twitter:description" content="${safeDescription}" />\n  <script type="application/ld+json" data-resonance-seo="true">${JSON.stringify(schema)}</script>\n  <!-- SEO:END -->\n`;
   return html.replace('</head>', `${seoBlock}</head>`);
 }
 
