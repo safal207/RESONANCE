@@ -1,0 +1,41 @@
+name: RESONANCE SEO Contract
+
+on:
+  pull_request:
+    paths:
+      - 'site/**'
+      - 'scripts/build-seo-site.mjs'
+      - 'scripts/verify-seo.mjs'
+      - '.github/workflows/seo.yml'
+      - '.github/workflows/pages.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - 'scripts/build-seo-site.mjs'
+      - 'scripts/verify-seo.mjs'
+      - '.github/workflows/seo.yml'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-seo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Build SEO-ready publication
+        run: node scripts/build-seo-site.mjs
+
+      - name: Verify SEO contract
+        run: node scripts/verify-seo.mjs
