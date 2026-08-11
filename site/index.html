@@ -40,7 +40,7 @@
           <p class="dek">AI systems are beginning to plan, act, transact, coordinate, recover and touch real infrastructure. The next question is not only what they can do — but how we know their actions are correct.</p>
           <div class="hero-actions">
             <a class="button" href="issue-001.html">Enter Issue 001</a>
-            <a class="text-link" href="verified-003-openai-agents-recovery.html">Latest verified report →</a>
+            <a class="text-link" href="verified-004-openai-agents-ambiguous-reconciliation.html">Latest verified report →</a>
           </div>
         </div>
         <aside class="issue-cover" aria-label="Issue 001 cover">
@@ -92,13 +92,13 @@
     <section class="section human-section">
       <div class="wrap editorial-grid">
         <div>
-          <p class="section-label">Verified Report #003 · Recovery under ambiguity</p>
-          <h2>A timeout is not a failed action.</h2>
+          <p class="section-label">Verified Report #004 · Ambiguous reconciliation</p>
+          <h2>UNKNOWN is not permission to retry.</h2>
         </div>
         <div>
-          <p>Blind retry after a synthetic timeout-after-commit produced <strong>two side effects</strong>. The recovery-aware path reconciled durable state first and preserved exactly one intended effect in both ambiguous branches. Recovery protocol score: <strong>10/10</strong>.</p>
-          <a class="button" href="verified-003-openai-agents-recovery.html">Open Verified Report #003</a>
-          <p><a class="text-link" href="verified-002-openai-agents-containment.html">Previous: Verified Report #002 · 8/10 containment →</a></p>
+          <p>When both a synthetic side effect and its reconciliation were ambiguous, the unsafe policy produced <strong>two effects</strong>. Timeout-aware and stale-aware recovery paths preserved UNKNOWN, blocked retry and kept exactly one intended effect. Protocol score: <strong>10/10</strong>.</p>
+          <a class="button" href="verified-004-openai-agents-ambiguous-reconciliation.html">Open Verified Report #004</a>
+          <p><a class="text-link" href="verified-003-openai-agents-recovery.html">Previous: Verified Report #003 · 10/10 recovery →</a></p>
         </div>
       </div>
     </section>
@@ -125,7 +125,7 @@
 
     <section class="issue-invite wrap section">
       <div><p class="section-label">Issue 001 · Founding Edition</p><h2>THE AGE OF AGENTS</h2></div>
-      <div><p>The founding issue now connects analysis → framework → benchmark → external verification → containment → recovery: from describing the shift to testing how systems survive ambiguous outcomes.</p><a class="button" href="issue-001.html">Open the issue</a></div>
+      <div><p>The founding issue now connects analysis → framework → benchmark → external verification → containment → recovery → uncertainty preservation: from describing the shift to testing how systems behave when even their recovery evidence is ambiguous.</p><a class="button" href="issue-001.html">Open the issue</a></div>
     </section>
   </main>
 
