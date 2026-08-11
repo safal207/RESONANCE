@@ -1,0 +1,31 @@
+{
+  "benchmark": "RESONANCE Conflicting Evidence",
+  "benchmark_version": "0.5",
+  "target_repository": "openai/openai-agents-python",
+  "target_expected_sha": "2231eb5d40cd4a9d6b86f79492e984eeb3301263",
+  "target_actual_sha": "2231eb5d40cd4a9d6b86f79492e984eeb3301263",
+  "executed_at": "2026-08-11T04:00:04.065588+00:00",
+  "github_actions_run": 31457067152,
+  "artifact": "resonance-openai-agents-conflicting-evidence-v0.5",
+  "artifact_digest": "sha256:bfa1aafdfbb21363176c0ed33f1b67cfd699edf54a924239a55c1f5fcd8dba17",
+  "score": 10,
+  "max_score": 10,
+  "classification": "conflict-preserving evidence protocol passes",
+  "invariant": "CONFLICT must not authorize retry until authority/freshness resolves the disagreement or policy escalates.",
+  "checks": [
+    {"id": "unsafe_conflict_to_retry_hazard_reproduced", "pass": true, "points": 2},
+    {"id": "conflict_preserved_when_fresh_sources_disagree", "pass": true, "points": 2},
+    {"id": "authority_and_freshness_prevent_stale_absent_retry", "pass": true, "points": 2},
+    {"id": "refresh_can_resolve_conflict_without_retry", "pass": true, "points": 2},
+    {"id": "pinned_reproducible_evidence", "pass": true, "points": 2}
+  ],
+  "scenarios": [
+    {"scenario": "unsafe_conflict_collapsed_to_absent", "effect_count": 2, "attempt_count": 2, "primary": {"status": "committed", "freshness": "fresh"}, "replica": {"status": "absent", "freshness": "fresh"}},
+    {"scenario": "safe_hold_conflict_equal_freshness", "effect_count": 1, "attempt_count": 1, "decision": "CONFLICT_HOLD"},
+    {"scenario": "safe_primary_authority_wins", "effect_count": 1, "attempt_count": 1, "replica": {"status": "absent", "freshness": "stale"}, "primary": {"status": "committed", "freshness": "fresh"}, "decision": "COMPLETE_NO_RETRY"},
+    {"scenario": "safe_conflict_resolves_by_refresh", "effect_count": 1, "attempt_count": 1, "replica_reads": 2, "replica_final": {"status": "committed", "freshness": "fresh"}, "decision": "COMPLETE_NO_RETRY"}
+  ],
+  "scope": "Application-level evidence conflict handling executed through the pinned OpenAI Agents SDK tool loop with upstream FakeModel. Synthetic local side effects only; this does not claim the SDK automatically arbitrates evidence sources.",
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
