@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified Report #010 — Distributed Commit Race: two valid readers can still create duplicate writes unless compare and transition share an atomic version precondition." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Verified Report #010 — Distributed Commit Race | RESONANCE" />
+  <meta property="og:description" content="Two nodes read the same ABSENT/version=100 snapshot. Split check/write duplicated the effect; CAS produced one winner and one safe conflict." />
+  <meta property="og:type" content="article" />
+  <title>Verified Report #010 — Distributed Commit Race | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="index.html#intelligence">AI</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="index.html#economy">Startups & Economy</a><a href="index.html#human">Human</a><a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Verified Report #010 · Distributed commit race</p><p class="article-status">Executed · 11 Aug 2026</p></div>
+      <h1 class="article-title">Two Correct Reads. Two Wrong Writes.</h1>
+      <p class="article-dek">A shared-state snapshot can be correct for two nodes and still become unsafe before either write completes. In a deterministic run through a pinned OpenAI Agents SDK tool loop, split check/write produced a duplicate; a version-bound compare-and-transition produced one winner.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>Target · OpenAI Agents SDK v0.19.4 · SHA 2231eb5d</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Report summary">
+        <div class="rail-card"><p class="section-label">Atomicity score</p><strong>10 / 10</strong><span>4 deterministic trajectories</span><span>Split check/write → 2 effects</span><span>CAS race → 1 effect</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">Invariant</p><code>CHECK + WRITE MUST SHARE ONE VERSION PRECONDITION</code><span>one state boundary</span></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Report #009 showed that authorization can become invalid between check and use. Report #010 removes authorization changes entirely and asks a narrower distributed-systems question: what if the business state itself changes between a correct read and the write it was supposed to justify?</p>
+
+        <div class="trajectory-box"><span>A reads ABSENT / v100</span><i>+</i><span>B reads ABSENT / v100</span><i>→</i><span>WHO MAY COMMIT?</span></div>
+
+        <h2>Split check/write reproduced a duplicate.</h2>
+        <p>Both synthetic nodes observed the same valid state: <code>ABSENT</code>, version <code>100</code>, zero effects. Node B wrote first and advanced the store to version 101. Node A then used its old snapshot without enforcing it at write time.</p>
+
+        <div class="verification-chain">
+          <div><small>01</small><strong>Read A</strong><p>ABSENT / version 100.</p></div>
+          <div><small>02</small><strong>Read B</strong><p>ABSENT / version 100.</p></div>
+          <div><small>03</small><strong>Write B</strong><p>Effect #1, version becomes 101.</p></div>
+          <div><small>04</small><strong>Stale write A</strong><p>Old v100 snapshot reused; effect #2.</p></div>
+        </div>
+
+        <div class="pull-quote">The reads were correct. The bug was the gap between observing the state and mutating it.</div>
+
+        <section class="claim-panel">
+          <p class="section-label">Comparative result</p>
+          <div><b>×2</b><p><strong>Unsafe split check/write</strong><span>Both nodes reused the same ABSENT/version=100 observation.</span></p></div>
+          <div><b>×1</b><p><strong>Safe two-node CAS</strong><span>Node B changed 100→101; Node A's stale expected version failed.</span></p></div>
+          <div><b>×1</b><p><strong>Unchanged-version control</strong><span>No competing mutation occurred, so the conditional transition progressed normally.</span></p></div>
+          <div><b>×1</b><p><strong>External mutation</strong><span>Another writer changed state first; stale Node A was rejected before mutation.</span></p></div>
+        </section>
+
+        <h2>CAS turns two valid readers into one valid writer.</h2>
+        <p>In the safe race, both nodes again read version 100. Node B called the conditional transition first:</p>
+        <div class="trajectory-box"><span>expected=100</span><i>=</i><span>current=100</span><i>→</i><span>COMMIT / v101</span></div>
+        <p>Node A then arrived with the same expected version:</p>
+        <div class="trajectory-box"><span>expected=100</span><i>≠</i><span>current=101</span><i>→</i><span>PRECONDITION_FAILED</span></div>
+        <p>After the conflict, Node A reread the state and observed <code>COMMITTED / version=101 / effects=1</code>. No blind second write occurred.</p>
+
+        <h2>A conflict can be a successful safety outcome.</h2>
+        <p>The losing node did not “fail” in the ordinary sense. It detected that the world had changed since its observation and refused to mutate on stale evidence. The correct recovery path is reread → reconcile → decide again.</p>
+
+        <h2>Atomic safety must still permit progress.</h2>
+        <p>The control scenario had no concurrent mutation. Version 100 still matched when Node A committed, so the transition succeeded exactly once and advanced the state to version 101.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Atomic state-version score · 10/10</p>
+          <div><b>01</b><p><strong>Unsafe duplicate · 2/2</strong><span>Two stale writes reproduced two effects.</span></p></div>
+          <div><b>02</b><p><strong>Single CAS winner · 2/2</strong><span>One transition succeeded and one stale transition was rejected.</span></p></div>
+          <div><b>03</b><p><strong>Conflict + reread · 2/2</strong><span>The loser observed COMMITTED after the precondition failure.</span></p></div>
+          <div><b>04</b><p><strong>Progress + mutation blocking · 2/2</strong><span>Unchanged state progressed; changed state blocked the stale writer.</span></p></div>
+          <div><b>05</b><p><strong>Pinned evidence · 2/2</strong><span>Exact upstream SHA, deterministic FakeModel, synthetic effects only.</span></p></div>
+        </section>
+
+        <h2>The atomic-transition invariant</h2>
+        <div class="trajectory-box"><span>READ(version=N)</span><i>→</i><span>COMPARE + TRANSITION(expected=N)</span><i>→</i><span>ONE LEGAL COMMIT</span></div>
+        <p>For irreversible state changes, verification cannot end at “the precondition was true when I looked.” The write must prove that the same relevant state still holds while the transition is committed.</p>
+
+        <h2>The RESONANCE model reaches the mutation boundary.</h2>
+        <p>A verified transition now includes actor, intended action, observed state, observed state version, authorization/trust version, invariant, atomic commit precondition and resulting evidence.</p>
+        <div class="trajectory-box"><span>STATE</span><i>↔</i><span>TRANSITION</span><i>↔</i><span>TIME τ</span><i>↔</i><span>CAUSALITY</span><i>↔</i><span>VERIFICATION</span></div>
+
+        <h2>Interpretation boundary</h2>
+        <p>This experiment uses a synthetic in-memory store and deterministic local side effects. It is not a production database, linearizability, consensus, exactly-once, payment-rail or blockchain-finality certification. The OpenAI Agents SDK executes the application protocol; it does not automatically provide application-level distributed atomicity.</p>
+
+        <section class="sources-block">
+          <p class="section-label">Reproduce / inspect</p>
+          <ol>
+            <li><a href="https://github.com/openai/openai-agents-python/commit/2231eb5d40cd4a9d6b86f79492e984eeb3301263" target="_blank" rel="noreferrer">Pinned upstream commit</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/actions/runs/31459591950" target="_blank" rel="noreferrer">Canonical GitHub Actions run</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/benchmarks/openai-agents-distributed-commit-race-v1.0/run_distributed_commit_race.py" target="_blank" rel="noreferrer">Benchmark harness</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/010-openai-agents-distributed-commit-race/result.json" target="_blank" rel="noreferrer">Machine-readable result</a></li>
+          </ol>
+          <p class="source-note">Evidence artifact digest: <code>sha256:e69f4f65802ff653e7575b8e9fbaa9b6c97a83455d88a191bfe8aa8a06aaa3dc</code>. No live model, production credential or external side-effecting service was used.</p>
+        </section>
+
+        <p class="closing-line"><strong>Verdict:</strong> two nodes acting on the same previously valid state snapshot reproduced a duplicate when check and write were split. Version-bound compare-and-transition produced one winner, rejected the stale writer and preserved exactly one side effect.</p>
+
+        <div class="article-end"><p><strong>RESONANCE Verified Report #010</strong></p><p>observe state → bind version → atomic compare + transition → reread on conflict.</p><a class="button" href="issue-001.html">Back to Issue 001</a></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Verified Report #010</p><p>Distributed Commit Race · 10/10</p></div><div><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified/010-openai-agents-distributed-commit-race">Evidence files ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
