@@ -1,0 +1,106 @@
+{
+  "benchmark": "RESONANCE Ambiguous Reconciliation",
+  "benchmark_version": "0.4",
+  "target_repository": "openai/openai-agents-python",
+  "target_expected_sha": "2231eb5d40cd4a9d6b86f79492e984eeb3301263",
+  "target_actual_sha": "2231eb5d40cd4a9d6b86f79492e984eeb3301263",
+  "executed_at": "2026-08-11T03:27:05.105608+00:00",
+  "score": 10,
+  "max_score": 10,
+  "classification": "UNKNOWN-preserving recovery pattern passes",
+  "invariant": "UNKNOWN reconciliation outcome must not authorize retry.",
+  "scope": "Application-level ambiguity preservation executed through the pinned OpenAI Agents SDK tool loop using its deterministic FakeModel. Synthetic local side effects only; this does not claim that the SDK automatically enforces recovery policy.",
+  "checks": [
+    {
+      "id": "unsafe_unknown_to_retry_hazard_reproduced",
+      "points": 2,
+      "pass": true,
+      "evidence": [
+        {"event": "charge_attempt", "operation_id": "op-unsafe-unknown-reconcile", "attempt": 1, "amount": 25},
+        {"event": "commit", "operation_id": "op-unsafe-unknown-reconcile", "attempt": 1, "response": "lost"},
+        {"event": "reconcile", "operation_id": "op-unsafe-unknown-reconcile", "status": "unknown", "reason": "status_timeout", "effect_count_hidden": 1},
+        {"event": "charge_attempt", "operation_id": "op-unsafe-unknown-reconcile", "attempt": 2, "amount": 25},
+        {"event": "commit", "operation_id": "op-unsafe-unknown-reconcile", "attempt": 2, "response": "delivered"}
+      ]
+    },
+    {
+      "id": "unknown_preserved_after_reconcile_timeout",
+      "points": 2,
+      "pass": true,
+      "evidence": [
+        {"event": "charge_attempt", "operation_id": "op-safe-hold-unknown", "attempt": 1, "amount": 25},
+        {"event": "commit", "operation_id": "op-safe-hold-unknown", "attempt": 1, "response": "lost"},
+        {"event": "reconcile", "operation_id": "op-safe-hold-unknown", "status": "unknown", "reason": "status_timeout", "effect_count_hidden": 1}
+      ]
+    },
+    {
+      "id": "stale_unknown_not_treated_as_absent",
+      "points": 2,
+      "pass": true,
+      "evidence": [
+        {"event": "charge_attempt", "operation_id": "op-safe-stale-unknown", "attempt": 1, "amount": 25},
+        {"event": "commit", "operation_id": "op-safe-stale-unknown", "attempt": 1, "response": "lost"},
+        {"event": "reconcile", "operation_id": "op-safe-stale-unknown", "status": "unknown", "reason": "stale_snapshot", "freshness": "stale", "effect_count_hidden": 1}
+      ]
+    },
+    {
+      "id": "repeat_reconciliation_can_resolve_without_retry",
+      "points": 2,
+      "pass": true,
+      "evidence": [
+        {"event": "charge_attempt", "operation_id": "op-safe-eventual-resolution", "attempt": 1, "amount": 25},
+        {"event": "commit", "operation_id": "op-safe-eventual-resolution", "attempt": 1, "response": "lost"},
+        {"event": "reconcile", "operation_id": "op-safe-eventual-resolution", "status": "unknown", "reason": "status_timeout", "effect_count_hidden": 1},
+        {"event": "reconcile", "operation_id": "op-safe-eventual-resolution", "status": "committed", "reason": "fresh_read", "freshness": "fresh", "effect_count": 1}
+      ]
+    },
+    {
+      "id": "pinned_reproducible_evidence",
+      "points": 2,
+      "pass": true,
+      "evidence": {
+        "target_sha": "2231eb5d40cd4a9d6b86f79492e984eeb3301263",
+        "synthetic_external_effects_only": true,
+        "live_model_used": false
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario": "unsafe_retry_after_unknown_reconciliation",
+      "operation_id": "op-unsafe-unknown-reconcile",
+      "amount": 25,
+      "effect_count": 2,
+      "attempt_count": 2,
+      "reconcile_calls": 1,
+      "final_output": "Unsafe policy converted UNKNOWN into RETRY."
+    },
+    {
+      "scenario": "safe_hold_unknown_after_reconciliation_timeout",
+      "operation_id": "op-safe-hold-unknown",
+      "amount": 25,
+      "effect_count": 1,
+      "attempt_count": 1,
+      "reconcile_calls": 1,
+      "final_output": "Reconciliation is still UNKNOWN; retry blocked and escalation required."
+    },
+    {
+      "scenario": "safe_stale_status_does_not_authorize_retry",
+      "operation_id": "op-safe-stale-unknown",
+      "amount": 25,
+      "effect_count": 1,
+      "attempt_count": 1,
+      "reconcile_calls": 1,
+      "final_output": "Stale UNKNOWN is not ABSENT; retry remains blocked."
+    },
+    {
+      "scenario": "safe_unknown_then_fresh_committed",
+      "operation_id": "op-safe-eventual-resolution",
+      "amount": 25,
+      "effect_count": 1,
+      "attempt_count": 1,
+      "reconcile_calls": 2,
+      "final_output": "Fresh reconciliation confirmed COMMITTED; no retry required."
+    }
+  ]
+}
