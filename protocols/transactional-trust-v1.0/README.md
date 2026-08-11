@@ -126,7 +126,7 @@ Rules:
 
 ### 7. RECONCILE
 
-After ambiguous outcomes, database conflicts or external acknowledgement loss, determine what actually happened before retrying.
+After ambiguous outcomes, database conflicts, transport failures or external acknowledgement loss, determine what actually happened before retrying.
 
 ```text
 UNKNOWN / CONFLICT / DB CONFLICT / EXTERNAL ACK UNKNOWN
@@ -143,9 +143,10 @@ Rules:
 - `UNKNOWN ─X→ RETRY` without evidence.
 - `CONFLICT ─X→ RETRY` without resolution.
 - A database-level retry signal is not business-level permission to replay a consequential effect.
-- A lost external acknowledgement is not evidence that the external effect is absent.
+- A lost HTTP or external acknowledgement is not evidence that the remote effect is absent.
 - Retry must re-enter observation, verification, authorization and execution binding; a prior authorization is not automatically reusable.
 - External redelivery SHOULD preserve the same logical effect identity when the external contract supports idempotency.
+- When authoritative remote status is available, it SHOULD be reconciled before another consequential request after an ambiguous transport outcome.
 
 ### 8. PROVE
 
@@ -162,6 +163,7 @@ evidence verification decisions
 precondition result
 commit or conflict result
 outbox / delivery identity when used
+transport outcome when external delivery is used
 external acknowledgement or reconciliation result
 final invariant result
 ```
@@ -170,7 +172,7 @@ Rules:
 
 - Tool success alone is not proof of state correctness.
 - Correct final state without causal evidence is incomplete verification.
-- Safety-relevant conflicts, rejected writes, redelivery and reconciliation belong in the evidence trail.
+- Safety-relevant conflicts, rejected writes, redelivery, transport ambiguity and reconciliation belong in the evidence trail.
 
 ## Core invariants
 
@@ -193,6 +195,10 @@ I15 BUSINESS STATE + DURABLE DELIVERY INTENT MUST COMMIT TOGETHER
 I16 DB COMMITTED ≠ EXTERNAL EFFECT ACKNOWLEDGED OR ABSENT
 I17 REDELIVERY MUST PRESERVE LOGICAL EFFECT IDENTITY
 I18 AMBIGUOUS EXTERNAL ACK → RECONCILE EXTERNAL STATE BEFORE RE-EXECUTION
+I19 HTTP ACK LOST ≠ REMOTE EFFECT ABSENT
+I20 SAME LOGICAL EFFECT → SAME IDEMPOTENCY IDENTITY
+I21 AUTHORITATIVE REMOTE STATUS SHOULD DOMINATE TRANSPORT FAILURE
+I22 NETWORK EVIDENCE BELONGS IN THE TRANSACTION TRAJECTORY
 ```
 
 ## Reference state machine
@@ -218,7 +224,10 @@ COMPARE
 
 external delivery
    ├─ ACK          → PROVE → COMPLETE
-   └─ ACK UNKNOWN  → RECONCILE EXTERNAL STATE
+   └─ ACK UNKNOWN  → RECONCILE REMOTE STATE
+                       ├─ COMMITTED → PROVE → COMPLETE
+                       ├─ ABSENT    → fresh delivery decision
+                       └─ UNKNOWN   → HOLD / RECONCILE AGAIN
 ```
 
 ## Failure coordinates covered
@@ -262,6 +271,7 @@ For consequential business actions:
 - reconciliation before retry
 - durable evidence bundle
 - stable logical effect identity across external redelivery when supported
+- transport outcome and remote reconciliation evidence when an HTTP/API boundary is involved
 
 ### TTP-Deep
 
@@ -346,6 +356,34 @@ Rules:
 
 Report #014 validates this rule with PostgreSQL 17.6 for business/outbox atomicity and a synthetic external effect ledger reached through separate transactions. An unsafe recovery path used a new request identity after ACK loss and produced two external effects. Stable-id redelivery was deduplicated to one effect, and reconcile-before-retry closed the outbox without a second external call.
 
+## HTTP transport evidence rule
+
+A transport failure is an observation about the connection, not an authoritative statement about remote state.
+
+```text
+HTTP POST
+   ↓
+REMOTE EFFECT MAY COMMIT
+   ↓
+ACK / CONNECTION FAILURE
+   ├─ ACK          → continue proof
+   └─ ACK_UNKNOWN
+          ↓
+   REMOTE STATUS / RECONCILIATION
+      ├─ COMMITTED → complete without replay
+      ├─ ABSENT    → fresh delivery decision
+      └─ UNKNOWN   → hold / reconcile again
+```
+
+Rules:
+
+- `RemoteDisconnected`, timeout or connection reset after request transmission MUST NOT be interpreted as proof that the remote effect is absent.
+- A repeated delivery of the same logical effect SHOULD reuse the same stable idempotency identity when the remote contract supports deduplication.
+- An authoritative remote `COMMITTED` observation SHOULD dominate a local transport failure for the retry decision.
+- Evidence SHOULD preserve the request identity, transport outcome, remote status, delivery-attempt count and final remote effect count.
+
+Report #015 validates this rule across a real localhost HTTP connection to a separate Dockerized service. The server committed an in-memory remote effect and then closed the connection before responding. A retry with a new identity produced two effects; a real second POST with the same identity returned `deduplicated` and preserved one effect; status reconciliation found `COMMITTED` and avoided a second POST entirely.
+
 ## Non-goals
 
 TTP v1.0 is not:
@@ -376,6 +414,7 @@ Validation then moved from isolated invariants into composed and concrete execut
 - **#012 PostgreSQL Transactional Trust Adapter** — two independent real PostgreSQL connections read the same `ABSENT / version=100` snapshot; unconditional writes produced two effects, while a version-bound conditional mutation produced one winner, one precondition failure and one final effect.
 - **#013 PostgreSQL Isolation-Level Matrix** — the same stale-writer race was executed at `READ COMMITTED`, `REPEATABLE READ` and `SERIALIZABLE`; storage signals differed, but fresh reconciliation preserved one effect and prevented a transaction-retry signal from becoming a blind business replay.
 - **#014 PostgreSQL Transactional Outbox / External Effect Boundary** — business state and durable delivery intent were committed together; ACK loss with a new request identity reproduced two external effects, while stable-id redelivery and reconcile-before-retry each preserved one external effect.
+- **#015 HTTP Idempotency Boundary** — a separate Dockerized HTTP service committed a remote effect before closing the connection. New retry identity produced two effects; stable-id HTTP redelivery was deduplicated and authoritative remote reconciliation avoided a second POST.
 
 These reports validate specific protocol properties under their declared scope; they are not general production safety certifications.
 
