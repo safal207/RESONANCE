@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="A TTP v1.0 rule for clock authority and skew: time-based replay safety must declare who decides time or preserve uncertainty across expiry." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="TTP Clock Authority / Skew Rule | RESONANCE" />
+  <meta property="og:description" content="Clock disagreement is evidence conflict. Expiry inside temporal uncertainty is not replay permission." />
+  <meta property="og:type" content="article" />
+  <title>TTP Clock Authority / Skew Rule | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#rule">Skip to rule</a>
+  <header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button></div><nav class="nav wrap" id="main-nav" aria-label="Primary navigation"><a href="ai-agents.html">AI Agents</a><a href="index.html#trust">Trust</a><a href="issue-001.html">Issue 001</a></nav></header>
+
+  <main id="rule">
+    <header class="article-hero wrap">
+      <a class="back-link" href="transactional-trust-protocol-v1.html">← Transactional Trust Protocol v1.0</a>
+      <div class="article-meta-row"><p class="section-label">TTP v1.0 · Canonical extension</p><p class="article-status">Verified by Report #018 · 11 Aug 2026</p></div>
+      <h1 class="article-title">Clock Authority / Skew Rule</h1>
+      <p class="article-dek">When a replay decision depends on expiry, time itself needs provenance. Different node clocks must not silently turn one durable record into opposite permissions.</p>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail"><div class="rail-card"><p class="section-label">Core rule</p><strong>Declare time authority or skew</strong></div><div class="rail-card rail-dark"><p class="section-label">Temporal conflict</p><code>expiry in uncertainty → TIME_UNKNOWN</code></div></aside>
+      <article class="article-body">
+        <div class="trajectory-box"><span>EXPIRY</span><i>+</i><span>DECISION TIME</span><i>→</i><span>ACTIVE / EXPIRED / TIME_UNKNOWN</span></div>
+
+        <h2>Four invariants.</h2>
+        <section class="claim-panel">
+          <div><b>I31</b><p><strong>SAME RETENTION RECORD + DIFFERENT CLOCKS CAN YIELD DIFFERENT SAFETY DECISIONS</strong><span>Time interpretation changes permissions without changing business state.</span></p></div>
+          <div><b>I32</b><p><strong>TIME-BASED SAFETY REQUIRES A DECLARED CLOCK AUTHORITY OR SKEW BOUND</strong><span>Decision time needs provenance.</span></p></div>
+          <div><b>I33</b><p><strong>EXPIRY INSIDE CLOCK-UNCERTAINTY WINDOW ≠ SAFE REPLAY PERMISSION</strong><span>Temporal ambiguity preserves TIME_UNKNOWN.</span></p></div>
+          <div><b>I34</b><p><strong>CLOCK DISAGREEMENT IS EVIDENCE CONFLICT</strong><span>It must be reconciled rather than silently collapsed.</span></p></div>
+        </section>
+
+        <h2>Reference decision path.</h2>
+        <div class="trajectory-box"><span>TIME-BASED PRECONDITION</span><i>→</i><span>ESTABLISH CLOCK BASIS</span></div>
+        <div class="trajectory-box"><span>AUTHORITY TIME</span><i>→</i><span>EVALUATE RETENTION ONCE</span></div>
+        <div class="trajectory-box"><span>OR SKEW WINDOW</span><i>→</i><span>EXPIRY CROSSED?</span><i>→</i><span>TIME_UNKNOWN → RECONCILE</span></div>
+
+        <h2>Verified #018.</h2>
+        <p>A 60-second retention record was evaluated by two deterministic node clocks. Node A at <code>T0+50</code> saw it ACTIVE; Node B at <code>T0+70</code> saw the same record EXPIRED while the original effect remained <code>COMMITTED / effect_count=1</code>. Letting Node B's local time authorize same-key replay produced two effects.</p>
+        <p>A declared authority time at <code>T0+55</code> kept the record active, so the real second POST was <code>deduplicated</code>. A ±20-second uncertainty interval crossing the expiry boundary produced <code>TIME_UNKNOWN</code>; reconciliation found the effect already committed and no second POST was made.</p>
+        <div class="pull-quote">Time is evidence with authority and uncertainty — not a free scalar supplied by whichever worker happens to retry.</div>
+
+        <h2>Evidence required.</h2>
+        <p>When safety depends on time, preserve the logical effect identity, expiry timestamp, node-local times, declared clock authority when present, authority decision time, skew or uncertainty bound, computed temporal state, remote authoritative status and final effect count.</p>
+
+        <h2>Scope.</h2>
+        <p>This rule concerns decision semantics. It does not prescribe NTP, PTP, chrony, production skew limits or universal provider TTLs, and it is not a clock-synchronization or exactly-once certification.</p>
+
+        <section class="sources-block"><p class="section-label">Inspect / reproduce</p><ol><li><a href="verified-018-idempotency-clock-skew.html">Verified Report #018</a></li><li><a href="https://github.com/safal207/RESONANCE/blob/main/protocols/transactional-trust-v1.0/CLOCK_AUTHORITY.md" target="_blank" rel="noreferrer">Canonical extension source</a></li><li><a href="ttp-idempotency-retention.html">Previous TTP extension · Retention Rule</a></li><li><a href="transactional-trust-protocol-v1.html">Transactional Trust Protocol v1.0</a></li></ol></section>
+
+        <p class="closing-line"><strong>Short form:</strong> CLOCK DISAGREEMENT = EVIDENCE CONFLICT.</p>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">TTP v1.0</p><p>Clock Authority / Skew Rule</p></div><div><a href="https://github.com/safal207/RESONANCE">GitHub repository ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
