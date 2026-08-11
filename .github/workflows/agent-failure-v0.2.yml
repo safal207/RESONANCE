@@ -1,0 +1,29 @@
+name: RESONANCE Agent Failure Benchmark v0.2
+
+on:
+  push:
+    paths:
+      - 'benchmarks/agent-failure-v0.2/**'
+      - '.github/workflows/agent-failure-v0.2.yml'
+  pull_request:
+    paths:
+      - 'benchmarks/agent-failure-v0.2/**'
+      - '.github/workflows/agent-failure-v0.2.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  reference-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run v0.2 reference tests
+        run: python -m unittest discover -s benchmarks/agent-failure-v0.2/tests -v
