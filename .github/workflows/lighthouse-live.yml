@@ -88,6 +88,16 @@ jobs:
           audit_desktop home ''
           audit_desktop article-en 'before-you-let-an-ai-agent-move-money.html'
 
+      - name: Enforce deployed UI geometry contract
+        env:
+          GITHUB_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          node scripts/lighthouse-ui-contract.mjs \
+            --input lighthouse-results \
+            --output ui-geometry-live-summary \
+            --enforce
+          cat ui-geometry-live-summary.md >> "$GITHUB_STEP_SUMMARY"
+
       - name: Build deployed-site health summary
         env:
           GITHUB_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
@@ -106,5 +116,7 @@ jobs:
             lighthouse-results/
             lighthouse-live-summary.json
             lighthouse-live-summary.md
+            ui-geometry-live-summary.json
+            ui-geometry-live-summary.md
           if-no-files-found: warn
           retention-days: 90
