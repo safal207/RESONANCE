@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified Report #011 — Transactional Trust Protocol v1.0 end-to-end adversarial run: compounded hazards produced 3 effects unsafely and 1 under TTP." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Verified Report #011 — Transactional Trust Protocol v1.0 | RESONANCE" />
+  <meta property="og:description" content="Timeout, stale evidence, revoked authority, stale trust and a competing writer were composed in one deterministic run. Unsafe: 3 effects. TTP: 1." />
+  <meta property="og:type" content="article" />
+  <title>Verified Report #011 — Transactional Trust Protocol v1.0 | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="index.html#intelligence">AI</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="index.html#economy">Startups & Economy</a><a href="index.html#human">Human</a><a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Verified Report #011 · TTP v1.0 E2E</p><p class="article-status">Executed · 11 Aug 2026</p></div>
+      <h1 class="article-title">Eight Stages. One Effect.</h1>
+      <p class="article-dek">A compounded synthetic hazard combined ambiguous commit, stale evidence, revoked authority, stale trust and a competing writer. The unsafe path produced three effects. RESONANCE Transactional Trust Protocol v1.0 preserved one.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>Harness · OpenAI Agents SDK v0.19.4 · SHA 2231eb5d</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Report summary">
+        <div class="rail-card"><p class="section-label">E2E score</p><strong>10 / 10</strong><span>Unsafe → 3 effects</span><span>TTP-safe → 1 effect</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">Protocol</p><code>O→V→A→B→C→C→R→P</code><span>all 8 stages covered</span></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Reports #003–#010 tested individual failure boundaries. Report #011 asks the harder question: what happens when several of those boundaries fail at the same time?</p>
+
+        <div class="trajectory-box"><span>timeout</span><i>+</i><span>stale evidence</span><i>+</i><span>revoked authority</span><i>+</i><span>competing writer</span></div>
+
+        <h2>The unsafe composition amplified the damage.</h2>
+        <p>Node A correctly observed <code>ABSENT / version=100</code>. It then accepted a still-fresh signed <code>ABSENT</code> record from legacy <code>primary-v1</code> through a 600-second-old trust cache that still marked the revoked key active.</p>
+
+        <div class="verification-chain">
+          <div><small>01</small><strong>Stale trust</strong><p>Local epoch 41 still trusted old primary-v1.</p></div>
+          <div><small>02</small><strong>Competing commit</strong><p>Node B committed effect #1 and its response timed out.</p></div>
+          <div><small>03</small><strong>Stale ABSENT</strong><p>Old evidence was treated as retry permission.</p></div>
+          <div><small>04</small><strong>Blind retries</strong><p>Effects #2 and #3 were committed.</p></div>
+        </div>
+
+        <div class="pull-quote">The unsafe path did not fail once. It let several small trust breaks compose into three committed effects.</div>
+
+        <section class="claim-panel">
+          <p class="section-label">Comparative result</p>
+          <div><b>×3</b><p><strong>Unsafe compounded path</strong><span>Revoked authority + stale trust + stale ABSENT + timeout + blind retries.</span></p></div>
+          <div><b>×1</b><p><strong>TTP v1.0 path</strong><span>Refresh trust, reject obsolete authority, bind versions, single CAS winner, reconcile ambiguity, prove invariant.</span></p></div>
+        </section>
+
+        <h2>The safe path exercised every protocol stage.</h2>
+
+        <div class="trajectory-box"><span>OBSERVE</span><i>→</i><span>VERIFY</span><i>→</i><span>AUTHORIZE</span><i>→</i><span>BIND</span></div>
+        <div class="trajectory-box"><span>COMPARE</span><i>→</i><span>COMMIT</span><i>→</i><span>RECONCILE</span><i>→</i><span>PROVE</span></div>
+
+        <h2>OBSERVE · version the world.</h2>
+        <p>Node A observed <code>ABSENT / version=100</code>. That observation became evidence about a specific state version, not a reusable permission.</p>
+
+        <h2>VERIFY + AUTHORIZE · refresh trust before believing legacy evidence.</h2>
+        <p>The same legacy record was cryptographically valid and fresh. But the local trust cache was stale. Refresh advanced trust from epoch 41 to epoch 42 and revealed that <code>primary-v1</code> was revoked. The record therefore evaluated to <code>trusted=false</code>.</p>
+
+        <div class="trajectory-box"><span>legacy evidence valid</span><i>+</i><span>key revoked</span><i>→</i><span>UNTRUSTED</span></div>
+
+        <p>Fresh current evidence from <code>primary-v2</code> reported <code>ABSENT / version=100</code> under trust epoch 42.</p>
+
+        <h2>BIND · carry state and trust versions to execution.</h2>
+        <p>Both synthetic writers bound their candidate transition to <code>expected_state_version=100</code> and <code>expected_trust_epoch=42</code>.</p>
+
+        <h2>COMPARE + COMMIT · one writer wins.</h2>
+        <p>Competing Node B reached the mutation boundary first. Its state/trust preconditions still matched, so exactly one effect committed and state advanced to version 101. The response then became ambiguous through a synthetic timeout-after-commit.</p>
+
+        <p>Node A arrived with the old version-100 binding:</p>
+        <div class="trajectory-box"><span>expected v100</span><i>≠</i><span>current v101</span><i>→</i><span>PRECONDITION_FAILED</span></div>
+        <p>No second effect occurred.</p>
+
+        <h2>RECONCILE · ambiguity does not become retry permission.</h2>
+        <p>Current state returned <code>COMMITTED / version=101 / effects=1</code>. Current trusted evidence from <code>primary-v2</code> independently agreed.</p>
+
+        <h2>PROVE · close the trajectory with an invariant.</h2>
+        <p>The final proof recorded <code>at_most_one_committed_effect=true</code>, final effect count 1, and all eight TTP stages.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">TTP v1.0 E2E score · 10/10</p>
+          <div><b>01</b><p><strong>Compound hazard reproduced · 2/2</strong><span>Unsafe path produced three effects.</span></p></div>
+          <div><b>02</b><p><strong>Authority recovery · 2/2</strong><span>Trust refresh exposed revocation and rejected legacy evidence.</span></p></div>
+          <div><b>03</b><p><strong>Atomic transition · 2/2</strong><span>One competing writer won; stale writer was blocked.</span></p></div>
+          <div><b>04</b><p><strong>Recovery + proof · 2/2</strong><span>Ambiguity reconciled to COMMITTED before any retry; invariant held.</span></p></div>
+          <div><b>05</b><p><strong>Full stage coverage · 2/2</strong><span>All eight protocol stages executed on the pinned deterministic harness.</span></p></div>
+        </section>
+
+        <h2>The combined invariant</h2>
+        <div class="trajectory-box"><span>EVIDENCE</span><i>↔</i><span>AUTHORITY</span><i>↔</i><span>STATE VERSION</span><i>↔</i><span>COMMIT</span></div>
+        <div class="trajectory-box"><span>AMBIGUITY</span><i>→</i><span>RECONCILE</span><i>→</i><span>PROOF</span></div>
+        <p>A consequential transition is trustworthy only when these guarantees remain connected across the whole path.</p>
+
+        <h2>Interpretation boundary</h2>
+        <p>The benchmark is synthetic: in-memory state, synthetic trust epochs, synthetic evidence and deterministic side effects. It does not certify a real database, consensus system, PKI/IAM deployment, payment rail, blockchain, arbitrary OpenAI Agents SDK application or model-level safety. The SDK is used as a deterministic tool-loop harness; TTP v1.0 is a RESONANCE application-level protocol.</p>
+
+        <section class="sources-block">
+          <p class="section-label">Reproduce / inspect</p>
+          <ol>
+            <li><a href="transactional-trust-protocol-v1.html">Transactional Trust Protocol v1.0</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/actions/runs/31460263393" target="_blank" rel="noreferrer">Canonical GitHub Actions run</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/benchmarks/transactional-trust-e2e-v1.0/run_transactional_trust_e2e.py" target="_blank" rel="noreferrer">Benchmark harness</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/011-transactional-trust-e2e/result.json" target="_blank" rel="noreferrer">Machine-readable result</a></li>
+          </ol>
+          <p class="source-note">Evidence artifact digest: <code>sha256:b6313449a91027e6441fb14fe85559bb730749bcb9e71a937a5aa3869c3b59c9</code>. No live model, production credential or external side-effecting service was used.</p>
+        </section>
+
+        <p class="closing-line"><strong>Verdict:</strong> the unsafe compounded trajectory produced three effects. TTP v1.0 preserved one effect while exercising all eight stages and producing a final invariant proof.</p>
+
+        <div class="article-end"><p><strong>RESONANCE Verified Report #011</strong></p><p>observe → verify → authorize → bind → compare → commit → reconcile → prove.</p><a class="button" href="transactional-trust-protocol-v1.html">Read the protocol</a></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Verified Report #011</p><p>TTP v1.0 E2E · 10/10</p></div><div><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified/011-transactional-trust-e2e">Evidence files ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
