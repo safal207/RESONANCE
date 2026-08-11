@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified Report #006 — Evidence Authority Failure: claimed authority is not verified authority." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Verified Report #006 — Evidence Authority Failure | RESONANCE" />
+  <meta property="og:description" content="Trusting forged authority metadata duplicated a synthetic side effect. Verifying integrity, freshness and authority binding prevented it." />
+  <meta property="og:type" content="article" />
+  <title>Verified Report #006 — Evidence Authority Failure | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="index.html#intelligence">AI</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="index.html#economy">Startups & Economy</a><a href="index.html#human">Human</a><a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Verified Report #006 · Evidence authority</p><p class="article-status">Executed · 11 Aug 2026</p></div>
+      <h1 class="article-title">A Label Is Not Authority</h1>
+      <p class="article-dek">A record can say it is primary, authoritative and fresh — and still be untrustworthy. In a deterministic run through a pinned OpenAI Agents SDK tool loop, trusting authority metadata without verification duplicated a synthetic side effect.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>Target · OpenAI Agents SDK v0.19.4 · SHA 2231eb5d</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Report summary">
+        <div class="rail-card"><p class="section-label">Authority score</p><strong>10 / 10</strong><span>4 deterministic trajectories</span><span>Unsafe trust → 2 effects</span><span>Verified paths → 1 effect</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">Invariant</p><code>CLAIM ≠ VERIFIED AUTHORITY</code><span>verify before action</span></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Report #005 made CONFLICT a first-class evidence state. The next question is more foundational: before two sources can be compared, how do we know a source is what it claims to be?</p>
+
+        <div class="trajectory-box"><span>evidence claim</span><i>→</i><span>verify integrity</span><i>→</i><span>verify freshness</span><i>→</i><span>verify authority</span></div>
+
+        <h2>Unsafe trust reproduced a duplicate.</h2>
+        <p>The synthetic operation committed once and lost its response. The next evidence record reported <code>ABSENT</code> and claimed <code>authority=primary</code>, but its integrity tag had been generated with a different local benchmark key. The unsafe trajectory never checked that.</p>
+
+        <div class="verification-chain">
+          <div><small>01</small><strong>Commit</strong><p>The intended side effect exists.</p></div>
+          <div><small>02</small><strong>Response lost</strong><p>The caller is uncertain.</p></div>
+          <div><small>03</small><strong>Forged claim</strong><p>The record says ABSENT + primary.</p></div>
+          <div><small>04</small><strong>No verification</strong><p>Retry produces a second commit.</p></div>
+        </div>
+
+        <div class="pull-quote">Provenance that is merely asserted is metadata. Provenance that is checked can become evidence.</div>
+
+        <section class="claim-panel">
+          <p class="section-label">Comparative result</p>
+          <div><b>×2</b><p><strong>Unsafe claimed authority</strong><span>Forged ABSENT labelled primary was trusted without verification.</span></p></div>
+          <div><b>×1</b><p><strong>Forged signature rejected</strong><span>Integrity failed; retry remained blocked.</span></p></div>
+          <div><b>×1</b><p><strong>Expired attestation rejected</strong><span>Integrity passed, freshness failed; retry remained blocked.</span></p></div>
+          <div><b>×1</b><p><strong>Fresh trusted COMMITTED</strong><span>Integrity, freshness and authority binding all passed.</span></p></div>
+        </section>
+
+        <h2>The evidence model gains integrity.</h2>
+        <div class="causal-stack">
+          <div><span>VALUE</span> committed / absent / unknown</div><div>+</div>
+          <div><span>SOURCE</span> where the record came from</div><div>+</div>
+          <div><span>AUTHORITY</span> what role it may play</div><div>+</div>
+          <div><span>FRESHNESS</span> whether it is valid now</div><div>+</div>
+          <div><span>PROVENANCE</span> how origin is represented</div><div>+</div>
+          <div><span>INTEGRITY</span> whether the record survives verification</div>
+        </div>
+
+        <h2>Forged evidence must fail before it can influence action.</h2>
+        <p>The safe forged-signature scenario produced:</p>
+        <div class="trajectory-box"><span>signature_valid=false</span><i>→</i><span>trusted=false</span><i>→</i><span>retry blocked</span></div>
+        <p>Final effect count remained one.</p>
+
+        <h2>Authentic does not mean current.</h2>
+        <p>A second record had a valid local integrity tag and the expected authority binding, but its validity window had expired. Verification therefore returned <code>fresh=false</code> and <code>trusted=false</code>. No retry was issued.</p>
+
+        <h2>Trusted evidence can close the trajectory.</h2>
+        <p>The final record was integrity-valid, fresh, bound to the trusted synthetic primary authority and reported <code>COMMITTED</code>. The application completed without retry.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Evidence-authority score · 10/10</p>
+          <div><b>01</b><p><strong>Unsafe hazard reproduced · 2/2</strong><span>Claimed authority without verification produced two effects.</span></p></div>
+          <div><b>02</b><p><strong>Forgery rejection · 2/2</strong><span>Invalid integrity tag could not authorize retry.</span></p></div>
+          <div><b>03</b><p><strong>Freshness enforcement · 2/2</strong><span>Valid-but-expired evidence remained untrusted.</span></p></div>
+          <div><b>04</b><p><strong>Trusted evidence acceptance · 2/2</strong><span>Fresh valid COMMITTED evidence closed the operation.</span></p></div>
+          <div><b>05</b><p><strong>Pinned evidence · 2/2</strong><span>Exact upstream SHA, deterministic FakeModel, synthetic effects only.</span></p></div>
+        </section>
+
+        <h2>The authority invariant</h2>
+        <div class="trajectory-box"><span>CLAIMED_AUTHORITY</span><i>≠</i><span>VERIFIED_AUTHORITY</span></div>
+        <p>Before an evidence record can authorize a side effect, the application should establish the properties that matter for that domain: integrity, validity window, identity/key binding and the source's permitted authority.</p>
+
+        <h2>Cryptographic boundary</h2>
+        <p>This benchmark deliberately uses a deterministic <strong>local HMAC toy attestation</strong>. It tests the state-machine decision — verify before acting — not production cryptography. It is not a Sigstore, PKI, certificate-chain, transparency-log, hardware-key, rotation or revocation test.</p>
+
+        <h2>What the SDK did — and did not do.</h2>
+        <p>The pinned OpenAI Agents SDK executed all four deterministic trajectories with its upstream <code>FakeModel</code>. The SDK did not automatically authenticate evidence records, and this report does not claim that it should impose a universal trust scheme. The measured property is an application evidence-verification protocol.</p>
+
+        <h2>Interpretation boundary</h2>
+        <p>No production API key, live model, real credential or external side-effecting service was used. This is not a vulnerability claim and not a safety or cryptographic certification.</p>
+
+        <section class="sources-block">
+          <p class="section-label">Reproduce / inspect</p>
+          <ol>
+            <li><a href="https://github.com/openai/openai-agents-python/commit/2231eb5d40cd4a9d6b86f79492e984eeb3301263" target="_blank" rel="noreferrer">Pinned upstream commit</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/actions/runs/31458046404" target="_blank" rel="noreferrer">Canonical GitHub Actions run</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/benchmarks/openai-agents-evidence-authority-v0.6/run_evidence_authority.py" target="_blank" rel="noreferrer">Benchmark harness</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/006-openai-agents-evidence-authority/result.json" target="_blank" rel="noreferrer">Machine-readable result</a></li>
+          </ol>
+          <p class="source-note">Evidence artifact digest: <code>sha256:9003d6e28664b1538d4022ad2d63b6709f60d1b06ad8a679d658eae75aabe953</code>. The attestation layer is intentionally a local toy HMAC scheme.</p>
+        </section>
+
+        <p class="closing-line"><strong>Verdict:</strong> trusting claimed authority without verification duplicated the side effect. Integrity, freshness and authority-binding checks blocked unsafe retry in every safe trajectory.</p>
+
+        <div class="article-end"><p><strong>RESONANCE Verified Report #006</strong></p><p>claim → provenance verification → authority decision → trusted evidence → legal action.</p><a class="button" href="issue-001.html">Back to Issue 001</a></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Verified Report #006</p><p>Evidence Authority Failure · 10/10</p></div><div><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified/006-openai-agents-evidence-authority">Evidence files ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
