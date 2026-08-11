@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified Report #009 — Revocation Race / TOCTOU: authority verified before execution must still hold at commit time." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Verified Report #009 — Revocation Race / TOCTOU | RESONANCE" />
+  <meta property="og:description" content="A key was active at verification and revoked before commit. Reusing the old authorization duplicated a synthetic effect; epoch-bound execution blocked it." />
+  <meta property="og:type" content="article" />
+  <title>Verified Report #009 — Revocation Race / TOCTOU | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="index.html#intelligence">AI</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="index.html#economy">Startups & Economy</a><a href="index.html#human">Human</a><a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Verified Report #009 · Revocation race / TOCTOU</p><p class="article-status">Executed · 11 Aug 2026</p></div>
+      <h1 class="article-title">Verified Then. Revoked Before Commit.</h1>
+      <p class="article-dek">Authorization can be correct when checked and wrong when used. In a deterministic run through a pinned OpenAI Agents SDK tool loop, reusing an earlier trust decision after revocation duplicated a synthetic side effect; binding execution to the verified trust epoch prevented it.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>Target · OpenAI Agents SDK v0.19.4 · SHA 2231eb5d</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Report summary">
+        <div class="rail-card"><p class="section-label">TOCTOU score</p><strong>10 / 10</strong><span>4 deterministic trajectories</span><span>Blind reuse → 2 effects</span><span>Bound paths → 1 effect</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">Invariant</p><code>VERIFIED THEN ≠ AUTHORIZED NOW</code><span>bind check to commit</span></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Report #008 established that trust state itself can go stale. Report #009 compresses the timing window further: the registry is current and the key is active when checked — then trust changes before the irreversible transition executes.</p>
+
+        <div class="trajectory-box"><span>T0 · ACTIVE / epoch 41</span><i>→</i><span>T1 · REVOKED / epoch 42</span><i>→</i><span>T2 · COMMIT?</span></div>
+
+        <h2>The race reproduced a duplicate.</h2>
+        <p>The first synthetic effect committed and lost its response. The application then verified <code>primary-v1</code> as active at trust epoch 41. Before retry, the benchmark revoked the key and advanced trust state to epoch 42. The unsafe trajectory reused the earlier decision anyway.</p>
+
+        <div class="verification-chain">
+          <div><small>01</small><strong>Commit</strong><p>The first intended effect already exists.</p></div>
+          <div><small>02</small><strong>Verify</strong><p>Key is ACTIVE at epoch 41.</p></div>
+          <div><small>03</small><strong>Revoke</strong><p>Trust changes to epoch 42 before execution.</p></div>
+          <div><small>04</small><strong>Blind reuse</strong><p>Old authorization drives retry and creates effect #2.</p></div>
+        </div>
+
+        <div class="pull-quote">The check was correct. The failure happened because the world changed before the check was used.</div>
+
+        <section class="claim-panel">
+          <p class="section-label">Comparative result</p>
+          <div><b>×2</b><p><strong>Unsafe TOCTOU</strong><span>ACTIVE at epoch 41 was reused after revocation moved trust to epoch 42.</span></p></div>
+          <div><b>×1</b><p><strong>Epoch-bound commit</strong><span>Expected 41, current 42; precondition failed before side effect.</span></p></div>
+          <div><b>×1</b><p><strong>Commit-time re-verification</strong><span>Current key state was inactive, so retry remained blocked.</span></p></div>
+          <div><b>×1</b><p><strong>Unchanged-state control</strong><span>First timeout happened before commit; epoch remained 41 and one necessary retry was allowed.</span></p></div>
+        </section>
+
+        <h2>Authorization becomes a versioned precondition.</h2>
+        <div class="causal-stack">
+          <div><span>VERIFY</span> authority active at a specific trust version</div><div>+</div>
+          <div><span>BIND</span> carry that version into the irreversible operation</div><div>+</div>
+          <div><span>COMPARE</span> require the same trust precondition at commit</div><div>+</div>
+          <div><span>EXECUTE</span> only while the verified state still holds</div>
+        </div>
+
+        <h2>Epoch mismatch blocks the side effect.</h2>
+        <p>The safe conditional commit received <code>expected_trust_epoch=41</code>. At execution, current trust epoch was 42 and the key was inactive:</p>
+        <div class="trajectory-box"><span>expected=41</span><i>≠</i><span>current=42</span><i>→</i><span>PRECONDITION_FAILED</span></div>
+        <p>No second effect was created.</p>
+
+        <h2>Re-verification is another valid strategy.</h2>
+        <p>A separate safe path explicitly checked authority again at synthetic commit time. It observed epoch 42 and <code>key_active=false</code>. Retry stayed blocked.</p>
+
+        <h2>Safety must still allow legitimate progress.</h2>
+        <p>In the control trajectory, the first request timed out before any side effect. The current key remained active and trust epoch stayed 41. Conditional retry saw matching state and committed exactly once.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Execution-bound trust score · 10/10</p>
+          <div><b>01</b><p><strong>TOCTOU hazard reproduced · 2/2</strong><span>Blind reuse after revocation duplicated the effect.</span></p></div>
+          <div><b>02</b><p><strong>Epoch binding · 2/2</strong><span>Version mismatch blocked commit before mutation.</span></p></div>
+          <div><b>03</b><p><strong>Re-verification · 2/2</strong><span>Commit-time check observed revoked authority.</span></p></div>
+          <div><b>04</b><p><strong>Legitimate retry · 2/2</strong><span>Unchanged trust allowed one needed side effect.</span></p></div>
+          <div><b>05</b><p><strong>Pinned evidence · 2/2</strong><span>Exact upstream SHA, deterministic FakeModel, synthetic effects only.</span></p></div>
+        </section>
+
+        <h2>The TOCTOU invariant</h2>
+        <div class="trajectory-box"><span>VERIFIED(epoch=N)</span><i>→</i><span>STATE CHANGES</span><i>→</i><span>OLD AUTHORIZATION INVALID</span></div>
+        <p>For irreversible transitions, the property that authorized the action must still hold at execution. A prior green check is evidence about the past, not a permanent permission bit.</p>
+
+        <h2>The trust model gains execution binding.</h2>
+        <p>RESONANCE now treats a trust decision as authority + evidence state + trust state + trust version/epoch + verification time + execution precondition.</p>
+
+        <div class="trajectory-box"><span>STATE</span><i>↔</i><span>TIME τ</span><i>↔</i><span>TRANSITION</span><i>↔</i><span>VERIFICATION</span><i>↔</i><span>EVIDENCE</span></div>
+
+        <h2>Interpretation boundary</h2>
+        <p>This experiment uses synthetic in-memory trust epochs, deterministic revocation and local side effects. It is not a production IAM, distributed transaction, database compare-and-swap, capability-security or cryptographic certification. The OpenAI Agents SDK executes the application protocol; it does not automatically impose this trust-epoch rule.</p>
+
+        <section class="sources-block">
+          <p class="section-label">Reproduce / inspect</p>
+          <ol>
+            <li><a href="https://github.com/openai/openai-agents-python/commit/2231eb5d40cd4a9d6b86f79492e984eeb3301263" target="_blank" rel="noreferrer">Pinned upstream commit</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/actions/runs/31459107395" target="_blank" rel="noreferrer">Canonical GitHub Actions run</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/benchmarks/openai-agents-revocation-race-v0.9/run_revocation_race.py" target="_blank" rel="noreferrer">Benchmark harness</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/009-openai-agents-revocation-race/result.json" target="_blank" rel="noreferrer">Machine-readable result</a></li>
+          </ol>
+          <p class="source-note">Evidence artifact digest: <code>sha256:97e81a88b3ad67e5ea8f42a1b0b5241afd67a2de516a99db58c6871be98d7485</code>. No live model, production credential or external side-effecting service was used.</p>
+        </section>
+
+        <p class="closing-line"><strong>Verdict:</strong> reusing an authorization that was valid before revocation reproduced a duplicate. Version-bound commit or commit-time re-verification prevented the unsafe transition while preserving legitimate progress when trust state stayed unchanged.</p>
+
+        <div class="article-end"><p><strong>RESONANCE Verified Report #009</strong></p><p>verify → bind state/version → commit precondition → legal transition.</p><a class="button" href="issue-001.html">Back to Issue 001</a></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Verified Report #009</p><p>Revocation Race / TOCTOU · 10/10</p></div><div><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified/009-openai-agents-revocation-race">Evidence files ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
