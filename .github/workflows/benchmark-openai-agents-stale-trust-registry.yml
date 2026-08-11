@@ -1,0 +1,59 @@
+name: RESONANCE — Stale Trust Registry
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'benchmarks/openai-agents-stale-trust-registry-v0.8/**'
+      - '.github/workflows/benchmark-openai-agents-stale-trust-registry.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  stale-trust-registry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      UPSTREAM_SHA: 2231eb5d40cd4a9d6b86f79492e984eeb3301263
+    steps:
+      - name: Checkout RESONANCE
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Fetch pinned OpenAI Agents SDK
+        run: |
+          git clone https://github.com/openai/openai-agents-python.git upstream
+          git -C upstream checkout "$UPSTREAM_SHA"
+          test "$(git -C upstream rev-parse HEAD)" = "$UPSTREAM_SHA"
+
+      - name: Install target
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ./upstream
+
+      - name: Run stale trust registry benchmark
+        run: |
+          python benchmarks/openai-agents-stale-trust-registry-v0.8/run_stale_trust_registry.py \
+            --upstream upstream \
+            --out benchmark-results/openai-agents-stale-trust-registry-v0.8
+
+      - name: Publish run summary
+        if: always()
+        run: |
+          if [ -f benchmark-results/openai-agents-stale-trust-registry-v0.8/RESULT.md ]; then
+            cat benchmark-results/openai-agents-stale-trust-registry-v0.8/RESULT.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload evidence bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-openai-agents-stale-trust-registry-v0.8
+          path: benchmark-results/openai-agents-stale-trust-registry-v0.8/
+          if-no-files-found: error
