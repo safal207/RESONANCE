@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Память может быть правдивой и всё равно небезопасной — RESONANCE о том, почему агентам нужен слой актуальности текущего состояния до того, как восстановленная память снова получит право влиять на действие." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <title>Память может быть правдивой и всё равно небезопасной | RESONANCE</title>
+  <link rel="alternate" hreflang="en" href="https://safal207.github.io/RESONANCE/memory-can-be-true-and-still-be-unsafe.html" />
+  <link rel="alternate" hreflang="ru" href="https://safal207.github.io/RESONANCE/memory-can-be-true-and-still-be-unsafe.ru.html" />
+  <link rel="alternate" hreflang="zh-CN" href="https://safal207.github.io/RESONANCE/memory-can-be-true-and-still-be-unsafe.zh.html" />
+  <link rel="stylesheet" href="styles.css" /><link rel="stylesheet" href="article.css" /><link rel="stylesheet" href="market.css" />
+</head>
+<body data-share-text="Память ИИ может оставаться исторически правдивой и при этом становиться небезопасной для действия. Что должно лишать восстановленную память права управлять следующим шагом агента?">
+  <header class="site-header"><div class="masthead wrap"><a class="brand" href="index.ru.html">RESONANCE</a><p class="masthead-line">Журнал интеллекта, технологий и человеческого прогресса</p></div></header>
+  <main id="article">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="language-switcher" aria-label="Язык"><a href="memory-can-be-true-and-still-be-unsafe.html" hreflang="en">EN</a><a href="memory-can-be-true-and-still-be-unsafe.ru.html" hreflang="ru" aria-current="page">RU</a><a href="memory-can-be-true-and-still-be-unsafe.zh.html" hreflang="zh-CN">中文</a></div>
+      <div class="article-meta-row"><p class="section-label">Исследование · Память агентов / Trust</p><p class="article-status">Опубликовано · 11 авг 2026</p></div>
+      <h1 class="article-title">Память может быть правдивой и всё равно небезопасной</h1>
+      <p class="article-dek">Памяти ИИ нужен срок действия полномочий, а не срок действия истины. Восстановленный факт может оставаться исторически верным, но уже не быть безопасным для текущего репозитория, политики, tenant, состояния ресурса или времени.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Editorial</strong></p><p>Issue 001 · Article 005</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail"><div class="rail-card"><p class="section-label">Главный инвариант</p><strong>Историческая истина ≠ текущее право действовать</strong><span>Перед действием — перепроверка.</span></div><div class="rail-card rail-dark"><p class="section-label">Вердикты</p><code>MATCH · DRIFT · ORPHAN · UNRESOLVABLE · REJECT · REVALIDATE</code></div></aside>
+      <article class="article-body">
+        <p class="dropcap">Постоянная память меняет поверхность риска у ИИ-агентов. Агент может восстановить старые решения, факты, approvals и планы — и уверенно продолжить работу из состояния, которое было правильным вчера, но уже не подходит для действия сейчас.</p>
+
+        <div class="pull-quote">Опасная память не обязательно ложная. Иногда она полностью правдива — просто больше не имеет права автоматически управлять следующим действием.</div>
+
+        <h2>Сигнал пришёл из дискуссии о provenance.</h2>
+        <p>В обсуждении памяти Claude Code участник <strong>DanceNitra</strong> разделил формальное наличие поля <code>source</code> и реальную возможность вернуться к источнику. В описанном хранилище около 98,3% записей имели заполненный <code>source</code>, но лишь 24 записи — примерно 0,01% — содержали идентификаторы, которые действительно можно было повторно получить и проверить.</p>
+        <p>Значение вроде <code>agent:scholar</code> может указывать автора, но не обязательно даёт адрес исходного контента. Значит, наличие provenance-метаданных ещё не гарантирует возможность обнаружить drift, удаление или подмену источника.</p>
+
+        <h2>Но даже хорошего provenance недостаточно.</h2>
+        <p>Представим, что агент помнит: pull request был проверен на commit <code>A</code>. Это может быть абсолютной исторической правдой. Но ветка уже ушла на commit <code>B</code>, политика изменилась, tenant другой, API обновился или срок действия разрешения закончился.</p>
+        <section class="claim-panel"><p class="section-label">Два независимых вопроса</p><div><b>1</b><p><strong>Историческая валидность:</strong> было ли это корректным свидетельством произошедшего?</p></div><div><b>2</b><p><strong>Текущая применимость:</strong> можно ли безопасно использовать это свидетельство здесь, сейчас и для этого действия?</p></div></section>
+
+        <div class="pull-quote"><strong>Историческое доказательство верно + среда изменилась ≠ текущее полномочие.</strong></div>
+
+        <h2>Из обсуждения — в исполняемый контракт.</h2>
+        <p>Мы реализовали это различие в open-source <strong>Causal Memory Layer (CML)</strong> как детерминированный слой Current-State Applicability. Реализация прошла review, была усилена против stale-SHA и cross-repository substitution, смержена и прошла тестовые Python lanes, deterministic-contract проверки, package validation, secret scan, dependency audit и CodeQL.</p>
+
+        <section class="claim-panel"><p class="section-label">Шесть вердиктов</p><div><b>M</b><p><strong>MATCH:</strong> источник и необходимые привязки среды совпадают.</p></div><div><b>D</b><p><strong>DRIFT:</strong> источник доступен, но его digest изменился.</p></div><div><b>O</b><p><strong>ORPHAN:</strong> источник удалён или исчез.</p></div><div><b>U</b><p><strong>UNRESOLVABLE:</strong> источник нельзя детерминированно перепроверить.</p></div><div><b>X</b><p><strong>REJECT:</strong> вход попытался подделать внутреннее trust-состояние.</p></div><div><b>R</b><p><strong>REVALIDATE:</strong> историческое свидетельство цело, но текущая среда уже не совпадает.</p></div></section>
+
+        <div class="trajectory-box"><span>REJECT</span><i>→</i><span>UNRESOLVABLE</span><i>→</i><span>ORPHAN</span><i>→</i><span>DRIFT</span><i>→</i><span>REVALIDATE</span><i>→</i><span>MATCH</span></div>
+
+        <h2>Почему repository и commit SHA стали строгими.</h2>
+        <p>На review проявился важный edge case: если историческая память вообще не была привязана к repository или commit SHA, совпадающий source digest мог позволить ей выглядеть безопасной уже в другом контексте кода. Теперь, если текущая authoritative-среда предоставляет repository или commit SHA, отсутствие соответствующей исторической привязки ведёт к <code>REVALIDATE</code>, а не к <code>MATCH</code>.</p>
+        <p><strong>Отсутствие исторического контекста — не разрешение предполагать непрерывность.</strong></p>
+
+        <h2>Нужно истечение полномочий, а не истины.</h2>
+        <p>Старая approval должна оставаться в аудите даже после окончания срока. Review старого commit остаётся исторической правдой после движения ветки. Источник, который позже удалили, не должен исчезать из истории.</p>
+        <div class="pull-quote">Не переписывайте прошлое потому, что изменилось настоящее. Отзывайте автоматическое право прошлого управлять настоящим.</div>
+
+        <h2>Это не должно становиться vendor moat.</h2>
+        <p>Мы поделились предложением и с Anthropic, и с OpenAI. Причина простая: revalidation памяти полезнее как совместимый safety primitive между экосистемами, чем как закрытая фича одного поставщика.</p>
+        <div class="market-kpi"><pre>memory
+→ provenance verification
+→ source integrity
+→ current environment
+→ applicability verdict
+→ current authority
+→ action</pre></div>
+
+        <section class="market-question" id="open-question">
+          <p class="section-label">Горячий вопрос рынку</p>
+          <h2>Где память должна терять право действовать?</h2>
+          <p class="hot-question"><strong>Что должно инвалидировать восстановленную память ИИ-агента до действия — изменение кода, политики/полномочий, tenant, состояния ресурса, API/model version, время или что-то ещё?</strong></p>
+          <p>Опишите один безопасно обобщённый кейс, где факт остаётся правдивым, но использовать его без перепроверки уже опасно.</p>
+          <div class="market-actions"><a class="button" href="https://github.com/safal207/RESONANCE/issues/new?template=market-workflow.yml" target="_blank" rel="noreferrer">Описать workflow →</a><a class="text-link" href="verified-workflow.html">Verified Workflow →</a></div>
+        </section>
+
+        <p class="closing-line"><strong>Память говорит агенту, что было правдой. Applicability говорит, имеет ли эта правда право управлять действием сейчас.</strong></p>
+
+        <section class="sources-block" id="sources"><p class="section-label">Проверяемые источники</p><ol><li><a href="https://github.com/anthropics/claude-code/issues/34556#issuecomment-5244228930" target="_blank" rel="noreferrer">Claude Code issue #34556 — обсуждение provenance / reconciliation</a></li><li><a href="https://github.com/safal207/Causal-Memory-Layer/pull/270" target="_blank" rel="noreferrer">CML PR #270 — Current-State Applicability and REVALIDATE</a></li><li><a href="https://github.com/safal207/Causal-Memory-Layer/blob/main/cml/integrations/memory_applicability.py" target="_blank" rel="noreferrer">Merged implementation</a></li></ol></section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Найти сигнал. Проверить путь. Понять будущее.</p></div><div><p class="footer-title">Market OS</p><p>Статья → Диалог → Проблема → Пилот → Доказательство → Продукт.</p></div></div></footer>
+  <script src="app.js"></script><script src="market.js"></script>
+</body>
+</html>
