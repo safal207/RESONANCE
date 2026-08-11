@@ -1,0 +1,99 @@
+name: RESONANCE — HTTP Idempotency Boundary
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'benchmarks/http-idempotency-boundary-v1.0/**'
+      - '.github/workflows/benchmark-http-idempotency-boundary.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  http-boundary:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:17.6-alpine
+        env:
+          POSTGRES_USER: resonance
+          POSTGRES_PASSWORD: resonance
+          POSTGRES_DB: resonance
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U resonance -d resonance"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    env:
+      DATABASE_URL: postgresql://resonance:resonance@127.0.0.1:5432/resonance
+      EXTERNAL_BASE_URL: http://127.0.0.1:18080
+      HTTP_SERVICE_IMAGE: python:3.12-slim
+
+    steps:
+      - name: Checkout RESONANCE
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install PostgreSQL client driver
+        run: python -m pip install 'psycopg[binary]==3.2.9'
+
+      - name: Start separate external HTTP service container
+        run: |
+          docker pull "$HTTP_SERVICE_IMAGE"
+          docker run -d \
+            --name resonance-external-http \
+            -p 18080:8080 \
+            -e SERVICE_INSTANCE=external-http-container \
+            -e PYTHONUNBUFFERED=1 \
+            -v "$PWD/benchmarks/http-idempotency-boundary-v1.0/external_service.py:/app/external_service.py:ro" \
+            "$HTTP_SERVICE_IMAGE" \
+            python /app/external_service.py --host 0.0.0.0 --port 8080
+
+          digest="$(docker image inspect "$HTTP_SERVICE_IMAGE" --format '{{index .RepoDigests 0}}')"
+          echo "HTTP_SERVICE_IMAGE_DIGEST=$digest" >> "$GITHUB_ENV"
+
+          for i in $(seq 1 30); do
+            if curl -fsS "$EXTERNAL_BASE_URL/health"; then
+              exit 0
+            fi
+            sleep 1
+          done
+          docker logs resonance-external-http
+          exit 1
+
+      - name: Run HTTP idempotency boundary benchmark
+        run: |
+          python benchmarks/http-idempotency-boundary-v1.0/run_http_boundary.py \
+            --out benchmark-results/http-idempotency-boundary-v1.0
+
+      - name: Capture external HTTP service logs
+        if: always()
+        run: docker logs resonance-external-http || true
+
+      - name: Publish run summary
+        if: always()
+        run: |
+          if [ -f benchmark-results/http-idempotency-boundary-v1.0/RESULT.md ]; then
+            cat benchmark-results/http-idempotency-boundary-v1.0/RESULT.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload evidence bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-http-idempotency-boundary-v1.0
+          path: benchmark-results/http-idempotency-boundary-v1.0/
+          if-no-files-found: error
+
+      - name: Stop external HTTP service
+        if: always()
+        run: docker rm -f resonance-external-http || true
