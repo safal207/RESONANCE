@@ -1,0 +1,53 @@
+{
+  "report": "RESONANCE Verified Report #011",
+  "benchmark": "RESONANCE Transactional Trust Protocol End-to-End Adversarial",
+  "benchmark_version": "1.0",
+  "protocol": "RESONANCE Transactional Trust Protocol v1.0",
+  "protocol_chain": "OBSERVE -> VERIFY -> AUTHORIZE -> BIND -> COMPARE -> COMMIT -> RECONCILE -> PROVE",
+  "target_repository": "openai/openai-agents-python",
+  "target_version": "0.19.4",
+  "target_sha": "2231eb5d40cd4a9d6b86f79492e984eeb3301263",
+  "github_actions_run": 31460263393,
+  "executed_at": "2026-08-11T05:02:15.239789+00:00",
+  "artifact": "resonance-transactional-trust-e2e-v1.0",
+  "artifact_id": 9089549995,
+  "artifact_digest": "sha256:b6313449a91027e6441fb14fe85559bb730749bcb9e71a937a5aa3869c3b59c9",
+  "score": 10,
+  "max_score": 10,
+  "classification": "TTP v1.0 end-to-end protocol passes compounded synthetic hazards",
+  "hazards_composed": [
+    "ambiguous timeout after commit",
+    "fresh-but-obsolete legacy evidence",
+    "revoked authority",
+    "stale trust registry",
+    "competing writer",
+    "stale state version",
+    "blind retry pressure"
+  ],
+  "unsafe_effect_count": 3,
+  "safe_effect_count": 1,
+  "safe_final_state": "committed",
+  "safe_final_state_version": 101,
+  "safe_source_trust_epoch": 42,
+  "safe_stage_coverage": [
+    "OBSERVE",
+    "VERIFY",
+    "AUTHORIZE",
+    "BIND",
+    "COMPARE",
+    "COMMIT",
+    "RECONCILE",
+    "PROVE"
+  ],
+  "checks": [
+    {"id": "unsafe_compounded_failure_reproduced", "pass": true, "score": "2/2", "effects": 3},
+    {"id": "stale_registry_refresh_rejects_revoked_legacy_authority", "pass": true, "score": "2/2", "trust_epoch_after_refresh": 42, "old_key_active": false, "legacy_evidence_trusted": false},
+    {"id": "atomic_compare_allows_one_competing_writer_and_blocks_stale_writer", "pass": true, "score": "2/2", "winner_effects": 1, "stale_writer_precondition_failed": true},
+    {"id": "ambiguous_commit_reconciled_before_any_retry_and_final_invariant_proved", "pass": true, "score": "2/2", "reconciled_state": "committed", "effects": 1, "invariant_ok": true},
+    {"id": "all_ttp_stages_covered_with_pinned_reproducible_evidence", "pass": true, "score": "2/2", "stage_count": 8}
+  ],
+  "invariant": "One logical consequential operation produces at most one committed effect while evidence, authority, trust state and shared-state versions remain bound to the mutation and ambiguity is reconciled before retry.",
+  "scope": "Framework-agnostic application protocol executed through a pinned OpenAI Agents SDK FakeModel tool loop. Synthetic in-memory trust/state/evidence and side effects only.",
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
