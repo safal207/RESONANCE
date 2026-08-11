@@ -1,0 +1,88 @@
+{
+  "benchmark": "RESONANCE Revoked Authority / Key Rotation",
+  "benchmark_version": "0.7",
+  "target_repository": "openai/openai-agents-python",
+  "target_expected_sha": "2231eb5d40cd4a9d6b86f79492e984eeb3301263",
+  "target_actual_sha": "2231eb5d40cd4a9d6b86f79492e984eeb3301263",
+  "executed_at": "2026-08-11T04:25:12.910973+00:00",
+  "decision_epoch": 1786422300,
+  "score": 10,
+  "max_score": 10,
+  "classification": "decision-time authority lifecycle protocol passes",
+  "invariant": "A mathematically valid signature must not authorize a current action when its authority key is revoked or not yet active at decision time.",
+  "trust_window": "activated_at <= decision_time < revoked_at (when revoked_at exists)",
+  "scope": "Application-level authority-lifecycle handling executed through the pinned OpenAI Agents SDK tool loop with upstream FakeModel. Synthetic local effects and toy HMAC keys only; revocation semantics are benchmark policy, not a universal PKI rule.",
+  "checks": [
+    {
+      "id": "unsafe_valid_but_revoked_key_retry_hazard_reproduced",
+      "points": 2,
+      "pass": true,
+      "summary": "Valid old signature was trusted without revocation check; retry produced two effects."
+    },
+    {
+      "id": "revoked_key_rejected_at_decision_time",
+      "points": 2,
+      "pass": true,
+      "verification": {
+        "signature_valid": true,
+        "evidence_fresh": true,
+        "authority_valid": true,
+        "key_active_at_issue": true,
+        "key_active_at_decision": false,
+        "trusted": false,
+        "key_id": "primary-v1"
+      }
+    },
+    {
+      "id": "not_yet_active_key_rejected",
+      "points": 2,
+      "pass": true,
+      "verification": {
+        "signature_valid": true,
+        "evidence_fresh": true,
+        "authority_valid": true,
+        "key_active_at_decision": false,
+        "trusted": false,
+        "key_id": "primary-v3"
+      }
+    },
+    {
+      "id": "current_rotated_key_accepted",
+      "points": 2,
+      "pass": true,
+      "verification": {
+        "signature_valid": true,
+        "evidence_fresh": true,
+        "authority_valid": true,
+        "key_active_at_issue": true,
+        "key_active_at_decision": true,
+        "trusted": true,
+        "status": "committed",
+        "key_id": "primary-v2"
+      }
+    },
+    {
+      "id": "pinned_reproducible_evidence",
+      "points": 2,
+      "pass": true,
+      "evidence": {
+        "target_sha": "2231eb5d40cd4a9d6b86f79492e984eeb3301263",
+        "decision_epoch": 1786422300,
+        "live_model_used": false,
+        "synthetic_effects_only": true,
+        "toy_hmac_attestation_only": true
+      }
+    }
+  ],
+  "scenarios": {
+    "unsafe_revoked_key": {"effects": 2, "attempts": 2},
+    "safe_revoked_key": {"effects": 1, "attempts": 1},
+    "safe_future_key": {"effects": 1, "attempts": 1},
+    "safe_current_rotated_key": {"effects": 1, "attempts": 1}
+  },
+  "artifact": {
+    "name": "resonance-openai-agents-revoked-authority-v0.7",
+    "digest": "sha256:0947cc82b86db36a48a7209e97719a42906233c8fc99c5e27ee1168577188847",
+    "github_actions_run": 31458387817
+  }
+}
