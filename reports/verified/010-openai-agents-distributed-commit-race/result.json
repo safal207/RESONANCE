@@ -1,0 +1,27 @@
+{
+  "report": "RESONANCE Verified Report #010",
+  "benchmark": "RESONANCE Distributed Commit Race",
+  "benchmark_version": "1.0",
+  "target_repository": "openai/openai-agents-python",
+  "target_version": "0.19.4",
+  "target_sha": "2231eb5d40cd4a9d6b86f79492e984eeb3301263",
+  "github_actions_run": 31459591950,
+  "executed_at": "2026-08-11T04:48:02.356728+00:00",
+  "artifact": "resonance-openai-agents-distributed-commit-race-v1.0",
+  "artifact_digest": "sha256:e69f4f65802ff653e7575b8e9fbaa9b6c97a83455d88a191bfe8aa8a06aaa3dc",
+  "initial_version": 100,
+  "score": 10,
+  "max_score": 10,
+  "classification": "atomic state-version precondition protocol passes",
+  "invariant": "A read/verification snapshot must not authorize an irreversible write after shared state changes; compare and transition must be atomic or version-bound.",
+  "checks": [
+    {"id": "unsafe_split_check_write_duplicate_reproduced", "pass": true, "score": "2/2", "effects": 2, "initial_version": 100, "final_version": 102},
+    {"id": "two_node_cas_allows_single_winner", "pass": true, "score": "2/2", "effects": 1, "winner": "B", "loser": "A", "final_version": 101},
+    {"id": "stale_writer_gets_precondition_failure_and_rereads_committed", "pass": true, "score": "2/2", "effects": 1, "reread_state": "committed", "reread_version": 101},
+    {"id": "unchanged_version_allows_progress_and_external_mutation_blocks", "pass": true, "score": "2/2", "unchanged_effects": 1, "external_mutation_effects": 1},
+    {"id": "pinned_reproducible_evidence", "pass": true, "score": "2/2"}
+  ],
+  "scope": "Application-level distributed commit race executed through the pinned OpenAI Agents SDK tool loop using upstream FakeModel. Synthetic in-memory shared state and side effects only; no live model, production data store, real credentials or external side-effecting service.",
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
