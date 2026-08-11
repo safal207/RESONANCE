@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified Report #007 — Revoked Authority / Key Rotation: a valid signature can still come from an authority that is no longer trusted." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Verified Report #007 — Revoked Authority / Key Rotation | RESONANCE" />
+  <meta property="og:description" content="A valid old signature caused a duplicate when revocation was ignored. Decision-time lifecycle checks prevented it." />
+  <meta property="og:type" content="article" />
+  <title>Verified Report #007 — Revoked Authority / Key Rotation | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="index.html#intelligence">AI</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="index.html#economy">Startups & Economy</a><a href="index.html#human">Human</a><a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Verified Report #007 · Authority lifecycle</p><p class="article-status">Executed · 11 Aug 2026</p></div>
+      <h1 class="article-title">A Valid Signature Can Arrive Too Late</h1>
+      <p class="article-dek">Evidence can be authentic, fresh and correctly bound to an authority — yet still be unusable for a current action if that authority was revoked before decision time.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>Target · OpenAI Agents SDK v0.19.4 · SHA 2231eb5d</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Report summary">
+        <div class="rail-card"><p class="section-label">Lifecycle score</p><strong>10 / 10</strong><span>4 deterministic trajectories</span><span>Unsafe revoked key → 2 effects</span><span>Safe paths → 1 effect</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">Invariant</p><code>VALID SIGNATURE ≠ CURRENT TRUST</code><span>verify lifecycle at decision time</span></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Report #006 added integrity to the evidence chain. #007 adds time to authority itself: not only “is this signature valid?” but “is this signer still allowed to authorize this transition now?”</p>
+
+        <div class="trajectory-box"><span>signed evidence</span><i>→</i><span>verify signature</span><i>→</i><span>verify key lifecycle</span><i>→</i><span>decide</span></div>
+
+        <h2>Ignoring revocation reproduced a duplicate.</h2>
+        <p>The synthetic operation committed once and lost its response. A later record reported <code>ABSENT</code> and carried a mathematically valid signature from <code>primary-v1</code>. That key, however, had been revoked before the benchmark decision time.</p>
+
+        <div class="verification-chain">
+          <div><small>01</small><strong>Commit</strong><p>The intended side effect exists.</p></div>
+          <div><small>02</small><strong>Old evidence</strong><p>Fresh signed ABSENT from primary-v1.</p></div>
+          <div><small>03</small><strong>Revocation ignored</strong><p>Signature validity is treated as sufficient.</p></div>
+          <div><small>04</small><strong>Retry</strong><p>A second commit is produced.</p></div>
+        </div>
+
+        <div class="pull-quote">Authenticity answers who signed. Lifecycle answers whether that signer still has authority now.</div>
+
+        <section class="claim-panel">
+          <p class="section-label">Comparative result</p>
+          <div><b>×2</b><p><strong>Unsafe valid-but-revoked key</strong><span>Old signature accepted without lifecycle check.</span></p></div>
+          <div><b>×1</b><p><strong>Revoked key rejected</strong><span>Signature valid, evidence fresh, authority valid — but key inactive at decision time.</span></p></div>
+          <div><b>×1</b><p><strong>Future key rejected</strong><span>Signature valid, but the scheduled key was not active yet.</span></p></div>
+          <div><b>×1</b><p><strong>Current rotated key accepted</strong><span>Active primary-v2 reported trusted COMMITTED.</span></p></div>
+        </section>
+
+        <h2>The decisive case</h2>
+        <div class="trajectory-box"><span>signature_valid=true</span><i>+</i><span>evidence_fresh=true</span><i>+</i><span>authority_valid=true</span></div>
+        <div class="trajectory-box"><span>key_active_at_issue=true</span><i>but</i><span>key_active_at_decision=false</span></div>
+        <p>The old key was valid when the evidence was issued. It was revoked 60 seconds before the decision. The safe protocol returned <code>trusted=false</code> and blocked retry.</p>
+
+        <h2>Future authority is not current authority.</h2>
+        <p>A planned <code>primary-v3</code> key also produced a valid local signature, but its activation time was still in the future. The safe path rejected it for the current transition.</p>
+
+        <h2>Rotation succeeds when the new key is active.</h2>
+        <p>The current <code>primary-v2</code> key was active at decision time and had not been revoked. Its fresh trusted evidence reported <code>COMMITTED</code>, so the trajectory closed without retry.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Authority-lifecycle score · 10/10</p>
+          <div><b>01</b><p><strong>Unsafe hazard reproduced · 2/2</strong><span>Valid revoked signature produced two effects when lifecycle was ignored.</span></p></div>
+          <div><b>02</b><p><strong>Revocation enforcement · 2/2</strong><span>Old key was valid at issue, invalid at decision.</span></p></div>
+          <div><b>03</b><p><strong>Activation enforcement · 2/2</strong><span>Future key could not authorize a current action.</span></p></div>
+          <div><b>04</b><p><strong>Rotation acceptance · 2/2</strong><span>Current active rotated key closed COMMITTED safely.</span></p></div>
+          <div><b>05</b><p><strong>Pinned evidence · 2/2</strong><span>Exact upstream SHA, deterministic FakeModel, synthetic effects only.</span></p></div>
+        </section>
+
+        <h2>The temporal trust invariant</h2>
+        <div class="trajectory-box"><span>VALID SIGNATURE</span><i>≠</i><span>CURRENTLY TRUSTED AUTHORITY</span></div>
+        <p>For this benchmark's strict current-state policy, a key is accepted only when:</p>
+        <div class="trajectory-box"><span>activated_at</span><i>≤</i><span>decision_time</span><i>&lt;</i><span>revoked_at</span></div>
+        <p>when a revocation timestamp exists.</p>
+
+        <h2>Evidence now has a lifecycle dimension.</h2>
+        <div class="causal-stack">
+          <div><span>VALUE</span> what the record claims</div><div>+</div>
+          <div><span>PROVENANCE</span> where it came from</div><div>+</div>
+          <div><span>INTEGRITY</span> whether it is authentic</div><div>+</div>
+          <div><span>FRESHNESS</span> whether the record itself is current</div><div>+</div>
+          <div><span>AUTHORITY LIFECYCLE</span> whether the signer is trusted now</div>
+        </div>
+
+        <p class="pull-quote">Time is not just metadata on evidence. Time participates in the authorization decision.</p>
+
+        <h2>Cryptographic boundary</h2>
+        <p>The benchmark uses deterministic local HMAC keys and an in-memory toy trust registry. It tests activation/revocation state semantics, not production PKI, CRLs, OCSP, Sigstore, transparency logs, timestamp authorities or hardware-backed keys.</p>
+
+        <h2>What the SDK did — and did not do.</h2>
+        <p>The pinned OpenAI Agents SDK executed all deterministic trajectories with its upstream <code>FakeModel</code>. The measured property is an application-level authority-lifecycle protocol, not an automatic SDK revocation guarantee.</p>
+
+        <section class="sources-block">
+          <p class="section-label">Reproduce / inspect</p>
+          <ol>
+            <li><a href="https://github.com/openai/openai-agents-python/commit/2231eb5d40cd4a9d6b86f79492e984eeb3301263" target="_blank" rel="noreferrer">Pinned upstream commit</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/actions/runs/31458387817" target="_blank" rel="noreferrer">Canonical GitHub Actions run</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/benchmarks/openai-agents-revoked-authority-v0.7/run_revoked_authority.py" target="_blank" rel="noreferrer">Benchmark harness</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/007-openai-agents-revoked-authority/result.json" target="_blank" rel="noreferrer">Machine-readable result</a></li>
+          </ol>
+          <p class="source-note">Evidence artifact digest: <code>sha256:0947cc82b86db36a48a7209e97719a42906233c8fc99c5e27ee1168577188847</code>. Toy HMAC and synthetic local effects only.</p>
+        </section>
+
+        <p class="closing-line"><strong>Verdict:</strong> a valid-but-revoked signing authority caused a duplicate when lifecycle was ignored. Decision-time activation/revocation checks blocked unsafe retry and accepted only the current rotated authority.</p>
+
+        <div class="article-end"><p><strong>RESONANCE Verified Report #007</strong></p><p>evidence → integrity → authority → time → trusted state → legal action.</p><a class="button" href="issue-001.html">Back to Issue 001</a></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Verified Report #007</p><p>Revoked Authority / Key Rotation · 10/10</p></div><div><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified/007-openai-agents-revoked-authority">Evidence files ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
