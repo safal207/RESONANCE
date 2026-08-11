@@ -1,0 +1,74 @@
+{
+  "benchmark": "RESONANCE Clock Rollback / Temporal ABA",
+  "benchmark_version": "1.0",
+  "classification": "Temporal ABA fencing / monotonic-time protocol passes",
+  "executed_at": "2026-08-11T07:43:48.169900+00:00",
+  "score": 10,
+  "max_score": 10,
+  "protocol": "RESONANCE Transactional Trust Protocol v1.0",
+  "database": {"server_version": "17.6"},
+  "psycopg_version": "3.2.9",
+  "http_service": {
+    "service": "resonance-external-http-clock-rollback",
+    "boot_id": "df967cda032243aa8a7bb0127801dd79",
+    "pid": 1,
+    "state_db": "/state/remote.db",
+    "temporal_epoch_at_start": 1,
+    "image": "python:3.12-slim",
+    "image_digest": "python@sha256:229a2c5bfa27522db7815ea81f9bed70af17ccb9de9fc7ad142b1877b5830d36"
+  },
+  "temporal_aba_visibility": {
+    "expires_at": 7000060,
+    "sequence": [
+      {"time": 7000050, "state": "active", "effect_count": 1},
+      {"time": 7000070, "state": "expired", "effect_count": 1},
+      {"time": 7000050, "state": "active", "effect_count": 1}
+    ]
+  },
+  "unsafe_purge_then_rollback": {
+    "original_expires_at": 8000060,
+    "expired_time": 8000070,
+    "gc_removed_records": 1,
+    "temporal_epoch_before_gc": 1,
+    "temporal_epoch_after_gc": 2,
+    "rollback_time": 8000050,
+    "same_idempotency_key": "temporal-aba-unsafe-op:effect:v1",
+    "second_delivery": "applied",
+    "final_effect_count": 2,
+    "final_status": "conflict"
+  },
+  "safe_temporal_epoch_fence": {
+    "bound_temporal_epoch": 2,
+    "temporal_epoch_after_gc": 3,
+    "rollback_time": 9000050,
+    "http_status": 409,
+    "delivery": "fenced_out",
+    "error": "temporal_epoch_mismatch",
+    "final_effect_count": 1,
+    "final_status": "committed"
+  },
+  "safe_monotonic_watermark": {
+    "forward_time": 10000070,
+    "rollback_wall_clock": 10000050,
+    "monotonic_watermark_before_rollback": 10000070,
+    "effective_time_after_rollback": 10000070,
+    "temporal_decision": "expired",
+    "second_post_made": false,
+    "final_effect_count": 1,
+    "final_status": "committed"
+  },
+  "invariants": [
+    "Same wall-clock value does not imply the same temporal state after history advances.",
+    "An expired or garbage-collected safety epoch must not be resurrected by clock rollback.",
+    "Consequential time-based authorization should bind to a monotonic epoch/fence or monotonic time basis.",
+    "Clock rollback after irreversible temporal transition is evidence conflict and requires reconciliation or fencing."
+  ],
+  "github_actions": {
+    "run_id": 31470122034,
+    "artifact_name": "resonance-idempotency-clock-rollback-v1.0",
+    "artifact_id": 9093020263,
+    "artifact_digest": "sha256:6132fb3a357952eedcd54aac4d15b48cd429684f9630ed152f3c3b65674b9dce"
+  },
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
