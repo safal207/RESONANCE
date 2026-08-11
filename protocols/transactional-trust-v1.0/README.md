@@ -119,16 +119,17 @@ Execute the side effect only if all bound preconditions still hold.
 
 Rules:
 
-- One logical operation SHOULD map to at most one committed effect.
-- Idempotency keys, compare-and-swap, transactions, leases or equivalent mechanisms MAY implement this property.
-- TTP does not prescribe one storage technology.
+- One logical operation SHOULD map to at most one committed effect under the declared adapter contract.
+- Idempotency keys, compare-and-swap, transactions, leases, transactional outbox or equivalent mechanisms MAY implement parts of this property.
+- If an external effect cannot share the business transaction, the business state and durable delivery intent SHOULD commit together before delivery begins.
+- TTP does not prescribe one storage or messaging technology.
 
 ### 7. RECONCILE
 
-After ambiguous outcomes or concurrency conflicts, determine what actually happened before retrying.
+After ambiguous outcomes, database conflicts or external acknowledgement loss, determine what actually happened before retrying.
 
 ```text
-UNKNOWN / CONFLICT / DB CONFLICT SIGNAL
+UNKNOWN / CONFLICT / DB CONFLICT / EXTERNAL ACK UNKNOWN
    ↓
 RECONCILE
    ├─ COMMITTED → COMPLETE
@@ -142,7 +143,9 @@ Rules:
 - `UNKNOWN ─X→ RETRY` without evidence.
 - `CONFLICT ─X→ RETRY` without resolution.
 - A database-level retry signal is not business-level permission to replay a consequential effect.
+- A lost external acknowledgement is not evidence that the external effect is absent.
 - Retry must re-enter observation, verification, authorization and execution binding; a prior authorization is not automatically reusable.
+- External redelivery SHOULD preserve the same logical effect identity when the external contract supports idempotency.
 
 ### 8. PROVE
 
@@ -158,7 +161,8 @@ trust observations + versions
 evidence verification decisions
 precondition result
 commit or conflict result
-reconciliation observations
+outbox / delivery identity when used
+external acknowledgement or reconciliation result
 final invariant result
 ```
 
@@ -166,7 +170,7 @@ Rules:
 
 - Tool success alone is not proof of state correctness.
 - Correct final state without causal evidence is incomplete verification.
-- Safety-relevant conflicts and rejected writes belong in the evidence trail.
+- Safety-relevant conflicts, rejected writes, redelivery and reconciliation belong in the evidence trail.
 
 ## Core invariants
 
@@ -185,6 +189,10 @@ I11 PRECONDITION FAILURE MAY BE A SAFETY SUCCESS
 I12 PROOF MUST COVER THE TRAJECTORY, NOT ONLY THE FINAL OUTPUT
 I13 RETRYABLE TRANSACTION ≠ RETRYABLE BUSINESS ACTION
 I14 DATABASE CONFLICT SIGNAL → RECONCILE BUSINESS STATE BEFORE RE-EXECUTION
+I15 BUSINESS STATE + DURABLE DELIVERY INTENT MUST COMMIT TOGETHER
+I16 DB COMMITTED ≠ EXTERNAL EFFECT ACKNOWLEDGED OR ABSENT
+I17 REDELIVERY MUST PRESERVE LOGICAL EFFECT IDENTITY
+I18 AMBIGUOUS EXTERNAL ACK → RECONCILE EXTERNAL STATE BEFORE RE-EXECUTION
 ```
 
 ## Reference state machine
@@ -205,8 +213,12 @@ COMPARE
   └─ match
        ↓
      COMMIT
-       ├─ acknowledged → PROVE → COMPLETE
-       └─ ambiguous    → UNKNOWN → RECONCILE
+       ├─ local acknowledged → external delivery if required
+       └─ local ambiguous    → UNKNOWN → RECONCILE
+
+external delivery
+   ├─ ACK          → PROVE → COMPLETE
+   └─ ACK UNKNOWN  → RECONCILE EXTERNAL STATE
 ```
 
 ## Failure coordinates covered
@@ -249,6 +261,7 @@ For consequential business actions:
 - state + trust version binding
 - reconciliation before retry
 - durable evidence bundle
+- stable logical effect identity across external redelivery when supported
 
 ### TTP-Deep
 
@@ -300,6 +313,39 @@ RETRY ONLY IF OPERATION IS STILL ABSENT + LEGAL
 
 Report #013 validates this rule across PostgreSQL 17.6 `READ COMMITTED`, `REPEATABLE READ` and `SERIALIZABLE` for one deterministic two-writer race. `READ COMMITTED` returned a zero-row precondition failure; the stronger snapshot levels returned SQLSTATE `40001`. All losing paths reconciled to `COMMITTED / version=101 / effects=1`.
 
+## Cross-boundary delivery rule
+
+A local transaction cannot by itself prove the state of an external side effect. When an effect lives beyond the database transaction boundary, TTP separates durable intent from delivery outcome.
+
+```text
+BUSINESS TRANSACTION
+  state transition + durable outbox intent
+              ↓
+            COMMIT
+              ↓
+        DELIVERY WORKER
+              ↓
+     stable logical effect ID
+              ↓
+      EXTERNAL EFFECT
+        ├─ ACK → mark delivered
+        └─ UNKNOWN
+             ↓
+      reconcile by effect ID
+             ├─ COMMITTED → mark delivered
+             ├─ ABSENT    → fresh delivery may proceed
+             └─ UNKNOWN   → hold / reconcile again
+```
+
+Rules:
+
+- Transactional outbox closes the gap between business-state commit and durable intent to deliver; it does not create universal exactly-once delivery.
+- The outbox identity and external idempotency identity SHOULD remain stable across redelivery.
+- If the external outcome is ambiguous and an authoritative reconciliation interface exists, reconcile before making another consequential external call.
+- A successful external deduplication response can be evidence that redelivery was safely absorbed, but final proof SHOULD still record the logical operation identity and external status.
+
+Report #014 validates this rule with PostgreSQL 17.6 for business/outbox atomicity and a synthetic external effect ledger reached through separate transactions. An unsafe recovery path used a new request identity after ACK loss and produced two external effects. Stable-id redelivery was deduplicated to one effect, and reconcile-before-retry closed the outbox without a second external call.
+
 ## Non-goals
 
 TTP v1.0 is not:
@@ -329,6 +375,7 @@ Validation then moved from isolated invariants into composed and concrete execut
 - **#011 TTP v1.0 End-to-End Adversarial Run** — compounded timeout, stale evidence, revoked authority, stale trust and a competing writer in one trajectory; unsafe path produced three effects, TTP preserved one while covering all eight stages.
 - **#012 PostgreSQL Transactional Trust Adapter** — two independent real PostgreSQL connections read the same `ABSENT / version=100` snapshot; unconditional writes produced two effects, while a version-bound conditional mutation produced one winner, one precondition failure and one final effect.
 - **#013 PostgreSQL Isolation-Level Matrix** — the same stale-writer race was executed at `READ COMMITTED`, `REPEATABLE READ` and `SERIALIZABLE`; storage signals differed, but fresh reconciliation preserved one effect and prevented a transaction-retry signal from becoming a blind business replay.
+- **#014 PostgreSQL Transactional Outbox / External Effect Boundary** — business state and durable delivery intent were committed together; ACK loss with a new request identity reproduced two external effects, while stable-id redelivery and reconcile-before-retry each preserved one external effect.
 
 These reports validate specific protocol properties under their declared scope; they are not general production safety certifications.
 
