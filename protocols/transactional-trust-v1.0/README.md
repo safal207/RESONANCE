@@ -126,10 +126,10 @@ Rules:
 
 ### 7. RECONCILE
 
-After ambiguous outcomes, database conflicts, transport failures or external acknowledgement loss, determine what actually happened before retrying.
+After ambiguous outcomes, database conflicts, transport failures, external acknowledgement loss or service restart, determine what actually happened before retrying.
 
 ```text
-UNKNOWN / CONFLICT / DB CONFLICT / EXTERNAL ACK UNKNOWN
+UNKNOWN / CONFLICT / DB CONFLICT / EXTERNAL ACK UNKNOWN / RESTART
    ↓
 RECONCILE
    ├─ COMMITTED → COMPLETE
@@ -147,6 +147,7 @@ Rules:
 - Retry must re-enter observation, verification, authorization and execution binding; a prior authorization is not automatically reusable.
 - External redelivery SHOULD preserve the same logical effect identity when the external contract supports idempotency.
 - When authoritative remote status is available, it SHOULD be reconciled before another consequential request after an ambiguous transport outcome.
+- After a service restart, recovery SHOULD establish whether the safety-relevant execution memory used for deduplication, authorization or reconciliation survived before relying on it.
 
 ### 8. PROVE
 
@@ -164,6 +165,8 @@ precondition result
 commit or conflict result
 outbox / delivery identity when used
 transport outcome when external delivery is used
+service / process restart identity when relevant
+safety-memory durability observation when relevant
 external acknowledgement or reconciliation result
 final invariant result
 ```
@@ -172,7 +175,7 @@ Rules:
 
 - Tool success alone is not proof of state correctness.
 - Correct final state without causal evidence is incomplete verification.
-- Safety-relevant conflicts, rejected writes, redelivery, transport ambiguity and reconciliation belong in the evidence trail.
+- Safety-relevant conflicts, rejected writes, redelivery, transport ambiguity, restart transitions and reconciliation belong in the evidence trail.
 
 ## Core invariants
 
@@ -199,6 +202,10 @@ I19 HTTP ACK LOST ≠ REMOTE EFFECT ABSENT
 I20 SAME LOGICAL EFFECT → SAME IDEMPOTENCY IDENTITY
 I21 AUTHORITATIVE REMOTE STATUS SHOULD DOMINATE TRANSPORT FAILURE
 I22 NETWORK EVIDENCE BELONGS IN THE TRANSACTION TRAJECTORY
+I23 STABLE KEY + VOLATILE DEDUPE STATE ≠ IDEMPOTENT DELIVERY
+I24 REMOTE EFFECT DURABILITY ≠ IDEMPOTENCY-MEMORY DURABILITY
+I25 DEDUPE STATE MUST SURVIVE THE FAILURE WINDOW IT PROTECTS
+I26 SERVICE RESTART IS A TRUST-MEMORY TRANSITION
 ```
 
 ## Reference state machine
@@ -228,6 +235,13 @@ external delivery
                        ├─ COMMITTED → PROVE → COMPLETE
                        ├─ ABSENT    → fresh delivery decision
                        └─ UNKNOWN   → HOLD / RECONCILE AGAIN
+
+service restart
+   ↓
+VERIFY SAFETY-MEMORY DURABILITY
+   ├─ durable memory present → continue under declared contract
+   ├─ memory unavailable     → authoritative reconciliation
+   └─ remote state unknown   → HOLD / RECONCILE AGAIN / ESCALATE
 ```
 
 ## Failure coordinates covered
@@ -272,6 +286,7 @@ For consequential business actions:
 - durable evidence bundle
 - stable logical effect identity across external redelivery when supported
 - transport outcome and remote reconciliation evidence when an HTTP/API boundary is involved
+- declared durability semantics for safety-relevant idempotency / execution memory across restart when relied upon
 
 ### TTP-Deep
 
@@ -384,6 +399,44 @@ Rules:
 
 Report #015 validates this rule across a real localhost HTTP connection to a separate Dockerized service. The server committed an in-memory remote effect and then closed the connection before responding. A retry with a new identity produced two effects; a real second POST with the same identity returned `deduplicated` and preserved one effect; status reconciliation found `COMMITTED` and avoided a second POST entirely.
 
+## Trust-memory durability rule
+
+A stable identifier only protects a replay if the execution authority preserves the memory needed to recognize that identifier across the failure window.
+
+```text
+REMOTE EFFECT COMMITTED
+        ↓
+     ACK_UNKNOWN
+        ↓
+   SERVICE RESTART
+        ↓
+VERIFY SAFETY MEMORY
+   ├─ durable dedupe state present
+   │      ↓
+   │   same-key redelivery may be absorbed
+   │
+   ├─ dedupe memory unavailable
+   │      ↓
+   │   authoritative remote reconciliation
+   │      ├─ COMMITTED → complete without replay
+   │      ├─ ABSENT    → fresh delivery decision
+   │      └─ UNKNOWN   → hold / reconcile again
+   │
+   └─ remote state unavailable
+          ↓
+       HOLD / ESCALATE
+```
+
+Rules:
+
+- Remote effect durability and idempotency-memory durability are separate properties.
+- Dedupe state SHOULD survive the longest failure/retry window for which the implementation claims idempotent replay protection.
+- A service restart MUST NOT be treated as proof that earlier execution history disappeared.
+- When dedupe memory cannot be trusted after restart, authoritative effect reconciliation SHOULD precede replay.
+- Proof SHOULD preserve evidence that the process/service identity changed and which safety-memory state survived that transition.
+
+Report #016 validates this rule using a real container replacement. A persistent SQLite effect ledger survived restart. With volatile process-local dedupe memory, a real same-key redelivery created a second effect. Persisting the idempotency mapping on the same durable volume caused the same redelivery to be deduplicated to one effect. A separate volatile-memory path also preserved one effect by reconciling authoritative remote status before any second POST.
+
 ## Non-goals
 
 TTP v1.0 is not:
@@ -415,6 +468,7 @@ Validation then moved from isolated invariants into composed and concrete execut
 - **#013 PostgreSQL Isolation-Level Matrix** — the same stale-writer race was executed at `READ COMMITTED`, `REPEATABLE READ` and `SERIALIZABLE`; storage signals differed, but fresh reconciliation preserved one effect and prevented a transaction-retry signal from becoming a blind business replay.
 - **#014 PostgreSQL Transactional Outbox / External Effect Boundary** — business state and durable delivery intent were committed together; ACK loss with a new request identity reproduced two external effects, while stable-id redelivery and reconcile-before-retry each preserved one external effect.
 - **#015 HTTP Idempotency Boundary** — a separate Dockerized HTTP service committed a remote effect before closing the connection. New retry identity produced two effects; stable-id HTTP redelivery was deduplicated and authoritative remote reconciliation avoided a second POST.
+- **#016 Idempotency State Durability / Service Restart** — a persistent remote effect survived container replacement while volatile dedupe memory disappeared; same-key replay duplicated the effect, durable idempotency state deduplicated it, and authoritative reconciliation offered a second safe recovery path.
 
 These reports validate specific protocol properties under their declared scope; they are not general production safety certifications.
 
