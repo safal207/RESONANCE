@@ -207,10 +207,12 @@ function injectSeo(file, source) {
   html = replaceTitle(html, cfg.title);
   html = replaceDescription(html, description);
 
-  // Turn the visual AI anchor into a crawlable topic hub in the deployed build.
+  // Keep internal navigation aligned with the canonical home URL and expose the AI topic hub.
   html = html
+    .replace(/href=["']index\.html#intelligence["']/g, 'href="ai-agents.html"')
     .replace(/href=["']#intelligence["']/g, 'href="ai-agents.html"')
-    .replace(/href=["']index\.html#intelligence["']/g, 'href="ai-agents.html"');
+    .replace(/href=["']index\.html#([^"']+)["']/g, 'href="./#$1"')
+    .replace(/href=["']index\.html["']/g, 'href="./"');
 
   const schema = buildSchema(file, html, cfg, canonical, description);
   const safeDescription = description.replace(/"/g, '&quot;');
