@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Прежде чем позволить AI-агенту распоряжаться деньгами — RESONANCE разбирает, почему авторизации недостаточно и как проверять состояние, восстановление, инварианты и доказательства по всей траектории транзакции." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <title>Прежде чем позволить AI-агенту распоряжаться деньгами | RESONANCE</title>
+  <link rel="alternate" hreflang="en" href="https://safal207.github.io/RESONANCE/before-you-let-an-ai-agent-move-money.html" />
+  <link rel="alternate" hreflang="ru" href="https://safal207.github.io/RESONANCE/before-you-let-an-ai-agent-move-money.ru.html" />
+  <link rel="alternate" hreflang="zh-CN" href="https://safal207.github.io/RESONANCE/before-you-let-an-ai-agent-move-money.zh.html" />
+  <link rel="alternate" hreflang="x-default" href="https://safal207.github.io/RESONANCE/before-you-let-an-ai-agent-move-money.html" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+  <link rel="stylesheet" href="market.css" />
+</head>
+<body data-share-text="AI-агентам начинают давать право распоряжаться деньгами. Авторизация — ещё не верификация. Что должно быть доказуемо истинным, прежде чем вы доверите агенту реальный финансовый workflow?">
+  <a class="skip-link" href="#article">К статье</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.ru.html" aria-label="RESONANCE">RESONANCE</a>
+      <p class="masthead-line">Журнал об интеллекте, технологиях и человеческом прогрессе</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Меню</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Навигация">
+      <a href="ai-agents.html">AI</a>
+      <a href="open-problems.html">Открытые проблемы</a>
+      <a href="verified-workflow.html">Verified Workflow</a>
+      <a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="article">
+    <header class="article-hero wrap">
+      <a class="back-link" href="index.ru.html">← RESONANCE · Русское издание</a>
+      <div class="language-switcher" aria-label="Язык">
+        <a href="before-you-let-an-ai-agent-move-money.html" hreflang="en">EN</a>
+        <a href="before-you-let-an-ai-agent-move-money.ru.html" hreflang="ru" aria-current="page">RU</a>
+        <a href="before-you-let-an-ai-agent-move-money.zh.html" hreflang="zh-CN">中文</a>
+      </div>
+      <div class="article-meta-row">
+        <p class="section-label">Market Experiment 001 · Agentic Commerce / Trust</p>
+        <p class="article-status">Published · 11 Aug 2026</p>
+      </div>
+      <h1 class="article-title">Прежде чем позволить AI-агенту распоряжаться деньгами</h1>
+      <p class="article-dek">Авторизация необходима, но её недостаточно. Когда агент получает право совершать транзакции, доверие зависит от того, остаётся ли корректной вся траектория выполнения — через таймауты, повторы, изменение состояния, recovery и независимую проверку.</p>
+      <div class="byline-row">
+        <p>Автор: <strong>RESONANCE Editorial</strong></p>
+        <p>Issue 001 · Article 004</p>
+      </div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Кратко">
+        <div class="rail-card"><p class="section-label">Главная мысль</p><strong>Authorization ≠ verification</strong><span>Проверяем траекторию, а не только финальный ответ.</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">Координаты доверия</p><code>S · C · P · T · τ · R · V · E</code></div>
+        <div class="rail-card"><p class="section-label">KPI эксперимента</p><strong>Реальные workflows</strong><span>Product signals, а не просмотры.</span></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">AI-системы переходят от рекомендаций к участию в коммерции. Google описывает UCP как открытый стандарт для agentic commerce, а AP2 — как совместимый слой авторизации с типизированными мандатами, ограничениями и проверяемым следом намерения. OpenAI и Stripe отдельно разработали Agentic Commerce Protocol для взаимодействия пользователей, агентов и бизнеса в процессе покупки.</p>
+
+        <p>Это важный сдвиг. Агент теперь может не просто сказать человеку, что купить. Он может участвовать в выборе, согласовании, авторизации и исполнении экономически значимого действия.</p>
+
+        <p>Эксперимент Anthropic Project Deal показывает ещё один сигнал: AI-представители людей договаривались о реальных товарах и заключили 186 сделок общей стоимостью более $4 000. Это не production-платёжная сеть, но это уже реальное делегирование экономического поведения агентам.</p>
+
+        <div class="pull-quote">Следующий вопрос доверия звучит не только как <em>«агенту было разрешено это сделать?»</em>, но и как <strong>«можем ли мы доказать, что он прошёл корректную траекторию?»</strong></div>
+
+        <h2>Обычный сбой распределённой системы.</h2>
+
+        <p>Агент должен оплатить счёт поставщика. Запрос отправлен. Сеть отвечает таймаутом до того, как агент получил однозначный результат.</p>
+
+        <div class="trajectory-box"><span>payment</span><i>→</i><span>timeout</span><i>→</i><span>unknown commit</span><i>→</i><span>?</span></div>
+
+        <p>Если первый платёж не прошёл, повтор может быть правильным. Если платёж уже committed, но acknowledgement потерялся, слепой retry может создать дублирующую транзакцию.</p>
+
+        <p>При этом второй API-вызов способен вернуть <code>200 OK</code>, а агент — сообщить об успешном выполнении. Финальный ответ выглядит правильным, но бизнес-инвариант уже нарушен.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Кандидат на финансовый инвариант</p>
+          <div><b>1</b><p><strong>Одно авторизованное намерение оплатить</strong></p></div>
+          <div><b>≤1</b><p><strong>Не более одного committed внешнего платежа</strong></p></div>
+        </section>
+
+        <h2>Авторизация закрывает только часть доверия.</h2>
+
+        <p>AP2 полезен именно потому, что делает делегированное намерение и ограничения расходов более явными. В документации Google показана цепочка от intent mandate к payment mandate, привязанному к конкретной корзине и сумме, а затем к receipt, который завершает audit trail авторизации.</p>
+
+        <p>Но прикладная система всё равно должна самостоятельно сохранить корректность через свою state machine, поведение провайдера, конкурентные изменения, retries и recovery.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Восемь координат RESONANCE</p>
+          <div><b>S</b><p><strong>State:</strong> какое финансовое состояние сейчас является авторитетным?</p></div>
+          <div><b>C</b><p><strong>Causality:</strong> какое легитимное намерение породило действие?</p></div>
+          <div><b>P</b><p><strong>Phase:</strong> где мы — authorization, execution, settlement или recovery?</p></div>
+          <div><b>T</b><p><strong>Transition:</strong> разрешён ли этот переход состояния?</p></div>
+          <div><b>τ</b><p><strong>Time:</strong> не протухли ли authority и assumptions?</p></div>
+          <div><b>R</b><p><strong>Recovery:</strong> что происходит после частичного или неоднозначного сбоя?</p></div>
+          <div><b>V</b><p><strong>Verification:</strong> проверено ли реальное postcondition независимо?</p></div>
+          <div><b>E</b><p><strong>Evidence:</strong> сможет ли другой наблюдатель восстановить значимую траекторию?</p></div>
+        </section>
+
+        <h2>Trust contract должен пережить смену модели.</h2>
+
+        <p>Хороший контракт для финансового агента не звучит как «модель должна быть осторожной». Он фиксирует условия, которые можно проверить независимо от того, какой planner выбрал действие.</p>
+
+        <div class="market-kpi"><pre>INTENT
+Пользователь разрешил платёж поставщику ≤ $1 000
+
+STATE
+Счёт ещё не оплачен
+
+TIME
+Authority действительно в момент исполнения
+
+TRANSITION
+UNPAID → PAYMENT_PENDING → PAID
+
+RECOVERY
+Unknown commit → reconciliation, а не blind retry
+
+VERIFICATION
+Provider state согласован с authoritative ledger
+
+EVIDENCE
+Intent + authority + attempts + reconciliation + decision сохранены</pre></div>
+
+        <p>Тогда вопрос становится намного точнее:</p>
+
+        <div class="pull-quote">Может ли execution удовлетворить проверяемому trust contract независимо от того, какая модель его выполняет?</div>
+
+        <h2>Более безопасная траектория неоднозначного сбоя.</h2>
+
+        <div class="trajectory-box"><span>timeout</span><i>→</i><span>reconcile authoritative state</span><i>→</i><span>verify invariant</span><i>→</i><span>retry / stop</span><i>→</i><span>preserve evidence</span></div>
+
+        <p>Это не универсальный алгоритм для любого платёжного провайдера. Где-то есть idempotency primitives, где-то reconciliation устроен иначе, где-то settlement отложен во времени. Смысл другой: <strong>recovery path должен быть явным, тестируемым и подтверждённым evidence</strong>.</p>
+
+        <h2>И здесь нам нужен рынок.</h2>
+
+        <p>Синтетические failure cases можно генерировать бесконечно. Настоящие ограничения production-систем научат нас гораздо большему.</p>
+
+        <section class="market-question" id="open-question">
+          <p class="section-label">Горячий вопрос рынку</p>
+          <h2>Эта статья специально не заканчивается выводом.</h2>
+          <p class="hot-question"><strong>Что должно быть доказуемо истинным, прежде чем вы позволите AI-агенту распоряжаться деньгами в вашей реальной системе?</strong></p>
+          <p>Опишите один безопасно обобщённый workflow:</p>
+          <ul class="market-prompts">
+            <li><strong>Agent:</strong> Что он делает?</li>
+            <li><strong>Failure:</strong> Что конкретно может пойти не так?</li>
+            <li><strong>Impact:</strong> К чему приведёт ошибка?</li>
+            <li><strong>Current workaround:</strong> Как вы решаете это сегодня?</li>
+            <li><strong>Trust condition:</strong> Что нужно уметь проверить, чтобы доверять процессу?</li>
+          </ul>
+          <div class="market-actions">
+            <a class="button" href="https://github.com/safal207/RESONANCE/issues/new?template=market-workflow.yml" target="_blank" rel="noreferrer">Описать workflow →</a>
+            <a class="text-link" href="verified-workflow.html">Как работает Verified Workflow pilot →</a>
+          </div>
+          <p class="market-note">Не отправляйте credentials, private keys, персональные данные, конфиденциальные данные клиентов или идентифицирующие production-детали. При необходимости обобщите кейс.</p>
+        </section>
+
+        <p>На сильный кейс мы сначала хотим вернуть не продажу, а ценность: выделить missing guarantee, построить trajectory и предложить одну конкретную verification hypothesis. Если одна и та же missing capability повторится у независимых команд, это уже будет основанием думать о продукте.</p>
+
+        <div class="protocol-flow"><span>Teach</span><i>→</i><span>Ask</span><i>→</i><span>Listen</span><i>→</i><span>Diagnose</span><i>→</i><span>Give value</span><i>→</i><span>Specify</span><i>→</i><span>Pilot</span><i>→</i><span>Prove</span></div>
+
+        <h2>Что происходит с ответами?</h2>
+
+        <p>Содержательный ответ превращается в Problem Card: workflow → failure → impact → workaround → missing capability → acceptance condition. Затем signals получают score и собираются в Demand Graph. Синтетические примеры помечены отдельно и никогда не считаются реальным market evidence.</p>
+
+        <p>Article #005 не будет называться «выбранным рынком», пока у нас не появится достаточный объём реальных данных. Текущее правило: минимум десять содержательных внешних workflows и минимум три реальных кейса в выбранном кластере.</p>
+
+        <p class="closing-line"><strong>Не спрашивать рынок, нравится ли ему наш продукт. Создать разговор, в котором рынок сам раскрывает продукт, который ему нужен.</strong></p>
+
+        <section class="share-panel" aria-label="Поделиться">
+          <p class="section-label">Distribution</p>
+          <h3>Делитесь вопросом, а не только ссылкой.</h3>
+          <div class="share-actions">
+            <button type="button" data-share="native">Поделиться</button>
+            <button type="button" data-share="telegram">Telegram</button>
+            <button type="button" data-share="vk">VK</button>
+            <button type="button" data-share="linkedin">LinkedIn</button>
+            <button type="button" data-share="x">X</button>
+            <button type="button" data-share="copy" data-copied-label="Скопировано">Копировать ссылку</button>
+          </div>
+        </section>
+
+        <section class="sources-block" id="sources">
+          <p class="section-label">Первичные источники</p>
+          <ol>
+            <li><a href="https://developers.googleblog.com/en/developers-guide-to-ai-agent-protocols/" target="_blank" rel="noreferrer">Google Developers Blog — Developer's Guide to AI Agent Protocols (AP2)</a> · 18 Mar 2026</li>
+            <li><a href="https://developers.googleblog.com/under-the-hood-universal-commerce-protocol-ucp/" target="_blank" rel="noreferrer">Google Developers Blog — Universal Commerce Protocol</a> · 11 Jan 2026</li>
+            <li><a href="https://openai.com/index/buy-it-in-chatgpt/" target="_blank" rel="noreferrer">OpenAI — Instant Checkout and Agentic Commerce Protocol</a> · 29 Sep 2025</li>
+            <li><a href="https://stripe.com/resources/more/agentic-commerce" target="_blank" rel="noreferrer">Stripe — Agentic commerce</a> · updated 22 Apr 2026</li>
+            <li><a href="https://www.anthropic.com/features/project-deal" target="_blank" rel="noreferrer">Anthropic — Project Deal</a> · 2026</li>
+          </ol>
+          <p class="source-note">Источники подтверждают развитие agentic/delegated commerce как реальной инженерной поверхности. Trajectory verification и trust-contract framing — аналитическая модель RESONANCE.</p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Найти сигнал. Проверить путь. Понять будущее.</p></div><div><p class="footer-title">Market OS</p><p>Article → Dialogue → Problem → Pilot → Evidence → Product.</p></div><div><p class="footer-title">Open publication</p><a href="https://github.com/safal207/RESONANCE">GitHub ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+  <script src="market.js"></script>
+</body>
+</html>
