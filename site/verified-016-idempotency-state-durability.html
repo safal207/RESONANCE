@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified #016 tests whether HTTP idempotency memory survives a real service restart, comparing volatile and durable dedupe state." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Verified #016 — Idempotency State Durability | RESONANCE" />
+  <meta property="og:description" content="Stable key + volatile dedupe state is not idempotent delivery across restart." />
+  <meta property="og:type" content="article" />
+  <title>Verified #016 — Idempotency State Durability | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="ai-agents.html">AI Agents</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="index.html#economy">Startups & Economy</a><a href="index.html#human">Human</a><a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Verified Report · 016</p><p class="article-status">Reproducible · 10/10 · 11 Aug 2026</p></div>
+      <h1 class="article-title">Idempotency State Durability</h1>
+      <p class="article-dek">The same stable HTTP idempotency key can still duplicate an effect after service restart if the consumer forgets the dedupe state that gave that key meaning.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>TTP v1.0 · Service restart boundary</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Verification summary">
+        <div class="rail-card"><p class="section-label">Result</p><strong>10 / 10</strong><span>restart-memory protocol passes</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">Core invariant</p><code>stable key + volatile memory ≠ idempotence</code></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Verified #015 established a real HTTP ambiguity: the remote effect can commit while the client receives <code>RemoteDisconnected</code>. #016 asks what happens next if the remote service itself dies and comes back before recovery.</p>
+
+        <div class="trajectory-box"><span>REMOTE COMMIT</span><i>→</i><span>ACK_UNKNOWN</span><i>→</i><span>SERVICE RESTART</span><i>→</i><span>SAME KEY</span></div>
+
+        <h2>The experiment separates effect memory from dedupe memory.</h2>
+        <p>The remote effect ledger is always SQLite on a persistent Docker volume. In the unsafe path only the idempotency map is process memory. That lets the first effect survive while the service forgets that it already handled the key.</p>
+
+        <section class="claim-panel">
+          <div><b>A</b><p><strong>Effect ledger</strong><span>Persistent SQLite volume · survives container replacement.</span></p></div>
+          <div><b>B</b><p><strong>Dedupe state</strong><span>Volatile memory in unsafe mode; persistent SQLite record in safe mode.</span></p></div>
+        </section>
+
+        <h2>Unsafe · the effect survived, the safety memory did not.</h2>
+        <p>The first container reported boot id <code>7fa5e591…</code>. The remote service committed one effect, dropped the HTTP response, and the client observed <code>ACK_UNKNOWN</code>.</p>
+        <div class="trajectory-box"><span>effect_count=1</span><i>→</i><span>container removed</span><i>→</i><span>new boot 2803e3ac…</span></div>
+        <p>After restart the durable effect ledger still reported <code>COMMITTED / effect_count=1</code>, but the volatile dedupe map was empty. The worker correctly reused the same key — and the new process applied it again.</p>
+        <div class="pull-quote">Stable request identity is not enough if the consumer forgets the state that makes the identity idempotent.</div>
+        <p>Final unsafe state: <strong>2 POST requests, 2 remote effects, CONFLICT</strong>.</p>
+
+        <h2>Safe · durable idempotency state survives the restart.</h2>
+        <p>The durable mode persisted both the effect and its idempotency mapping. The first boot <code>36d472f4…</code> committed the effect and lost the response. After container replacement the new boot <code>696deb30…</code> still observed one effect and one durable idempotency record.</p>
+        <div class="trajectory-box"><span>POST #2</span><i>→</i><span>SAME KEY</span><i>→</i><span>DEDUPLICATED</span><i>→</i><span>1 EFFECT</span></div>
+        <p>The real second HTTP delivery therefore remained safe across process death: <strong>2 delivery attempts, 1 committed remote effect</strong>.</p>
+
+        <h2>Recovery alternative · reconcile the effect ledger.</h2>
+        <p>A third path intentionally lost volatile dedupe memory again. After restart, recovery queried authoritative remote status first. It found <code>COMMITTED / effect_count=1</code> and made no second POST.</p>
+        <div class="trajectory-box"><span>ACK_UNKNOWN</span><i>→</i><span>RESTART</span><i>→</i><span>GET STATUS</span><i>→</i><span>COMMITTED</span><i>→</i><span>NO REPLAY</span></div>
+
+        <h2>What #016 adds to TTP.</h2>
+        <section class="claim-panel">
+          <div><b>I23</b><p><strong>STABLE KEY + VOLATILE DEDUPE STATE ≠ IDEMPOTENT DELIVERY</strong><span>Identity requires memory with adequate durability.</span></p></div>
+          <div><b>I24</b><p><strong>REMOTE EFFECT DURABILITY ≠ IDEMPOTENCY-MEMORY DURABILITY</strong><span>These are separate properties.</span></p></div>
+          <div><b>I25</b><p><strong>DEDUPE STATE MUST SURVIVE THE FAILURE WINDOW IT PROTECTS</strong><span>Restart is part of the protocol threat model.</span></p></div>
+          <div><b>I26</b><p><strong>SERVICE RESTART IS A TRUST-MEMORY TRANSITION</strong><span>Restart evidence belongs in the trajectory.</span></p></div>
+        </section>
+
+        <h2>Evidence.</h2>
+        <p>GitHub Actions run <code>31466444029</code> completed successfully. Artifact <code>resonance-idempotency-state-durability-v1.0</code> has ID <code>9091692210</code> and digest <code>sha256:968fdc68906cfdb2603e3b130a0f0c487d1b406f2eb9d73d6f6f6224231cdd13</code>.</p>
+        <p>Execution used PostgreSQL 17.6, <code>python:3.12-slim</code> for the HTTP service, and a persistent Docker named volume with a SQLite remote ledger.</p>
+
+        <h2>Interpretation boundary.</h2>
+        <p>This is a local restart-durability benchmark, not a multi-region durability or exactly-once certification. It does not model total volume loss, replicated caches, disk corruption, consensus or production payment-provider semantics. It is also not yet a CML integration; it is a protocol result about durable execution memory that can inform one.</p>
+
+        <section class="sources-block">
+          <p class="section-label">Inspect / reproduce</p>
+          <ol>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/016-idempotency-state-durability/REPORT.md" target="_blank" rel="noreferrer">Canonical report</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/tree/main/benchmarks/idempotency-state-durability-v1.0" target="_blank" rel="noreferrer">Benchmark harness</a></li>
+            <li><a href="transactional-trust-protocol-v1.html">Transactional Trust Protocol v1.0</a></li>
+            <li><a href="verified-015-http-idempotency-boundary.html">Previous · Verified Report #015</a></li>
+          </ol>
+        </section>
+
+        <p class="closing-line"><strong>Verdict:</strong> the durability of safety memory must be at least as strong as the failure window it is expected to survive.</p>
+        <div class="article-end"><p><strong>RESONANCE Verified #016</strong></p><p>effect durability → memory durability → restart recovery → proof.</p><a class="button" href="transactional-trust-protocol-v1.html">Read TTP v1.0</a></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Verified #016</p><p>Idempotency State Durability</p></div><div><a href="https://github.com/safal207/RESONANCE">GitHub repository ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
