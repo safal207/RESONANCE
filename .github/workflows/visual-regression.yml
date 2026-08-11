@@ -1,0 +1,99 @@
+name: RESONANCE Visual Regression Contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - 'scripts/build-seo-site.mjs'
+      - 'scripts/verify-seo.mjs'
+      - 'scripts/visual-regression.mjs'
+      - '.github/workflows/visual-regression.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: resonance-visual-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  visual-regression:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Build publication
+        run: node scripts/build-seo-site.mjs
+
+      - name: Verify publication contract first
+        run: node scripts/verify-seo.mjs
+
+      - name: Install exact visual-audit dependencies
+        run: npm install --no-save puppeteer-core@24.16.0 pixelmatch@7.1.0 pngjs@7.0.0
+
+      - name: Start candidate publication server
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8080 --directory dist >/tmp/resonance-visual-server.log 2>&1 &
+          echo $! > /tmp/resonance-visual-server.pid
+          for attempt in {1..20}; do
+            if curl --silent --fail http://127.0.0.1:8080/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/resonance-visual-server.log
+          exit 1
+
+      - name: Capture multilingual viewport matrix and enforce geometry
+        env:
+          GITHUB_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          node scripts/visual-regression.mjs \
+            --candidate http://127.0.0.1:8080/ \
+            --baseline https://safal207.github.io/RESONANCE/ \
+            --output visual-results \
+            --enforce
+          cat visual-results/visual-summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload immutable visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-visual-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: visual-results/
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Post or update PR visual summary
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const marker = '<!-- resonance-visual-regression -->';
+            const summaryPath = 'visual-results/visual-summary.md';
+            const fallback = '# RESONANCE Visual Regression Contract\n\nThe run did not produce a summary. Inspect workflow logs/artifacts.';
+            const body = `${marker}\n${fs.existsSync(summaryPath) ? fs.readFileSync(summaryPath, 'utf8') : fallback}`;
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number, per_page: 100 });
+            const previous = comments.find((comment) => comment.user?.type === 'Bot' && comment.body?.includes(marker));
+            if (previous) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: previous.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
