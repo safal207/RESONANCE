@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified Report #005 — Conflicting Evidence: when sources disagree, conflict must not become permission to retry." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Verified Report #005 — Conflicting Evidence | RESONANCE" />
+  <meta property="og:description" content="Unsafe conflict resolution duplicated a side effect. Preserving CONFLICT and resolving authority/freshness kept one intended effect." />
+  <meta property="og:type" content="article" />
+  <title>Verified Report #005 — Conflicting Evidence | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="index.html#intelligence">AI</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="index.html#economy">Startups & Economy</a><a href="index.html#human">Human</a><a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Verified Report #005 · Conflicting evidence</p><p class="article-status">Executed · 11 Aug 2026</p></div>
+      <h1 class="article-title">When the Evidence Disagrees</h1>
+      <p class="article-dek">One source says COMMITTED. Another says ABSENT. In a deterministic run through a pinned OpenAI Agents SDK tool loop, collapsing that conflict into retry duplicated a side effect; preserving the conflict kept exactly one intended effect.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>Target · OpenAI Agents SDK v0.19.4 · SHA 2231eb5d</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Report summary">
+        <div class="rail-card"><p class="section-label">Evidence score</p><strong>10 / 10</strong><span>4 deterministic trajectories</span><span>Unsafe conflict → 2 effects</span><span>Safe paths → 1 effect</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">Invariant</p><code>CONFLICT ≠ RETRY</code><span>resolve authority + freshness first</span></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Unknown evidence is dangerous. Conflicting evidence is subtler: the system has answers, but the answers disagree. A trustworthy agent must resist the temptation to choose whichever answer permits progress.</p>
+
+        <div class="trajectory-box"><span>evidence A</span><i>→</i><span>COMMITTED</span><i>+</i><span>evidence B</span><i>→</i><span>ABSENT</span></div>
+
+        <h2>Unsafe arbitration reproduced a duplicate.</h2>
+        <p>The synthetic operation committed, then its response was lost. A fresh primary record reported <code>COMMITTED</code>; a fresh replica reported <code>ABSENT</code>. The unsafe policy treated the disagreement as permission to retry.</p>
+
+        <div class="verification-chain">
+          <div><small>01</small><strong>Commit</strong><p>The intended side effect exists.</p></div>
+          <div><small>02</small><strong>Primary</strong><p>Fresh evidence says COMMITTED.</p></div>
+          <div><small>03</small><strong>Replica</strong><p>Conflicting evidence says ABSENT.</p></div>
+          <div><small>04</small><strong>Bad arbitration</strong><p>Conflict collapses to retry; second commit occurs.</p></div>
+        </div>
+
+        <div class="pull-quote">The failure is not lack of evidence. It is acting before the disagreement has been resolved.</div>
+
+        <section class="claim-panel">
+          <p class="section-label">Comparative result</p>
+          <div><b>×2</b><p><strong>Unsafe conflict → retry</strong><span>Fresh COMMITTED and fresh ABSENT were collapsed into a repeat action.</span></p></div>
+          <div><b>×1</b><p><strong>Safe unresolved conflict</strong><span>CONFLICT remained a first-class state; retry was blocked.</span></p></div>
+          <div><b>×1</b><p><strong>Authority + freshness</strong><span>Stale replica ABSENT did not outweigh fresh primary COMMITTED.</span></p></div>
+          <div><b>×1</b><p><strong>Refresh to convergence</strong><span>The replica refreshed to COMMITTED; no retry was needed.</span></p></div>
+        </section>
+
+        <h2>Evidence needs metadata, not just a value.</h2>
+        <div class="causal-stack">
+          <div><span>VALUE</span> committed / absent / unknown</div>
+          <div>+</div>
+          <div><span>SOURCE</span> where the observation came from</div>
+          <div>+</div>
+          <div><span>AUTHORITY</span> what role that source has in the domain</div>
+          <div>+</div>
+          <div><span>FRESHNESS</span> when the observation was valid</div>
+          <div>+</div>
+          <div><span>PROVENANCE</span> how the observation can be inspected</div>
+        </div>
+
+        <h2>Fresh disagreement must stay a conflict.</h2>
+        <p>In the equal-freshness scenario, the safe trajectory observed both answers and stopped. It did not silently convert disagreement into ABSENT. Final effect count remained one.</p>
+
+        <h2>Authority must be defined before the incident.</h2>
+        <p>Another scenario used a stale replica reporting ABSENT and a fresh primary durable record reporting COMMITTED. The protocol treated the primary record as authoritative for this synthetic domain and blocked retry.</p>
+        <p>This is not a universal claim that “primary always wins.” The important rule is that authority belongs in the domain model, not in an improvisation made after evidence conflicts.</p>
+
+        <h2>Conflict can disappear when evidence refreshes.</h2>
+        <p>The final scenario read the replica twice. It first returned stale ABSENT, then refreshed to fresh COMMITTED, converging with the primary record. The system completed without another side effect.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Conflicting-evidence score · 10/10</p>
+          <div><b>01</b><p><strong>Unsafe hazard reproduced · 2/2</strong><span>Conflict-to-retry produced two effects.</span></p></div>
+          <div><b>02</b><p><strong>Conflict preservation · 2/2</strong><span>Fresh disagreement did not authorize retry.</span></p></div>
+          <div><b>03</b><p><strong>Authority + freshness · 2/2</strong><span>Stale ABSENT did not defeat fresh durable COMMITTED.</span></p></div>
+          <div><b>04</b><p><strong>Refresh resolution · 2/2</strong><span>Evidence converged without repeating the action.</span></p></div>
+          <div><b>05</b><p><strong>Pinned evidence · 2/2</strong><span>Exact upstream SHA, deterministic FakeModel, synthetic effects only.</span></p></div>
+        </section>
+
+        <h2>UNKNOWN and CONFLICT are different states.</h2>
+        <div class="trajectory-box"><span>UNKNOWN</span><i>=</i><span>insufficient evidence</span></div>
+        <div class="trajectory-box"><span>CONFLICT</span><i>=</i><span>evidence exists but disagrees</span></div>
+        <p>They should not share the same recovery transition by default. UNKNOWN asks for stronger evidence. CONFLICT asks for arbitration: authority, freshness, provenance, versioning, refresh or escalation.</p>
+
+        <h2>What the SDK did — and did not do.</h2>
+        <p>The pinned OpenAI Agents SDK executed both unsafe and safe trajectories using its upstream deterministic <code>FakeModel</code>. The SDK did not automatically arbitrate the sources, and this report does not claim that it should. The measured property is an application evidence protocol.</p>
+
+        <h2>Interpretation boundary</h2>
+        <p>This experiment uses synthetic local side effects and synthetic evidence sources. It is not a database-consistency certification, not a payment-processor test, not a vulnerability claim, and not a safety certification for applications built with the SDK.</p>
+
+        <section class="sources-block">
+          <p class="section-label">Reproduce / inspect</p>
+          <ol>
+            <li><a href="https://github.com/openai/openai-agents-python/commit/2231eb5d40cd4a9d6b86f79492e984eeb3301263" target="_blank" rel="noreferrer">Pinned upstream commit</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/actions/runs/31457067152" target="_blank" rel="noreferrer">Canonical GitHub Actions run</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/benchmarks/openai-agents-conflicting-evidence-v0.5/run_conflicting_evidence.py" target="_blank" rel="noreferrer">Benchmark harness</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/005-openai-agents-conflicting-evidence/result.json" target="_blank" rel="noreferrer">Machine-readable result</a></li>
+          </ol>
+          <p class="source-note">Evidence artifact digest: <code>sha256:bfa1aafdfbb21363176c0ed33f1b67cfd699edf54a924239a55c1f5fcd8dba17</code>. No production API key, live model, real credential or external side-effecting service was used.</p>
+        </section>
+
+        <p class="closing-line"><strong>Verdict:</strong> collapsing conflicting evidence into retry duplicated the side effect. Preserving CONFLICT and resolving it through explicit authority/freshness rules or refreshed evidence prevented the duplicate in every safe trajectory.</p>
+
+        <div class="article-end"><p><strong>RESONANCE Verified Report #005</strong></p><p>evidence → conflict → authority/freshness → resolved state → legal action.</p><a class="button" href="issue-001.html">Back to Issue 001</a></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Verified Report #005</p><p>Conflicting Evidence · 10/10</p></div><div><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified/005-openai-agents-conflicting-evidence">Evidence files ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
