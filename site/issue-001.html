@@ -62,8 +62,13 @@
         </article>
         <article>
           <h3>Verified Report #001 — OpenAI Agents SDK</h3>
-          <p><strong>Published · 95/100 structural baseline.</strong> A pinned SDK revision was tested through 597 upstream tests across seven suites. Containment remains an explicit partial result, not a hidden caveat.</p>
+          <p><strong>Published · 95/100 structural baseline.</strong> A pinned SDK revision was tested through 597 upstream tests across seven suites. Containment was intentionally left partial until a real boundary could be exercised.</p>
           <a class="text-link" href="verified-001-openai-agents-sdk.html">Open verified report →</a>
+        </article>
+        <article>
+          <h3>Verified Report #002 — Docker Containment</h3>
+          <p><strong>Published · 8/10 containment.</strong> Host filesystem, workspace path and Docker control-plane boundaries held; an ephemeral local peer remained reachable over the Docker bridge.</p>
+          <a class="text-link" href="verified-002-openai-agents-containment.html">Open containment report →</a>
         </article>
         <article><h3>Compute Becomes Strategy</h3><p>How model capability increasingly depends on the infrastructure beneath it.</p></article>
         <article><h3>Security Beyond the Prompt</h3><p>Why agent safety expands into tools, credentials, environments and persistent state.</p></article>
@@ -77,8 +82,8 @@
 
     <section class="section human-section">
       <div class="wrap editorial-grid">
-        <div><p class="section-label">Editorial standard</p><h2>This issue now produces its own evidence.</h2></div>
-        <p>Issue 001 moves through analysis → framework → benchmark → external verification. Verified Report #001 pins an external framework revision, executes reproducible probes, preserves the evidence artifact, and publishes both the score and the boundary of what the score does not prove.</p>
+        <div><p class="section-label">Editorial standard</p><h2>This issue now tests the boundary itself.</h2></div>
+        <p>Issue 001 moves through analysis → framework → benchmark → external verification → containment. Report #002 deliberately attempts safe overreach, rejects an invalid first measurement, reruns the corrected harness, and publishes both what held and what remained reachable.</p>
       </div>
     </section>
 
