@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified Report #012 — PostgreSQL Transactional Trust Adapter: two independent database connections, one version-bound winner, one stale writer rejected." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Verified Report #012 — PostgreSQL Transactional Trust Adapter | RESONANCE" />
+  <meta property="og:description" content="Two PostgreSQL connections read ABSENT/version=100. Unsafe writes produced two effects; a version-bound conditional mutation preserved one." />
+  <meta property="og:type" content="article" />
+  <title>Verified Report #012 — PostgreSQL Transactional Trust Adapter | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="index.html#intelligence">AI</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="index.html#economy">Startups & Economy</a><a href="index.html#human">Human</a><a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Verified Report #012 · PostgreSQL adapter</p><p class="article-status">Executed · 11 Aug 2026</p></div>
+      <h1 class="article-title">Two Readers. One Writer.</h1>
+      <p class="article-dek">The TTP atomic-transition rule moved from an in-memory model into a real PostgreSQL service. Two independent connections read the same legal snapshot. Unconditional writes duplicated the effect; a version-bound conditional mutation allowed one winner and rejected the stale writer.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>PostgreSQL 17.6 · two independent connections</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Report summary">
+        <div class="rail-card"><p class="section-label">Adapter score</p><strong>10 / 10</strong><span>Unsafe → 2 effects</span><span>Safe → 1 effect</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">Mutation rule</p><code>WHERE version=100</code><span>one winner · one conflict</span></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Reports #010 and #011 showed that a correct earlier read is not enough to authorize a later write. Report #012 asks whether that rule survives contact with a real transactional database.</p>
+
+        <div class="trajectory-box"><span>READ v100</span><i>→</i><span>RACE</span><i>→</i><span>CONDITIONAL UPDATE</span><i>→</i><span>ONE WINNER</span></div>
+
+        <h2>The unsafe control reproduced the duplicate.</h2>
+        <p>Node A and Node B used separate PostgreSQL connections. Both first observed <code>ABSENT / version=100</code>. After a synchronization barrier, both executed an unconditional mutation and inserted an effect.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Unsafe database result</p>
+          <div><b>A</b><p><strong>Unconditional commit</strong><span>State advanced to version 101 and effect #1 was inserted.</span></p></div>
+          <div><b>B</b><p><strong>Unconditional commit</strong><span>State advanced again to version 102 and effect #2 was inserted.</span></p></div>
+        </section>
+
+        <div class="pull-quote">Both reads were true. The duplicate happened because the truth of the read was not enforced at the write boundary.</div>
+
+        <h2>The PostgreSQL adapter bound the observation to mutation.</h2>
+        <p>The safe workers carried the observed version into the database predicate:</p>
+
+        <pre><code>UPDATE operations
+SET state = 'committed',
+    version = version + 1,
+    updated_at = clock_timestamp()
+WHERE id = 'op-1'
+  AND state = 'absent'
+  AND version = 100
+RETURNING state, version;</code></pre>
+
+        <p>Only a worker receiving a returned row could insert its effect, and that insert occurred in the same database transaction.</p>
+
+        <h2>One connection won. The other became evidence.</h2>
+        <p>In the canonical run, Node A won the conditional mutation:</p>
+        <div class="trajectory-box"><span>A expected v100</span><i>=</i><span>current v100</span><i>→</i><span>COMMIT v101</span></div>
+        <p>Node B had already read the same version 100 snapshot, but by the time its conditional UPDATE was evaluated the row had changed:</p>
+        <div class="trajectory-box"><span>B expected v100</span><i>≠</i><span>current v101</span><i>→</i><span>0 ROWS</span></div>
+        <p>That zero-row result was classified as <code>PRECONDITION_FAILED</code>, not as permission to retry blindly.</p>
+
+        <h2>RECONCILE turned the failed write into current knowledge.</h2>
+        <p>The stale writer rolled back its attempted transaction and reread the authoritative database state:</p>
+        <div class="trajectory-box"><span>COMMITTED</span><i>·</i><span>version 101</span><i>·</i><span>effects 1</span></div>
+        <p>The final database invariant therefore held with exactly one committed effect.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">PostgreSQL adapter score · 10/10</p>
+          <div><b>01</b><p><strong>Real PostgreSQL service · 2/2</strong><span>Server reported PostgreSQL 17.6.</span></p></div>
+          <div><b>02</b><p><strong>Unsafe duplicate · 2/2</strong><span>Two independent connections produced two effects and version 102.</span></p></div>
+          <div><b>03</b><p><strong>Single conditional winner · 2/2</strong><span>Safe path produced exactly one commit winner and one precondition failure.</span></p></div>
+          <div><b>04</b><p><strong>Stale writer reconciliation · 2/2</strong><span>Loser reread COMMITTED / version 101 / effects 1.</span></p></div>
+          <div><b>05</b><p><strong>Final database proof · 2/2</strong><span>Final state committed, version 101, effect count 1.</span></p></div>
+        </section>
+
+        <h2>TTP now has a real storage adapter.</h2>
+        <div class="trajectory-box"><span>OBSERVE</span><i>→</i><span>BIND VERSION</span><i>→</i><span>COMPARE + COMMIT</span></div>
+        <div class="trajectory-box"><span>CONFLICT</span><i>→</i><span>RECONCILE</span><i>→</i><span>PROVE</span></div>
+        <p>The database-specific invariant is simple:</p>
+        <div class="pull-quote">COMPARE + TRANSITION + EFFECT must share the same enforced transaction boundary.</div>
+
+        <h2>Interpretation boundary</h2>
+        <p>This benchmark uses a real PostgreSQL 17.6 service container and two real independent client connections, but the business tables and effects are synthetic. It does not certify exactly-once delivery, cross-database atomicity, distributed consensus, failover behavior, every PostgreSQL isolation level, external APIs, payment rails, blockchains or arbitrary agent safety.</p>
+
+        <section class="sources-block">
+          <p class="section-label">Reproduce / inspect</p>
+          <ol>
+            <li><a href="transactional-trust-protocol-v1.html">Transactional Trust Protocol v1.0</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/actions/runs/31461002473" target="_blank" rel="noreferrer">Canonical GitHub Actions run</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/benchmarks/postgresql-transactional-trust-adapter-v1.0/run_postgresql_adapter.py" target="_blank" rel="noreferrer">PostgreSQL adapter harness</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/012-postgresql-transactional-trust-adapter/result.json" target="_blank" rel="noreferrer">Machine-readable result</a></li>
+          </ol>
+          <p class="source-note">Artifact digest: <code>sha256:4a9ed5a039c624acd1f0f5c0feef07c47ade79128a62050977089b0109cebaf1</code>. PostgreSQL image digest observed during the run: <code>sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94</code>.</p>
+        </section>
+
+        <p class="closing-line"><strong>Verdict:</strong> two independent PostgreSQL readers saw the same valid snapshot. Unconditional writes created two effects. A version-bound conditional mutation created one winner, rejected the stale writer and preserved exactly one effect.</p>
+
+        <div class="article-end"><p><strong>RESONANCE Verified Report #012</strong></p><p>observe → bind version → conditional mutation → reconcile → prove.</p><a class="button" href="transactional-trust-protocol-v1.html">Read the protocol</a></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Verified Report #012</p><p>PostgreSQL adapter · 10/10</p></div><div><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified/012-postgresql-transactional-trust-adapter">Evidence files ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
