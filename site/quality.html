@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="RESONANCE Site Health explains the publication, Lighthouse, accessibility, SEO and live-deployment checks used to keep the journal measurable and evidence-first." />
+  <meta name="description" content="RESONANCE Site Health explains the publication, Lighthouse, UI geometry, image, accessibility, SEO and live-deployment checks used to keep the journal measurable and evidence-first." />
   <meta name="theme-color" content="#f4f0e8" />
   <title>Site Health & Quality | RESONANCE</title>
   <link rel="stylesheet" href="styles.css" />
@@ -29,14 +29,14 @@
     <header class="article-hero wrap">
       <p class="section-label">Site Health · Quality Contract</p>
       <h1 class="article-title">Measure the publication, not just the content.</h1>
-      <p class="article-dek">RESONANCE treats the website itself as a verifiable system: structure is checked before release, browser experience is measured in CI, and the deployed GitHub Pages site is measured again after publication.</p>
+      <p class="article-dek">RESONANCE treats the website itself as a verifiable system: structure is checked before release, browser experience and UI geometry are measured in CI, and the deployed GitHub Pages site is measured again after publication.</p>
     </header>
 
     <div class="article-layout wrap">
       <aside class="article-rail">
         <div class="rail-card">
-          <p class="section-label">Three layers</p>
-          <strong>Build → Browser → Live</strong>
+          <p class="section-label">Four layers</p>
+          <strong>Build → Geometry → Browser → Live</strong>
           <span>Different checks answer different questions.</span>
         </div>
         <div class="rail-card rail-dark">
@@ -46,13 +46,28 @@
       </aside>
 
       <article class="article-body">
-        <div class="status-chip open">RESONANCE Site Health v0.1</div>
+        <div class="status-chip ready">RESONANCE Site Health v0.2</div>
 
         <h2>1. Publication Contract</h2>
         <p>The deterministic publication contract builds the journal and checks canonical URLs, structured data, multilingual metadata, sitemap coverage, Market OS evidence boundaries and other release invariants before deployment.</p>
 
-        <h2>2. Experience Contract</h2>
-        <p>Pull requests that change the publication run Lighthouse against a local build. Representative pages are measured on mobile, with key pages also measured on desktop.</p>
+        <h2>2. UI & Media Contract</h2>
+        <p>Geometry is treated as a release property. New images and controls must satisfy explicit markup rules before the browser audit even starts, and rendered Lighthouse audits re-check the result afterwards.</p>
+        <table class="market-table">
+          <thead><tr><th>Element</th><th>Initial rule</th><th>Why it matters</th></tr></thead>
+          <tbody>
+            <tr><td>Primary CTA</td><td>44 px minimum design target</td><td>Keep important controls comfortably actionable on touch interfaces.</td></tr>
+            <tr><td>Buttons</td><td>Explicit valid <code>type</code></td><td>Avoid accidental behavior changes when controls move into forms.</td></tr>
+            <tr><td>Images</td><td><code>alt</code> + positive intrinsic <code>width</code>/<code>height</code></td><td>Reserve layout space and keep media understandable to assistive technology.</td></tr>
+            <tr><td>Local image source</td><td>≤ 750 KiB per image</td><td>Prevent a single editorial asset from becoming a hidden payload regression.</td></tr>
+            <tr><td>Large image</td><td><code>srcset</code> when intrinsic width ≥ 960 px</td><td>Avoid sending desktop-sized media blindly to smaller screens.</td></tr>
+            <tr><td>Rendered media</td><td>Aspect-ratio and responsive-image audits pass when applicable</td><td>Catch distortion and poor responsive sizing after CSS is applied.</td></tr>
+            <tr><td>Rendered controls</td><td>Target-size / tap-target audit passes when exposed by pinned Lighthouse</td><td>Catch controls that are visually present but mechanically too small or cramped.</td></tr>
+          </tbody>
+        </table>
+
+        <h2>3. Experience Contract</h2>
+        <p>Pull requests that change the publication run Lighthouse against a local build. Representative pages are measured on mobile, with key pages also measured on desktop. The UI Geometry Contract separately records target size, image dimensions, aspect ratio, responsive sizing, contrast and viewport checks.</p>
         <table class="market-table">
           <thead><tr><th>Signal</th><th>Initial budget</th><th>Why it matters</th></tr></thead>
           <tbody>
@@ -62,22 +77,25 @@
             <tr><td>SEO</td><td>≥ 95</td><td>Complement the deterministic SEO contract with browser-level checks.</td></tr>
             <tr><td>LCP</td><td>≤ 3.5 s mobile / ≤ 2.5 s desktop</td><td>Budget the largest visible content render in the Lighthouse lab profile.</td></tr>
             <tr><td>TBT</td><td>≤ 300 ms mobile / ≤ 200 ms desktop</td><td>Detect main-thread blocking that can make pages feel unresponsive.</td></tr>
-            <tr><td>CLS</td><td>≤ 0.10</td><td>Protect readers from unstable layouts.</td></tr>
+            <tr><td>CLS</td><td>≤ 0.10</td><td>Protect readers from unstable layouts, including late-loading media.</td></tr>
           </tbody>
         </table>
 
-        <h2>3. Live Experience Audit</h2>
-        <p>After a successful GitHub Pages deployment, Lighthouse measures the public site again. The result is stored as an immutable workflow artifact with the audited commit/run context.</p>
+        <h2>4. Live Experience Audit</h2>
+        <p>After a successful GitHub Pages deployment, Lighthouse measures the public site again. UI geometry is re-checked against the deployed pages, and the result is stored as an immutable workflow artifact with the audited commit/run context.</p>
+
+        <h2>Next: multilingual visual regression</h2>
+        <p>Category scores cannot reliably tell us that a Russian headline wrapped into an ugly extra line, Chinese copy clipped a control, or a media block overflowed its column. The next layer will use stable screenshots around three reference viewports: approximately <strong>390 × 844</strong> phone, <strong>768 × 1024</strong> tablet and <strong>1440 × 900</strong> desktop.</p>
 
         <h2>Evidence produced</h2>
         <div class="signal-grid-market">
-          <div class="signal-card"><strong>Readable summary</strong><p>A compact score table is written into the GitHub Actions job summary and PR conversation.</p></div>
-          <div class="signal-card"><strong>Raw reports</strong><p>JSON and HTML Lighthouse reports are retained as workflow artifacts for inspection.</p></div>
-          <div class="signal-card"><strong>Budgets</strong><p>Performance, accessibility, best-practice and SEO thresholds are versioned in the repository.</p></div>
+          <div class="signal-card"><strong>Readable summaries</strong><p>Compact Lighthouse, UI Geometry and UI Markup results are written into GitHub Actions and the PR conversation.</p></div>
+          <div class="signal-card"><strong>Raw reports</strong><p>JSON and HTML Lighthouse reports plus machine-readable geometry/markup summaries are retained as workflow artifacts.</p></div>
+          <div class="signal-card"><strong>Versioned rules</strong><p>Performance, accessibility, image and control requirements live in the repository rather than in tribal memory.</p></div>
         </div>
 
         <h2>What the numbers do not prove</h2>
-        <p>Lighthouse is controlled lab evidence. A high score does not prove Google ranking, real-user Core Web Vitals, conversion, or identical performance on every device and network. Those claims require their own evidence.</p>
+        <p>Lighthouse and UI geometry checks are controlled lab evidence. A high score does not prove Google ranking, real-user Core Web Vitals, conversion, visual taste, or identical rendering on every device and network. Those claims require their own evidence.</p>
 
         <section class="market-question">
           <p class="section-label">Inspect the evidence</p>
