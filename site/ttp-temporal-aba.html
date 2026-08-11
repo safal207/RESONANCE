@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="A TTP v1.0 rule for clock rollback and Temporal ABA: retired execution states must not be resurrected by reversible wall-clock values." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="TTP Temporal ABA / Monotonic Time Rule | RESONANCE" />
+  <meta property="og:description" content="Bind time-based execution to monotonic history: temporal epochs, fencing tokens or monotonic watermarks." />
+  <meta property="og:type" content="article" />
+  <title>TTP Temporal ABA / Monotonic Time Rule | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#rule">Skip to rule</a>
+  <header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button></div><nav class="nav wrap" id="main-nav" aria-label="Primary navigation"><a href="ai-agents.html">AI Agents</a><a href="index.html#trust">Trust</a><a href="issue-001.html">Issue 001</a></nav></header>
+
+  <main id="rule">
+    <header class="article-hero wrap">
+      <a class="back-link" href="transactional-trust-protocol-v1.html">← Transactional Trust Protocol v1.0</a>
+      <div class="article-meta-row"><p class="section-label">TTP v1.0 · Canonical extension</p><p class="article-status">Verified by Report #019 · 11 Aug 2026</p></div>
+      <h1 class="article-title">Temporal ABA / Monotonic Time Rule</h1>
+      <p class="article-dek">A timestamp may return to an old value after history has advanced. Consequential execution must bind time to monotonic history, not to a reversible wall-clock scalar alone.</p>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail"><div class="rail-card"><p class="section-label">Core rule</p><strong>Time needs history</strong></div><div class="rail-card rail-dark"><p class="section-label">Distinction</p><code>same time value ≠ same state</code></div></aside>
+      <article class="article-body">
+        <div class="trajectory-box"><span>ACTIVE</span><i>→</i><span>EXPIRED</span><i>→</i><span>ROLLBACK</span><i>→</i><span>DO NOT RESURRECT</span></div>
+
+        <h2>Four invariants.</h2>
+        <section class="claim-panel">
+          <div><b>I35</b><p><strong>SAME WALL-CLOCK VALUE ≠ SAME TEMPORAL STATE AFTER HISTORY ADVANCES</strong><span>A timestamp does not identify the execution epoch.</span></p></div>
+          <div><b>I36</b><p><strong>EXPIRED / RETIRED SAFETY EPOCH MUST NOT BE RESURRECTED BY CLOCK ROLLBACK</strong><span>Old permission does not return with old clock values.</span></p></div>
+          <div><b>I37</b><p><strong>TIME-BASED EXECUTION AUTHORIZATION SHOULD BIND TO A MONOTONIC EPOCH OR MONOTONIC TIME BASIS</strong><span>Use a history signal that cannot move backward with the wall clock.</span></p></div>
+          <div><b>I38</b><p><strong>CLOCK ROLLBACK AFTER IRREVERSIBLE TEMPORAL TRANSITION IS EVIDENCE CONFLICT</strong><span>Fence or reconcile before consequential execution.</span></p></div>
+        </section>
+
+        <h2>Reference decision path.</h2>
+        <div class="trajectory-box"><span>WALL CLOCK</span><i>+</i><span>TEMPORAL EPOCH / WATERMARK</span><i>→</i><span>EXECUTION PRECONDITION</span></div>
+        <div class="trajectory-box"><span>history advances</span><i>→</i><span>expiry / cleanup / revocation / rotation</span></div>
+        <div class="trajectory-box"><span>clock moves backward</span><i>→</i><span>compare monotonic history</span><i>→</i><span>FENCE / RECONCILE</span></div>
+
+        <h2>Why a wall clock is not enough.</h2>
+        <p>Wall-clock predicates can move in both directions. A lifecycle transition such as expiry cleanup, revocation or lease rotation may be irreversible from the protocol's point of view. If the clock later returns to an earlier value, the old predicate can become numerically true again even though the system has moved to a new execution epoch.</p>
+        <div class="pull-quote">The value can return. The history cannot.</div>
+
+        <h2>Verified #019.</h2>
+        <p>The same idempotency record was observed <code>ACTIVE → EXPIRED → ACTIVE</code> when logical wall-clock time moved forward and then backward. After cleanup removed the record and advanced the temporal epoch, an un-fenced same-key replay produced two effects.</p>
+        <p>Binding the retry to the old epoch caused the service to reject it with <code>HTTP 409 / fenced_out</code> after the epoch advanced. A separate monotonic time watermark kept the effective decision time at the maximum previously observed value, preserved <code>EXPIRED</code>, and reconciled <code>COMMITTED</code> without another POST.</p>
+
+        <h2>Evidence required.</h2>
+        <p>A proof path that depends on temporal fencing should preserve wall-clock observations, bound temporal epoch or watermark, the history-changing transition, current epoch at execution, fence result, remote authoritative state and final effect count.</p>
+
+        <h2>Scope.</h2>
+        <p>This rule does not prescribe NTP/PTP behavior, operating-system clock handling, hardware timing, a universal fencing mechanism or production TTL values. It defines protocol semantics for preventing old temporal permission from being revived solely by a backward-moving clock value.</p>
+
+        <section class="sources-block"><p class="section-label">Inspect / reproduce</p><ol><li><a href="verified-019-idempotency-clock-rollback.html">Verified Report #019</a></li><li><a href="https://github.com/safal207/RESONANCE/blob/main/protocols/transactional-trust-v1.0/TEMPORAL_ABA.md" target="_blank" rel="noreferrer">Canonical extension source</a></li><li><a href="transactional-trust-protocol-v1.html">Transactional Trust Protocol v1.0</a></li></ol></section>
+
+        <p class="closing-line"><strong>Short form:</strong> SAME WALL-CLOCK VALUE ≠ SAME TEMPORAL STATE.</p>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">TTP v1.0</p><p>Temporal ABA / Monotonic Time Rule</p></div><div><a href="https://github.com/safal207/RESONANCE">GitHub repository ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
