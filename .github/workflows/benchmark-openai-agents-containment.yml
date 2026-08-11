@@ -1,0 +1,63 @@
+name: RESONANCE — OpenAI Agents SDK Containment
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'benchmarks/openai-agents-sdk-containment-v0.2/**'
+      - '.github/workflows/benchmark-openai-agents-containment.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  containment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      UPSTREAM_SHA: 2231eb5d40cd4a9d6b86f79492e984eeb3301263
+    steps:
+      - name: Checkout RESONANCE
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Verify Docker
+        run: |
+          docker version
+          docker info
+
+      - name: Fetch pinned OpenAI Agents SDK
+        run: |
+          git clone https://github.com/openai/openai-agents-python.git upstream
+          git -C upstream checkout "$UPSTREAM_SHA"
+          test "$(git -C upstream rev-parse HEAD)" = "$UPSTREAM_SHA"
+
+      - name: Install target with Docker support
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e './upstream[docker]'
+
+      - name: Run RESONANCE containment probes
+        run: |
+          python benchmarks/openai-agents-sdk-containment-v0.2/run_containment.py \
+            --out benchmark-results/openai-agents-sdk-containment-v0.2
+
+      - name: Publish run summary
+        if: always()
+        run: |
+          if [ -f benchmark-results/openai-agents-sdk-containment-v0.2/RESULT.md ]; then
+            cat benchmark-results/openai-agents-sdk-containment-v0.2/RESULT.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload evidence bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-openai-agents-containment-v0.2
+          path: benchmark-results/openai-agents-sdk-containment-v0.2/
+          if-no-files-found: error
