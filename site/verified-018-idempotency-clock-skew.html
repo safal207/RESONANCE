@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified #018 tests clock-skew expiry disagreement: one durable idempotency record is ACTIVE for one node and EXPIRED for another." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Verified #018 — Clock Skew / Expiry Disagreement | RESONANCE" />
+  <meta property="og:description" content="Time-based safety needs a declared clock authority or skew bound." />
+  <meta property="og:type" content="article" />
+  <title>Verified #018 — Clock Skew / Expiry Disagreement | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="ai-agents.html">AI Agents</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="index.html#economy">Startups & Economy</a><a href="index.html#human">Human</a><a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Verified Report · 018</p><p class="article-status">Reproducible · 10/10 · 11 Aug 2026</p></div>
+      <h1 class="article-title">Clock Skew / Expiry Disagreement</h1>
+      <p class="article-dek">The same durable idempotency record can be ACTIVE for one node and EXPIRED for another. Time-based safety needs a declared clock authority or an explicit uncertainty bound.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>TTP v1.0 · Time Authority × Memory</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Verification summary">
+        <div class="rail-card"><p class="section-label">Result</p><strong>10 / 10</strong><span>clock-authority protocol passes</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">Core invariant</p><code>clock disagreement = evidence conflict</code></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Verified #017 established that idempotency protection can expire before recovery. #018 asks the distributed-time question: whose clock decides that expiry when nodes disagree?</p>
+
+        <div class="trajectory-box"><span>SAME RECORD</span><i>→</i><span>NODE A: ACTIVE</span><i>↔</i><span>NODE B: EXPIRED</span><i>→</i><span>REPLAY DECISION?</span></div>
+
+        <h2>One record. Two opposite temporal decisions.</h2>
+        <p>The record was created at <code>T0</code> with a 60-second TTL.</p>
+        <section class="claim-panel">
+          <div><b>A</b><p><strong>Node A · T0+50</strong><span>Record is ACTIVE. Original effect remains COMMITTED.</span></p></div>
+          <div><b>B</b><p><strong>Node B · T0+70</strong><span>Same record is EXPIRED. Original effect still remains COMMITTED.</span></p></div>
+        </section>
+        <p>The only difference is the clock used to interpret <code>expires_at=T0+60</code>. The business evidence itself did not change.</p>
+
+        <h2>Unsafe · node-local expiry becomes replay authority.</h2>
+        <p>The first HTTP POST committed one remote effect and then dropped the response, so recovery began at <code>ACK_UNKNOWN</code>. Node A observed <code>active_idempotency_records=1</code>. Node B observed <code>active_idempotency_records=0</code> for the same record and same <code>effect_count=1</code>.</p>
+        <div class="trajectory-box"><span>NODE B @ +70</span><i>→</i><span>EXPIRED</span><i>→</i><span>SAME KEY POST</span><i>→</i><span>APPLIED</span><i>→</i><span>2 EFFECTS</span></div>
+        <div class="pull-quote">A local clock is not automatically a trust authority just because that worker happens to execute recovery.</div>
+        <p>Final unsafe state: <strong>2 POST requests, 2 remote effects, CONFLICT</strong>.</p>
+
+        <h2>Safe A · use a declared decision-time authority.</h2>
+        <p>The second scenario kept the exact local disagreement: Node A still saw ACTIVE and Node B still saw EXPIRED. But replay was evaluated against a declared authority time <code>T0+55</code>, still before <code>expires_at=T0+60</code>.</p>
+        <div class="trajectory-box"><span>LOCAL CLOCKS DISAGREE</span><i>→</i><span>AUTHORITY @ +55</span><i>→</i><span>ACTIVE</span><i>→</i><span>DEDUPLICATED</span><i>→</i><span>1 EFFECT</span></div>
+        <p>The real second HTTP POST reused the same idempotency key and returned <code>deduplicated</code>.</p>
+
+        <h2>Safe B · if uncertainty crosses expiry, preserve TIME_UNKNOWN.</h2>
+        <p>The third path declared a maximum clock error of ±20 seconds. The observed local time was exactly on the expiry boundary. That produced an uncertainty interval spanning both sides of expiry:</p>
+        <div class="trajectory-box"><span>T0+40</span><i>←</i><span>EXPIRY T0+60</span><i>→</i><span>T0+80</span></div>
+        <p>Because the expiry boundary sat inside that uncertainty window, the safe temporal state was <code>TIME_UNKNOWN</code> — not <code>EXPIRED</code>.</p>
+        <div class="trajectory-box"><span>TIME_UNKNOWN</span><i>→</i><span>GET AUTHORITATIVE STATUS</span><i>→</i><span>COMMITTED</span><i>→</i><span>NO SECOND POST</span></div>
+
+        <h2>What #018 adds to TTP.</h2>
+        <section class="claim-panel">
+          <div><b>I31</b><p><strong>SAME RETENTION RECORD + DIFFERENT CLOCKS CAN YIELD DIFFERENT SAFETY DECISIONS</strong><span>Time interpretation is part of the decision evidence.</span></p></div>
+          <div><b>I32</b><p><strong>TIME-BASED SAFETY REQUIRES A DECLARED CLOCK AUTHORITY OR SKEW BOUND</strong><span>Decision time must have provenance.</span></p></div>
+          <div><b>I33</b><p><strong>EXPIRY INSIDE CLOCK-UNCERTAINTY WINDOW ≠ SAFE REPLAY PERMISSION</strong><span>Temporal ambiguity should preserve TIME_UNKNOWN.</span></p></div>
+          <div><b>I34</b><p><strong>CLOCK DISAGREEMENT IS EVIDENCE CONFLICT</strong><span>It should be reconciled, not silently collapsed.</span></p></div>
+        </section>
+
+        <h2>Temporal trust memory.</h2>
+        <div class="trajectory-box"><span>DURABILITY</span><i>+</i><span>RETENTION</span><i>+</i><span>CLOCK AUTHORITY</span><i>+</i><span>RECOVERY</span></div>
+        <p>#016 asked whether memory survived. #017 asked whether it was still valid. #018 asks whose time decides that validity and what to do when the answer is uncertain.</p>
+
+        <h2>Evidence.</h2>
+        <p>GitHub Actions run <code>31468827381</code> completed successfully. Artifact <code>resonance-idempotency-clock-skew-v1.0</code> has ID <code>9092529978</code> and digest <code>sha256:de18c97b164742f55dcb2725af83637abe8d51014930c56d26363e6340b2a345</code>.</p>
+        <p>Execution used PostgreSQL 17.6 and a separate <code>python:3.12-slim</code> HTTP container with persistent SQLite remote state. The HTTP image digest was <code>python@sha256:229a2c5bfa27522db7815ea81f9bed70af17ccb9de9fc7ad142b1877b5830d36</code>.</p>
+
+        <h2>Interpretation boundary.</h2>
+        <p>This benchmark tests deterministic decision semantics under intentionally separated logical clocks. It does not test NTP/PTP/chrony, physical oscillator drift, leap seconds, consensus time, a universal production skew bound or production provider idempotency behavior. The 20-second disagreement and 60-second TTL are benchmark parameters.</p>
+
+        <section class="sources-block">
+          <p class="section-label">Inspect / reproduce</p>
+          <ol>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/018-idempotency-clock-skew/REPORT.md" target="_blank" rel="noreferrer">Canonical report</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/tree/main/benchmarks/idempotency-clock-skew-v1.0" target="_blank" rel="noreferrer">Benchmark harness</a></li>
+            <li><a href="ttp-clock-authority.html">TTP Clock Authority / Skew Rule</a></li>
+            <li><a href="verified-017-idempotency-ttl-replay.html">Previous · Verified Report #017</a></li>
+          </ol>
+        </section>
+
+        <p class="closing-line"><strong>Verdict:</strong> time-based replay protection needs a declared time authority or an uncertainty policy that refuses to turn temporal disagreement into permission.</p>
+        <div class="article-end"><p><strong>RESONANCE Verified #018</strong></p><p>time authority → uncertainty → reconciliation → proof.</p><a class="button" href="ttp-clock-authority.html">Read the TTP clock rule</a></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Verified #018</p><p>Clock Skew / Expiry Disagreement</p></div><div><a href="https://github.com/safal207/RESONANCE">GitHub repository ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
