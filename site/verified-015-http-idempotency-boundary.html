@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified Report #015 tests HTTP acknowledgement loss, stable idempotency keys and remote reconciliation across a separate service container." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Verified Report #015 — HTTP Idempotency Boundary | RESONANCE" />
+  <meta property="og:description" content="The effect committed. The response disappeared. What makes retry safe?" />
+  <meta property="og:type" content="article" />
+  <title>Verified Report #015 — HTTP Idempotency Boundary | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="ai-agents.html">AI Agents</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="index.html#economy">Startups & Economy</a><a href="index.html#human">Human</a><a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Verified Report #015 · HTTP boundary</p><p class="article-status">Executed · 11 Aug 2026</p></div>
+      <h1 class="article-title">The Effect Committed. The Response Disappeared.</h1>
+      <p class="article-dek">A real HTTP connection was cut after a separate service container had already recorded the effect. A new retry identity duplicated it; stable identity or remote reconciliation preserved one effect.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>PostgreSQL 17.6 · separate Dockerized HTTP service</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Report summary">
+        <div class="rail-card"><p class="section-label">Score</p><strong>10 / 10</strong><span>Unsafe remote effects → 2</span><span>Safe remote effects → 1</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">Network rule</p><code>ACK LOST ≠ EFFECT ABSENT</code><span>reconcile or preserve identity</span></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Reports #012–#014 moved Transactional Trust Protocol from synthetic state into PostgreSQL and then across a database/external-effect boundary. Report #015 gives that external side its own HTTP process and network connection.</p>
+
+        <div class="trajectory-box"><span>PostgreSQL</span><i>→</i><span>outbox worker</span><i>→</i><span>HTTP</span><i>→</i><span>external container</span></div>
+
+        <h2>The ambiguity is now on the wire.</h2>
+        <p>The benchmark external service records an effect and then deliberately closes the connection before returning an HTTP response. The client observes <code>RemoteDisconnected</code> and classifies the result as <code>ACK_UNKNOWN</code>.</p>
+        <div class="trajectory-box"><span>POST</span><i>→</i><span>REMOTE COMMIT</span><i>→</i><span>CONNECTION DROP</span><i>→</i><span>ACK_UNKNOWN</span></div>
+        <p>An immediate authoritative status request nevertheless observed <code>COMMITTED / effect_count=1</code>. Transport failure therefore did not establish remote absence.</p>
+
+        <h2>Unsafe · a new retry identity creates a second effect.</h2>
+        <p>The business row and outbox intent committed once at <code>COMMITTED / v101</code>. The first remote call used <code>http-unsafe:attempt:1</code>, applied the effect and lost its response. Recovery generated <code>http-unsafe:attempt:2</code>; the remote service treated it as a new logical request and applied another effect.</p>
+        <div class="trajectory-box"><span>ACK_UNKNOWN</span><i>→</i><span>NEW KEY</span><i>→</i><span>APPLIED</span><i>→</i><span>2 EFFECTS</span></div>
+
+        <h2>Safe · a real second POST is deduplicated.</h2>
+        <p>The safe redelivery path reused one durable identity: <code>http-safe-redelivery-op:effect:v1</code>. POST #1 committed remotely and lost its response. POST #2 really crossed HTTP again with the same key and returned <code>200 / deduplicated</code>.</p>
+        <section class="claim-panel">
+          <p class="section-label">Observed redelivery</p>
+          <div><b>01</b><p><strong>POST #1 → ACK_UNKNOWN</strong><span>Remote status already showed COMMITTED / one effect.</span></p></div>
+          <div><b>02</b><p><strong>POST #2 → DEDUPLICATED</strong><span>Two HTTP delivery attempts, one committed remote effect.</span></p></div>
+          <div><b>03</b><p><strong>Outbox → DELIVERED</strong><span>delivery_attempts=2, remote effect_count=1.</span></p></div>
+        </section>
+
+        <div class="pull-quote">Multiple delivery attempts can be real while the committed effect remains singular.</div>
+
+        <h2>Safer · reconcile before a second POST.</h2>
+        <p>The third path received the same <code>RemoteDisconnected</code>, then queried <code>GET /status/http-safe-reconcile-op</code>. The remote service reported <code>COMMITTED / effect_count=1 / post_requests=1</code>, so the worker made no second consequential POST and closed the outbox as delivered.</p>
+        <div class="trajectory-box"><span>ACK_UNKNOWN</span><i>→</i><span>GET STATUS</span><i>→</i><span>COMMITTED</span><i>→</i><span>NO SECOND POST</span></div>
+
+        <h2>Real service boundary.</h2>
+        <p>The external service ran in a separate Docker container. Its health evidence reported service <code>resonance-external-http</code>, container hostname <code>3f9f87866627</code> and PID <code>1</code>. The worker reached it over <code>http://127.0.0.1:18080</code>.</p>
+        <p>HTTP image: <code>python:3.12-slim</code> at <code>python@sha256:229a2c5bfa27522db7815ea81f9bed70af17ccb9de9fc7ad142b1877b5830d36</code>.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Score · 10/10</p>
+          <div><b>01</b><p><strong>Real DB + separate HTTP boundary · 2/2</strong><span>PostgreSQL and independent HTTP service both verified.</span></p></div>
+          <div><b>02</b><p><strong>Unsafe duplicate · 2/2</strong><span>ACK loss followed by a new identity produced two remote effects.</span></p></div>
+          <div><b>03</b><p><strong>Stable-key redelivery · 2/2</strong><span>A real second HTTP POST was deduplicated to one effect.</span></p></div>
+          <div><b>04</b><p><strong>Status reconciliation · 2/2</strong><span>Remote COMMITTED evidence prevented a second POST.</span></p></div>
+          <div><b>05</b><p><strong>Cross-boundary proof · 2/2</strong><span>Both safe paths preserved one DB transition and one remote effect.</span></p></div>
+        </section>
+
+        <h2>TTP network law</h2>
+        <div class="trajectory-box"><span>ACK_UNKNOWN</span><i>→</i><span>REMOTE RECONCILE</span><i>→</i><span>FRESH DECISION</span></div>
+        <p>If authoritative remote status says <code>COMMITTED</code>, complete without re-execution. If it says <code>ABSENT</code>, a fresh delivery may be allowed under current preconditions. If status remains <code>UNKNOWN</code>, preserve uncertainty rather than converting a transport error into retry permission.</p>
+
+        <h2>New invariants</h2>
+        <div class="trajectory-box"><span>HTTP ACK LOST</span><i>≠</i><span>REMOTE EFFECT ABSENT</span></div>
+        <div class="trajectory-box"><span>SAME LOGICAL EFFECT</span><i>→</i><span>SAME IDEMPOTENCY IDENTITY</span></div>
+        <p>Network evidence — request identity, transport outcome, authoritative remote status and final effect count — belongs in the same proof trajectory as database and outbox evidence.</p>
+
+        <h2>Interpretation boundary</h2>
+        <p>The HTTP boundary and TCP failure are real, but the remote service is still a local benchmark container. This does not certify production payment APIs, arbitrary exactly-once delivery, internet-scale partitions, proxy/load-balancer behavior, remote durability after service restart, authentication, authorization or arbitrary agent safety.</p>
+
+        <section class="sources-block">
+          <p class="section-label">Reproduce / inspect</p>
+          <ol>
+            <li><a href="transactional-trust-protocol-v1.html">Transactional Trust Protocol v1.0</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/actions/runs/31465000594" target="_blank" rel="noreferrer">Canonical GitHub Actions run</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/benchmarks/http-idempotency-boundary-v1.0/external_service.py" target="_blank" rel="noreferrer">External HTTP service</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/benchmarks/http-idempotency-boundary-v1.0/run_http_boundary.py" target="_blank" rel="noreferrer">Benchmark harness</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/015-http-idempotency-boundary/result.json" target="_blank" rel="noreferrer">Machine-readable result</a></li>
+          </ol>
+          <p class="source-note">Evidence artifact digest: <code>sha256:afd38661d64ccc3e04f1fa663c0c45a536e564fa872153d03424bc2c0d8b3afd</code>.</p>
+        </section>
+
+        <p class="closing-line"><strong>Verdict:</strong> a real HTTP acknowledgement disappeared after the remote effect existed. New retry identity duplicated it; stable identity or authoritative remote reconciliation preserved one effect.</p>
+
+        <div class="article-end"><p><strong>RESONANCE Verified Report #015</strong></p><p>remote commit → ACK unknown → reconcile identity → prove.</p><a class="button" href="transactional-trust-protocol-v1.html">Read TTP v1.0</a></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Verified Report #015</p><p>HTTP idempotency boundary · 10/10</p></div><div><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified/015-http-idempotency-boundary">Evidence files ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
