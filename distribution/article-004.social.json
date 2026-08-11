@@ -1,0 +1,31 @@
+{
+  "article": "004",
+  "slug": "before-you-let-an-ai-agent-move-money",
+  "canonical": "https://safal207.github.io/RESONANCE/before-you-let-an-ai-agent-move-money.html",
+  "goal": "Generate concrete workflow/failure responses, not only traffic.",
+  "languages": {
+    "en": {
+      "url": "https://safal207.github.io/RESONANCE/before-you-let-an-ai-agent-move-money.html",
+      "hotQuestion": "What would have to be provably true before you would allow an AI agent to move money in your real system?",
+      "x": "AI agents are starting to move money. But proving an agent was authorized to pay is not the same as proving the transaction was executed correctly. payment → timeout → unknown commit → retry. What must be provably true before you trust this in production?",
+      "linkedin": "Agentic commerce is becoming real infrastructure. The trust problem is moving from 'was the agent allowed to act?' to 'can we prove the action followed a valid trajectory?' Our new RESONANCE article examines timeout, unknown commit, unsafe retry, reconciliation, invariants and evidence. The open question: what would have to be provably true before you let an AI agent move money in your real system? Share one workflow; we want the strongest real cases to shape the next benchmark and product experiments.",
+      "reddit": "Before You Let an AI Agent Move Money — authorization is not verification. Looking for real failure cases around agentic payments, unknown commit, recovery and evidence.",
+      "telegram": "AI agents are getting permission to transact. The harder question is whether we can prove the transaction trajectory was correct. New RESONANCE Article #004: payment → timeout → unknown commit → reconcile → verify → retry/stop → evidence. What would have to be provably true before you trusted this in your system?",
+      "hackerNews": "Before You Let an AI Agent Move Money: trajectory verification for agentic payments"
+    },
+    "ru": {
+      "url": "https://safal207.github.io/RESONANCE/before-you-let-an-ai-agent-move-money.ru.html",
+      "hotQuestion": "Что должно быть доказуемо истинным, прежде чем вы позволите AI-агенту распоряжаться деньгами в вашей реальной системе?",
+      "telegram": "AI-агентам начинают давать право распоряжаться деньгами. Но доказать, что агенту разрешили платёж, — не то же самое, что доказать корректность всей транзакции. Платёж → timeout → неизвестный commit → retry. Что должно быть доказуемо истинным, прежде чем вы доверите такой процесс AI-агенту?",
+      "vk": "Новая статья RESONANCE #004: почему authorization ещё не означает verification для AI-агентов, которые двигают деньги. Разбираем timeout, unknown commit, безопасный retry, reconciliation и evidence. В конце — вопрос рынку: какое условие вы должны уметь доказать, прежде чем доверить агенту реальный финансовый workflow?",
+      "habr": "AI-агент получил право на платёж. А как доказать, что он прошёл транзакцию правильно? Разбираем trajectory verification и собираем реальные failure cases рынка."
+    },
+    "zh-CN": {
+      "url": "https://safal207.github.io/RESONANCE/before-you-let-an-ai-agent-move-money.zh.html",
+      "hotQuestion": "在你的真实业务系统中，在允许 AI Agent 支配资金之前，哪些条件必须是可验证并且可证明的？",
+      "weibo": "AI Agent 正在从回答问题走向执行真实交易。但证明 Agent 有权付款，并不等于证明交易执行路径正确。付款 → 超时 → 提交状态未知 → 重试。你需要证明什么，才会允许 AI Agent 在真实系统中支配资金？",
+      "wechat": "RESONANCE #004｜Before You Let an AI Agent Move Money。核心问题：授权不等于验证。对于付款、超时、未知提交状态、重试、对账与证据链，我们需要验证整个执行轨迹，而不仅仅看最终 API 是否返回成功。开放问题：在你的真实业务系统中，在允许 AI Agent 支配资金之前，哪些条件必须是可证明的？",
+      "zhihu": "当 AI Agent 可以执行付款时，真正的工程问题不只是‘它有没有权限’，而是‘我们能否证明整个执行轨迹是正确的’。如果请求超时，而 Agent 不知道第一次付款是否已经提交，它应该如何安全恢复？我们用 State / Causality / Phase / Transition / Time / Recovery / Verification / Evidence 八个维度来分析，并向市场征集真实工作流。"
+    }
+  }
+}
