@@ -48,7 +48,7 @@
           <p class="dek">AI systems are beginning to plan, act, transact, coordinate, recover and touch real infrastructure. The next question is not only what they can do — but how we know their actions are correct.</p>
           <div class="hero-actions">
             <a class="button" href="before-you-let-an-ai-agent-move-money.html">Article #004 · Market Experiment</a>
-            <a class="text-link" href="verified-017-idempotency-ttl-replay.html">Latest verified report #017 →</a>
+            <a class="text-link" href="verified-018-idempotency-clock-skew.html">Latest verified report #018 →</a>
           </div>
         </div>
         <aside class="issue-cover" aria-label="Issue 001 cover">
@@ -100,14 +100,14 @@
     <section class="section human-section">
       <div class="wrap editorial-grid">
         <div>
-          <p class="section-label">Verified Report #017 · Idempotency TTL / replay after expiry</p>
-          <h2>The memory survived. Its protection expired.</h2>
+          <p class="section-label">Verified Report #018 · Clock skew / expiry disagreement</p>
+          <h2>Same record. Two clocks. Opposite permissions.</h2>
         </div>
         <div>
-          <p>With a <strong>120-second recovery delay</strong>, a <strong>60-second idempotency TTL</strong> expired while the original remote effect remained durable. The same key was then accepted again and produced <strong>two effects</strong>. A <strong>300-second retention window</strong> deduplicated the same delayed replay, while authoritative reconciliation after expiry avoided replay entirely. Score: <strong>10/10</strong>.</p>
-          <a class="button" href="verified-017-idempotency-ttl-replay.html">Open Verified Report #017</a>
-          <p><a class="text-link" href="verified-016-idempotency-state-durability.html">Previous: Verified Report #016 · restart durability →</a></p>
-          <p><a class="text-link" href="transactional-trust-protocol-v1.html">Read Transactional Trust Protocol v1.0 →</a></p>
+          <p>A single durable idempotency record was <strong>ACTIVE</strong> for Node A at <strong>T0+50</strong> and <strong>EXPIRED</strong> for Node B at <strong>T0+70</strong>, while the original remote effect remained committed. Letting the later node-local clock authorize same-key replay produced <strong>two effects</strong>. A declared authority clock deduplicated the replay, while a skew interval crossing expiry preserved <strong>TIME_UNKNOWN</strong> and reconciled without a second POST. Score: <strong>10/10</strong>.</p>
+          <a class="button" href="verified-018-idempotency-clock-skew.html">Open Verified Report #018</a>
+          <p><a class="text-link" href="verified-017-idempotency-ttl-replay.html">Previous: Verified Report #017 · retention window →</a></p>
+          <p><a class="text-link" href="ttp-clock-authority.html">Read TTP Clock Authority / Skew Rule →</a></p>
         </div>
       </div>
     </section>
@@ -148,7 +148,7 @@
 
     <section class="issue-invite wrap section">
       <div><p class="section-label">Issue 001 · Founding Edition</p><h2>THE AGE OF AGENTS</h2></div>
-      <div><p>The founding issue now connects analysis → framework → benchmark → recovery → authority → execution binding → atomic transition → <strong>Transactional Trust Protocol v1.0</strong> → real PostgreSQL → isolation conflict taxonomy → transactional outbox → real HTTP ambiguity → durable execution memory → <strong>idempotency retention over time</strong>. The trust path now spans local state, durable intent, request identity, network ambiguity, remote effects, memory durability and the validity window required for safe recovery.</p><a class="button" href="issue-001.html">Open the issue</a></div>
+      <div><p>The founding issue now connects analysis → framework → benchmark → recovery → authority → execution binding → atomic transition → <strong>Transactional Trust Protocol v1.0</strong> → real PostgreSQL → isolation conflict taxonomy → transactional outbox → real HTTP ambiguity → durable execution memory → idempotency retention → <strong>clock authority and temporal uncertainty</strong>. The trust path now spans local state, durable intent, request identity, network ambiguity, remote effects, memory durability, retention validity and the time evidence required for safe recovery.</p><a class="button" href="issue-001.html">Open the issue</a></div>
     </section>
 
     <section class="section rule-top wrap">
