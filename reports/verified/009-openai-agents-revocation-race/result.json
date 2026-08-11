@@ -1,0 +1,28 @@
+{
+  "report": "RESONANCE Verified Report #009",
+  "benchmark": "RESONANCE Revocation Race / TOCTOU",
+  "benchmark_version": "0.9",
+  "target_repository": "openai/openai-agents-python",
+  "target_version": "0.19.4",
+  "target_sha": "2231eb5d40cd4a9d6b86f79492e984eeb3301263",
+  "github_actions_run": 31459107395,
+  "executed_at": "2026-08-11T04:38:45.484209+00:00",
+  "artifact": "resonance-openai-agents-revocation-race-v0.9",
+  "artifact_digest": "sha256:97e81a88b3ad67e5ea8f42a1b0b5241afd67a2de516a99db58c6871be98d7485",
+  "score": 10,
+  "max_score": 10,
+  "classification": "execution-bound trust precondition protocol passes",
+  "verify_time": 1786424000,
+  "commit_time": 1786424030,
+  "invariant": "Authority verified before execution must not authorize an irreversible commit after the bound trust state changes; compare trust version at commit or re-verify.",
+  "checks": [
+    {"id": "unsafe_toctou_duplicate_reproduced", "pass": true, "score": "2/2", "effects": 2, "verified_epoch": 41, "post_revocation_epoch": 42},
+    {"id": "epoch_bound_commit_blocks_revocation_race", "pass": true, "score": "2/2", "effects": 1, "expected_epoch": 41, "current_epoch": 42, "precondition": "failed"},
+    {"id": "commit_time_reverification_sees_revocation", "pass": true, "score": "2/2", "effects": 1, "current_epoch": 42, "key_active": false},
+    {"id": "unchanged_epoch_allows_required_retry", "pass": true, "score": "2/2", "effects": 1, "expected_epoch": 41, "current_epoch": 41, "key_active_at_commit": true},
+    {"id": "pinned_reproducible_evidence", "pass": true, "score": "2/2"}
+  ],
+  "scope": "Application-level TOCTOU handling executed through the pinned OpenAI Agents SDK tool loop using upstream FakeModel. Synthetic trust epochs, revocation and side effects only; no live model, production IAM, real credentials or external side-effecting service.",
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
