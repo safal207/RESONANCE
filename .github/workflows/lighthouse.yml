@@ -1,0 +1,144 @@
+name: RESONANCE Experience Contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - 'scripts/build-seo-site.mjs'
+      - 'scripts/verify-seo.mjs'
+      - 'scripts/lighthouse-summary.mjs'
+      - '.github/workflows/lighthouse.yml'
+      - '.github/workflows/lighthouse-live.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: resonance-lighthouse-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  experience-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Build publication
+        run: node scripts/build-seo-site.mjs
+
+      - name: Verify publication before browser audit
+        run: node scripts/verify-seo.mjs
+
+      - name: Install exact Lighthouse version
+        run: npm install --global lighthouse@12.8.2
+
+      - name: Start local publication server
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8080 --directory dist >/tmp/resonance-lighthouse-server.log 2>&1 &
+          echo $! > /tmp/resonance-lighthouse-server.pid
+          for attempt in {1..20}; do
+            if curl --silent --fail http://127.0.0.1:8080/ >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/resonance-lighthouse-server.log
+          exit 1
+
+      - name: Run representative mobile and desktop audits
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p lighthouse-results
+
+          audit_mobile() {
+            local name="$1"
+            local route="$2"
+            lighthouse "http://127.0.0.1:8080/${route}" \
+              --output=json \
+              --output=html \
+              --output-path="lighthouse-results/${name}-mobile" \
+              --only-categories=performance,accessibility,best-practices,seo \
+              --form-factor=mobile \
+              --screen-emulation.mobile=true \
+              --throttling-method=simulate \
+              --chrome-flags='--headless --no-sandbox --disable-gpu' \
+              --quiet
+          }
+
+          audit_desktop() {
+            local name="$1"
+            local route="$2"
+            lighthouse "http://127.0.0.1:8080/${route}" \
+              --preset=desktop \
+              --output=json \
+              --output=html \
+              --output-path="lighthouse-results/${name}-desktop" \
+              --only-categories=performance,accessibility,best-practices,seo \
+              --chrome-flags='--headless --no-sandbox --disable-gpu' \
+              --quiet
+          }
+
+          audit_mobile home ''
+          audit_mobile article-en 'before-you-let-an-ai-agent-move-money.html'
+          audit_mobile article-ru 'before-you-let-an-ai-agent-move-money.ru.html'
+          audit_mobile article-zh 'before-you-let-an-ai-agent-move-money.zh.html'
+          audit_mobile open-problems 'open-problems.html'
+          audit_mobile verified-workflow 'verified-workflow.html'
+          audit_mobile quality 'quality.html'
+          audit_desktop home ''
+          audit_desktop article-en 'before-you-let-an-ai-agent-move-money.html'
+
+      - name: Enforce Lighthouse budgets and build readable summary
+        run: |
+          node scripts/lighthouse-summary.mjs \
+            --input lighthouse-results \
+            --output lighthouse-summary \
+            --enforce
+          cat lighthouse-summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload immutable Lighthouse evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-lighthouse-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            lighthouse-results/
+            lighthouse-summary.json
+            lighthouse-summary.md
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Post or update PR Site Health summary
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const marker = '<!-- resonance-site-health -->';
+            const summaryPath = 'lighthouse-summary.md';
+            const fallback = '# RESONANCE Lighthouse Site Health\n\nThe audit did not produce a summary. Inspect the workflow artifacts/logs.';
+            const body = `${marker}\n${fs.existsSync(summaryPath) ? fs.readFileSync(summaryPath, 'utf8') : fallback}`;
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number, per_page: 100 });
+            const previous = comments.find((comment) => comment.user?.type === 'Bot' && comment.body?.includes(marker));
+            if (previous) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: previous.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }

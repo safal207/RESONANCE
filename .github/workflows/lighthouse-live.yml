@@ -1,0 +1,110 @@
+name: RESONANCE Live Experience Audit
+
+on:
+  workflow_run:
+    workflows: ['Deploy RESONANCE to GitHub Pages']
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: resonance-lighthouse-live
+  cancel-in-progress: true
+
+jobs:
+  live-audit:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout audit tooling
+        uses: actions/checkout@v6
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install exact Lighthouse version
+        run: npm install --global lighthouse@12.8.2
+
+      - name: Verify public site is reachable
+        run: |
+          set -euo pipefail
+          for attempt in {1..12}; do
+            if curl --silent --fail --location "https://safal207.github.io/RESONANCE/?health=${GITHUB_RUN_ID}" >/dev/null; then
+              exit 0
+            fi
+            sleep 5
+          done
+          echo 'RESONANCE GitHub Pages did not become reachable'
+          exit 1
+
+      - name: Audit deployed representative routes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p lighthouse-results
+          BASE='https://safal207.github.io/RESONANCE/'
+
+          audit_mobile() {
+            local name="$1"
+            local route="$2"
+            lighthouse "${BASE}${route}?audit=${GITHUB_RUN_ID}" \
+              --output=json \
+              --output=html \
+              --output-path="lighthouse-results/${name}-mobile" \
+              --only-categories=performance,accessibility,best-practices,seo \
+              --form-factor=mobile \
+              --screen-emulation.mobile=true \
+              --throttling-method=simulate \
+              --chrome-flags='--headless --no-sandbox --disable-gpu' \
+              --quiet
+          }
+
+          audit_desktop() {
+            local name="$1"
+            local route="$2"
+            lighthouse "${BASE}${route}?audit=${GITHUB_RUN_ID}" \
+              --preset=desktop \
+              --output=json \
+              --output=html \
+              --output-path="lighthouse-results/${name}-desktop" \
+              --only-categories=performance,accessibility,best-practices,seo \
+              --chrome-flags='--headless --no-sandbox --disable-gpu' \
+              --quiet
+          }
+
+          audit_mobile home ''
+          audit_mobile article-en 'before-you-let-an-ai-agent-move-money.html'
+          audit_mobile open-problems 'open-problems.html'
+          audit_mobile quality 'quality.html'
+          audit_desktop home ''
+          audit_desktop article-en 'before-you-let-an-ai-agent-move-money.html'
+
+      - name: Build deployed-site health summary
+        env:
+          GITHUB_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          node scripts/lighthouse-summary.mjs \
+            --input lighthouse-results \
+            --output lighthouse-live-summary
+          cat lighthouse-live-summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload immutable deployed Lighthouse evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-lighthouse-live-${{ github.event.workflow_run.head_sha || github.sha }}-${{ github.run_id }}
+          path: |
+            lighthouse-results/
+            lighthouse-live-summary.json
+            lighthouse-live-summary.md
+          if-no-files-found: warn
+          retention-days: 90

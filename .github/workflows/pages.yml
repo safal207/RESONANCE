@@ -7,6 +7,7 @@ on:
       - 'site/**'
       - 'scripts/build-seo-site.mjs'
       - 'scripts/verify-seo.mjs'
+      - 'scripts/verify-links.mjs'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -39,6 +40,9 @@ jobs:
 
       - name: Verify SEO contract
         run: node scripts/verify-seo.mjs
+
+      - name: Verify internal publication links
+        run: node scripts/verify-links.mjs
 
       - name: Configure Pages
         uses: actions/configure-pages@v6
