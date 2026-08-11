@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified #017 tests idempotency TTL expiry: a durable effect duplicates when dedupe retention ends before delayed recovery arrives." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Verified #017 — Idempotency TTL / Replay After Expiry | RESONANCE" />
+  <meta property="og:description" content="Durable memory can still expire before recovery. TTP tests retention time as part of the safety boundary." />
+  <meta property="og:type" content="article" />
+  <title>Verified #017 — Idempotency TTL / Replay After Expiry | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="ai-agents.html">AI Agents</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="index.html#economy">Startups & Economy</a><a href="index.html#human">Human</a><a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Verified Report · 017</p><p class="article-status">Reproducible · 10/10 · 11 Aug 2026</p></div>
+      <h1 class="article-title">Idempotency TTL / Replay After Expiry</h1>
+      <p class="article-dek">A stable idempotency key can still duplicate a durable effect when its dedupe record expires before delayed recovery arrives. Time now becomes part of the trust-memory contract.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>TTP v1.0 · Time × Memory × Recovery</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Verification summary">
+        <div class="rail-card"><p class="section-label">Result</p><strong>10 / 10</strong><span>retention-window protocol passes</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">Core invariant</p><code>TTL must cover recovery window</code></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Verified #016 showed that dedupe memory must survive a service restart. #017 asks the temporal version: what if the memory is durable but expires before the recovery path finishes?</p>
+
+        <div class="trajectory-box"><span>REMOTE COMMIT</span><i>→</i><span>ACK_UNKNOWN</span><i>→</i><span>TIME PASSES</span><i>→</i><span>TTL EXPIRES</span><i>→</i><span>DELAYED REPLAY</span></div>
+
+        <h2>The benchmark fixes the recovery window and changes retention.</h2>
+        <section class="claim-panel">
+          <div><b>120s</b><p><strong>Recovery / replay delay</strong><span>Same delay in unsafe and safe cases.</span></p></div>
+          <div><b>60s</b><p><strong>Unsafe idempotency TTL</strong><span>Protection expires before recovery arrives.</span></p></div>
+          <div><b>300s</b><p><strong>Safe idempotency TTL</strong><span>Protection still covers the delayed replay.</span></p></div>
+        </section>
+        <p>The HTTP service uses persistent SQLite for both remote effects and idempotency records. Logical time is supplied deterministically over HTTP so the test can move across expiry boundaries without wall-clock waiting.</p>
+
+        <h2>Unsafe · the effect survives longer than the dedupe guarantee.</h2>
+        <p>At <code>T0=1,000,000</code>, the first POST committed one remote effect and created an idempotency record expiring at <code>1,000,060</code>. The response was dropped, leaving the client at <code>ACK_UNKNOWN</code>.</p>
+        <div class="trajectory-box"><span>T0</span><i>→</i><span>effect=1 · active record=1</span><i>→</i><span>T0+120</span><i>→</i><span>effect=1 · active record=0</span></div>
+        <p>The delayed worker then reused the <strong>same</strong> idempotency key. Because the 60-second record had expired, the service accepted it as a new application.</p>
+        <div class="pull-quote">Stable identity + expired dedupe memory is not idempotent delivery.</div>
+        <p>Final unsafe state: <strong>2 POST requests, 2 remote effects, CONFLICT</strong>.</p>
+
+        <h2>Safe · retention covers the recovery window.</h2>
+        <p>The second case kept the same 120-second recovery delay but changed TTL to 300 seconds. At retry time the idempotency record was still active, so the real second HTTP POST returned <code>deduplicated</code>.</p>
+        <div class="trajectory-box"><span>TTL 300s</span><i>→</i><span>retry at +120s</span><i>→</i><span>RECORD ACTIVE</span><i>→</i><span>DEDUPLICATED</span><i>→</i><span>1 EFFECT</span></div>
+
+        <h2>Safe alternative · reconcile after expiry.</h2>
+        <p>The third path deliberately used the short 60-second TTL again. At recovery time the idempotency record was expired, but authoritative remote status still reported <code>COMMITTED / effect_count=1</code>. Recovery therefore made no second POST.</p>
+        <div class="trajectory-box"><span>TTL EXPIRED</span><i>→</i><span>GET STATUS</span><i>→</i><span>COMMITTED</span><i>→</i><span>NO REPLAY</span></div>
+
+        <h2>What #017 adds to TTP.</h2>
+        <section class="claim-panel">
+          <div><b>I27</b><p><strong>DEDUPE RETENTION MUST COVER THE RECOVERY / REPLAY WINDOW IT PROTECTS</strong><span>Retention duration is part of the execution contract.</span></p></div>
+          <div><b>I28</b><p><strong>EXPIRED DEDUPE MEMORY ≠ EFFECT ABSENT</strong><span>Expiry describes protection state, not business state.</span></p></div>
+          <div><b>I29</b><p><strong>AFTER IDEMPOTENCY EXPIRY, RECONCILE BEFORE CONSEQUENTIAL REPLAY</strong><span>Fresh remote evidence must replace expired memory.</span></p></div>
+          <div><b>I30</b><p><strong>TIME + MEMORY + RECOVERY POLICY FORM ONE SAFETY BOUNDARY</strong><span>A safety record must remain valid when recovery actually needs it.</span></p></div>
+        </section>
+
+        <h2>Durable does not mean valid forever.</h2>
+        <div class="trajectory-box"><span>DURABLE MEMORY</span><i>≠</i><span>MEMORY VALID AT DECISION TIME</span></div>
+        <p>#016 established durability across restart. #017 adds validity over time. A record can survive perfectly and still be unusable for a later decision because its contractual retention window has ended.</p>
+
+        <h2>Evidence.</h2>
+        <p>GitHub Actions run <code>31467526532</code> completed successfully. Artifact <code>resonance-idempotency-ttl-replay-v1.0</code> has ID <code>9092068450</code> and digest <code>sha256:9e3da946190c6ab6e3b9ab26d0b18d0f5856c740a3f532bae70b7ca0dbdbfc26</code>.</p>
+        <p>Execution used PostgreSQL 17.6 and a separate <code>python:3.12-slim</code> HTTP container with persistent SQLite effect/idempotency state.</p>
+
+        <h2>Interpretation boundary.</h2>
+        <p>The network and persistence components are real local services, while time progression is deterministic logical benchmark time. The values 60, 120 and 300 seconds are test parameters — not recommended production defaults. This is not a universal provider-TTL, exactly-once, clock-synchronization or arbitrary-agent-safety certification.</p>
+
+        <section class="sources-block">
+          <p class="section-label">Inspect / reproduce</p>
+          <ol>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/017-idempotency-ttl-replay/REPORT.md" target="_blank" rel="noreferrer">Canonical report</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/tree/main/benchmarks/idempotency-ttl-replay-v1.0" target="_blank" rel="noreferrer">Benchmark harness</a></li>
+            <li><a href="transactional-trust-protocol-v1.html">Transactional Trust Protocol v1.0</a></li>
+            <li><a href="verified-016-idempotency-state-durability.html">Previous · Verified Report #016</a></li>
+          </ol>
+        </section>
+
+        <p class="closing-line"><strong>Verdict:</strong> safety memory must not only survive failures; its validity window must still cover the moment recovery depends on it.</p>
+        <div class="article-end"><p><strong>RESONANCE Verified #017</strong></p><p>time → memory validity → delayed recovery → safe replay decision.</p><a class="button" href="transactional-trust-protocol-v1.html">Read TTP v1.0</a></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Verified #017</p><p>Idempotency TTL / Replay After Expiry</p></div><div><a href="https://github.com/safal207/RESONANCE">GitHub repository ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
