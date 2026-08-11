@@ -30,8 +30,8 @@
       <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
       <div class="article-meta-row"><p class="section-label">Protocol · v1.0</p><p class="article-status">Experimental · 11 Aug 2026</p></div>
       <h1 class="article-title">Transactional Trust Protocol</h1>
-      <p class="article-dek">A framework-agnostic execution protocol for consequential agent actions: keep evidence, authority, shared state, commit preconditions, recovery and final proof connected across the whole transition.</p>
-      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>Derived from Verified Reports #003–#013</p></div>
+      <p class="article-dek">A framework-agnostic execution protocol for consequential agent actions: keep evidence, authority, shared state, commit preconditions, external delivery, recovery and final proof connected across the whole transition.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>Derived from Verified Reports #003–#014</p></div>
     </header>
 
     <div class="article-layout wrap">
@@ -61,15 +61,15 @@
         <h2>5 · Compare at the mutation boundary.</h2>
         <p>Require the state version and trust version that authorized the action to still be current. The compare and irreversible transition must be atomic, transactional or otherwise enforced by the mutation authority.</p>
 
-        <h2>6 · Commit once.</h2>
-        <p>Execute only while all bound preconditions hold. Idempotency keys, compare-and-swap, transactions, leases or equivalent mechanisms can implement this property; the protocol does not prescribe one storage technology.</p>
+        <h2>6 · Commit once — and persist delivery intent when the effect is external.</h2>
+        <p>Execute only while bound preconditions hold. If an external side effect cannot share the business transaction, persist a durable delivery intent in that same transaction, then deliver it separately with a stable logical effect identity.</p>
 
-        <h2>7 · Reconcile ambiguity and database conflicts before retry.</h2>
-        <div class="trajectory-box"><span>UNKNOWN / CONFLICT / DB SIGNAL</span><i>→</i><span>RECONCILE</span><i>→</i><span>COMMITTED / ABSENT / CONFLICT / UNKNOWN</span></div>
-        <p>A timeout is not proof of failure. A zero-row conditional mutation or a serialization failure is not proof that the business effect is absent. Retry must re-enter observation, verification, authorization and execution binding rather than reuse an old decision automatically.</p>
+        <h2>7 · Reconcile ambiguity, database conflicts and external ACK loss.</h2>
+        <div class="trajectory-box"><span>UNKNOWN / CONFLICT / DB SIGNAL / ACK UNKNOWN</span><i>→</i><span>RECONCILE</span></div>
+        <p>A timeout, zero-row mutation, serialization failure or lost external acknowledgement does not prove the intended effect is absent. Retry must re-enter fresh observation and binding; external redelivery should preserve the same logical effect identity when the consumer supports idempotency.</p>
 
         <h2>8 · Prove the trajectory.</h2>
-        <p>Preserve state observations, trust observations, verification decisions, precondition results, database conflict signals, commit/conflict outcomes, reconciliation evidence and the final invariant result.</p>
+        <p>Preserve state and trust versions, verification decisions, database conflict signals, outbox/delivery identity, external acknowledgement or reconciliation evidence and the final invariant result.</p>
 
         <section class="claim-panel">
           <p class="section-label">TTP v1.0 invariants</p>
@@ -77,12 +77,14 @@
           <div><b>I2</b><p><strong>UNKNOWN ≠ ABSENT</strong><span>Uncertainty is not retry permission.</span></p></div>
           <div><b>I3</b><p><strong>VALID SIGNATURE ≠ CURRENT TRUST</strong><span>Authority has a lifecycle.</span></p></div>
           <div><b>I4</b><p><strong>READ WAS CORRECT ≠ WRITE IS STILL LEGAL</strong><span>Bind action to state version.</span></p></div>
-          <div><b>I5</b><p><strong>CHECK + WRITE SHARE ONE PRECONDITION</strong><span>Make mutation boundary enforce the version.</span></p></div>
-          <div><b>I6</b><p><strong>RETRYABLE TRANSACTION ≠ RETRYABLE BUSINESS ACTION</strong><span>Storage retry signals must re-enter fresh verification.</span></p></div>
-          <div><b>I7</b><p><strong>PROOF COVERS THE TRAJECTORY</strong><span>Tool success alone is not sufficient evidence.</span></p></div>
+          <div><b>I5</b><p><strong>RETRYABLE TRANSACTION ≠ RETRYABLE BUSINESS ACTION</strong><span>Storage retry signals must re-enter fresh verification.</span></p></div>
+          <div><b>I6</b><p><strong>STATE + OUTBOX INTENT COMMIT TOGETHER</strong><span>Do not lose the durable intent after the business commit.</span></p></div>
+          <div><b>I7</b><p><strong>DB COMMIT ≠ EXTERNAL ACK</strong><span>The remote effect can remain UNKNOWN.</span></p></div>
+          <div><b>I8</b><p><strong>REDELIVERY PRESERVES EFFECT IDENTITY</strong><span>Stable identity lets the external boundary deduplicate.</span></p></div>
+          <div><b>I9</b><p><strong>PROOF COVERS THE TRAJECTORY</strong><span>Tool success alone is not sufficient evidence.</span></p></div>
         </section>
 
-        <div class="pull-quote">A consequential transition is trustworthy only when evidence, authority, state, commit preconditions, recovery and proof remain connected across the whole path.</div>
+        <div class="pull-quote">A consequential transition is trustworthy only when evidence, authority, state, commit preconditions, delivery identity, recovery and proof remain connected across the whole path.</div>
 
         <h2>Database adapter rule</h2>
         <div class="trajectory-box"><span>OBSERVE vN</span><i>→</i><span>BIND vN</span><i>→</i><span>MUTATION AUTHORITY CHECKS vN</span></div>
@@ -93,15 +95,21 @@
         <div class="trajectory-box"><span>RE-VERIFY</span><i>→</i><span>RE-BIND</span><i>→</i><span>RETRY ONLY IF STILL LEGAL</span></div>
         <p>Verified Report #013 ran the same two-writer race on PostgreSQL 17.6 at three isolation levels. READ COMMITTED produced a zero-row precondition failure; REPEATABLE READ and SERIALIZABLE produced <code>SQLSTATE 40001</code>. Every losing path reconciled to <code>COMMITTED / v101 / effects=1</code>.</p>
 
+        <h2>Cross-boundary delivery rule</h2>
+        <div class="trajectory-box"><span>BUSINESS TX + OUTBOX INTENT</span><i>→</i><span>COMMIT</span><i>→</i><span>WORKER</span></div>
+        <div class="trajectory-box"><span>STABLE EFFECT ID</span><i>→</i><span>EXTERNAL EFFECT</span><i>→</i><span>ACK / UNKNOWN</span><i>→</i><span>RECONCILE</span></div>
+        <p>Verified Report #014 crossed the PostgreSQL-to-external-effect boundary. An unsafe recovery changed request identity after lost acknowledgement and produced two external effects. A transactional outbox preserved delivery intent, stable-id redelivery was deduplicated to one effect, and reconcile-before-retry closed the outbox without a second external call.</p>
+        <p><strong>Transactional outbox is not universal exactly-once delivery.</strong> It removes the database-side lost-intent gap. External uniqueness still depends on an explicit idempotency/deduplication or reconciliation contract.</p>
+
         <h2>Three conformance profiles</h2>
         <div class="verification-chain">
           <div><small>FAST</small><strong>TTP-Fast</strong><p>Low-impact reversible actions: observe, minimal verify, state-version binding, compare/commit, basic proof.</p></div>
-          <div><small>STD</small><strong>TTP-Standard</strong><p>All eight stages, explicit UNKNOWN/CONFLICT, authority lifecycle, trust freshness and durable evidence.</p></div>
+          <div><small>STD</small><strong>TTP-Standard</strong><p>All eight stages, explicit UNKNOWN/CONFLICT, authority lifecycle, trust freshness, durable evidence and stable external effect identity where applicable.</p></div>
           <div><small>DEEP</small><strong>TTP-Deep</strong><p>Independent verification, stronger provenance, isolated execution, replayable evidence and explicit escalation.</p></div>
         </div>
 
         <h2>Interpretation boundary</h2>
-        <p>TTP v1.0 is a RESONANCE experimental protocol synthesis. It is not a replacement for database transactions or consensus, not a PKI/IAM standard, not an OpenAI Agents SDK feature claim and not an external security certification.</p>
+        <p>TTP v1.0 is a RESONANCE experimental protocol synthesis. It is not a replacement for database transactions or consensus, not an exactly-once delivery claim, not a PKI/IAM standard, not an OpenAI Agents SDK feature claim and not an external security certification.</p>
 
         <section class="sources-block">
           <p class="section-label">Inspect / reproduce</p>
@@ -110,13 +118,14 @@
             <li><a href="verified-011-transactional-trust-e2e.html">Verified Report #011 · end-to-end adversarial run</a></li>
             <li><a href="verified-012-postgresql-transactional-trust-adapter.html">Verified Report #012 · PostgreSQL adapter</a></li>
             <li><a href="verified-013-postgresql-isolation-matrix.html">Verified Report #013 · isolation-level matrix</a></li>
+            <li><a href="verified-014-postgresql-transactional-outbox.html">Verified Report #014 · transactional outbox boundary</a></li>
             <li><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified" target="_blank" rel="noreferrer">Full verified evidence trail</a></li>
           </ol>
         </section>
 
         <p class="closing-line"><strong>Canonical short form:</strong> OBSERVE → VERIFY → AUTHORIZE → BIND → COMPARE → COMMIT → RECONCILE → PROVE.</p>
 
-        <div class="article-end"><p><strong>RESONANCE Transactional Trust Protocol v1.0</strong></p><p>trajectory correctness → execution binding → conflict classification → recoverable proof.</p><a class="button" href="verified-013-postgresql-isolation-matrix.html">Open latest database verification</a></div>
+        <div class="article-end"><p><strong>RESONANCE Transactional Trust Protocol v1.0</strong></p><p>trajectory correctness → execution binding → external delivery → recoverable proof.</p><a class="button" href="verified-014-postgresql-transactional-outbox.html">Open latest boundary verification</a></div>
       </article>
     </div>
   </main>
