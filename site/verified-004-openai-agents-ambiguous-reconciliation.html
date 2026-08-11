@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified Report #004 — Ambiguous Reconciliation: when both the action and the status check are inconclusive, UNKNOWN must remain UNKNOWN." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Verified Report #004 — Ambiguous Reconciliation | RESONANCE" />
+  <meta property="og:description" content="Unsafe UNKNOWN→RETRY duplicated a synthetic side effect. Preserving UNKNOWN after timeout or stale reconciliation prevented it." />
+  <meta property="og:type" content="article" />
+  <title>Verified Report #004 — Ambiguous Reconciliation | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="index.html#intelligence">AI</a>
+      <a href="index.html#science">Science</a>
+      <a href="index.html#trust">Trust</a>
+      <a href="index.html#economy">Startups & Economy</a>
+      <a href="index.html#human">Human</a>
+      <a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row">
+        <p class="section-label">Verified Report #004 · Ambiguous reconciliation</p>
+        <p class="article-status">Executed · 11 Aug 2026</p>
+      </div>
+      <h1 class="article-title">UNKNOWN Must Stay UNKNOWN</h1>
+      <p class="article-dek">What happens when an action times out — and the reconciliation request also times out or returns stale evidence? In this deterministic run, treating uncertainty as permission to retry duplicated the effect. Preserving uncertainty did not.</p>
+      <div class="byline-row">
+        <p>By <strong>RESONANCE Research</strong></p>
+        <p>Target · OpenAI Agents SDK v0.19.4 · SHA 2231eb5d</p>
+      </div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Report summary">
+        <div class="rail-card">
+          <p class="section-label">Protocol score</p>
+          <strong>10 / 10</strong>
+          <span>4 deterministic trajectories</span>
+          <span>Unsafe path → 2 effects</span>
+          <span>Safe paths → 1 effect</span>
+        </div>
+        <div class="rail-card rail-dark">
+          <p class="section-label">Invariant</p>
+          <code>UNKNOWN ≠ ABSENT</code>
+          <span>stale ≠ absent · timeout ≠ absent</span>
+        </div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Recovery becomes harder when the check that should resolve uncertainty is itself uncertain. A status endpoint can time out. A read replica can be stale. A queue may be delayed. If an agent interprets “I still do not know” as “the action probably did not happen,” it can manufacture a duplicate from missing evidence.</p>
+
+        <div class="trajectory-box"><span>attempt</span><i>→</i><span>UNKNOWN</span><i>→</i><span>reconcile</span><i>→</i><span>UNKNOWN</span><i>→</i><span>?</span></div>
+
+        <h2>The unsafe shortcut duplicated the effect.</h2>
+        <p>The first synthetic charge committed, then deliberately lost its response. The status check also timed out. The unsafe trajectory converted that second UNKNOWN directly into another charge.</p>
+
+        <div class="verification-chain">
+          <div><small>01</small><strong>Commit</strong><p>The intended synthetic effect is durably recorded.</p></div>
+          <div><small>02</small><strong>Response lost</strong><p>The caller observes a timeout.</p></div>
+          <div><small>03</small><strong>Reconcile timeout</strong><p>The durable state remains unknown to the caller.</p></div>
+          <div><small>04</small><strong>Unsafe retry</strong><p>A second effect is committed.</p></div>
+        </div>
+
+        <div class="pull-quote">No evidence of an effect is not the same thing as evidence of no effect.</div>
+
+        <section class="claim-panel">
+          <p class="section-label">Comparative result</p>
+          <div><b>×2</b><p><strong>UNKNOWN → RETRY</strong><span>Reconciliation timed out; blind retry produced a duplicate.</span></p></div>
+          <div><b>×1</b><p><strong>UNKNOWN → HOLD</strong><span>Status timeout preserved uncertainty; retry was blocked.</span></p></div>
+          <div><b>×1</b><p><strong>STALE UNKNOWN → HOLD</strong><span>A stale snapshot was not reinterpreted as ABSENT.</span></p></div>
+          <div><b>×1</b><p><strong>UNKNOWN → RECONCILE AGAIN</strong><span>A later fresh read confirmed COMMITTED; no retry was needed.</span></p></div>
+        </section>
+
+        <h2>The state machine needs a real uncertainty state.</h2>
+        <p>The recovery rule from Report #003 becomes stricter here. Reconciliation is not automatically truth. The system must also classify the quality of the evidence returned by reconciliation.</p>
+
+        <div class="causal-stack">
+          <div><span>UNKNOWN</span> operation outcome</div>
+          <div>↓</div>
+          <div><span>RECONCILE</span> durable state</div>
+          <div>↓</div>
+          <div><span>fresh COMMITTED</span> → COMPLETE</div>
+          <div><span>fresh ABSENT</span> → RETRY_ALLOWED</div>
+          <div><span>timeout / stale / inconclusive</span> → UNKNOWN</div>
+          <div>↓</div>
+          <div><span>reconcile again / escalate</span></div>
+        </div>
+
+        <h2>Timeout during reconciliation</h2>
+        <p>The safe path experienced the same hidden commit and the same failed status check as the unsafe path. The difference was one transition: it refused to map the failed read to <code>ABSENT</code>.</p>
+        <p><strong>Observed:</strong> one charge attempt, one hidden commit, one inconclusive reconciliation, one final effect, no retry.</p>
+
+        <h2>Stale evidence is not negative evidence.</h2>
+        <p>A second safe scenario returned a deliberately stale snapshot with <code>status=unknown</code>. The protocol preserved uncertainty because freshness is part of evidence quality. A stale record cannot authorize a destructive or duplicative transition merely because it lacks the new state.</p>
+        <p><strong>Observed:</strong> one attempt, one effect, stale UNKNOWN, retry blocked.</p>
+
+        <h2>Uncertainty can resolve without action.</h2>
+        <p>In the fourth trajectory the first status request timed out, but a second reconciliation returned a fresh <code>committed</code> state. The operation completed with one effect and no second charge call.</p>
+        <p>This is an important pattern for agent systems: sometimes the correct recovery action is not another side effect. It is another observation.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Ambiguous reconciliation score · 10/10</p>
+          <div><b>01</b><p><strong>Unsafe hazard reproduced · 2/2</strong><span>UNKNOWN → RETRY created two effects.</span></p></div>
+          <div><b>02</b><p><strong>UNKNOWN preserved after timeout · 2/2</strong><span>No second side-effecting call.</span></p></div>
+          <div><b>03</b><p><strong>Stale UNKNOWN not treated as ABSENT · 2/2</strong><span>Freshness failure blocked retry.</span></p></div>
+          <div><b>04</b><p><strong>Repeat reconciliation resolves safely · 2/2</strong><span>Fresh COMMITTED arrived on the second read.</span></p></div>
+          <div><b>05</b><p><strong>Pinned reproducible evidence · 2/2</strong><span>Exact upstream SHA + deterministic FakeModel + synthetic local effects.</span></p></div>
+        </section>
+
+        <h2>Four distinctions worth keeping</h2>
+        <div class="protocol-box"><code>ABSENT ≠ UNKNOWN · STALE ≠ ABSENT · TIMEOUT ≠ ABSENT · NO EVIDENCE ≠ NO EFFECT</code></div>
+
+        <p>These look almost trivial when written down. In production state machines they are exactly the distinctions that disappear under pressure to “just retry.” The result is duplicated payments, repeated messages, double provisioning, repeated deployments or conflicting state transitions.</p>
+
+        <h2>What the SDK did — and did not do.</h2>
+        <p>The pinned OpenAI Agents SDK tool loop faithfully executed all four deterministic trajectories using the upstream <code>FakeModel</code>. As in Report #003, the framework provides the execution machinery; the recovery semantics are an application protocol.</p>
+        <p>This report does not claim that OpenAI Agents SDK automatically keeps UNKNOWN states, blocks retries, verifies freshness or provides service-side idempotency.</p>
+
+        <h2>Interpretation boundary</h2>
+        <p>This is a synthetic application-level experiment. It is not a real payment test, a vulnerability claim, a live-model evaluation, a test of every reconciliation source, or a safety certification for applications built with the SDK.</p>
+
+        <section class="sources-block">
+          <p class="section-label">Reproduce / inspect</p>
+          <ol>
+            <li><a href="https://github.com/openai/openai-agents-python/commit/2231eb5d40cd4a9d6b86f79492e984eeb3301263" target="_blank" rel="noreferrer">Pinned upstream commit</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/actions/runs/31455403621" target="_blank" rel="noreferrer">Canonical GitHub Actions run</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/benchmarks/openai-agents-ambiguous-reconciliation-v0.4/run_ambiguous_reconciliation.py" target="_blank" rel="noreferrer">Benchmark harness</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/004-openai-agents-ambiguous-reconciliation/result.json" target="_blank" rel="noreferrer">Machine-readable result</a></li>
+          </ol>
+          <p class="source-note">Evidence artifact digest: <code>sha256:f09d763fb399873236593901560eb29a7dbeec9df1dc2c244f69b2a53e66fef2</code>. No production API key, live model, real payment rail, external service or real credential was used.</p>
+        </section>
+
+        <p class="closing-line"><strong>Verdict:</strong> an inconclusive reconciliation result must preserve uncertainty. Turning UNKNOWN into retry reproduced a duplicate; keeping UNKNOWN prevented it across timeout, stale-read and eventual-resolution trajectories.</p>
+
+        <div class="article-end">
+          <p><strong>RESONANCE Verified Report #004</strong></p>
+          <p>action ambiguity → reconciliation ambiguity → preserve UNKNOWN → evidence → legal transition.</p>
+          <a class="button" href="issue-001.html">Back to Issue 001</a>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div>
+      <div><p class="footer-title">Verified Report #004</p><p>Ambiguous Reconciliation · 10/10</p></div>
+      <div><a href="https://github.com/safal207/RESONANCE/tree/main/reports/verified/004-openai-agents-ambiguous-reconciliation">Evidence files ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
