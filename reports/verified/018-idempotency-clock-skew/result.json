@@ -1,0 +1,70 @@
+{
+  "benchmark": "RESONANCE Idempotency Clock Skew / Expiry Disagreement",
+  "benchmark_version": "1.0",
+  "protocol": "RESONANCE Transactional Trust Protocol v1.0",
+  "github_actions_run": 31468827381,
+  "artifact": {
+    "id": 9092529978,
+    "name": "resonance-idempotency-clock-skew-v1.0",
+    "digest": "sha256:de18c97b164742f55dcb2725af83637abe8d51014930c56d26363e6340b2a345"
+  },
+  "score": 10,
+  "max_score": 10,
+  "classification": "Clock-authority / skew-bound protocol passes",
+  "database": {"server_version": "17.6"},
+  "http_service": {
+    "service": "resonance-external-http-clock-skew",
+    "image": "python:3.12-slim",
+    "image_digest": "python@sha256:229a2c5bfa27522db7815ea81f9bed70af17ccb9de9fc7ad142b1877b5830d36",
+    "pid": 1,
+    "persistent_state": "SQLite on Docker named volume"
+  },
+  "clock_model": {
+    "type": "deterministic logical epochs",
+    "ttl_seconds": 60,
+    "node_a_offset_seconds": 50,
+    "node_b_offset_seconds": 70,
+    "clock_disagreement_seconds": 20,
+    "authority_offset_seconds": 55,
+    "max_clock_error_seconds": 20
+  },
+  "unsafe_node_clock": {
+    "expires_at": 4000060,
+    "node_a_evaluation_time": 4000050,
+    "node_a_active_idempotency_records": 1,
+    "node_b_evaluation_time": 4000070,
+    "node_b_active_idempotency_records": 0,
+    "effect_count_before_replay": 1,
+    "second_post_delivery": "applied",
+    "final_effect_count": 2,
+    "final_status": "conflict"
+  },
+  "safe_clock_authority": {
+    "node_a_local_time": 5000050,
+    "node_b_local_time": 5000070,
+    "authority_time": 5000055,
+    "expires_at": 5000060,
+    "authoritative_record_active": true,
+    "second_post_delivery": "deduplicated",
+    "final_effect_count": 1,
+    "final_status": "committed"
+  },
+  "safe_skew_guard": {
+    "expires_at": 6000060,
+    "observed_local_time": 6000060,
+    "uncertainty_interval": [6000040, 6000080],
+    "expiry_inside_uncertainty": true,
+    "temporal_decision": "time_unknown",
+    "reconciled_status": "committed",
+    "second_post_made": false,
+    "final_effect_count": 1
+  },
+  "invariants": [
+    "Same retention record plus different clocks can yield different safety decisions.",
+    "Time-based safety requires a declared clock authority or skew bound.",
+    "Expiry inside the clock-uncertainty window is not safe replay permission.",
+    "Clock disagreement is evidence conflict and must not silently collapse to EXPIRED."
+  ],
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
