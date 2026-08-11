@@ -35,7 +35,7 @@
         <p class="article-status">Evidence-first research map</p>
       </div>
       <h1 class="article-title">AI Agents: Reliability, Security & Verification</h1>
-      <p class="article-dek">A map of RESONANCE research on what happens when AI systems move from answering to acting: state, causality, containment, recovery, uncertainty, evidence and authority.</p>
+      <p class="article-dek">A map of RESONANCE research on what happens when AI systems move from answering to acting: state, causality, containment, recovery, evidence, authority and transactional trust.</p>
     </header>
 
     <div class="article-layout wrap">
@@ -61,7 +61,7 @@
         </div>
 
         <h2>Verified research.</h2>
-        <p>The verified-report series turns abstract trust claims into bounded, reproducible tests. Each report separates what was observed from what is inferred.</p>
+        <p>The verified-report series turns abstract trust claims into bounded, reproducible tests. The sequence now runs from framework checks into real PostgreSQL concurrency and a database-to-external-effect boundary.</p>
         <div class="verification-chain">
           <div><small>001</small><strong><a href="verified-001-openai-agents-sdk.html">SDK baseline</a></strong><p>Structural verification against a pinned OpenAI Agents SDK revision.</p></div>
           <div><small>002</small><strong><a href="verified-002-openai-agents-containment.html">Containment</a></strong><p>Tests of filesystem, workspace and Docker control-plane boundaries.</p></div>
@@ -70,6 +70,13 @@
           <div><small>005</small><strong><a href="verified-005-openai-agents-conflicting-evidence.html">Conflicting evidence</a></strong><p>Authority and freshness when sources disagree.</p></div>
           <div><small>006</small><strong><a href="verified-006-openai-agents-evidence-authority.html">Evidence authority</a></strong><p>Why claimed authority is not verified authority.</p></div>
           <div><small>007</small><strong><a href="verified-007-openai-agents-revoked-authority.html">Revoked authority</a></strong><p>Why formerly valid authority can become invalid before action.</p></div>
+          <div><small>008</small><strong><a href="verified-008-openai-agents-stale-trust-registry.html">Stale trust registry</a></strong><p>Why fresh evidence evaluated against stale trust state is not trusted evidence.</p></div>
+          <div><small>009</small><strong><a href="verified-009-openai-agents-revocation-race.html">Revocation race</a></strong><p>Execution-bound authorization and trust-epoch TOCTOU protection.</p></div>
+          <div><small>010</small><strong><a href="verified-010-openai-agents-distributed-commit-race.html">Distributed commit race</a></strong><p>Two readers, one version-bound writer through an atomic transition.</p></div>
+          <div><small>011</small><strong><a href="verified-011-transactional-trust-e2e.html">TTP end-to-end</a></strong><p>Eight protocol stages across a compounded adversarial trajectory.</p></div>
+          <div><small>012</small><strong><a href="verified-012-postgresql-transactional-trust-adapter.html">PostgreSQL adapter</a></strong><p>The state-version invariant moved from model to a real PostgreSQL service.</p></div>
+          <div><small>013</small><strong><a href="verified-013-postgresql-isolation-matrix.html">Isolation matrix</a></strong><p>0-row conflicts and SQLSTATE 40001 mapped into one business recovery law.</p></div>
+          <div><small>014</small><strong><a href="verified-014-postgresql-transactional-outbox.html">Transactional outbox</a></strong><p>Durable delivery intent, stable idempotency and reconciliation across an external-effect boundary.</p></div>
         </div>
 
         <h2>The research question.</h2>
