@@ -1,0 +1,102 @@
+{
+  "benchmark": "RESONANCE PostgreSQL Isolation-Level Matrix",
+  "benchmark_version": "1.0",
+  "checks": [
+    {
+      "id": "real_postgresql_service_and_unsafe_baseline",
+      "pass": true,
+      "points": 2,
+      "evidence": {
+        "server_version": "17.6",
+        "unsafe": {
+          "effect_count": 2,
+          "final_state": "committed",
+          "final_version": 102,
+          "isolation": "READ COMMITTED",
+          "mode": "unsafe",
+          "workers": [
+            {"node": "A", "observed_state": "absent", "observed_version": 100, "transition": "unconditional_commit", "returned_state": "committed", "returned_version": 101},
+            {"node": "B", "observed_state": "absent", "observed_version": 100, "transition": "unconditional_commit", "returned_state": "committed", "returned_version": 102}
+          ]
+        }
+      }
+    },
+    {
+      "id": "read_committed_single_winner_zero_row_conflict",
+      "pass": true,
+      "points": 2,
+      "evidence": {
+        "effect_count": 1,
+        "final_state": "committed",
+        "final_version": 101,
+        "isolation": "READ COMMITTED",
+        "winner": "commit_winner",
+        "loser": "precondition_failed",
+        "loser_sqlstate": null,
+        "loser_reconciled_state": "committed",
+        "loser_reconciled_version": 101,
+        "loser_reconciled_effects": 1
+      }
+    },
+    {
+      "id": "repeatable_read_single_winner_serialization_failure",
+      "pass": true,
+      "points": 2,
+      "evidence": {
+        "effect_count": 1,
+        "final_state": "committed",
+        "final_version": 101,
+        "isolation": "REPEATABLE READ",
+        "winner": "commit_winner",
+        "loser": "serialization_failure",
+        "loser_sqlstate": "40001",
+        "loser_reconciled_state": "committed",
+        "loser_reconciled_version": 101,
+        "loser_reconciled_effects": 1
+      }
+    },
+    {
+      "id": "serializable_single_winner_serialization_failure",
+      "pass": true,
+      "points": 2,
+      "evidence": {
+        "effect_count": 1,
+        "final_state": "committed",
+        "final_version": 101,
+        "isolation": "SERIALIZABLE",
+        "winner": "commit_winner",
+        "loser": "serialization_failure",
+        "loser_sqlstate": "40001",
+        "loser_reconciled_state": "committed",
+        "loser_reconciled_version": 101,
+        "loser_reconciled_effects": 1
+      }
+    },
+    {
+      "id": "ttp_retry_classification_preserves_one_effect_across_matrix",
+      "pass": true,
+      "points": 2,
+      "evidence": {
+        "read_committed": {"loser_signal": "precondition_failed", "sqlstate": null, "reconciled_state": "committed", "final_effect_count": 1},
+        "repeatable_read": {"loser_signal": "serialization_failure", "sqlstate": "40001", "reconciled_state": "committed", "final_effect_count": 1},
+        "serializable": {"loser_signal": "serialization_failure", "sqlstate": "40001", "reconciled_state": "committed", "final_effect_count": 1}
+      }
+    }
+  ],
+  "classification": "PostgreSQL isolation-level TTP matrix passes",
+  "database": {"server_version": "17.6", "server_version_num": 170006},
+  "executed_at": "2026-08-11T05:52:09.116144+00:00",
+  "external_safety_certification": false,
+  "invariant": "Isolation-level conflict signals differ, but TTP recovery must preserve at most one committed effect and re-enter from fresh state before any retry.",
+  "max_score": 10,
+  "protocol": "RESONANCE Transactional Trust Protocol v1.0",
+  "retry_rule": "A database conflict signal is not permission to blindly replay the mutation. Abort/close the failed transaction, re-observe authoritative state, re-verify/re-bind preconditions, and retry only if the operation is still absent and legal.",
+  "score": 10,
+  "signal_taxonomy": {
+    "READ COMMITTED": "precondition_failed (conditional UPDATE returned 0 rows)",
+    "REPEATABLE READ": "serialization_failure / SQLSTATE 40001",
+    "SERIALIZABLE": "serialization_failure / SQLSTATE 40001"
+  },
+  "scope": "Real PostgreSQL service container with two concurrent independent client connections per isolation level; local synthetic operation/effects tables only.",
+  "unsafe_baseline": {"effect_count": 2, "final_state": "committed", "final_version": 102}
+}
