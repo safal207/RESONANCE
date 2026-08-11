@@ -69,6 +69,42 @@ Market infrastructure:
 
 Synthetic examples are permitted only for testing the data model and **must never count as market evidence**. The Demand Graph starts at zero real signals.
 
+## Science Desk
+
+RESONANCE Science is the journal's evidence-first desk for biology, AI for Science, computational research, reproducibility and scientific decision-making.
+
+Its central question is not only **"what did the study find?"** but also:
+
+> What is known, what is inferred, what remains uncertain, and what additional evidence would materially change the decision?
+
+The Science Desk uses a dedicated reasoning chain:
+
+```text
+OBSERVATION
+  ↓
+SOURCE / DATA
+  ↓
+EVIDENCE STATE
+  ↓
+INTERPRETATION
+  ↓
+CAUSAL BOUNDARY
+  ↓
+TRANSLATION GAP
+  ↓
+DECISION READINESS
+  ↓
+NEXT DISCRIMINATING EVIDENCE
+```
+
+Founding resources:
+
+- [`science/README.md`](science/README.md) — Science Desk manifesto and editorial rules;
+- [`reports/science/001-discovery-to-decision.md`](reports/science/001-discovery-to-decision.md) — Science Report #001, *From Discovery to Decision*;
+- [`site/science.html`](site/science.html) — Science Desk web edition.
+
+The desk is research-only. It does not provide wet-lab instructions, clinical advice, safety approval or experiment authorization.
+
 ## Languages
 
 The publication now has first-class entry points for:
@@ -116,7 +152,7 @@ Verified Report #011 composes those hazards in one deterministic end-to-end benc
 RESONANCE focuses on five connected domains:
 
 - **AI** — models, agents, infrastructure, robotics, intelligence systems;
-- **Science** — research, discovery, reproducibility, scientific tooling;
+- **Science** — biology, AI for Science, research, discovery, reproducibility, scientific tooling and translation readiness;
 - **Startups & Economy** — companies, markets, new business models, capital;
 - **Trust & Verification** — safety, security, provenance, evidence, governance;
 - **Human** — cognition, flow, learning, creativity, health, meaning and adaptation.
@@ -172,6 +208,7 @@ Machine-readable evidence and reports live under [`reports/verified/`](reports/v
 - `site/index.html` — English magazine homepage;
 - `site/index.ru.html` — Russian homepage;
 - `site/index.zh.html` — Simplified Chinese homepage;
+- `site/science.html` — RESONANCE Science Desk;
 - `site/before-you-let-an-ai-agent-move-money*.html` — Article #004 in EN/RU/ZH;
 - `site/open-problems.html` — public Demand Graph / Open Problems view;
 - `site/verified-workflow.html` — service-first verification pilot;
@@ -193,15 +230,20 @@ RESONANCE/
 ├── content/
 ├── distribution/
 ├── market/
+├── science/
+│   └── README.md
 ├── protocols/
 │   └── transactional-trust-v1.0/
 ├── benchmarks/
 ├── reports/
+│   ├── science/
+│   │   └── 001-discovery-to-decision.md
 │   └── verified/
 ├── issues/
 │   └── 001-age-of-agents/
 ├── topics/
 ├── site/
+│   └── science.html
 └── .github/
     ├── ISSUE_TEMPLATE/
     └── workflows/
