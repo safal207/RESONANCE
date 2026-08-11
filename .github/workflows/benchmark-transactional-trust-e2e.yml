@@ -1,0 +1,60 @@
+name: RESONANCE — Transactional Trust Protocol v1.0 E2E
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'protocols/transactional-trust-v1.0/**'
+      - 'benchmarks/transactional-trust-e2e-v1.0/**'
+      - '.github/workflows/benchmark-transactional-trust-e2e.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  ttp-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      UPSTREAM_SHA: 2231eb5d40cd4a9d6b86f79492e984eeb3301263
+    steps:
+      - name: Checkout RESONANCE
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Fetch pinned OpenAI Agents SDK
+        run: |
+          git clone https://github.com/openai/openai-agents-python.git upstream
+          git -C upstream checkout "$UPSTREAM_SHA"
+          test "$(git -C upstream rev-parse HEAD)" = "$UPSTREAM_SHA"
+
+      - name: Install target
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ./upstream
+
+      - name: Run TTP v1.0 end-to-end adversarial benchmark
+        run: |
+          python benchmarks/transactional-trust-e2e-v1.0/run_transactional_trust_e2e.py \
+            --upstream upstream \
+            --out benchmark-results/transactional-trust-e2e-v1.0
+
+      - name: Publish run summary
+        if: always()
+        run: |
+          if [ -f benchmark-results/transactional-trust-e2e-v1.0/RESULT.md ]; then
+            cat benchmark-results/transactional-trust-e2e-v1.0/RESULT.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload evidence bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-transactional-trust-e2e-v1.0
+          path: benchmark-results/transactional-trust-e2e-v1.0/
+          if-no-files-found: error
