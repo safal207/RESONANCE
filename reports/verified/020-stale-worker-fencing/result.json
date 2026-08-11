@@ -1,0 +1,40 @@
+{
+  "benchmark": "RESONANCE Stale Worker Resurrection / Fencing Token Split-Brain",
+  "benchmark_version": "1.0",
+  "classification": "Stale-worker fencing protocol passes",
+  "score": 10,
+  "max_score": 10,
+  "github_actions_run": 31474292875,
+  "artifact": {
+    "id": 9094593495,
+    "name": "resonance-stale-worker-fencing-v1.0",
+    "digest": "sha256:62ad23e3cf55a5742e587334098263dfb9686989923bb2f181ac12d9533689cf"
+  },
+  "database": {"server_version": "17.6"},
+  "unsafe": {
+    "worker_a_token": 1,
+    "worker_b_token": 2,
+    "coordination_owner_after_takeover": "worker-B",
+    "final_effect_count": 2,
+    "final_status": "conflict"
+  },
+  "fenced": {
+    "worker_a_token": 1,
+    "worker_b_token": 2,
+    "worker_b_http_status": 200,
+    "worker_a_http_status": 409,
+    "worker_a_delivery": "fenced_out",
+    "highest_fence": 2,
+    "final_effect_count": 1,
+    "final_status": "committed"
+  },
+  "recheck": {
+    "current_owner": "worker-B",
+    "current_fence": 2,
+    "stale_detected": true,
+    "worker_a_write_made": false,
+    "final_effect_count": 1
+  },
+  "external_safety_certification": false,
+  "vulnerability_claim": false
+}
