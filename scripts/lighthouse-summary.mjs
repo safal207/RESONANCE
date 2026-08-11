@@ -52,6 +52,16 @@ const score = (report, category) => Math.round((report.categories?.[category]?.s
 const numeric = (report, id) => report.audits?.[id]?.numericValue ?? null;
 const display = (report, id) => report.audits?.[id]?.displayValue ?? null;
 
+function auditSamples(audit) {
+  const items = Array.isArray(audit?.details?.items) ? audit.details.items : [];
+  return items.slice(0, 4).map((item) => ({
+    selector: item?.node?.selector ?? null,
+    snippet: item?.node?.snippet ?? null,
+    explanation: item?.node?.explanation ?? null,
+    label: item?.label ?? item?.failureSummary ?? null,
+  })).filter((item) => Object.values(item).some(Boolean));
+}
+
 const reports = files.map((file) => {
   const report = JSON.parse(fs.readFileSync(path.join(inputDir, file), 'utf8'));
   const profile = file.includes('desktop') ? 'desktop' : 'mobile';
@@ -70,6 +80,17 @@ const reports = files.map((file) => {
     .sort((a, b) => (b.numericValue ?? 0) - (a.numericValue ?? 0))
     .slice(0, 5)
     .map((audit) => ({ id: audit.id, title: audit.title, displayValue: audit.displayValue ?? null, score: audit.score }));
+  const failedAudits = Object.values(report.audits ?? {})
+    .filter((audit) => typeof audit?.score === 'number' && audit.score < 1 && !['notApplicable', 'informative', 'manual'].includes(audit.scoreDisplayMode))
+    .sort((a, b) => (a.score ?? 1) - (b.score ?? 1))
+    .slice(0, 20)
+    .map((audit) => ({
+      id: audit.id,
+      title: audit.title,
+      score: audit.score,
+      displayValue: audit.displayValue ?? null,
+      samples: auditSamples(audit),
+    }));
 
   return {
     file,
@@ -78,7 +99,8 @@ const reports = files.map((file) => {
     url: report.finalDisplayedUrl || report.finalUrl || null,
     categories,
     metrics,
-    opportunities
+    opportunities,
+    failedAudits
   };
 });
 
@@ -119,6 +141,21 @@ const rows = reports.map((report) => {
   return `| ${report.file.replace('.json', '')} | ${c.performance} | ${c.accessibility} | ${c['best-practices']} | ${c.seo} | ${report.metrics.lcp.displayValue ?? 'n/a'} | ${report.metrics.tbt.displayValue ?? 'n/a'} | ${report.metrics.cls.displayValue ?? 'n/a'} |`;
 });
 
+const failingReportSections = reports
+  .filter((report) => report.failedAudits.length > 0)
+  .flatMap((report) => {
+    const lines = [`### ${report.file}`, ''];
+    for (const audit of report.failedAudits) {
+      lines.push(`- **${audit.id}** — ${audit.title}${audit.displayValue ? ` (${audit.displayValue})` : ''}`);
+      for (const sample of audit.samples) {
+        const target = sample.selector || sample.snippet || sample.label || sample.explanation;
+        if (target) lines.push(`  - ${String(target).replace(/\s+/g, ' ').slice(0, 280)}`);
+      }
+    }
+    lines.push('');
+    return lines;
+  });
+
 const markdown = [
   '# RESONANCE Lighthouse Site Health',
   '',
@@ -133,7 +170,8 @@ const markdown = [
   `- Mobile: performance ≥ ${budgets.mobile.performance}, accessibility ≥ ${budgets.mobile.accessibility}, best practices ≥ ${budgets.mobile['best-practices']}, SEO ≥ ${budgets.mobile.seo}, LCP ≤ ${budgets.mobile.lcpMs} ms, TBT ≤ ${budgets.mobile.tbtMs} ms, CLS ≤ ${budgets.mobile.cls}.`,
   `- Desktop: performance ≥ ${budgets.desktop.performance}, accessibility ≥ ${budgets.desktop.accessibility}, best practices ≥ ${budgets.desktop['best-practices']}, SEO ≥ ${budgets.desktop.seo}, LCP ≤ ${budgets.desktop.lcpMs} ms, TBT ≤ ${budgets.desktop.tbtMs} ms, CLS ≤ ${budgets.desktop.cls}.`,
   '',
-  ...(failures.length ? ['## Failures', '', ...failures.map((failure) => `- ${failure}`), ''] : []),
+  ...(failures.length ? ['## Budget failures', '', ...failures.map((failure) => `- ${failure}`), ''] : []),
+  ...(failingReportSections.length ? ['## Failing Lighthouse audits', '', ...failingReportSections] : []),
   '> Lighthouse is a repeatable lab measurement for a specific run. It is not a claim about search ranking, production field Core Web Vitals, or every user/device/network.',
   ''
 ].join('\n');
