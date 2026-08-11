@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Engineering Signal 001: a second public agent-memory implementation consumed the frozen CML applicability fixture byte-for-byte, creating an inspectable interoperability signal." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="External Reproduction of Memory Applicability | RESONANCE" />
+  <meta property="og:description" content="From one memory contract to two inspectable implementations — with the next lineage reproduction gate still open." />
+  <meta property="og:type" content="article" />
+  <title>External Reproduction of Memory Applicability | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+  <link rel="stylesheet" href="market.css" />
+</head>
+<body data-share-text="A memory contract became more interesting when a second implementation consumed the same frozen fixture byte-for-byte. RESONANCE Engineering Signal 001.">
+  <a class="skip-link" href="#article">Skip to article</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="ai-agents.html">AI</a><a href="index.html#science">Science</a><a href="index.html#trust">Trust</a><a href="open-problems.html">Open Problems</a><a href="verified-workflow.html">Verified Workflow</a><a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="article">
+    <header class="article-hero wrap">
+      <a class="back-link" href="memory-can-be-true-and-still-be-unsafe.html">← Memory Can Be True and Still Be Unsafe</a>
+      <div class="article-meta-row">
+        <p class="section-label">Engineering Signal 001 · External Reproduction</p>
+        <p class="article-status">Verified · 11 Aug 2026</p>
+      </div>
+      <h1 class="article-title">A Memory Contract Survived a Second Implementation</h1>
+      <p class="article-dek">The important event was not agreement in a comment thread. It was a frozen fixture crossing implementation boundaries, exposing a missing capability, and becoming a shared executable contract.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Editorial</strong></p><p>Signal status · interoperability loop active</p></div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Signal summary">
+        <div class="rail-card"><p class="section-label">Verified</p><strong>Byte-for-byte fixture identity</strong><span>Same Git blob SHA in CML and Inspeximus.</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">Reported result</p><code>15 / 15 cases agree</code><span>Attributed to the second implementation author.</span></div>
+        <div class="rail-card"><p class="section-label">Next gate</p><strong>Lineage reproduction</strong><span>Pending — agreement is not assumed.</span></div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">A specification becomes more useful when another implementation can disagree with it. That happened this week around CML Current-State Applicability: a second public agent-memory implementation consumed the frozen fixture verbatim, implemented the six-outcome contract, and turned a discussion about memory safety into an inspectable interoperability loop.</p>
+
+        <div class="pull-quote">The signal is not “someone liked the idea.” The signal is “another implementation accepted the same test surface and made disagreement measurable.”</div>
+
+        <h2>What we verified directly.</h2>
+        <p>The CML fixture <code>tests/fixtures/memory_applicability_v0.1.json</code> and the vendored Inspeximus fixture <code>tests/fixtures/cml_memory_applicability_v0.1.json</code> have the same Git blob SHA:</p>
+        <div class="market-kpi"><pre>ec27aad145c6051e22e993a4ef30e57a9063af48</pre></div>
+        <p>Because Git blob identity is content-addressed, that gives an inspectable repository-level check that the fixture contents are byte-for-byte identical.</p>
+
+        <p>The public Inspeximus conformance test then loads that frozen file, requires at least fifteen cases, checks that all six applicability outcomes appear, runs every case through its own <code>evaluate_applicability()</code>, asserts <code>expected_status</code>, and asserts every declared <code>expected_reasons</code>.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Claim classification</p>
+          <div><b>V</b><p><strong>Verified fact:</strong> fixture identity and public conformance-harness structure are directly inspectable.</p></div>
+          <div><b>R</b><p><strong>Direct participant report:</strong> DanceNitra reported 15/15 case agreement, including declared reasons.</p></div>
+          <div><b>P</b><p><strong>Pending:</strong> the newer lineage/supersession fixture has not yet been reproduced by the second implementation.</p></div>
+        </section>
+
+        <h2>The state transition matters more than the score.</h2>
+        <div class="trajectory-box"><span>one implementation</span><i>→</i><span>frozen fixture</span><i>→</i><span>second implementation</span><i>→</i><span>measured agreement</span></div>
+
+        <p>Earlier in the exchange, the second implementation could reproduce several source-integrity outcomes but could not produce <code>REVALIDATE</code> because it did not bind memory to the current repository, commit, tenant, policy, model or validity window. That disagreement was productive: a missing capability became explicit rather than hidden behind similar terminology.</p>
+
+        <p>The second implementation then adopted the six-outcome applicability contract:</p>
+        <div class="market-kpi"><pre>REJECT → UNRESOLVABLE → ORPHAN → DRIFT → REVALIDATE → MATCH</pre></div>
+
+        <p>Two rules became especially important: source failures outrank environment drift, and absence of historical repository/commit binding is not permission to assume continuity.</p>
+
+        <h2>The loop then created a new failure class.</h2>
+        <p>The external discussion produced a harder case: a derived memory can still match its own source while one of the records it was derived from has been superseded, retired, erased or changed. Source integrity alone cannot see that failure because the derived record itself may remain unchanged.</p>
+
+        <p>CML turned that case into a lineage/supersession extension and merged PR #272 to <code>main</code>. The resulting contract is:</p>
+        <div class="market-kpi"><pre>source integrity
+→ lineage / supersession
+→ current-state applicability
+→ authority
+→ action
+→ evidence</pre></div>
+
+        <p>The CML merge commit <code>0c27e1918c27e5223fe8343df0aac77b2db5ccdb</code> passed post-merge CI, Python Package Validation and Security Baseline on the exact <code>main</code> state.</p>
+
+        <h2>Why this is an Engineering Signal, not an endorsement story.</h2>
+        <p>DanceNitra is an external open-source contributor participating in a public issue inside the Anthropic Claude Code repository. This signal is <strong>not</strong> an Anthropic endorsement, product commitment or official Anthropic implementation.</p>
+
+        <p>RESONANCE records the event because the causal structure is useful:</p>
+        <div class="trajectory-box"><span>proposal</span><i>→</i><span>external test</span><i>→</i><span>gap</span><i>→</i><span>implementation</span><i>→</i><span>new failure case</span><i>→</i><span>new contract</span></div>
+
+        <p>That is a stronger signal than a positive comment because each transition leaves an artifact that can be inspected or falsified.</p>
+
+        <h2>The next verification gate is still open.</h2>
+        <p>The lineage contract should not inherit credibility from the earlier 15/15 result. It needs its own reproduction.</p>
+        <div class="market-kpi"><pre>CML memory_lineage_v0.1.json
+→ vendor byte-for-byte
+→ second implementation
+→ compare expected_status
+→ compare expected_reasons
+→ compare exclusion accounting
+→ freeze agreement OR disagreement</pre></div>
+
+        <p>Until that happens, lineage interoperability remains <strong>pending</strong>.</p>
+
+        <section class="market-question" id="open-question">
+          <p class="section-label">The Open Question</p>
+          <h2>What makes interoperability real?</h2>
+          <p class="hot-question"><strong>For agent-memory safety, what should two implementations be required to agree on: verdict only, reasons, precedence, exclusion accounting, evidence identity — or all of them?</strong></p>
+          <p>A useful answer should name one disagreement that would be dangerous to smooth over.</p>
+          <div class="market-actions"><a class="button" href="https://github.com/safal207/RESONANCE/issues/new?template=market-workflow.yml" target="_blank" rel="noreferrer">Add a real interoperability case →</a><a class="text-link" href="memory-can-be-true-and-still-be-unsafe.html">Read the underlying memory model →</a></div>
+        </section>
+
+        <section class="sources-block" id="sources">
+          <p class="section-label">Primary / inspectable references</p>
+          <ol>
+            <li><a href="https://github.com/anthropics/claude-code/issues/34556" target="_blank" rel="noreferrer">Anthropic Claude Code issue #34556 — public memory discussion</a></li>
+            <li><a href="https://github.com/DanceNitra/inspeximus/blob/e7c030e0efa50e2f3fe1f15865fb56648de12f8e/tests/test_cml_memory_applicability_contract.py" target="_blank" rel="noreferrer">Inspeximus — CML applicability conformance test</a></li>
+            <li><a href="https://github.com/DanceNitra/inspeximus/blob/e7c030e0efa50e2f3fe1f15865fb56648de12f8e/tests/fixtures/cml_memory_applicability_v0.1.json" target="_blank" rel="noreferrer">Inspeximus vendored frozen fixture</a></li>
+            <li><a href="https://github.com/safal207/Causal-Memory-Layer/blob/main/tests/fixtures/memory_applicability_v0.1.json" target="_blank" rel="noreferrer">CML frozen applicability fixture</a></li>
+            <li><a href="https://github.com/safal207/Causal-Memory-Layer/pull/270" target="_blank" rel="noreferrer">CML PR #270 — Current-State Applicability</a></li>
+            <li><a href="https://github.com/safal207/Causal-Memory-Layer/pull/272" target="_blank" rel="noreferrer">CML PR #272 — lineage / supersession revalidation</a></li>
+            <li><a href="https://github.com/safal207/Causal-Memory-Layer/blob/0c27e1918c27e5223fe8343df0aac77b2db5ccdb/tests/fixtures/memory_lineage_v0.1.json" target="_blank" rel="noreferrer">Frozen lineage fixture at merged SHA</a></li>
+          </ol>
+          <p class="source-note">The 15/15 count is attributed to DanceNitra's direct report. RESONANCE independently verified the public fixture identity and conformance-harness structure. No Anthropic endorsement is claimed.</p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Signal status</p><p>External reproduction · lineage gate pending</p></div><div><p class="footer-title">Open publication</p><a href="https://github.com/safal207/RESONANCE">GitHub repository ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+  <script src="market.js"></script>
+</body>
+</html>
