@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="A TTP v1.0 rule for idempotency retention: dedupe memory must remain valid through the recovery window it is expected to protect." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="TTP Idempotency Retention Rule | RESONANCE" />
+  <meta property="og:description" content="Durable memory is not enough: replay protection must remain valid when recovery actually arrives." />
+  <meta property="og:type" content="article" />
+  <title>TTP Idempotency Retention Rule | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#rule">Skip to rule</a>
+  <header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button></div><nav class="nav wrap" id="main-nav" aria-label="Primary navigation"><a href="ai-agents.html">AI Agents</a><a href="index.html#trust">Trust</a><a href="issue-001.html">Issue 001</a></nav></header>
+
+  <main id="rule">
+    <header class="article-hero wrap">
+      <a class="back-link" href="transactional-trust-protocol-v1.html">← Transactional Trust Protocol v1.0</a>
+      <div class="article-meta-row"><p class="section-label">TTP v1.0 · Canonical extension</p><p class="article-status">Verified by Report #017 · 11 Aug 2026</p></div>
+      <h1 class="article-title">Idempotency Retention Rule</h1>
+      <p class="article-dek">A safety record can survive perfectly and still stop protecting a delayed replay. TTP treats retention time as part of the execution contract.</p>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail"><div class="rail-card"><p class="section-label">Core rule</p><strong>TTL ≥ protected recovery window</strong></div><div class="rail-card rail-dark"><p class="section-label">Distinction</p><code>durable ≠ valid forever</code></div></aside>
+      <article class="article-body">
+        <div class="trajectory-box"><span>ACK_UNKNOWN</span><i>→</i><span>TIME PASSES</span><i>→</i><span>CHECK RETENTION</span><i>→</i><span>REPLAY / RECONCILE</span></div>
+
+        <h2>Four invariants.</h2>
+        <section class="claim-panel">
+          <div><b>I27</b><p><strong>DEDUPE RETENTION WINDOW MUST COVER THE RECOVERY / REPLAY WINDOW IT PROTECTS</strong><span>A claim of replay protection needs an explicit time horizon.</span></p></div>
+          <div><b>I28</b><p><strong>EXPIRED DEDUPE MEMORY ≠ EFFECT ABSENT</strong><span>Expiry changes the protection state, not the underlying effect state.</span></p></div>
+          <div><b>I29</b><p><strong>AFTER IDEMPOTENCY EXPIRY, RECONCILE BEFORE CONSEQUENTIAL REPLAY</strong><span>Authoritative effect state should replace expired dedupe memory.</span></p></div>
+          <div><b>I30</b><p><strong>TIME + MEMORY + RECOVERY POLICY FORM ONE SAFETY BOUNDARY</strong><span>The pieces must be evaluated together.</span></p></div>
+        </section>
+
+        <h2>Reference recovery path.</h2>
+        <div class="trajectory-box"><span>REMOTE EFFECT</span><i>→</i><span>ACK_UNKNOWN</span><i>→</i><span>RECOVERY DELAY</span></div>
+        <div class="trajectory-box"><span>RECORD ACTIVE?</span><i>→</i><span>YES: SAME-KEY DELIVERY UNDER CONTRACT</span></div>
+        <div class="trajectory-box"><span>NO / UNKNOWN</span><i>→</i><span>AUTHORITATIVE RECONCILE</span><i>→</i><span>FRESH DECISION</span></div>
+
+        <h2>Evidence required.</h2>
+        <p>When replay safety depends on retention, the proof path should preserve the logical effect identity, idempotency key, record creation and expiry times, recovery/retry time, retention policy, transport outcome, authoritative remote status and final effect count.</p>
+
+        <h2>Verified #017.</h2>
+        <p>The benchmark fixed a 120-second delayed recovery window. A 60-second TTL expired first and the same key produced a second effect. A 300-second TTL still covered the delayed replay and the second POST was deduplicated. With the short TTL expired, authoritative reconciliation observed <code>COMMITTED</code> and avoided a second POST entirely.</p>
+        <div class="pull-quote">#016 asks whether safety memory survived. #017 asks whether surviving safety memory is still valid when recovery needs it.</div>
+
+        <h2>Scope.</h2>
+        <p>The benchmark uses deterministic logical time across a real local HTTP boundary. Its numeric TTL values are test parameters, not production recommendations. This rule does not claim universal exactly-once delivery or provider-specific retention guarantees.</p>
+
+        <section class="sources-block"><p class="section-label">Inspect / reproduce</p><ol><li><a href="verified-017-idempotency-ttl-replay.html">Verified Report #017</a></li><li><a href="https://github.com/safal207/RESONANCE/blob/main/protocols/transactional-trust-v1.0/IDEMPOTENCY_RETENTION.md" target="_blank" rel="noreferrer">Canonical extension source</a></li><li><a href="transactional-trust-protocol-v1.html">Transactional Trust Protocol v1.0</a></li></ol></section>
+
+        <p class="closing-line"><strong>Short form:</strong> DURABLE MEMORY ≠ MEMORY VALID FOR THIS DECISION TIME.</p>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">TTP v1.0</p><p>Idempotency Retention Rule</p></div><div><a href="https://github.com/safal207/RESONANCE">GitHub repository ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
