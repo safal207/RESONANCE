@@ -1,0 +1,49 @@
+{
+  "id": "RES-001-001",
+  "synthetic": false,
+  "source": {
+    "article": "External dialogue: crewAI GuardrailProvider conformance governance",
+    "language": "English",
+    "channel": "GitHub Issue #4877",
+    "url": "https://github.com/crewAIInc/crewAI/issues/4877#issuecomment-5263327237"
+  },
+  "clientContext": {
+    "companyType": "open-source AI agent framework ecosystem",
+    "role": "conformance-suite maintainer / ecosystem contributor",
+    "domain": "agent guardrails, verification, conformance governance"
+  },
+  "workflow": {
+    "actor": "conformance-suite maintainer and independent graders",
+    "action": "admit test vectors, define expected verdicts, recompute results, and use the suite as a GuardrailProvider conformance bar",
+    "trigger": "a provider-neutral GuardrailProvider contract needs a credible pass/fail conformance process",
+    "currentState": "fixture bytes and verdicts are independently recomputable, but one maintainer currently controls vector admission and expected semantics",
+    "expectedTransition": "move normative vector admission to an independently governed home with explicit multi-party admission and ratification rules"
+  },
+  "failure": {
+    "scenario": "A conformance suite can be mechanically reproducible while remaining normatively centralized because one party chooses the vectors and expected outcomes.",
+    "cause": "Computational independence and normative independence are treated as if they were the same trust property.",
+    "recovery": "Separate recomputability from ratifiability; keep vendor-owned suites explicitly labeled until a multi-party admission rule exists.",
+    "impact": "A provider or ecosystem may overstate neutrality and treat a vendor-owned test set as an authoritative conformance bar without independent governance of the normative cases."
+  },
+  "currentSolution": {
+    "workaround": "Publish committed fixture bytes and an independently runnable checker so strangers can recompute and challenge expected verdicts.",
+    "limitation": "Independent recomputation closes the mechanical review gap but does not determine who is allowed to define the normative test set."
+  },
+  "trustRequirement": {
+    "desiredState": "A conformance suite whose computation is independently reproducible and whose normative vector set is governed by an explicit process no single vendor controls.",
+    "invariant": "A suite MUST NOT claim neutrality solely because verdicts are independently recomputable; vector admission and ratification must also be externally governed or explicitly identified as vendor-owned.",
+    "verification": "Verify both properties separately: (1) unrelated graders derive the same result from published bytes; (2) vector admission and expected-outcome changes follow a documented multi-party rule.",
+    "evidence": "Public fixture bytes, independent grader results, admission-policy history, ratification records, and signatures/approvals from more than one governance participant."
+  },
+  "productDiscovery": {
+    "missingCapability": "A neutral, multi-party ratification layer for agent-governance conformance vectors, separate from the mechanical checker implementation.",
+    "hypothesis": "Conformance infrastructure needs two independent trust axes — computational independence and normative independence — and tools should report them separately.",
+    "clientValidation": "yes",
+    "signalScore": 8,
+    "pilotInterest": "maybe"
+  },
+  "conversation": {
+    "clientLanguage": "English",
+    "nextQuestion": "What is the smallest admissibility and multi-signature ratification rule that would let a vendor-owned fixture set become a credible ecosystem conformance bar without creating a new central authority?"
+  }
+}
