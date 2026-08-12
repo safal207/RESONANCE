@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Transactional Trust Protocol extension: authenticate authority-head evidence before using a generation watermark to fence consequential actions."><title>TTP Authority Head Authenticity | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · AUTHORITY HEAD AUTHENTICITY</p><h1>Freshness claim ≠ authentic freshness evidence.</h1><p class="dek">A generation watermark cannot safely prove authority-view currentness until the exact head statement that carries it has been authenticated.</p><h2>Canonical rule</h2><pre><code>RECEIVE AUTHORITY HEAD H
+↓
+AUTHENTICATE
+- trusted signer / key
+- authority namespace
+- canonical payload
+- integrity / signature
+↓
+authentic?
+├─ no → HOLD / REJECT HEAD
+└─ yes
+   ↓
+EXTRACT AUTHENTICATED GENERATION G
+   ↓
+COMPARE REGIONAL VIEW >= G
+   ├─ no → STALE AUTHORITY VIEW → HOLD
+   └─ yes
+      ↓
+   CHECK RULE STATUS / DIGEST / GENERATION
+      ↓
+   CHECK PROOF + SCOPE
+      ↓
+   CURRENT OWNER ADOPTS
+      ↓
+   FENCED COMMIT
+      ↓
+PROVE HEAD AUTHENTICITY → VIEW CURRENTNESS → PROOF AUTHORITY → EFFECT</code></pre><h2>I83–I86</h2><ul><li><strong>I83</strong> — Freshness claim ≠ authentic freshness evidence.</li><li><strong>I84</strong> — Authority head identity, domain, generation and content must be authenticated before they can fence consequence.</li><li><strong>I85</strong> — Unauthenticated or tampered authority head → hold before regional freshness evaluation.</li><li><strong>I86</strong> — Authentic head evidence can fence a stale replica, but authentic old-head replay requires an additional monotonicity mechanism.</li></ul><h2>Minimal decision</h2><pre><code>IF head.authentication_valid
+AND head.authority_domain_is_expected
+THEN
+  use head.generation as freshness fence
+ELSE
+  hold before evaluating replica freshness
+
+THEN IF regional_generation < authenticated_head_generation
+  hold as stale_authority_view</code></pre><blockquote><p><strong>AUTHENTICATE FIRST. COMPARE FRESHNESS SECOND.</strong></p></blockquote><h2>Boundary</h2><p>Verified #031 uses a deterministic HMAC-SHA256 test fixture to isolate tamper detection. The protocol does not require a particular cryptographic primitive. Authentic-but-old head replay remains a separate currentness problem.</p><div class="article-actions"><a class="button" href="verified-031-authority-head-authenticity.html">Open Verified Report #031</a><a class="text-link" href="ttp-revocation-propagation.html">Previous TTP rule →</a></div></article></main><footer class="site-footer"><div class="wrap"><a href="index.html">← RESONANCE home</a></div></footer></body></html>
