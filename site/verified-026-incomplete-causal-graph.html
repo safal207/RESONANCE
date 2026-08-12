@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #026: a correct fingerprint over an incomplete dependency set is still unsafe."><title>Verified #026 — Incomplete Causal Graph | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #026</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #026</p><h1>The fingerprint was correct. The causal model was not.</h1><p class="dek">Dependency-aware applicability only works if the dependency model is complete enough for the decision. This executable benchmark omits a real causal input and shows a perfectly stable fingerprint authorizing the wrong consequence.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><h2>Ground truth</h2><pre><code>output = min(limit, 2 × price + tax_rate)
+
+authoritative dependencies:
+price + limit + tax_rate
+
+artifact declares:
+price + limit</code></pre><h2>Unsafe: a perfect fingerprint over the wrong graph</h2><pre><code>tax_rate: 2 → 8
+
+declared fingerprint(price, limit):
+UNCHANGED
+
+correct output:
+22 → 28
+
+declared-only adoption:
+rows = 1
+HTTP 200
+committed output = 22  ❌</code></pre><p>The hash did exactly what it was asked to do. The mistake was upstream: <code>tax_rate</code> was absent from the declared causal graph.</p><h2>Safe: validate the dependency manifest first</h2><pre><code>artifact manifest:
+price + limit
+
+authoritative contract:
+price + limit + tax_rate
+
+→ dependency_manifest_conflict
+→ adoption rows = 0
+→ external effects = 0</code></pre><p>Worker B then recomputed using the complete causal contract and committed output <strong>28</strong> exactly once.</p><h2>I63–I66</h2><ul><li><strong>I63</strong> — A correct fingerprint over an incomplete dependency set is still unsafe.</li><li><strong>I64</strong> — Dependency-set identity is part of applicability evidence.</li><li><strong>I65</strong> — Adoption must validate the dependency manifest, not only fingerprint values.</li><li><strong>I66</strong> — Omitted or unknown causal input requires revalidation, recomputation, or hold before consequence.</li></ul><blockquote><p><strong>VALUE INTEGRITY ≠ MODEL COMPLETENESS.</strong></p></blockquote><h2>Evidence</h2><pre><code>GitHub Actions run: 31583719848
+Artifact ID: 9136209133
+Artifact digest:
+sha256:6bbe0b9a78e19ea9933f3389b3c9d99e7931b2d5d87b183b9d950aaaf8930f48
+Score: 10/10</code></pre><p>This is a deterministic protocol benchmark, not production safety certification or a vulnerability claim against PostgreSQL or another external product.</p><div class="article-actions"><a class="button" href="ttp-causal-model-completeness.html">Read TTP Causal Model Completeness Rule</a><a class="text-link" href="verified-025-dependency-aware-applicability.html">Previous: Verified #025 →</a></div></article></main><footer class="site-footer"><div class="wrap"><a href="index.html">← RESONANCE home</a></div></footer></body></html>
