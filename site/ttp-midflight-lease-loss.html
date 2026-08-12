@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE TTP Mid-flight Lease Loss / Commit Authority Rule — start authorization is not timeless commit authority." />
+  <title>TTP Mid-flight Commit Authority Rule | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+<header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol · Experimental Extension</p></div></header>
+<main>
+  <header class="article-hero wrap">
+    <a class="back-link" href="transactional-trust-protocol-v1.html">← Transactional Trust Protocol v1.0</a>
+    <p class="section-label">TTP Rule · Derived from Verified #022</p>
+    <h1 class="article-title">Mid-flight Lease Loss / Commit Authority</h1>
+    <p class="article-dek">A worker may be authorized when long-running work starts and stale when that work finishes. Consequential completion must bind to current authority at the irreversible boundary.</p>
+  </header>
+  <div class="article-layout wrap"><aside class="article-rail"><div class="rail-card rail-dark"><p class="section-label">Rule</p><code>START AUTH ≠ COMMIT AUTH</code></div></aside><article class="article-body">
+    <h2>Canonical path</h2>
+    <div class="trajectory-box"><span>ACQUIRE N</span><i>→</i><span>AUTHORIZE START</span><i>→</i><span>RUN WORK</span></div>
+    <div class="trajectory-box"><span>OWNERSHIP MAY CHANGE</span><i>→</i><span>REVALIDATE COMMIT</span><i>→</i><span>RESOURCE FENCE</span></div>
+    <p>If the worker's epoch is stale at completion, the result may be discarded, reconciled, transferred or retried under a new owner — but the old worker must not silently publish it using its original start permission.</p>
+
+    <section class="claim-panel">
+      <p class="section-label">Invariants</p>
+      <div><b>I47</b><p><strong>Authorized at start does not imply authorized at commit.</strong></p></div>
+      <div><b>I48</b><p><strong>Lease loss while work is in flight invalidates the old commit authority.</strong></p></div>
+      <div><b>I49</b><p><strong>Long-running consequential work must bind the final mutation to current authority.</strong></p></div>
+      <div><b>I50</b><p><strong>Proof must preserve both the start epoch and the commit epoch.</strong></p></div>
+    </section>
+
+    <h2>Proof fields</h2>
+    <ul><li>start decision time, owner, fence, lease version and expiry;</li><li>finish / commit decision time;</li><li>ownership observed at commit;</li><li>commit-time authorization result;</li><li>fence presented to the protected resource;</li><li>highest resource-side fence and final effect;</li><li>recovery / handoff / reconciliation outcome.</li></ul>
+
+    <h2>Why the resource fence remains final</h2>
+    <p>A coordinator recheck is useful but can itself become stale before an external mutation. A protected resource that compares monotonic fencing tokens closes the last race at the actual effect boundary.</p>
+
+    <h2>Relationship</h2>
+    <div class="trajectory-box"><span>#020 stale worker</span><i>→</i><span>#021 stale heartbeat</span><i>→</i><span>#022 stale completion</span></div>
+    <p>Together they turn ownership from a label into a versioned, time-sensitive execution capability.</p>
+
+    <section class="sources-block"><p class="section-label">Evidence</p><ol><li><a href="verified-022-midflight-lease-loss.html">Verified Report #022</a></li><li><a href="https://github.com/safal207/RESONANCE/blob/main/protocols/transactional-trust-v1.0/MIDFLIGHT_LEASE_LOSS.md">Canonical protocol extension</a></li></ol></section>
+  </article></div>
+</main>
+<footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div></div><div><p class="footer-title">TTP Extension</p><p>Mid-flight Commit Authority</p></div><div><a href="verified-022-midflight-lease-loss.html">Verified #022 →</a></div></div></footer>
+<script src="app.js"></script>
+</body>
+</html>
