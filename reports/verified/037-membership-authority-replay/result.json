@@ -1,0 +1,64 @@
+{
+  "report": "RESONANCE Verified Report #037 — Membership Authority Replay / Stale Rotation View",
+  "benchmark": "Membership Authority Replay / Stale Rotation View v1.0",
+  "score": 10,
+  "max_score": 10,
+  "classification": "Membership authority replay protocol passes",
+  "law": "AUTHENTIC MEMBERSHIP RECORD != CURRENT MEMBERSHIP AUTHORITY",
+  "run_id": 31617837571,
+  "job_id": 94184983666,
+  "benchmark_head_sha": "13e4820054cdd9305c169ce27c1d4a39e8b6d18d",
+  "artifact_id": 9149995371,
+  "artifact_digest": "sha256:c01bf51e10708674b29316e006556f298456080b7416e2b662226cceff8e1392",
+  "historical_membership": {
+    "set_id": "set-A",
+    "set_epoch": 1,
+    "members": ["W1", "W2", "W3"],
+    "threshold": 2,
+    "membership_digest": "sha256:d246e1090221a03be9c8b8364f19c1b73ec2df37e38f585c231465fba0bda5e7"
+  },
+  "current_membership": {
+    "set_id": "set-B",
+    "set_epoch": 2,
+    "members": ["W4", "W5", "W6"],
+    "threshold": 2,
+    "membership_digest": "sha256:aa0ad1f938ebde6911b5678bd40aaf0df1f2294c8925e8658b088f2c70557402",
+    "predecessor_membership_digest": "sha256:d246e1090221a03be9c8b8364f19c1b73ec2df37e38f585c231465fba0bda5e7"
+  },
+  "membership_checkpoint": {
+    "max_set_epoch": 2,
+    "set_id": "set-B",
+    "membership_digest": "sha256:aa0ad1f938ebde6911b5678bd40aaf0df1f2294c8925e8658b088f2c70557402"
+  },
+  "unsafe": {
+    "presented_membership_authentic": true,
+    "old_quorum_valid": true,
+    "head_authentic": true,
+    "verdict": "presented_membership_treated_as_current",
+    "adoption_rows": 1,
+    "http_status": 200,
+    "effect_count": 1
+  },
+  "safe": {
+    "presented_membership_authentic": true,
+    "presented_set_epoch": 1,
+    "trusted_set_epoch": 2,
+    "verdict": "membership_authority_rollback_detected",
+    "adoption_rows": 0,
+    "effect_count": 0
+  },
+  "recovery": {
+    "presented_set_epoch": 2,
+    "trusted_set_epoch": 2,
+    "certificate": "QC-current-epoch2",
+    "signers": ["W4", "W5"],
+    "verdict": "current_membership_authorized",
+    "adoption_rows": 1,
+    "http_status": 200,
+    "effect_count": 1,
+    "output": 30
+  },
+  "invariants": ["I107", "I108", "I109", "I110"],
+  "external_safety_certification": false,
+  "vulnerability_claim": false
+}
