@@ -1,0 +1,40 @@
+{
+  "report": "RESONANCE Verified Report #021",
+  "benchmark": "Lease Renewal Race / Delayed Heartbeat v1.0",
+  "protocol": "RESONANCE Transactional Trust Protocol v1.0",
+  "score": 10,
+  "max_score": 10,
+  "github_actions_run": 31551799739,
+  "artifact": {
+    "name": "resonance-lease-renewal-race-v1.0",
+    "id": 9124531164,
+    "digest": "sha256:7c78f54350d392fae2a508bda16e8cabdf73932a2a2ef59346d9d261fc64068a"
+  },
+  "database": "PostgreSQL 17.6",
+  "lease_model": {"ttl_seconds": 60, "initial_time": 1000, "takeover_time": 1070, "late_heartbeat_time": 1075},
+  "unsafe": {
+    "a_initial": {"owner": "worker-A", "fence": 1, "lease_version": 1, "expires_at": 1060},
+    "b_takeover": {"owner": "worker-B", "fence": 2, "lease_version": 2, "expires_at": 1130},
+    "late_heartbeat_updated_rows": 1,
+    "final_lease": {"owner": "worker-A", "fence": 1, "lease_version": 2, "expires_at": 1135},
+    "external_effects": 2,
+    "remote_status": "conflict"
+  },
+  "safe_compare_and_renew": {
+    "late_heartbeat_updated_rows": 0,
+    "final_lease": {"owner": "worker-B", "fence": 2, "lease_version": 2, "expires_at": 1130},
+    "worker_a_external_call": false,
+    "external_effects": 1
+  },
+  "resource_fence_defense": {
+    "coordinator_was_corrupted_by_blind_late_heartbeat": true,
+    "stale_worker_http_status": 409,
+    "stale_worker_delivery": "fenced_out",
+    "highest_fence": 2,
+    "external_effects": 1
+  },
+  "valid_current_heartbeat": {"updated_rows": 1, "owner": "worker-A", "fence": 1, "lease_version": 2, "expires_at": 1090},
+  "classification": "Delayed-heartbeat lease protocol passes",
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
