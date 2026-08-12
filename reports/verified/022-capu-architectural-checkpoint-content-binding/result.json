@@ -1,0 +1,85 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "022-capu-architectural-checkpoint-content-binding",
+  "title": "CaPU v0.17 — Architectural Checkpoint Content Binding",
+  "status": "PASS",
+  "scope": "bounded reduced-width exact checkpoint content binding of the minimal v0.16 architectural state together with recovery epoch, causal head/GEN/SEAL and replay spent-state",
+  "project": "safal207/CaPU",
+  "pull_request": 70,
+  "verified_content_head": "d627b4d15e26bcda5ce2f0803db05fa8e750e9c2",
+  "workflow": {
+    "name": "CaPU vCML Architectural Checkpoint Binding v0.17",
+    "run_id": 31618001622,
+    "rtl_job_id": 94185501677,
+    "rtl_job_status": "success",
+    "formal_job_id": 94185608852,
+    "formal_job_status": "success"
+  },
+  "canonical_checkpoint_digest": "fd768d0de2d11af63765e2d21e1beeda70979c9f0a31baa00f06debc208ee4d1",
+  "formal": {
+    "safety_depth": 24,
+    "cover_depth": 28,
+    "cover_witness_files": 5,
+    "safety_result": "DONE (PASS, rc=0)",
+    "cover_result": "DONE (PASS, rc=0)",
+    "formal_input_sha256": "8f09087bb2d1f72c0ba0b1e4e748267fb2043619493b06f78f360881e9aaf61c",
+    "formal_log_sha256": "99ae1b1a4f2cbb8be7ae19d9c01bc37b70fa122a1254857a49f7b45cd854dc18",
+    "cover_log_sha256": "e2d927c448ad4d131c7644bec4e1e90bd4ec1ddb061345d0b80b8a5dde13ebe5",
+    "v0_16_regression_log_sha256": "378904e96faa11bfc11d368b5c585b77939c3949d8129c9182ff0fe3f156fdfa"
+  },
+  "artifacts": [
+    {
+      "name": "capu-vcml-v17-arch-checkpoint-evidence",
+      "artifact_id": 9150053641,
+      "sha256": "bf1dd140809d42526170cd46111c3d59863ca6d234a145118d0786110119cf3f"
+    },
+    {
+      "name": "capu-vcml-v17-arch-checkpoint-formal-evidence",
+      "artifact_id": 9150143252,
+      "sha256": "84ba71cec3671adc309ab73f27e0df14f9a58b7ab574a8281069a272a32ec425"
+    }
+  ],
+  "authority_invariants": [
+    "PREPARE_ACCEPT => CANDIDATE_PAYLOAD == AUTHORITATIVE_LIVE_PAYLOAD",
+    "PERSIST_ACCEPT => PERSISTED_PAYLOAD == REQUEST_PAYLOAD",
+    "AUTHORITY_COMMIT => ACK_PAYLOAD == REQUEST_PAYLOAD",
+    "RESTORE_ACCEPT => VERIFIED_SNAPSHOT_PAYLOAD == ANCHOR_PAYLOAD",
+    "MIXED_SNAPSHOT => NO_RESTORE_ACCEPT",
+    "RECOVERY_OR_RESTORE => NO_CONCURRENT_AUTHORITY_TRANSITION && PENDING_AUTHORITY_DISCARDED"
+  ],
+  "committed_state": [
+    "checkpoint_ref",
+    "checkpoint_epoch",
+    "recovery_epoch",
+    "pc",
+    "gpr0",
+    "gpr1",
+    "gpr2",
+    "gpr3",
+    "status",
+    "causal_head_valid",
+    "causal_head_transition_id",
+    "causal_head_gen",
+    "sealed_chain",
+    "spent_authorization_set"
+  ],
+  "formal_driven_fixes": [
+    "genesis base-anchor shadow equality is required only when a base anchor is valid because bytes for a nonexistent base have no authority semantics",
+    "pending and durable checkpoint authority are discarded on recovery or restore so pre-boundary state cannot gain authority after live state replacement"
+  ],
+  "exact_head_regression": {
+    "all_registered_pull_request_workflows_green": true,
+    "workflows": [
+      "CaPU vCML Architectural Checkpoint Binding v0.17",
+      "CaPU vCML Architectural Causal Resume v0.16",
+      "CaPU Core v0 RTL Smoke",
+      "Validate Examples"
+    ],
+    "v0_16_deterministic_regression_in_v0_17_workflow": "PASS",
+    "v0_16_bounded_safety_regression_in_v0_17_workflow": "PASS"
+  },
+  "upstream_assumption": "SHA-256 calculation and commitment verification are trusted off-path in the bounded model",
+  "claim_boundary": "bounded reduced-width checkpoint-content binding result; no RTL SHA-256/verifier trustworthiness, full ISA/register-file/CSR, precise exception/interrupt/privilege, MMU/TLB, cache/coherence/multicore, durable-media or unbounded correctness is claimed",
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
