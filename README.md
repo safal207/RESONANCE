@@ -175,13 +175,14 @@ analysis
 → checkpoint content commitment
 → full causal checkpoint state binding
 → live causal execution resumption
+→ causally bound architectural execution resumption
 ```
 
 See [`issues/001-age-of-agents/`](issues/001-age-of-agents/) and the web edition at [`site/issue-001.html`](site/issue-001.html).
 
 ## Verified research
 
-**Current verified milestone — 2026-08-12:** CaPU v0.15 takes the v0.14 recovered full causal checkpoint record and makes it the live execution-policy state after recovery. Given an upstream-accepted v0.14 snapshot, CaPU restores the finite replay spent-set plus causal head, GEN and SEAL; all operations remain fail-closed until runtime restore completes; recovery/restore flushes pre-existing speculative STORE state; and ordinary continuation then reuses the same exact-parent / next-GEN / SEAL rules as before failure. Verified CaPU head: `7bdb355a1854db88230174db15adacf654b952d5`. The complete CaPU workflow stack from v0.9 through v0.15 completed green on that exact head. See [`Verified Report #020`](reports/verified/020-capu-live-causal-resume/REPORT.md) and its [`machine-readable result`](reports/verified/020-capu-live-causal-resume/result.json).
+**Current verified milestone — 2026-08-12:** CaPU v0.16 extends the v0.15 live causal/replay recovery state with a bounded minimal architectural context — PC, four GPRs and a status byte — and requires the architectural and causal components to carry the same accepted recovery epoch before execution can resume. Split-state epoch mixing and wrong-PC execution fail closed; recovery/restore is a visible-effect barrier; resumed STORE address/data come from restored GPRs; and the existing exact-parent / next-GEN / SEAL / replay policy remains the continuation authority. Verified CaPU head: `4bc80b38cce8b9b7a9428e9182d8ff016f164e63`. The complete CaPU workflow stack from v0.9 through v0.16 completed green on that exact head. The result does not yet claim cryptographic inclusion of PC/GPR/status in the upstream v0.14 checkpoint digest. See [`Verified Report #021`](reports/verified/021-capu-architectural-causal-resume/REPORT.md) and its [`machine-readable result`](reports/verified/021-capu-architectural-causal-resume/result.json).
 
 Key reproducible reports:
 
@@ -195,7 +196,8 @@ Key reproducible reports:
 - **#017** CaPU v0.12 checkpoint authority commit — bounded formal PASS with persist-then-anchor commit semantics;
 - **#018** CaPU v0.13 checkpoint content commitment — bounded formal PASS with canonical replay-state content binding across prepare, persistence, authority commit and anchored recovery;
 - **#019** CaPU v0.14 full causal checkpoint state binding — bounded formal PASS binding replay state plus committed causal head, GEN and SEAL across checkpoint construction and recovery;
-- **#020** CaPU v0.15 live causal execution resumption — bounded formal PASS restoring replay state plus causal head / GEN / SEAL into live continuation control while recovery remains a fail-closed speculation barrier.
+- **#020** CaPU v0.15 live causal execution resumption — bounded formal PASS restoring replay state plus causal head / GEN / SEAL into live continuation control while recovery remains a fail-closed speculation barrier;
+- **#021** CaPU v0.16 causally bound architectural execution resumption — bounded formal PASS coupling PC / four GPRs / status to the recovered causal/replay runtime by one accepted recovery epoch, rejecting split-state recovery and blocking visible effects across recovery/restore.
 
 All scores are scope-specific protocol/benchmark scores. They are **not percentages of safety** and are not external certifications.
 
