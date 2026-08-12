@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="RESONANCE Site Health documents publication, translation parity, corrections/version history, Lighthouse, UI geometry, visual regression, accessibility, SEO and live-deployment checks." />
+  <meta name="description" content="RESONANCE Site Health v0.7 documents publication, translation parity, corrections, RSS, browser and visual quality, live deployment, and privacy-aware measurement contracts." />
   <meta name="theme-color" content="#f4f0e8" />
   <title>Site Health & Quality | RESONANCE</title>
   <link rel="stylesheet" href="styles.css" />
@@ -22,6 +22,7 @@
       <a href="ai-agents.html">AI Agents</a>
       <a href="open-problems.html">Open Problems</a>
       <a href="corrections.html">Corrections</a>
+      <a href="measurement.html">Measurement</a>
       <a href="verified-workflow.html">Verified Workflow</a>
     </nav>
   </header>
@@ -30,120 +31,105 @@
     <header class="article-hero wrap">
       <p class="section-label">Site Health · Quality Contract</p>
       <h1 class="article-title">Measure the publication, not just the content.</h1>
-      <p class="article-dek">RESONANCE treats the website itself as a verifiable system: structure is checked before release, managed translations are checked for semantic drift, managed published changes leave append-only version history, browser experience and UI geometry are measured in CI, multilingual screenshots are compared against public main, and the deployed GitHub Pages site is measured again after publication.</p>
+      <p class="article-dek">RESONANCE treats the journal as a verifiable system. Build structure, translations, version history, feeds, browser experience, visual geometry, deployed routes and privacy-aware measurement each have an explicit contract and evidence boundary.</p>
     </header>
 
     <div class="article-layout wrap">
       <aside class="article-rail">
         <div class="rail-card">
-          <p class="section-label">Seven layers</p>
-          <strong>Build → Translation → History → Geometry → Browser → Visual → Live</strong>
-          <span>Different checks answer different questions.</span>
+          <p class="section-label">Eight layers</p>
+          <strong>Build → Translation → History → Feed → Browser → Visual → Live → Measurement</strong>
+          <span>Each layer answers a different trust question.</span>
         </div>
         <div class="rail-card rail-dark">
           <p class="section-label">Principle</p>
-          <strong>No claim without a boundary. No correction without a trail.</strong>
+          <strong>No claim without a boundary.</strong>
+          <span>No correction without a trail. No metric without a definition.</span>
         </div>
       </aside>
 
       <article class="article-body">
-        <div class="status-chip ready">RESONANCE Site Health v0.5</div>
+        <div class="status-chip ready">RESONANCE Site Health v0.7</div>
 
         <h2>1. Publication Contract</h2>
-        <p>The deterministic publication contract builds the journal and checks canonical URLs, structured data, multilingual metadata, sitemap coverage, Market OS evidence boundaries and other release invariants before deployment.</p>
+        <p>The deterministic publication contract builds the journal and checks canonical URLs, structured data, multilingual metadata, sitemap coverage, internal links, Market OS evidence boundaries and other release invariants before deployment.</p>
 
         <h2>2. Translation Parity Contract</h2>
-        <p>Translation Parity v0.4 manages explicit EN / RU / zh-CN publication triplets. It blocks a release when a managed sibling disappears, locale routing or reciprocal hreflang drifts, or translated articles stop exposing the same evidence/action structure as the English reference.</p>
-        <table class="market-table">
-          <thead><tr><th>Parity surface</th><th>Release rule</th><th>What it protects</th></tr></thead>
-          <tbody>
-            <tr><td>Sibling set</td><td>Managed EN / RU / zh-CN files all exist</td><td>Prevents a declared localization from silently disappearing.</td></tr>
-            <tr><td>Locale routing</td><td><code>html lang</code>, canonical, reciprocal <code>hreflang</code> and visible language switcher agree</td><td>Prevents readers and crawlers from being sent to the wrong language sibling.</td></tr>
-            <tr><td>Article outline</td><td>H2/H3 levels plus evidence, trajectory, market-question, distribution and source blocks keep the same order</td><td>Detects structural translation drift without forcing sentence-by-sentence literalism.</td></tr>
-            <tr><td>Action surface</td><td>Critical IDs, CTA destinations and runtime script set match</td><td>Prevents a localized article from calling a different workflow or losing behavior.</td></tr>
-            <tr><td>Evidence surface</td><td>Primary / evidence source URLs match the English reference</td><td>Prevents localization from silently dropping or substituting provenance.</td></tr>
-          </tbody>
-        </table>
-        <p>Passing this contract does not prove that translated prose is fluent or nuance-perfect. It proves that the managed localized publication exposes the same structural, action and evidence boundary.</p>
+        <p>Managed EN / RU / zh-CN publication groups must preserve sibling routes, locale identity, reciprocal <code>hreflang</code>, visible language switching, action surfaces and evidence-source structure. A green parity check proves structural equivalence, not perfect prose fluency.</p>
 
         <h2>3. Corrections + Version History Contract</h2>
-        <p>Version History v0.5 gives registered publications an explicit temporal identity. A public JSON ledger records version transitions and a human-readable Corrections page exposes what changed, why, which locale/version was affected and which evidence supports the change.</p>
-        <table class="market-table">
-          <thead><tr><th>History surface</th><th>Release rule</th><th>What it protects</th></tr></thead>
-          <tbody>
-            <tr><td>Version chain</td><td>Every managed route must form an unbroken initial → current version sequence</td><td>Prevents ambiguous or skipped publication states.</td></tr>
-            <tr><td>Append-only history</td><td>Existing entries cannot be deleted, reordered or rewritten after v0.5 reaches main</td><td>Prevents retroactive rewriting of the correction record.</td></tr>
-            <tr><td>Published edit</td><td>A modified managed route requires a newly appended event covering that route</td><td>Blocks silent edits to version-managed publications.</td></tr>
-            <tr><td>Change semantics</td><td>Type + claim impact + reason + before/after versions are required</td><td>Separates a wording/translation repair from a claim-changing correction.</td></tr>
-            <tr><td>Evidence</td><td>Every event has inspectable URLs; non-publication updates require RESONANCE GitHub evidence</td><td>Makes the correction path independently inspectable.</td></tr>
-          </tbody>
-        </table>
-        <p>The initial ledger registers Article #004 and Article #005 across EN / RU / zh-CN. It also records the Article #005 RU/zh-CN parity repair found by v0.4 as a presentation-level localization correction rather than pretending that the underlying English claim changed.</p>
+        <p>Registered publications have an append-only temporal identity. Version transitions, change semantics and evidence URLs are checked so a published claim cannot be silently rewritten while still appearing to be the same recorded state.</p>
         <p><a class="button" href="corrections.html">Open Corrections & Version History →</a></p>
 
-        <h2>4. UI & Media Contract</h2>
-        <p>Geometry is treated as a release property. New images and controls must satisfy explicit markup rules before the browser audit even starts, and rendered Lighthouse audits re-check the result afterwards.</p>
+        <h2>4. RSS / Subscribe Contract</h2>
+        <p>Multilingual RSS feeds are generated from published HTML rather than a separately maintained article list. Feed ordering, locale routing, RSS autodiscovery and deterministic <code>lastBuildDate</code> are verified before deploy, then the public feeds are fetched again after GitHub Pages succeeds.</p>
         <table class="market-table">
-          <thead><tr><th>Element</th><th>Initial rule</th><th>Why it matters</th></tr></thead>
+          <thead><tr><th>Feed property</th><th>Rule</th><th>Boundary</th></tr></thead>
           <tbody>
-            <tr><td>Primary CTA</td><td>44 × 44 px minimum target</td><td>Keep important controls comfortably actionable on touch interfaces.</td></tr>
-            <tr><td>Buttons</td><td>Explicit valid <code>type</code></td><td>Avoid accidental behavior changes when controls move into forms.</td></tr>
-            <tr><td>Images</td><td><code>alt</code> + positive intrinsic <code>width</code>/<code>height</code></td><td>Reserve layout space and keep media understandable to assistive technology.</td></tr>
-            <tr><td>Local image source</td><td>≤ 750 KiB per image</td><td>Prevent a single editorial asset from becoming a hidden payload regression.</td></tr>
-            <tr><td>Large image</td><td><code>srcset</code> when intrinsic width ≥ 960 px</td><td>Avoid sending desktop-sized media blindly to smaller screens.</td></tr>
-            <tr><td>Rendered media</td><td>Aspect-ratio and responsive-image audits pass when applicable</td><td>Catch distortion and poor responsive sizing after CSS is applied.</td></tr>
-            <tr><td>Rendered controls</td><td>Target-size / tap-target audit passes when exposed by pinned Lighthouse</td><td>Catch controls that are visually present but mechanically too small or cramped.</td></tr>
+            <tr><td>Identity</td><td>RSS 2.0 + stable Atom self-link</td><td>Reader applications can resolve a stable feed URL.</td></tr>
+            <tr><td>Ordering</td><td>Explicit publication dates, newest first</td><td>No wall-clock build timestamp masquerading as editorial change.</td></tr>
+            <tr><td>Locale</td><td>EN / RU / zh-CN routes stay in their own feeds</td><td>No language mixing caused by filename drift.</td></tr>
+            <tr><td>Live proof</td><td>Public feeds and representative item routes are re-fetched</td><td>Build success alone is not treated as deployment success.</td></tr>
           </tbody>
         </table>
+        <p><a class="button" href="subscribe.html">Open Subscribe →</a></p>
 
-        <h2>5. Experience Contract</h2>
-        <p>Pull requests that change the publication run Lighthouse against a local build. Representative pages — including the public Corrections history — are measured on mobile, with key pages also measured on desktop. The UI Geometry Contract separately records target size, image dimensions, aspect ratio, responsive sizing, contrast and viewport checks.</p>
+        <h2>5. Experience + UI Geometry Contract</h2>
+        <p>Representative pages are audited with pinned Lighthouse profiles and explicit geometry rules. Performance, accessibility, best practices, SEO, touch-target size, image behavior, overflow and layout stability are release properties rather than informal visual impressions.</p>
         <table class="market-table">
           <thead><tr><th>Signal</th><th>Initial budget</th><th>Why it matters</th></tr></thead>
           <tbody>
-            <tr><td>Performance</td><td>≥ 80 mobile / ≥ 90 desktop</td><td>Detect meaningful regressions without pretending a lab score is field data.</td></tr>
-            <tr><td>Accessibility</td><td>≥ 95</td><td>Keep the journal usable across assistive technologies and input modes.</td></tr>
+            <tr><td>Performance</td><td>≥ 80 mobile / ≥ 90 desktop</td><td>Detect meaningful lab regressions.</td></tr>
+            <tr><td>Accessibility</td><td>≥ 95</td><td>Protect keyboard, assistive-technology and readable interaction paths.</td></tr>
             <tr><td>Best Practices</td><td>≥ 95</td><td>Catch browser/platform regressions and unsafe defaults.</td></tr>
-            <tr><td>SEO</td><td>≥ 95</td><td>Complement the deterministic SEO contract with browser-level checks.</td></tr>
-            <tr><td>LCP</td><td>≤ 3.5 s mobile / ≤ 2.5 s desktop</td><td>Budget the largest visible content render in the Lighthouse lab profile.</td></tr>
-            <tr><td>TBT</td><td>≤ 300 ms mobile / ≤ 200 ms desktop</td><td>Detect main-thread blocking that can make pages feel unresponsive.</td></tr>
-            <tr><td>CLS</td><td>≤ 0.10</td><td>Protect readers from unstable layouts, including late-loading media.</td></tr>
+            <tr><td>SEO</td><td>≥ 95</td><td>Complement deterministic metadata checks with rendered-page checks.</td></tr>
+            <tr><td>Primary target</td><td>≥ 44 × 44 px</td><td>Keep important controls comfortably actionable on touch screens.</td></tr>
+            <tr><td>CLS</td><td>≤ 0.10</td><td>Protect readers from unstable layouts.</td></tr>
           </tbody>
         </table>
 
         <h2>6. Multilingual Visual Regression</h2>
-        <p>Visual Regression v0.3 captures the homepage, Article #004 EN/RU/中文, Article #005 EN/RU/中文, this Quality page and the public Corrections history at three fixed viewports. That gives us 27 candidate screenshots per PR plus public-main baselines and pixel-diff images when a baseline route already exists.</p>
-        <table class="market-table">
-          <thead><tr><th>Profile</th><th>Viewport</th><th>Release use</th></tr></thead>
-          <tbody>
-            <tr><td>Phone</td><td>390 × 844</td><td>Touch targets, compact wrapping and horizontal overflow.</td></tr>
-            <tr><td>Tablet</td><td>768 × 1024</td><td>Mid-width breakpoints and long translated copy.</td></tr>
-            <tr><td>Desktop</td><td>1440 × 900</td><td>Wide editorial composition, cards and article rails.</td></tr>
-          </tbody>
-        </table>
-        <p>The hard gate blocks horizontal overflow, clipped key text/controls, watched elements outside the viewport and visible primary button targets below 44 × 44 px. Raw pixel-diff percentage remains advisory in v0.3 because legitimate editorial edits also change screenshots.</p>
+        <p>The homepage, core multilingual articles, Quality, Corrections and Measurement surfaces are captured at phone, tablet and desktop viewports. Horizontal overflow, clipped key content, watched elements outside the viewport and undersized primary controls are blocking defects. Raw pixel-diff percentage remains advisory because legitimate editorial changes also alter screenshots.</p>
 
         <h2>7. Live Experience Audit</h2>
-        <p>After a successful GitHub Pages deployment, Lighthouse measures the public site again, including the Corrections history. UI geometry is re-checked against the deployed pages, and the result is stored as an immutable workflow artifact with the audited commit/run context.</p>
+        <p>After GitHub Pages reports success, the public site is measured again. This closes the gap between “the branch built correctly” and “the reader can actually reach the deployed surface.” Live evidence is retained with deploy/run context.</p>
+
+        <h2>8. Measurement & Privacy Contract</h2>
+        <p>Site Health v0.7 adds a separate measurement layer for the article-to-dialogue path:</p>
+        <div class="protocol-flow" aria-label="Privacy-aware measurement path">
+          <span>Article</span><i>→</i><span>Meaningful read</span><i>→</i><span>Hot question</span><i>→</i><span>Workflow intake</span><i>→</i><span>Market evidence</span>
+        </div>
+        <p>The browser runtime has four allowlisted events and a five-field payload. It creates no cookie, local/session storage identity or fingerprint, sends no referrer, user-agent, screen/device fields, email/name, free text or exact client timestamp, and honors Global Privacy Control and Do Not Track. Automated browser audits are suppressed so Site Health cannot manufacture its own readership.</p>
+        <table class="market-table">
+          <thead><tr><th>Measurement surface</th><th>v0.7 contract</th><th>What it does not prove</th></tr></thead>
+          <tbody>
+            <tr><td><code>meaningful_read</code></td><td>Visible ≥ 45 s and scroll depth ≥ 60%</td><td>Comprehension, agreement or demand.</td></tr>
+            <tr><td><code>hot_question_view</code></td><td>Hot question ≥ 60% visible</td><td>That the reader considered or answered it.</td></tr>
+            <tr><td><code>workflow_intake_open</code></td><td>Public GitHub intake link activated</td><td>That a workflow was submitted.</td></tr>
+            <tr><td><code>verified_workflow_open</code></td><td>Pilot description activated from a market-question surface</td><td>Pilot qualification or willingness to pay.</td></tr>
+          </tbody>
+        </table>
+        <p>Transport is default-off. A collector can only be enabled at publication build time through a clean HTTPS endpoint, and collector-side IP handling, retention, jurisdiction and data-processing policy require their own review.</p>
+        <p><a class="button" href="measurement.html">Open Measurement & Privacy →</a></p>
 
         <h2>Evidence produced</h2>
         <div class="signal-grid-market">
-          <div class="signal-card"><strong>Readable summaries</strong><p>Compact Lighthouse, UI Geometry, UI Markup, Translation Parity, Corrections History and Visual Regression results are written into GitHub Actions and the PR conversation.</p></div>
-          <div class="signal-card"><strong>Public history</strong><p>The human Corrections page and machine-readable JSON ledger expose version transitions and evidence outside the CI interface.</p></div>
-          <div class="signal-card"><strong>Visual evidence</strong><p>Candidate, public-main baseline and diff PNGs are retained so layout changes can be inspected rather than guessed.</p></div>
-          <div class="signal-card"><strong>Versioned rules</strong><p>Performance, accessibility, localization, correction-history, image, control and viewport requirements live in the repository rather than in tribal memory.</p></div>
+          <div class="signal-card"><strong>Machine contracts</strong><p>Publication, feed, translation, history and analytics rules are executable rather than implied.</p></div>
+          <div class="signal-card"><strong>Browser evidence</strong><p>Lighthouse, UI geometry and visual artifacts expose rendered regressions that static checks cannot see.</p></div>
+          <div class="signal-card"><strong>Public state</strong><p>Corrections, Subscribe and Measurement pages expose important trust boundaries outside the CI interface.</p></div>
+          <div class="signal-card"><strong>Live proof</strong><p>Post-deploy audits re-fetch public Pages surfaces instead of assuming deployment from a successful local build.</p></div>
         </div>
 
         <h2>What the numbers do not prove</h2>
-        <p>Lighthouse, UI geometry, translation-parity, corrections-history checks and screenshot diffs are controlled evidence. A passing gate does not prove Google ranking, real-user Core Web Vitals, conversion, nuanced translation quality, factual sufficiency of a correction, visual taste, or identical rendering on every device and network. Those claims require their own evidence.</p>
+        <p>A green Site Health gate is controlled evidence, not a universal quality certificate. It does not prove Google ranking, real-user Core Web Vitals, factual completeness, nuanced translation quality, visual taste, reader comprehension, workflow demand, product-market fit or revenue. Those claims require their own evidence.</p>
 
         <section class="market-question">
           <p class="section-label">Inspect the evidence</p>
-          <h2>Every health result and every managed correction should be traceable.</h2>
-          <p>Use GitHub Actions for the latest Publication, Translation Parity, Corrections + Version History, Experience, Visual Regression and Live Experience evidence.</p>
+          <h2>Every health claim should be traceable.</h2>
+          <p>Use GitHub Actions for current contracts, the public history for managed corrections, and Measurement & Privacy for the analytics boundary.</p>
           <div class="market-actions">
             <a class="button" href="https://github.com/safal207/RESONANCE/actions" target="_blank" rel="noreferrer">Open Actions →</a>
-            <a class="text-link" href="corrections.html">Open public history →</a>
+            <a class="text-link" href="measurement.html">Measurement & Privacy →</a>
           </div>
         </section>
       </article>
@@ -154,7 +140,7 @@
     <div class="wrap footer-grid">
       <div><div class="brand footer-brand">RESONANCE</div><p>Evidence-first publishing includes the publication itself.</p></div>
       <div><p class="footer-title">Quality</p><a href="corrections.html">Corrections & History →</a></div>
-      <div><p class="footer-title">Market OS</p><a href="open-problems.html">Open Problems →</a></div>
+      <div><p class="footer-title">Measurement</p><a href="measurement.html">Privacy contract →</a></div>
     </div>
   </footer>
   <script src="app.js"></script>

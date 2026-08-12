@@ -5,13 +5,16 @@ on:
     branches: [main]
     paths:
       - 'site/**'
+      - 'analytics/**'
       - 'scripts/build-seo-site.mjs'
       - 'scripts/build-feeds.mjs'
       - 'scripts/verify-feed.mjs'
+      - 'scripts/verify-analytics.mjs'
       - 'scripts/verify-seo.mjs'
       - 'scripts/verify-links.mjs'
       - '.github/workflows/pages.yml'
       - '.github/workflows/feed-live.yml'
+      - '.github/workflows/analytics-live.yml'
   workflow_dispatch:
 
 permissions:
@@ -29,6 +32,8 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    env:
+      RESONANCE_ANALYTICS_ENDPOINT: ${{ vars.RESONANCE_ANALYTICS_ENDPOINT }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -49,6 +54,18 @@ jobs:
 
       - name: Verify RSS / Subscribe contract
         run: node scripts/verify-feed.mjs --root dist --output feed-results --enforce
+
+      - name: Verify privacy analytics contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "${RESONANCE_ANALYTICS_ENDPOINT:-}" ]]; then
+            node scripts/verify-analytics.mjs \
+              --mode enabled \
+              --expected-endpoint "$RESONANCE_ANALYTICS_ENDPOINT"
+          else
+            node scripts/verify-analytics.mjs --mode disabled
+          fi
 
       - name: Verify internal publication links
         run: node scripts/verify-links.mjs

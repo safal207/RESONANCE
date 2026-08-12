@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Measurement & Privacy explains the journal's default-off, no-identity analytics contract and the boundary between reading signals and real Market OS evidence." />
+  <meta name="theme-color" content="#f4f0e8" />
+  <title>Measurement & Privacy | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+  <link rel="stylesheet" href="market.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="./">RESONANCE</a>
+      <p class="masthead-line">Measurement without reader identity</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav">
+      <a href="./">Journal</a>
+      <a href="quality.html">Site Health</a>
+      <a href="open-problems.html">Open Problems</a>
+      <a href="verified-workflow.html">Verified Workflow</a>
+    </nav>
+  </header>
+
+  <main id="article">
+    <header class="article-hero wrap">
+      <p class="section-label">Site Health v0.7 · Measurement & Privacy</p>
+      <h1 class="article-title">Measure the path. Do not identify the reader.</h1>
+      <p class="article-dek">RESONANCE wants to know whether an article reaches its hot question and creates a real workflow conversation. It does not need a persistent reader profile to answer that question.</p>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail">
+        <div class="rail-card">
+          <p class="section-label">Runtime status</p>
+          <strong data-analytics-status>Disabled — no event collector configured.</strong>
+          <span>The build exposes the current transport mode.</span>
+        </div>
+        <div class="rail-card rail-dark">
+          <p class="section-label">Core invariant</p>
+          <strong>No identity required.</strong>
+          <span>Aggregate behavior is enough for the article-to-dialogue question.</span>
+        </div>
+      </aside>
+
+      <article class="article-body">
+        <div class="status-chip ready">RESONANCE Privacy-Aware Analytics v0.7</div>
+
+        <h2>What we measure</h2>
+        <div class="protocol-flow" aria-label="Measurement path">
+          <span>Article</span><i>→</i><span>Meaningful read</span><i>→</i><span>Hot question</span><i>→</i><span>Workflow intake</span><i>→</i><span>Market evidence</span>
+        </div>
+        <p>A <strong>meaningful read</strong> means an article remained visible for at least 45 seconds and reached at least 60% scroll depth during the same page load. A <strong>hot-question view</strong> means the market question became materially visible. A <strong>workflow-intake open</strong> means the reader activated the public GitHub workflow form.</p>
+
+        <h2>What we do not measure</h2>
+        <table class="market-table">
+          <thead><tr><th>Surface</th><th>v0.7 rule</th><th>Reason</th></tr></thead>
+          <tbody>
+            <tr><td>Cookies</td><td>Not used</td><td>No cross-session reader identity is needed.</td></tr>
+            <tr><td>Persistent browser storage</td><td>Not used</td><td>No local anonymous profile or visitor ID.</td></tr>
+            <tr><td>Fingerprinting</td><td>Not used</td><td>Device characteristics are irrelevant to product discovery.</td></tr>
+            <tr><td>Referrer / user agent / screen size</td><td>Not sent</td><td>Avoid collecting contextual identifiers that are not necessary for the question.</td></tr>
+            <tr><td>Email / name / free text</td><td>Never part of the analytics payload</td><td>Market submissions are explicit GitHub evidence, not analytics exhaust.</td></tr>
+            <tr><td>Exact client timestamp</td><td>Not sent</td><td>The collector may timestamp receipt without increasing the client payload.</td></tr>
+          </tbody>
+        </table>
+
+        <h2>The payload is deliberately small</h2>
+        <div class="market-kpi"><pre>{
+  "schema_version": 1,
+  "event": "meaningful_read",
+  "path": "/RESONANCE/before-you-let-an-ai-agent-move-money.html",
+  "language": "en",
+  "content_kind": "article"
+}</pre></div>
+
+        <h2>Privacy signals are authoritative</h2>
+        <p>If Global Privacy Control or Do Not Track is enabled, the runtime does not emit analytics events. Automated browser audits are also excluded so Site Health does not manufacture its own readership.</p>
+
+        <h2>Transport is default-off</h2>
+        <p>The journal only sends events when an HTTPS collector endpoint is explicitly configured during the publication build. Requests omit credentials and referrer information. Until a collector passes a separate provider/retention/privacy review, the runtime remains measurement-ready but transport-disabled.</p>
+
+        <h2>Analytics is not demand evidence</h2>
+        <p>Reading and clicking are useful behavioral signals, but they do not prove a real workflow, a real failure, willingness to test, product-market fit or revenue. Those claims begin only when a person submits a generalized workflow and it enters the existing Problem Card / Product Signal / Demand Graph process.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Evidence boundary</p>
+          <div><b>WEB</b><p><strong>Interest:</strong> meaningful read → hot-question exposure → intake open.</p></div>
+          <div><b>MARKET</b><p><strong>Demand:</strong> submitted workflow → Problem Card → Product Signal → pilot evidence.</p></div>
+        </section>
+
+        <section class="market-question">
+          <p class="section-label">Inspect the contract</p>
+          <h2>The measurement rules live with the publication.</h2>
+          <p>The machine-readable event schema, runtime and CI verifier are public in the RESONANCE repository.</p>
+          <div class="market-actions">
+            <a class="button" href="https://github.com/safal207/RESONANCE/tree/main/analytics" target="_blank" rel="noreferrer">Open analytics contract →</a>
+            <a class="text-link" href="quality.html">Back to Site Health →</a>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div><div class="brand footer-brand">RESONANCE</div><p>Evidence-first measurement, default-off transport.</p></div>
+      <div><p class="footer-title">Quality</p><a href="quality.html">Site Health →</a></div>
+      <div><p class="footer-title">Market OS</p><a href="open-problems.html">Open Problems →</a></div>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

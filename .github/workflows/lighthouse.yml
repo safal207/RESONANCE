@@ -5,9 +5,11 @@ on:
     branches: [main]
     paths:
       - 'site/**'
+      - 'analytics/**'
       - 'scripts/build-seo-site.mjs'
       - 'scripts/build-feeds.mjs'
       - 'scripts/verify-feed.mjs'
+      - 'scripts/verify-analytics.mjs'
       - 'scripts/verify-seo.mjs'
       - 'scripts/verify-ui-markup.mjs'
       - 'scripts/lighthouse-summary.mjs'
@@ -41,6 +43,8 @@ jobs:
           node-version: '22'
 
       - name: Build publication
+        env:
+          RESONANCE_ANALYTICS_ENDPOINT: ''
         run: node scripts/build-seo-site.mjs
 
       - name: Build deterministic multilingual feeds
@@ -50,6 +54,7 @@ jobs:
         run: |
           node scripts/verify-seo.mjs
           node scripts/verify-feed.mjs --root dist --output feed-results --enforce
+          node scripts/verify-analytics.mjs --mode disabled
 
       - name: Enforce static UI/media markup contract
         run: |
@@ -116,6 +121,7 @@ jobs:
           audit_mobile quality 'quality.html'
           audit_mobile corrections 'corrections.html'
           audit_mobile subscribe 'subscribe.html'
+          audit_mobile measurement 'measurement.html'
           audit_desktop home ''
           audit_desktop article-en 'before-you-let-an-ai-agent-move-money.html'
 
@@ -149,6 +155,8 @@ jobs:
             ui-geometry-summary.json
             ui-geometry-summary.md
             feed-results/
+            analytics-summary-disabled.json
+            analytics-summary-disabled.md
           if-no-files-found: warn
           retention-days: 90
 
