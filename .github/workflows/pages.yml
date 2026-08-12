@@ -6,9 +6,12 @@ on:
     paths:
       - 'site/**'
       - 'scripts/build-seo-site.mjs'
+      - 'scripts/build-feeds.mjs'
+      - 'scripts/verify-feed.mjs'
       - 'scripts/verify-seo.mjs'
       - 'scripts/verify-links.mjs'
       - '.github/workflows/pages.yml'
+      - '.github/workflows/feed-live.yml'
   workflow_dispatch:
 
 permissions:
@@ -38,8 +41,14 @@ jobs:
       - name: Build SEO-ready publication
         run: node scripts/build-seo-site.mjs
 
+      - name: Build deterministic multilingual feeds
+        run: node scripts/build-feeds.mjs
+
       - name: Verify SEO contract
         run: node scripts/verify-seo.mjs
+
+      - name: Verify RSS / Subscribe contract
+        run: node scripts/verify-feed.mjs --root dist --output feed-results --enforce
 
       - name: Verify internal publication links
         run: node scripts/verify-links.mjs

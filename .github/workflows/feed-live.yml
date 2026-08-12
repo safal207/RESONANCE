@@ -1,0 +1,51 @@
+name: RESONANCE Live RSS / Subscribe Audit
+
+on:
+  workflow_run:
+    workflows: ['Deploy RESONANCE to GitHub Pages']
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: resonance-feed-live
+  cancel-in-progress: true
+
+jobs:
+  live-feed:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+
+    steps:
+      - name: Checkout exact deployed audit tooling
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify deployed RSS feeds and recent routes
+        env:
+          GITHUB_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          node scripts/verify-feed.mjs \
+            --live-base 'https://safal207.github.io/RESONANCE/' \
+            --output feed-live-results \
+            --enforce
+          cat feed-live-results/feed-summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload immutable live-feed evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-feed-live-${{ github.event.workflow_run.head_sha || github.sha }}-${{ github.run_id }}
+          path: feed-live-results/
+          if-no-files-found: warn
+          retention-days: 90

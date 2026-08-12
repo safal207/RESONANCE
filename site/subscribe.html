@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Subscribe to RESONANCE through deterministic RSS feeds for English, Russian and Simplified Chinese publications." />
+  <meta name="theme-color" content="#f4f0e8" />
+  <title>Subscribe to RESONANCE | RSS</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+  <link rel="stylesheet" href="market.css" />
+</head>
+<body>
+  <a class="skip-link" href="#article">Skip to content</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="./" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Evidence-first publishing · direct subscription</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="./">Journal</a>
+      <a href="ai-agents.html">AI Agents</a>
+      <a href="open-problems.html">Open Problems</a>
+      <a href="corrections.html">Corrections</a>
+      <a href="quality.html">Site Health</a>
+    </nav>
+  </header>
+
+  <main id="article">
+    <header class="article-hero wrap">
+      <p class="section-label">Site Health v0.6 · Subscribe</p>
+      <h1 class="article-title">Follow the publication without an algorithm in the middle.</h1>
+      <p class="article-dek">RESONANCE publishes deterministic RSS 2.0 feeds generated from the same public pages readers can inspect. Choose a language, add the feed to any RSS reader, and receive new publication entries when the journal changes.</p>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Subscription principles">
+        <div class="rail-card">
+          <p class="section-label">Transport</p>
+          <strong>RSS 2.0</strong>
+          <span>Open, portable and reader-independent.</span>
+        </div>
+        <div class="rail-card rail-dark">
+          <p class="section-label">Build rule</p>
+          <strong>Same publication state → same feed bytes</strong>
+          <span>No wall-clock timestamp is injected into the feed.</span>
+        </div>
+      </aside>
+
+      <article class="article-body">
+        <div class="status-chip ready">RESONANCE Subscribe v0.6</div>
+
+        <h2>Choose a feed</h2>
+        <div class="signal-grid-market">
+          <div class="signal-card">
+            <strong>English</strong>
+            <p>Verified reports, research notes and evidence-first analysis published in English.</p>
+            <p><a class="button" href="feed.xml">Open English RSS →</a></p>
+          </div>
+          <div class="signal-card">
+            <strong>Русский</strong>
+            <p>Русские публикации RESONANCE, когда у материала есть отдельная локализованная версия.</p>
+            <p><a class="button" href="feed.ru.xml">Открыть RSS →</a></p>
+          </div>
+          <div class="signal-card">
+            <strong>中文</strong>
+            <p>RESONANCE 简体中文独立发布页面进入单独的中文 RSS。</p>
+            <p><a class="button" href="feed.zh.xml">打开中文 RSS →</a></p>
+          </div>
+        </div>
+
+        <h2>What enters the feed</h2>
+        <p>The feed builder reads the built publication itself. A page enters RSS only when it has an explicit publication date and is not a utility surface such as Site Health, Corrections, Open Problems or this Subscribe page. Locale-specific pages stay in their locale feed rather than being duplicated into English.</p>
+
+        <h2>Why the feed is deterministic</h2>
+        <p>Many RSS generators stamp every build with the current time. RESONANCE does not. <code>lastBuildDate</code> is derived from the newest publication entry, and items are ordered by publication date with a stable route tie-break. If the publication state is unchanged, rebuilding the feed does not invent a new historical state.</p>
+
+        <h2>Email newsletter status</h2>
+        <p>Email delivery is not enabled in v0.6. We are not collecting addresses through a decorative form before choosing a provider, retention policy and privacy contract. RSS is the first subscription transport because it works without creating a reader identity database.</p>
+
+        <h2>Verification</h2>
+        <p>CI checks RSS structure, Atom self-link identity, item ordering, locale routing, publication-route existence and feed autodiscovery links. After GitHub Pages deploys, a live contract fetches the public feeds and representative recent item URLs again.</p>
+
+        <section class="market-question">
+          <p class="section-label">Direct channel</p>
+          <h2>Publication → feed → reader.</h2>
+          <p>No recommendation system is required for the basic delivery path.</p>
+          <div class="market-actions">
+            <a class="button" href="feed.xml">English feed →</a>
+            <a class="text-link" href="quality.html">Inspect Site Health →</a>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div><div class="brand footer-brand">RESONANCE</div><p>Evidence-first publishing includes how publication reaches readers.</p></div>
+      <div><p class="footer-title">History</p><a href="corrections.html">Corrections →</a></div>
+      <div><p class="footer-title">Quality</p><a href="quality.html">Site Health →</a></div>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>

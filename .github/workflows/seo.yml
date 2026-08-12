@@ -9,11 +9,15 @@ on:
       - 'protocols/**'
       - '.github/ISSUE_TEMPLATE/market-workflow.yml'
       - 'scripts/build-seo-site.mjs'
+      - 'scripts/build-feeds.mjs'
+      - 'scripts/verify-feed.mjs'
       - 'scripts/verify-seo.mjs'
       - 'scripts/verify-links.mjs'
       - 'scripts/lighthouse-summary.mjs'
       - '.github/workflows/seo.yml'
       - '.github/workflows/pages.yml'
+      - '.github/workflows/feed.yml'
+      - '.github/workflows/feed-live.yml'
       - '.github/workflows/lighthouse.yml'
       - '.github/workflows/lighthouse-live.yml'
   push:
@@ -25,11 +29,15 @@ on:
       - 'protocols/**'
       - '.github/ISSUE_TEMPLATE/market-workflow.yml'
       - 'scripts/build-seo-site.mjs'
+      - 'scripts/build-feeds.mjs'
+      - 'scripts/verify-feed.mjs'
       - 'scripts/verify-seo.mjs'
       - 'scripts/verify-links.mjs'
       - 'scripts/lighthouse-summary.mjs'
       - '.github/workflows/seo.yml'
       - '.github/workflows/pages.yml'
+      - '.github/workflows/feed.yml'
+      - '.github/workflows/feed-live.yml'
       - '.github/workflows/lighthouse.yml'
       - '.github/workflows/lighthouse-live.yml'
   workflow_dispatch:
@@ -56,8 +64,14 @@ jobs:
       - name: Build SEO-ready publication
         run: node scripts/build-seo-site.mjs
 
+      - name: Build deterministic multilingual feeds
+        run: node scripts/build-feeds.mjs
+
       - name: Verify SEO contract
         run: node scripts/verify-seo.mjs
+
+      - name: Verify RSS / Subscribe contract
+        run: node scripts/verify-feed.mjs --root dist --output feed-results --enforce
 
       - name: Verify internal publication links
         run: node scripts/verify-links.mjs
