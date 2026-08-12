@@ -1,0 +1,26 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="TTP rule for detecting same-epoch governance finality forks and recovering through a higher-epoch independent constitutional resolution."><title>TTP — Governance Resolution Equivocation | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · GOVERNANCE CONSISTENCY</p><h1>Governance Resolution Equivocation</h1><p class="dek">A valid governance signature authenticates one finality record. It does not prove the governance issuer produced only one finality for that epoch.</p><blockquote><p><strong>AUTHENTIC GOVERNANCE RESOLUTION ≠ UNIQUE FINALITY.</strong></p></blockquote><h2>Rule</h2><pre><code>RECEIVE GOVERNANCE RESOLUTION G
+        ↓
+AUTHENTICATE G
+        ↓
+LOOK FOR PEER GOVERNANCE VIEW
+AT SAME NAMESPACE + GOVERNANCE EPOCH + DISPUTE SET
+        ↓
+same issuer + same epoch + same dispute + different digest?
+  ├─ yes → GOVERNANCE RESOLUTION EQUIVOCATION
+  │        → quarantine governance issuer
+  │        → hold every disputed finality branch
+  │        → 0 consequence
+  └─ no
+        ↓
+CHECK GOVERNANCE CURRENTNESS
+        ↓
+VALIDATE MEMBERSHIP + QUORUM + AUTHORITY HEAD
+        ↓
+FENCED CONSEQUENCE
+
+RECOVERY:
+  higher epoch
++ independent constitutional/root resolver
++ bind every conflicting governance digest
++ fresh quorum
+→ resume</code></pre><h2>I119–I122</h2><ul><li><strong>I119</strong> — Authentic governance resolution ≠ unique finality.</li><li><strong>I120</strong> — Same governance authority + same governance epoch + same dispute set + different authentic finality digests = equivocation evidence.</li><li><strong>I121</strong> — Hold every disputed finality branch and quarantine the equivocating governance issuer before consequence.</li><li><strong>I122</strong> — Resume only through a higher-epoch independent constitutional resolution binding every conflicting governance digest.</li></ul><h2>Why it matters</h2><p>“Final” is a semantic claim, not a cryptographic property. If two authentic finality records exist at one epoch, local validity is insufficient; cross-view conflict becomes first-class evidence.</p><h2>Boundary</h2><p>This extension does not solve root-authority replay, rollback or equivocation. Those remain separate trust surfaces.</p><div class="article-actions"><a class="button" href="verified-040-governance-resolution-equivocation.html">Open Verified Report #040</a><a class="text-link" href="transactional-trust-protocol-v1.html">Transactional Trust Protocol v1.0 →</a></div></article></main><footer class="site-footer"><div class="wrap"><a href="index.html">← RESONANCE home</a></div></footer></body></html>
