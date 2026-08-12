@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #029: a compatibility proof can remain internally valid after its authority is revoked."><title>Verified #029 — Compatibility Proof Revocation | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #029</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #029</p><h1>The proof was still correct. Its authority was gone.</h1><p class="dek">A compatibility certificate can remain internally valid, correctly bound, and semantically true after the rule that authorized it has been revoked. Consequential reuse therefore needs current proof authority, not only proof validity.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><h2>Nothing semantic broke</h2><pre><code>price = 20
+limit = 30
+tax_rate = 8
+
+model-v1 output = 30
+model-v2 output = 30
+compatibility predicate = true</code></pre><p>The artifact stayed correct. The proof's static bindings stayed correct. Only proof authority changed.</p><h2>Authority transition</h2><pre><code>issuance:
+R1 = ACTIVE
+authority_epoch = 1
+proof P1 issued
+
+before adoption:
+R1 → REVOKED
+authority_epoch → 2
+successor → R2
+
+R2 → ACTIVE
+authority_epoch = 2</code></pre><h2>Unsafe: cached proof validity</h2><pre><code>from_model = true
+to_model = true
+artifact = true
+current values = true
+predicate = true
+
+→ adoption rows = 1
+→ HTTP 200
+→ effect_count = 1
+→ output = 30</code></pre><p>The output is numerically correct, but current authority explicitly revoked the proof rule. A correct result can still be an unauthorized consequence.</p><h2>Safe: resolve live proof authority</h2><pre><code>proof: R1 / epoch 1
+registry now: R1 / REVOKED / epoch 2
+
+→ compatibility_proof_revoked
+→ adoption rows = 0
+→ external effects = 0</code></pre><p>A fresh proof under active successor R2 then re-authorized the same historical artifact and committed output <strong>30</strong> exactly once.</p><h2>Active is not enough</h2><pre><code>R2 proof issued at epoch 2
+R2 remains ACTIVE
+registry epoch advances 2 → 3
+
+→ compatibility_proof_authority_conflict
+→ adoption rows = 0
+→ effects = 0</code></pre><p>Current proof authority needs identity and epoch, not just an ACTIVE flag.</p><h2>I75–I78</h2><ul><li><strong>I75</strong> — Proof valid then ≠ proof authorized now.</li><li><strong>I76</strong> — Consequential proof authority must be resolved against current rule authority at adoption or commit time.</li><li><strong>I77</strong> — Revocation or authority-epoch advance invalidates historical proof authorization even when the semantic predicate still holds.</li><li><strong>I78</strong> — A successor proof may reauthorize the same artifact only through fresh current-authority binding.</li></ul><blockquote><p><strong>CORRECT PROOF ≠ CURRENTLY AUTHORIZED PROOF.</strong></p></blockquote><h2>Evidence</h2><pre><code>GitHub Actions run: 31587611585
+Artifact ID: 9137771205
+Artifact digest:
+sha256:5782654655249341994236b6d68ca875f74ceb1d8d22fd4eacc53454e7100e80
+Score: 10/10</code></pre><p>This is a deterministic protocol benchmark, not production safety certification or a vulnerability claim against PostgreSQL or another external product.</p><div class="article-actions"><a class="button" href="ttp-compatibility-proof-authority.html">Read TTP Compatibility Proof Authority Rule</a><a class="text-link" href="verified-028-model-compatibility-proof.html">Previous: Verified #028 →</a></div></article></main><footer class="site-footer"><div class="wrap"><a href="index.html">← RESONANCE home</a></div></footer></body></html>
