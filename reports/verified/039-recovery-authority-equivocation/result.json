@@ -1,0 +1,60 @@
+{
+  "report": "RESONANCE Verified Report #039 — Recovery Authority Equivocation / Conflicting Resolution Fork",
+  "benchmark": "Recovery Authority Equivocation / Conflicting Resolution Fork v1.0",
+  "score": 10,
+  "max_score": 10,
+  "classification": "Recovery authority equivocation protocol passes",
+  "law": "AUTHENTIC RECOVERY RECORD != UNIQUE RECOVERY HISTORY",
+  "run_id": 31619761478,
+  "job_id": 94191344408,
+  "benchmark_head_sha": "fbb8d596e526785676b10f5c0dcf3d666d0cae3f",
+  "artifact_id": 9150741985,
+  "artifact_digest": "sha256:14f960e31edaabab4e599910387685cdf6dca51cd89cda995a0d6ebe29384677",
+  "disputed_membership_digests": [
+    "sha256:aa0ad1f938ebde6911b5678bd40aaf0df1f2294c8925e8658b088f2c70557402",
+    "sha256:b1586f4db5d001f30c64587bfdc960b625748d55048d30b94f350ddeebeca24c"
+  ],
+  "recovery_branch_A": {
+    "set_id": "set-D",
+    "recovery_epoch": 3,
+    "resolution_digest": "sha256:96ba32f275d54015845336d0b24baccae2ad3d2985322ebdebf53f27579639ae",
+    "authentic": true,
+    "quorum_valid": true
+  },
+  "recovery_branch_B": {
+    "set_id": "set-E",
+    "recovery_epoch": 3,
+    "resolution_digest": "sha256:fc5034190cbfe2727441388e204f44d7904d3000680712a31d9cb7a04ef25ac0",
+    "authentic": true,
+    "quorum_valid": true
+  },
+  "unsafe": {
+    "branch": "R3-B",
+    "verdict": "isolated_recovery_branch_authorized",
+    "adoption_rows": 1,
+    "http_status": 200,
+    "effect_count": 1
+  },
+  "safe": {
+    "verdict": "recovery_authority_equivocation_detected",
+    "branch_A_adoption_rows": 0,
+    "branch_A_effect_count": 0,
+    "branch_B_adoption_rows": 0,
+    "branch_B_effect_count": 0,
+    "quarantined_issuer": "membership-recovery-authority-demo-key-v1"
+  },
+  "recovery": {
+    "set_id": "set-F",
+    "recovery_epoch": 4,
+    "issuer": "membership-governance-resolution-demo-key-v1",
+    "binds_all_conflicting_recovery_digests": true,
+    "verdict": "recovery_equivocation_resolved_by_governance_epoch4",
+    "adoption_rows": 1,
+    "http_status": 200,
+    "effect_count": 1,
+    "output": 30
+  },
+  "invariants": ["I115", "I116", "I117", "I118"],
+  "external_safety_certification": false,
+  "vulnerability_claim": false
+}
