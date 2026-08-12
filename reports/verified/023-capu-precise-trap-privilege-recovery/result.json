@@ -1,0 +1,111 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "023-capu-precise-trap-privilege-recovery",
+  "title": "CaPU v0.18 — Precise Trap / Privilege Recovery",
+  "status": "PASS",
+  "scope": "bounded reduced-width one-trap privilege recovery model content-bound to the exact v0.17 architectural/causal/replay checkpoint authority, with wrong-privilege, interrupt-mask, trap-entry/return and pre-trap visible-effect containment semantics",
+  "project": "safal207/CaPU",
+  "pull_request": 71,
+  "verified_content_head": "dc47ba9801d8c17862d600d55c8795f7dfd9d61e",
+  "workflow": {
+    "name": "CaPU vCML Precise Trap Privilege Recovery v0.18",
+    "run_id": 31619671057,
+    "rtl_job_id": 94191037153,
+    "rtl_job_status": "success",
+    "formal_job_id": 94191128567,
+    "formal_job_status": "success"
+  },
+  "canonical_checkpoint_digest": "da7f80efe0eac2695edf367ee42193ab6100bd184b091da8f1f00d0797f0c16e",
+  "formal": {
+    "solver": "z3 4.8.12",
+    "yosys": "0.33 (git sha1 2584903a060)",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "safety_depth": 26,
+    "cover_depth": 30,
+    "cover_witness_files": 7,
+    "safety_result": "DONE (PASS, rc=0)",
+    "cover_result": "DONE (PASS, rc=0)",
+    "formal_input_sha256": "2e68ea48f706250bb37faf860e03b8319acc3468f95b9659212e35eef1e5c1b1",
+    "formal_log_sha256": "a24f5a3f5e54ecf84cd03a1c852a78a0785980626d765b2ef65221318937ab61",
+    "cover_log_sha256": "32b5742b2e38391d59db90491cc88b950948caec355d3bcb698080fb6d6e5ff3",
+    "v0_17_regression_log_sha256": "ae2e07ead9f957d1ff79ddcf635e0de0d28d3c59332afaa90a6e1be10171af2d",
+    "instance": {
+      "checkpoint_ref_width": 3,
+      "checkpoint_epoch_width": 3,
+      "checkpoint_commitment_width": 4,
+      "base_payload_width": 12,
+      "pc_width": 4,
+      "privilege_width": 2,
+      "cause_width": 3
+    }
+  },
+  "artifacts": [
+    {
+      "name": "capu-vcml-v18-trap-privilege-evidence",
+      "artifact_id": 9150699573,
+      "sha256": "98a4c6ec7a37ce573013730c83ed4bf8116dc224ec381df9a548dcaae26084f4"
+    },
+    {
+      "name": "capu-vcml-v18-trap-privilege-formal-evidence",
+      "artifact_id": 9150741321,
+      "sha256": "d75ff8bd4889bd479d20a7f6b097375b5db5ec5020497c11d6273381b61b2ca9"
+    }
+  ],
+  "executable_hashes": {
+    "v18_rtl_sha256": "c1a170a7bbe97737d2446664af919423613c8c418ada5555f3238a45b98a88e0",
+    "v18_tb_sha256": "a933aa6f93bc254304218d45b26402d692d846900e10b31a8d93d9ddfc75e88f",
+    "v18_canonical_encoder_sha256": "22c3929e9f2b994f53c12ec15f839aa08f24229e3c8f5717321f33f07ecc49e6",
+    "v18_canonical_test_sha256": "66c6a5344fd7dfdc4f636f05c49af2a0780adbcd389c7a27bf935dc783adce26",
+    "trajectory_log_sha256": "667aab26d18800bdb02e3edbc23fa2a329aacef753b8260f526c2259fd297e4d",
+    "canonical_python_log_sha256": "f421a549b69c622f7c167986305d1528f3bc7e5152daf80ed4e744b3ad52f2c5"
+  },
+  "checkpoint_state": [
+    "complete v0.17 canonical checkpoint payload",
+    "privilege_mode",
+    "trap_pending",
+    "trap_is_interrupt",
+    "trap_cause",
+    "trap_return_pc",
+    "trap_return_privilege",
+    "interrupt_mask"
+  ],
+  "runtime_invariants": [
+    "RESTORE_ACCEPT => SNAPSHOT == ANCHOR == EXACT_REPACKED_TRAP_STATE",
+    "FOREIGN_TRAP_OR_PRIVILEGE_STATE => RESTORE_REJECT",
+    "PRIVILEGE_MISMATCH => NORMAL_STEP_REJECT",
+    "MASKED_INTERRUPT => NO_INTERRUPT_TRAP_ENTRY",
+    "EXCEPTION_AND_INTERRUPT => EXCEPTION_PRIORITY",
+    "TRAP_ENTER => SAVE_RETURN_CONTEXT && NO_VISIBLE_EFFECT",
+    "PRE_TRAP_SPECULATION => DISCARDED_ON_TRAP",
+    "TRAP_RETURN => RECORDED_PC_AND_PRIVILEGE",
+    "RECOVERY_OR_RESTORE => NO_CHECKPOINT_AUTHORITY_TRANSITION"
+  ],
+  "deterministic_paths": [
+    "checkpoint preparation with altered privilege bytes is rejected",
+    "exact full v0.18 payload completes prepare, persistence and authority commit",
+    "valid anchor plus altered explicit restore privilege is rejected",
+    "exact restore re-establishes PC 0x40, privilege 1, idle trap context and interrupt mask",
+    "normal continuation presented under a different privilege is rejected without advancing PC",
+    "masked interrupt is rejected",
+    "exception and interrupt presented together select the exception",
+    "pending pre-trap abstract effect cannot become visible during accepted trap entry and is discarded",
+    "trap return restores recorded PC 0x40 and privilege 1",
+    "correct-privilege normal continuation advances PC to 0x41",
+    "recovery closes runtime readiness"
+  ],
+  "exact_head_regression": {
+    "all_registered_pull_request_workflows_green": true,
+    "workflows": [
+      "CaPU vCML Precise Trap Privilege Recovery v0.18",
+      "Validate Examples",
+      "CaPU Core v0 RTL Smoke"
+    ],
+    "v0_17_deterministic_regression_in_v0_18_workflow": "PASS",
+    "v0_17_canonical_regression_in_v0_18_workflow": "PASS",
+    "v0_17_bounded_safety_regression_in_v0_18_workflow": "PASS"
+  },
+  "upstream_assumption": "the embedded v0.17 checkpoint payload and off-path SHA-256 commitment verification remain the authoritative base; the v0.18 RTL model does not implement SHA-256 internally",
+  "claim_boundary": "bounded reduced-width one-trap privilege-recovery result; no full ISA/CSR/delegation, nested traps, MMU/TLB/page-fault semantics, NMI/debug, interrupt-controller or synchronization correctness, production speculation, cache/coherence/multicore, RTL SHA-256/verifier trustworthiness, durable-media or unbounded correctness is claimed",
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
