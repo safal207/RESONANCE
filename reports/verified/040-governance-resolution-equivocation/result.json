@@ -1,0 +1,35 @@
+{
+  "artifact": {
+    "digest": "sha256:6df3501a46124054bdfef7de7c64c9c4597eb5d57a598b247767167ab435f220",
+    "id": 9151038853,
+    "name": "resonance-governance-resolution-equivocation-v1.0"
+  },
+  "benchmark": "RESONANCE Governance Resolution Equivocation / Conflicting Finality",
+  "benchmark_head_sha": "2afaf1c3bbcda266ec7cbbefb478ff63d27232c4",
+  "classification": "Governance resolution equivocation protocol passes",
+  "evidence": {
+    "governance_branch_a_digest": "sha256:934092cbe1425ed433555d72e10081cbbe9d1933a421cc901a6e5f9a09d8d45d",
+    "governance_branch_b_digest": "sha256:117325df07b62b8609a395cf6da32860b309052fd322509005bf1a2cd1b40773",
+    "governance_equivocation_detected": true,
+    "isolated_branch_effect_count": 1,
+    "isolated_branch_http_status": 200,
+    "safe_branch_a_effect_count": 0,
+    "safe_branch_b_effect_count": 0,
+    "constitutional_epoch": 5,
+    "constitutional_recovery_effect_count": 1,
+    "constitutional_recovery_http_status": 200,
+    "constitutional_recovery_binds_both_governance_digests": true
+  },
+  "github_actions": {
+    "job": 94193979974,
+    "run": 31620538601
+  },
+  "invariants": [
+    "I119 — AUTHENTIC GOVERNANCE RESOLUTION ≠ UNIQUE FINALITY",
+    "I120 — SAME GOVERNANCE AUTHORITY + SAME GOVERNANCE EPOCH + SAME DISPUTE SET + DIFFERENT AUTHENTIC FINALITY DIGESTS = EQUIVOCATION EVIDENCE",
+    "I121 — GOVERNANCE-RESOLUTION EQUIVOCATION MUST HOLD ALL DISPUTED FINALITY BRANCHES AND QUARANTINE THE EQUIVOCATING GOVERNANCE ISSUER BEFORE CONSEQUENCE",
+    "I122 — RECOVERY FROM GOVERNANCE EQUIVOCATION REQUIRES A HIGHER-EPOCH INDEPENDENT CONSTITUTIONAL RESOLUTION THAT BINDS EVERY CONFLICTING GOVERNANCE DIGEST"
+  ],
+  "max_score": 10,
+  "score": 10
+}
