@@ -1,0 +1,99 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "021-capu-architectural-causal-resume",
+  "title": "CaPU v0.16 — Causally Bound Architectural Execution Resumption",
+  "status": "PASS",
+  "scope": "bounded reduced-width recovery of a minimal architectural context (PC, four GPRs and status) coupled by one accepted recovery epoch to the already-verified v0.15 causal/replay local STORE runtime",
+  "project": "safal207/CaPU",
+  "pull_request": 69,
+  "verified_content_head": "4bc80b38cce8b9b7a9428e9182d8ff016f164e63",
+  "workflow": {
+    "name": "CaPU vCML Architectural Causal Resume v0.16",
+    "run_id": 31612609824,
+    "rtl_job_id": 94167473386,
+    "rtl_job_status": "success",
+    "formal_job_id": 94167585994,
+    "formal_job_status": "success"
+  },
+  "formal": {
+    "solver": "z3 4.8.12",
+    "yosys": "0.33 (git sha1 2584903a060)",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "safety_depth": 28,
+    "cover_depth": 32,
+    "cover_witness_files": 5,
+    "safety_result": "DONE (PASS, rc=0)",
+    "cover_result": "DONE (PASS, rc=0)",
+    "formal_input_sha256": "b3d5e40a94cf95e1e5351bee6e798159a1a558581b68b70e3bf9b0c1824eb4c0",
+    "formal_log_sha256": "9f80085c2b2348cc98371b4fa0756b7cea1a4b81e1312d51a5a9447ec663762a",
+    "cover_log_sha256": "9c85696eb37d65c8e62f6edce362b6aa45fb581a52068efa5c8ebca82916c1be",
+    "instance": {
+      "address_width": 4,
+      "data_width": 8,
+      "transition_id_width": 4,
+      "authorization_ref_width": 4,
+      "policy_epoch_width": 4,
+      "recovery_epoch_width": 3,
+      "gpr_count": 4,
+      "spent_authorization_slots": 2
+    }
+  },
+  "artifacts": [
+    {
+      "name": "capu-vcml-v16-arch-resume-evidence",
+      "artifact_id": 9147838677,
+      "sha256": "669033e2235ba772bc2efdc5f31cf2ee9d960512459ef37535e6ceea28d90432"
+    },
+    {
+      "name": "capu-vcml-v16-arch-resume-formal-evidence",
+      "artifact_id": 9147938150,
+      "sha256": "4b82984a5a7b15d5f4a1f02cd0072d7e476aaa013a0452bbd1a561a89af0bb2c"
+    }
+  ],
+  "executable_hashes": {
+    "v15_rtl_sha256": "784519183f324c47bd999b341c445ce86078fa5ad1d5771b3594aeb8ddf58141",
+    "v16_rtl_sha256": "c9a9162dd399930331866b25775080ed0f6b256f4aa9a9c560d08dbbb287ea8b",
+    "v16_tb_sha256": "90cd66648a4452d9c5c9ce7f386af3879e1aeb69e811711a1cd0284f96444905",
+    "trajectory_log_sha256": "bbca1f52ffca31854bb374be84b7c6bb36683647783365e1236d59456bd499ab"
+  },
+  "runtime_invariants": [
+    "SPLIT_STATE_EPOCH_MISMATCH => RESTORE_REJECT && RECOVERY_BARRIER && NO_VISIBLE_EFFECT",
+    "RESTORE_ACCEPT => NEXT_LIVE_ARCH_STATE == ACCEPTED_ARCH_SNAPSHOT && NEXT_LIVE_CAUSAL_STATE == ACCEPTED_CAUSAL_SNAPSHOT && LIVE_EPOCH == ACCEPTED_EPOCH",
+    "EXECUTION_PC != LIVE_PC => REJECT",
+    "VISIBLE_STORE => ADDRESS == LIVE_GPR[addr_reg] && DATA == LIVE_GPR[data_reg]",
+    "RECOVERY_OR_RESTORE_ACTIVITY => NO_VISIBLE_EFFECT",
+    "PRE_RECOVERY_SPECULATION => NEVER_POST_RECOVERY_RETIRE"
+  ],
+  "deterministic_paths": [
+    "architectural epoch 0x11 with causal epoch 0x12 is split-state rejected",
+    "accepted epoch 0x21 restores PC 0x40, GPR1 0x80, GPR2 0x55, status 0xA5, causal head 0x2201, GEN 6 and SEAL 0",
+    "otherwise-valid continuation at wrong PC 0x41 is rejected",
+    "exact continuation at restored PC 0x40 uses restored GPR1/GPR2 as visible STORE address/data",
+    "visible retirement advances causal head to 0x2202 GEN 7 and architectural PC exactly once",
+    "pre-recovery speculative STORE cannot retire after recovery and restore of a different epoch/state"
+  ],
+  "formal_driven_fixes": [
+    "recovery_begin has strict priority over simultaneous restore_valid so a snapshot cannot be falsely reported accepted while sequential recovery clears state",
+    "memory_write_enable and vcml_event_valid are masked across recovery/restore so a pre-boundary retirement pulse cannot cross the visible-effect barrier",
+    "formal shadow model preserves a newly admitted STORE when its admission overlaps the registered retirement pulse of the previous STORE"
+  ],
+  "exact_head_regression": {
+    "all_green": true,
+    "workflows": [
+      "Validate Examples",
+      "CaPU Core v0 RTL Smoke",
+      "CaPU vCML Bridge v0 / v0.9",
+      "CaPU vCML Recovery v0.10",
+      "CaPU vCML Checkpoint v0.11",
+      "CaPU vCML Checkpoint Commit v0.12",
+      "CaPU vCML Checkpoint Content v0.13",
+      "CaPU vCML Full Causal Checkpoint v0.14",
+      "CaPU vCML Live Causal Resume v0.15",
+      "CaPU vCML Architectural Causal Resume v0.16"
+    ]
+  },
+  "upstream_assumption": "the causal/replay component is an already accepted v0.15 recovery snapshot; the modeled architectural component carries the same accepted recovery epoch",
+  "claim_boundary": "bounded reduced-width local STORE execution-recovery proof; matching accepted recovery epochs are enforced at runtime, but v0.16 does not yet prove that PC/GPR/status are cryptographically included in the upstream v0.14 checkpoint digest or anchor commitment and does not prove full ISA/register-file/CSR/exception/interrupt/privilege/load-memory-order/cache/TLB/MMU/predictor/coherence/multicore/durable-media/distributed/unbounded correctness",
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
