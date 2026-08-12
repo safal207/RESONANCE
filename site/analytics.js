@@ -13,6 +13,7 @@
     ?.trim() || '';
 
   const privacyOptOut =
+    navigator.webdriver === true ||
     navigator.globalPrivacyControl === true ||
     navigator.doNotTrack === '1' ||
     window.doNotTrack === '1';
