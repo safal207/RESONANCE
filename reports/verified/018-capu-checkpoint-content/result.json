@@ -1,0 +1,76 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "018-capu-checkpoint-content",
+  "title": "CaPU v0.13 — Checkpoint Content Commitment Boundary",
+  "status": "PASS",
+  "scope": "bounded checkpoint commitment binding plus deterministic canonical replay-state SHA-256 reference",
+  "project": "safal207/CaPU",
+  "pull_request": 69,
+  "verified_content_head": "5c69c997a30c872eee86137607feef816a98f289",
+  "workflow": {
+    "name": "CaPU vCML Checkpoint Content v0.13",
+    "run_id": 31584426137,
+    "rtl_job_id": 94074812796,
+    "rtl_job_status": "success",
+    "formal_job_id": 94074899721,
+    "formal_job_status": "success"
+  },
+  "canonical_commitment": {
+    "algorithm": "SHA-256",
+    "computed_in_rtl": false,
+    "domain": "CaPU-vCML-checkpoint-content-v0.13",
+    "current_content_scope": [
+      "checkpoint reference",
+      "checkpoint epoch",
+      "authorization reference width",
+      "finite replay slot count",
+      "semantic set of spent root authorization references"
+    ],
+    "spent_ref_ordering": "numeric canonical sort",
+    "verification_boundary": "trusted off-path canonical commitment engine/verifier"
+  },
+  "formal": {
+    "solver": "z3",
+    "yosys": "0.33",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "safety_depth": 16,
+    "cover_depth": 20,
+    "cover_witness_files": 4,
+    "safety_result": "DONE (PASS, rc=0)",
+    "cover_result": "DONE (PASS, rc=0)",
+    "formal_input_sha256": "372a43625956a5812e1d645119aa0810de1ce219f4860020c7e8f11cef5390f3",
+    "formal_log_sha256": "3ce9e657b35b76c1c18ef399a5ae3c1bb298230e80ec701e3e03c51ec2717476",
+    "cover_log_sha256": "50be06ba8d7d49d0726c7dbd222eacb90cde481629d274cc78831a4c2fe6d0e5"
+  },
+  "artifacts": [
+    {
+      "name": "capu-vcml-v13-checkpoint-content-evidence",
+      "artifact_id": 9136482452,
+      "sha256": "96e782266fc0ceff4961afa5f9efe3157e0c4b3b1d7d1867c8eed5149cee5827"
+    },
+    {
+      "name": "capu-vcml-v13-checkpoint-content-formal-evidence",
+      "artifact_id": 9136522097,
+      "sha256": "117cd96a67f088ff4fbcda35d8aab8588c5e051e500988cae679c2ba57acfd7f"
+    }
+  ],
+  "invariants": [
+    "ANCHORED_RESTORE_ACCEPT => COMMITMENT_VERIFIED && SNAPSHOT_COMMITMENT == ANCHOR_COMMITMENT",
+    "UNVERIFIED_OR_MISMATCHED_ANCHORED_COMMITMENT => NO_RESTORE_ACCEPT",
+    "PREPARE_ACCEPT => CANDIDATE_COMMITMENT_VERIFIED && CANDIDATE_COMMITMENT != 0",
+    "PERSIST_ACCEPT => PERSISTED_COMMITMENT == REQUEST_COMMITMENT",
+    "CHECKPOINT_COMMIT_EVENT => ACK_COMMITMENT == REQUEST_COMMITMENT",
+    "ANCHOR_COMMIT_REQUEST => REQUEST_COMMITMENT != 0"
+  ],
+  "deterministic_fail_closed_cases": [
+    "unverified candidate commitment",
+    "wrong persisted commitment",
+    "wrong anchor acknowledgement commitment",
+    "unverified anchored restore commitment",
+    "mismatched anchored restore commitment",
+    "tampered replay snapshot rejected by off-path commitment verifier"
+  ],
+  "claim_boundary": "the content commitment currently covers the finite replay-state snapshot, not causal head, GEN, SEAL or complete CaPU architectural state; SHA-256 and commitment verification are off-path trusted functions; no cryptographic RTL implementation correctness, trusted-engine integrity, source-history omission resistance, durable-media correctness, external CAS correctness, complete CPU proof or unbounded proof is claimed",
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
