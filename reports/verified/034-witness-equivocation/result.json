@@ -1,0 +1,71 @@
+{
+  "benchmark": "RESONANCE Witness Rollback / Equivocation",
+  "benchmark_version": "1.0",
+  "protocol": "RESONANCE Transactional Trust Protocol v1.0",
+  "executed_at": "2026-08-12T15:58:59.319879+00:00",
+  "database": {
+    "server_version": "17.6"
+  },
+  "containers": {
+    "postgres_image_digest": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+    "python_image_digest": "sha256:229a2c5bfa27522db7815ea81f9bed70af17ccb9de9fc7ad142b1877b5830d36",
+    "http_boot_id": "135214c9efa545afade9862e9bbaa064"
+  },
+  "github": {
+    "run_id": 31615206797,
+    "job_id": 94176189614,
+    "head_sha": "6021d88d946e1e91b54a8c64b4bd8c1ed2f48668",
+    "artifact_id": 9148905171,
+    "artifact_name": "resonance-witness-equivocation-v1.0",
+    "artifact_digest": "sha256:05b958a9d258fbdc8dfd5c0d5680782ce01f12ee66c486b315299471913b0036"
+  },
+  "head_digests": {
+    "H7": "sha256:419197879e94b1cbb382321292c4b2ab8b824f1f8f71f6a02e4b305657e6f6ec",
+    "H9": "sha256:8db327c9d436be787862eaba7f2eec29c788e1fd6c9fcc2e74cb7b1486f9722e"
+  },
+  "witness_fork": {
+    "witness_id": "witness-A",
+    "witness_seq": 43,
+    "parent_digest": "sha256:0f31256f6b9a19d11c5ed3c91fca28c435bce01be6d4044192d3f8be9aa3e5fa",
+    "good_generation": 9,
+    "good_statement_digest": "sha256:eff4494cb8544511685c81777d685b80fac39d25ffb64a926d215907e23223c4",
+    "fork_generation": 7,
+    "fork_statement_digest": "sha256:06b885e6193a56a0c18bcd569b8c8d80a15271a6596e1c88a2daf3ebc4843c2e",
+    "both_authentic": true,
+    "same_sequence": true,
+    "same_parent": true,
+    "equivocation_detected": true
+  },
+  "unsafe": {
+    "verdict": "witness_authorized_current_head",
+    "adoption_rows": 1,
+    "http_status": 200,
+    "external_effect_count": 1
+  },
+  "safe": {
+    "verdict": "witness_equivocation_detected",
+    "adoption_rows": 0,
+    "external_effect_count": 0,
+    "quarantined_witness": "witness-A"
+  },
+  "recovery": {
+    "source": "witness-B",
+    "checkpoint_generation": 9,
+    "reason": "checkpoint_reconstructed_from_independent_witness",
+    "old_H7_verdict": "authority_head_rollback_detected",
+    "fresh_H9_adoption_rows": 1,
+    "fresh_H9_http_status": 200,
+    "fresh_H9_external_effect_count": 1
+  },
+  "score": 10,
+  "max_score": 10,
+  "classification": "Witness consistency protocol passes",
+  "invariants": [
+    "I95 — INDEPENDENT WITNESS ≠ CONSISTENT WITNESS",
+    "I96 — AUTHENTIC WITNESS STATEMENT ≠ UNIQUE WITNESS HISTORY",
+    "I97 — SAME WITNESS SEQUENCE + SAME PARENT + DIFFERENT AUTHENTIC CONTENT = EQUIVOCATION EVIDENCE",
+    "I98 — EQUIVOCATING WITNESS MUST BE QUARANTINED; RECONSTRUCT TRUST FROM NON-CONFLICTING INDEPENDENT EVIDENCE BEFORE CONSEQUENCE"
+  ],
+  "external_safety_certification": false,
+  "vulnerability_claim": false
+}
