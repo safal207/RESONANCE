@@ -65,7 +65,8 @@ The pull-request Experience Contract measures:
 - Article #004 Simplified Chinese;
 - Open Problems;
 - Verified Workflow;
-- Site Health / Quality.
+- Site Health / Quality;
+- Corrections / Version History.
 
 Desktop Lighthouse profiling is intentionally narrower (homepage + primary Article #004) to keep CI useful and fast.
 
@@ -75,11 +76,12 @@ The Visual Regression Contract uses a broader multilingual matrix:
 - Article #004 EN / RU / zh-CN;
 - Article #005 EN / RU / zh-CN;
 - Site Health / Quality;
+- Corrections / Version History;
 - each at 390×844, 768×1024 and 1440×900.
 
-That produces 24 candidate screenshots per run plus matching public-main baselines and diff PNGs when a baseline route exists.
+That produces 27 candidate screenshots per run plus matching public-main baselines and diff PNGs when a baseline route exists. A newly introduced route may legitimately have no public-main baseline on its first release; candidate geometry remains release-blocking while the missing baseline is reported rather than invented.
 
-The post-deployment Live Experience Audit measures a smaller public subset again to detect deploy/runtime differences.
+The post-deployment Live Experience Audit measures a smaller public subset again to detect deploy/runtime differences, including the public Corrections history once v0.5 is deployed.
 
 ## Translation Parity Contract
 
@@ -148,7 +150,7 @@ Once v0.5 exists on the base branch, CI requires:
 - every entry to carry reason, claim-impact classification and evidence;
 - every non-initial-publication event to include RESONANCE GitHub evidence.
 
-The first v0.5 release bootstraps the ledger from known history. Append-only diff enforcement activates automatically on subsequent changes because the base branch will then contain the ledger.
+The first v0.5 release bootstraps the ledger from known history. Append-only diff enforcement activates automatically on subsequent changes because the base branch will then contain the ledger. PR runs compare against the pull-request base SHA; direct pushes to `main` compare against the push event's previous SHA so the same silent-edit boundary cannot be bypassed by skipping a PR.
 
 The first recorded repair is the Article #005 localization drift found by Translation Parity v0.4: the RU and zh-CN siblings were restored from 17 semantic tokens / 3 source links to the English publication's 23 semantic tokens / 4 source links. That repair changes the localized publication package, not the underlying English claim, so its claim impact is recorded as `presentation`.
 
