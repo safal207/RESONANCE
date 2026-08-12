@@ -1,0 +1,66 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "017-capu-checkpoint-commit",
+  "title": "CaPU v0.12 — Checkpoint Commit / Recovery Authority Creation",
+  "status": "PASS",
+  "scope": "bounded checkpoint commit controller and deterministic recovery composition",
+  "project": "safal207/CaPU",
+  "pull_request": 69,
+  "verified_content_head": "ca64c3c7477e13dff64c0d3301f8a8d5a1364b06",
+  "workflow": {
+    "name": "CaPU vCML Checkpoint Commit v0.12",
+    "run_id": 31582350253,
+    "rtl_job_id": 94068124035,
+    "rtl_job_status": "success",
+    "formal_job_id": 94068213196,
+    "formal_job_status": "success"
+  },
+  "formal": {
+    "solver": "z3",
+    "yosys": "0.33",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "safety_depth": 24,
+    "cover_depth": 28,
+    "cover_witness_files": 5,
+    "safety_result": "DONE (PASS, rc=0)",
+    "cover_result": "DONE (PASS, rc=0)",
+    "formal_input_sha256": "15c524160dfa5e6dabdfe2fe067a6eab3067d0182431c066eb7177b60357cb23",
+    "formal_log_sha256": "0ce4200e1d341ca2410ba31d48b679cf6debe8451a33abd38fd512e4c038008d",
+    "cover_log_sha256": "54f0f36d036e21f50823cabbf02b71ff157b3bd93813e50cdeeaa0523ec4991c"
+  },
+  "artifacts": [
+    {
+      "name": "capu-vcml-v12-checkpoint-commit-evidence",
+      "artifact_id": 9135668015,
+      "sha256": "0e1c149d085b93e411cce1b737216227c8aab5e53b31d28c8372a96863502b17"
+    },
+    {
+      "name": "capu-vcml-v12-checkpoint-commit-formal-evidence",
+      "artifact_id": 9135695310,
+      "sha256": "0143c89396c9e3ce1091475133970f7a86013c12b97413bd56c93bc4d1b77371"
+    }
+  ],
+  "invariants": [
+    "ANCHOR_COMMIT_REQUEST => CANDIDATE_PENDING && SNAPSHOT_DURABLE && BASE_STILL_CURRENT",
+    "STALE_BASE => NO_ANCHOR_COMMIT_REQUEST",
+    "CHECKPOINT_COMMIT_EVENT => EXACT_EXTERNAL_ACK && ANCHOR_COMMIT_REQUEST",
+    "NO_SNAPSHOT_PERSISTENCE => NO_ANCHOR_COMMIT_REQUEST",
+    "INVALID_OR_SKIPPED_EPOCH => NO_PREPARE_ACCEPT",
+    "EPOCH_EXHAUSTED => NO_PREPARE_ACCEPT",
+    "ABORT => NO_ANCHOR_COMMIT_REQUEST && NO_COMMIT_EVENT"
+  ],
+  "deterministic_fail_closed_cases": [
+    "early anchor acknowledgement before snapshot persistence",
+    "wrong persisted checkpoint state tag",
+    "wrong external anchor acknowledgement",
+    "restored spent authorization replay",
+    "checkpoint state-binding mismatch",
+    "concurrent authoritative anchor advance",
+    "skipped checkpoint epoch",
+    "abort after snapshot persistence",
+    "checkpoint epoch wrap"
+  ],
+  "claim_boundary": "the current external anchor, snapshot-persistence acknowledgement and external anchor compare-and-swap acknowledgement are trusted interface inputs; no durable media, cryptographic authentication, external CAS implementation correctness, crash-consistent storage internals, distributed consensus, complete CPU proof, or unbounded proof is claimed",
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
