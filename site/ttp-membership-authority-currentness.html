@@ -1,0 +1,28 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="TTP membership-authority currentness rule: authentic membership records still need monotonic anti-rollback evidence before consequence."><title>TTP — Membership Authority Currentness | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · MEMBERSHIP AUTHORITY CURRENTNESS</p><h1>Authentic membership is not enough. Authority history must not move backward.</h1><p class="dek">A witness-membership record may remain perfectly authentic after a successor configuration takes over. The verifier therefore needs monotonic evidence of which membership epoch it has already trusted.</p><blockquote><p><strong>AUTHENTIC MEMBERSHIP RECORD ≠ CURRENT MEMBERSHIP AUTHORITY.</strong></p></blockquote><h2>Decision rule</h2><pre><code>RECEIVE MEMBERSHIP M + QUORUM QC
+        ↓
+AUTHENTICATE M
+        ↓
+READ TRUSTED MEMBERSHIP CHECKPOINT C
+        ↓
+M.epoch &lt; C.epoch?
+  ├─ yes → membership_authority_rollback_detected
+  │         → HOLD / 0 CONSEQUENCE
+  └─ no
+        ↓
+M.epoch == C.epoch?
+  ├─ yes → REQUIRE SAME SET ID + DIGEST + THRESHOLD
+  └─ no  → REQUIRE AUTHENTIC FORWARD LINEAGE
+            BEFORE ADVANCING C
+        ↓
+VALIDATE QC AGAINST CURRENT M
+        ↓
+CHECK QUORUM CONSISTENCY
+        ↓
+CHECK AUTHORITY HEAD / VIEW / PROOF
+        ↓
+FENCED CONSEQUENCE</code></pre><h2>Required bindings</h2><ul><li>membership namespace;</li><li>witness-set identity;</li><li>monotonic set epoch;</li><li>membership digest;</li><li>exact member identities;</li><li>threshold policy;</li><li>predecessor / successor lineage evidence;</li><li>issuance generation when relevant.</li></ul><h2>I107–I110</h2><ul><li><strong>I107</strong> — Authentic membership record ≠ current membership authority.</li><li><strong>I108</strong> — Membership currentness must bind to a monotonic set-epoch / membership-digest checkpoint or equivalent anti-rollback evidence.</li><li><strong>I109</strong> — Authentic membership below the trusted membership high-watermark must fail closed before consequence.</li><li><strong>I110</strong> — Fresh current-membership quorum evidence is required to restore live authority after rotation.</li></ul><h2>Failure disposition</h2><pre><code>membership_authority_rollback_detected
+→ preserve trusted high-watermark
+→ no adoption
+→ no external effect
+→ resolve current membership
+→ require current-set quorum evidence</code></pre><h2>Boundary</h2><p>This rule does not define production membership governance, PKI, BFT reconfiguration, transparency logs or distributed checkpoint witnesses. It defines the narrower safety invariant: membership authenticity must be combined with monotonic currentness evidence.</p><div class="article-actions"><a class="button" href="verified-037-membership-authority-replay.html">Open Verified Report #037</a><a class="text-link" href="transactional-trust-protocol-v1.html">Back to TTP v1.0 →</a></div></article></main><footer class="site-footer"><div class="wrap"><a href="index.html">← RESONANCE home</a></div></footer></body></html>
