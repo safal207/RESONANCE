@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE TTP Lease Renewal Race rule — delayed heartbeats must not resurrect superseded ownership epochs." />
+  <title>TTP Lease Renewal Race Rule | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+<header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol</p></div></header>
+<main>
+<header class="article-hero wrap">
+  <a class="back-link" href="transactional-trust-protocol-v1.html">← Transactional Trust Protocol v1.0</a>
+  <div class="article-meta-row"><p class="section-label">TTP Extension · #021</p><p class="article-status">Experimental</p></div>
+  <h1 class="article-title">Lease Renewal Race / Delayed Heartbeat Rule</h1>
+  <p class="article-dek">A heartbeat extends one ownership epoch. If a newer owner already exists, the old heartbeat is stale evidence — not authority to rewrite the lease.</p>
+</header>
+<div class="article-layout wrap"><aside class="article-rail"><div class="rail-card rail-dark"><p class="section-label">Core law</p><code>late heartbeat ≠ renewed authority</code></div></aside><article class="article-body">
+  <h2>I43 · Do not resurrect superseded ownership</h2>
+  <p>Once takeover advances the ownership epoch from fencing token N to N+1, a delayed heartbeat from the N owner must not make N current again.</p>
+
+  <h2>I44 · Renewal is a compare-and-mutate operation</h2>
+  <div class="trajectory-box"><span>owner</span><i>+</i><span>fence</span><i>+</i><span>lease version</span><i>+</i><span>expiry</span></div>
+  <p>Renewal should succeed only while all facts that established the caller's current ownership still match at the renewal boundary.</p>
+
+  <h2>I45 · Zero rows is safety evidence</h2>
+  <div class="trajectory-box"><span>conditional renewal</span><i>→</i><span>0 rows</span><i>→</i><span>STALE / RE-OBSERVE</span></div>
+  <p>A failed renewal comparison is not permission to retry a blind update. It proves the cached lease is no longer enough to authorize extension.</p>
+
+  <h2>I46 · Keep the resource fence</h2>
+  <p>Coordinator compare-and-renew protects the lease record. The protected resource must still compare a monotonic fencing token, because coordinator state itself can be corrupted or become stale.</p>
+  <div class="trajectory-box"><span>B accepted N+1</span><i>→</i><span>A later presents N</span><i>→</i><span>FENCED_OUT</span></div>
+
+  <h2>Canonical chain</h2>
+  <div class="trajectory-box"><span>ACQUIRE</span><i>→</i><span>HEARTBEAT</span><i>→</i><span>EXPIRY</span><i>→</i><span>TAKEOVER</span></div>
+  <div class="trajectory-box"><span>LATE HEARTBEAT</span><i>→</i><span>COMPARE-AND-RENEW</span><i>→</i><span>RESOURCE FENCE</span><i>→</i><span>PROVE</span></div>
+
+  <h2>Evidence fields</h2>
+  <p>Preserve worker identity, resource identity, fence, lease version, expiry, renewal preconditions, renewal row count/classification, takeover state, resource-side highest fence, external mutation result and final reconciliation.</p>
+
+  <h2>Observed benchmark result</h2>
+  <p>Verified #021 reproduced two effects after blind late-heartbeat resurrection. Compare-and-renew produced zero rows and preserved one effect. When coordinator state was deliberately corrupted, resource-side fencing returned HTTP 409 and still preserved one effect.</p>
+
+  <h2>Boundary</h2>
+  <p>This is an experimental RESONANCE protocol rule derived from a deterministic PostgreSQL + local HTTP benchmark. It does not prescribe one universal lease implementation or replace consensus, transactions or provider-specific concurrency guarantees.</p>
+
+  <section class="sources-block"><p class="section-label">Inspect</p><ol>
+    <li><a href="verified-021-lease-renewal-race.html">Verified Report #021</a></li>
+    <li><a href="https://github.com/safal207/RESONANCE/blob/main/protocols/transactional-trust-v1.0/LEASE_RENEWAL_RACE.md">Canonical extension</a></li>
+  </ol></section>
+  <div class="article-end"><p><strong>TTP Lease Renewal Rule</strong></p><p>current owner → current epoch → conditional renewal → fenced mutation.</p></div>
+</article></div>
+</main>
+<footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div></div><div><p class="footer-title">TTP Extension</p><p>Lease Renewal Race</p></div><div><a href="transactional-trust-protocol-v1.html">Protocol v1.0</a></div></div></footer>
+<script src="app.js"></script>
+</body>
+</html>
