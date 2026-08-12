@@ -1,0 +1,60 @@
+{
+  "report": "RESONANCE Verified Report #038 — Membership Authority Equivocation / Same-Epoch Fork",
+  "benchmark": "Membership Authority Equivocation / Same-Epoch Fork v1.0",
+  "score": 10,
+  "max_score": 10,
+  "classification": "Membership authority equivocation protocol passes",
+  "law": "SAME AUTHORITY + SAME MEMBERSHIP EPOCH + DIFFERENT AUTHENTIC MEMBERSHIP DIGESTS = EQUIVOCATION EVIDENCE",
+  "run_id": 31618790089,
+  "job_id": 94188104629,
+  "benchmark_head_sha": "a90f9d903e74103dfead69134104c44761848982",
+  "artifact_id": 9150364287,
+  "artifact_digest": "sha256:bbd0de53bf4cc9690a4df11893ccaa7fbb5469d60fa4353aa96d2ff62bf8039b",
+  "fork": {
+    "issuer_key_id": "membership-authority-demo-key-v1",
+    "set_epoch": 2,
+    "same_predecessor": true,
+    "branch_a": {
+      "set_id": "set-B",
+      "members": ["W4", "W5", "W6"],
+      "membership_digest": "sha256:aa0ad1f938ebde6911b5678bd40aaf0df1f2294c8925e8658b088f2c70557402",
+      "authentic": true,
+      "quorum_valid": true
+    },
+    "branch_b": {
+      "set_id": "set-C",
+      "members": ["W7", "W8", "W9"],
+      "membership_digest": "sha256:b1586f4db5d001f30c64587bfdc960b625748d55048d30b94f350ddeebeca24c",
+      "authentic": true,
+      "quorum_valid": true
+    }
+  },
+  "unsafe": {
+    "branch": "set-C / epoch 2",
+    "verdict": "isolated_membership_branch_authorized",
+    "adoption_rows": 1,
+    "http_status": 200,
+    "effect_count": 1
+  },
+  "safe": {
+    "verdict": "membership_authority_equivocation_detected",
+    "branch_a_effect_count": 0,
+    "branch_b_effect_count": 0,
+    "quarantined_issuer": "membership-authority-demo-key-v1"
+  },
+  "recovery": {
+    "set_id": "set-D",
+    "set_epoch": 3,
+    "issuer_key_id": "membership-recovery-authority-demo-key-v1",
+    "binds_both_conflicting_digests": true,
+    "signers": ["W10", "W11"],
+    "verdict": "equivocation_resolved_by_fresh_recovery_membership",
+    "adoption_rows": 1,
+    "http_status": 200,
+    "effect_count": 1,
+    "output": 30
+  },
+  "invariants": ["I111", "I112", "I113", "I114"],
+  "external_safety_certification": false,
+  "vulnerability_claim": false
+}
