@@ -1,0 +1,68 @@
+{
+  "report": 25,
+  "title": "Dependency-Aware Applicability / Relevant vs Irrelevant State Drift",
+  "benchmark": "RESONANCE Dependency-Aware Applicability v1.0",
+  "run_id": 31582719421,
+  "job_id": 94069304397,
+  "score": 10,
+  "max_score": 10,
+  "classification": "Dependency-aware applicability protocol passes",
+  "artifact": {
+    "name": "resonance-dependency-aware-applicability-v1.0",
+    "id": 9135817141,
+    "digest": "sha256:b0f6a68a5cb0a2aaff3672fb28b734645a10c65f4d100da7250a45c3fdf66505"
+  },
+  "environment": {
+    "postgresql": "17.6",
+    "http_service_image": "python:3.12-slim",
+    "http_service_image_digest": "python@sha256:229a2c5bfa27522db7815ea81f9bed70af17ccb9de9fc7ad142b1877b5830d36"
+  },
+  "causal_dependencies": ["price", "limit"],
+  "irrelevant_state": ["theme"],
+  "irrelevant_drift": {
+    "global_version_before": 100,
+    "global_version_after": 101,
+    "theme_before": "light",
+    "theme_after": "dark",
+    "dependency_fingerprint_unchanged": true,
+    "expected_output_before": 20,
+    "expected_output_after": 20,
+    "strict_global_guard_rows": 0,
+    "strict_global_guard_reason": "global_version_conflict",
+    "dependency_guard_rows": 1,
+    "final_effect_count": 1,
+    "committed_output": 20
+  },
+  "relevant_price_drift": {
+    "price_before": 10,
+    "price_after": 20,
+    "dependency_fingerprint_changed": true,
+    "expected_output_before": 20,
+    "expected_output_after": 30,
+    "blind_adoption_rows": 1,
+    "blind_committed_output": 20,
+    "dependency_guard_rows": 0,
+    "dependency_guard_reason": "dependency_conflict",
+    "effects_before_recompute": 0,
+    "fresh_recomputed_output": 30,
+    "final_effect_count": 1
+  },
+  "relevant_limit_drift": {
+    "limit_before": 30,
+    "limit_after": 15,
+    "expected_output_before": 20,
+    "expected_output_after": 15,
+    "dependency_fingerprint_changed": true,
+    "dependency_guard_rows": 0,
+    "dependency_guard_reason": "dependency_conflict",
+    "final_effect_count": 0
+  },
+  "invariants": [
+    "STATE CHANGED DOES NOT IMPLY RELEVANT STATE CHANGED.",
+    "APPLICABILITY SHOULD BIND TO THE STATE SUBGRAPH THAT CAUSALLY JUSTIFIED THE RESULT.",
+    "GLOBAL VERSION MISMATCH MAY BE A CONSERVATIVE SIGNAL, NOT PROOF OF INVALIDITY.",
+    "DEPENDENCY FINGERPRINT MISMATCH REQUIRES REVALIDATION, RECOMPUTATION, OR DOMAIN PROOF BEFORE CONSEQUENCE."
+  ],
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
