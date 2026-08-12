@@ -1,0 +1,49 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "016-capu-checkpoint-freshness",
+  "title": "CaPU v0.11 — Checkpoint Freshness / Anti-Rollback Boundary",
+  "status": "PASS",
+  "scope": "bounded hardware/formal checkpoint freshness guard",
+  "project": "safal207/CaPU",
+  "pull_request": 69,
+  "verified_head": "2495b8ec669b836b7c4d487400fbd62352ce8aac",
+  "workflow": {
+    "name": "CaPU vCML Checkpoint v0.11",
+    "run_id": 31580821379,
+    "rtl_job_status": "success",
+    "formal_job_status": "success"
+  },
+  "formal": {
+    "solver": "z3",
+    "yosys": "0.33",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "safety_depth": 16,
+    "cover_depth": 20,
+    "cover_witnesses": 6,
+    "safety_result": "DONE (PASS, rc=0)",
+    "cover_result": "DONE (PASS, rc=0)"
+  },
+  "artifacts": [
+    {
+      "name": "capu-vcml-v11-checkpoint-evidence",
+      "artifact_id": 9135065535,
+      "sha256": "d74686470349b3835bb156d51744ae55bc6e55c1eb9bc916b6a0d7450295ea11"
+    },
+    {
+      "name": "capu-vcml-v11-checkpoint-formal-evidence",
+      "artifact_id": 9135079466,
+      "sha256": "e5fc4dff0baf65552b632eb80a8ac28aae04504f1ca3c855498b1ef16668f8ff"
+    }
+  ],
+  "invariants": [
+    "ANCHORED_RESTORE_ACCEPT => CHECKPOINT_TRUSTED && SNAPSHOT_REF==ANCHOR_REF && SNAPSHOT_EPOCH==ANCHOR_EPOCH",
+    "SNAPSHOT_EPOCH<ANCHOR_EPOCH => ROLLBACK_DETECTED && NO_RESTORE_ACCEPT",
+    "SAME_EPOCH_WRONG_REF => NO_RESTORE_ACCEPT",
+    "UNTRUSTED_ANCHORED_CHECKPOINT => NO_RESTORE_ACCEPT",
+    "RECOVERY_BEGIN => NO_RESTORE_ACCEPT",
+    "COLD_START_ACCEPT => !ANCHOR_VALID && COLD_START_AUTHORIZED && REF==0 && EPOCH==0"
+  ],
+  "claim_boundary": "checkpoint_trusted and the external anchor are trusted inputs; no cryptographic verification, durable monotonic storage, anchor persistence, checkpoint commit protocol, distributed recovery, complete CPU proof, or unbounded proof is claimed",
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
