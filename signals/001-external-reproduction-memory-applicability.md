@@ -119,7 +119,7 @@ Until that happens, lineage interoperability remains **pending**.
 1. Anthropic Claude Code issue #34556 — public memory discussion and DanceNitra reports: https://github.com/anthropics/claude-code/issues/34556
 2. Inspeximus conformance test: https://github.com/DanceNitra/inspeximus/blob/e7c030e0efa50e2f3fe1f15865fb56648de12f8e/tests/test_cml_memory_applicability_contract.py
 3. Inspeximus vendored frozen fixture: https://github.com/DanceNitra/inspeximus/blob/e7c030e0efa50e2f3fe1f15865fb56648de12f8e/tests/fixtures/cml_memory_applicability_v0.1.json
-4. CML frozen fixture: https://github.com/safal207/Causal-Memory-Layer/blob/main/tests/fixtures/memory_applicability_v0.1.json
+4. CML frozen fixture: https://github.com/safal207/Causal-Memory-Layer/blob/0c27e1918c27e5223fe8343df0aac77b2db5ccdb/tests/fixtures/memory_applicability_v0.1.json
 5. CML Current-State Applicability PR #270: https://github.com/safal207/Causal-Memory-Layer/pull/270
 6. CML lineage/supersession PR #272: https://github.com/safal207/Causal-Memory-Layer/pull/272
 7. Frozen lineage fixture: https://github.com/safal207/Causal-Memory-Layer/blob/0c27e1918c27e5223fe8343df0aac77b2db5ccdb/tests/fixtures/memory_lineage_v0.1.json
