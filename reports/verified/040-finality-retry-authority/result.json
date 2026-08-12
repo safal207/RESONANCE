@@ -1,0 +1,29 @@
+{
+  "report": "RESONANCE Verified Report 040 — Finality != Retry Authority",
+  "date": "2026-08-12",
+  "source_repository": "safal207/ContractGraph-QA",
+  "source_merge_commit": "24ca237ba01d98e8bb2150f51db5309bd403ecb9",
+  "provider_profile": "payram-payout-public",
+  "provider_adapter_schema": "cgqa.payment-provider-adapter.v0.3",
+  "market_driven_correction": {
+    "previous_assumption": "final failed reconciliation may imply retry authority",
+    "corrected_rule": "reconciliation finality and retry authority are independent claims",
+    "retry_semantics_status": "unresolved",
+    "retry_allowed_after_provider_states": [],
+    "fail_closed": true
+  },
+  "core_principle": "FINALITY(previous operation) + AUTHORITY(next operation) = permission to continue",
+  "verified_properties": {
+    "final_failure_can_block_retry": true,
+    "retry_authority_is_separate_from_reconciliation": true,
+    "undocumented_retry_semantics_remain_unresolved": true
+  },
+  "provider_boundary": {
+    "production_system_tested": false,
+    "vulnerability_claim": false,
+    "compliance_claim": false,
+    "endorsement_claim": false,
+    "basis": "reviewed public contract plus merged executable adapter"
+  },
+  "classification": "Market-driven recovery-model correction recorded"
+}
