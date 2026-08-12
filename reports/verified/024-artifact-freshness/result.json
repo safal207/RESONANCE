@@ -1,0 +1,66 @@
+{
+  "benchmark": "RESONANCE Artifact Freshness / Stale-but-Valid Result",
+  "benchmark_version": "1.0",
+  "protocol": "RESONANCE Transactional Trust Protocol v1.0",
+  "score": 10,
+  "max_score": 10,
+  "classification": "Artifact applicability protocol passes",
+  "github_actions_run": 31581764996,
+  "evidence_artifact": {
+    "name": "resonance-artifact-freshness-v1.0",
+    "id": 9135437374,
+    "digest": "sha256:f6a689be4f4c44e59cdb40d6c62459146f6eb10a18a2bc66cc87eb5baf89e8c4"
+  },
+  "database": "PostgreSQL 17.6",
+  "http_service_image_digest": "python@sha256:229a2c5bfa27522db7815ea81f9bed70af17ccb9de9fc7ad142b1877b5830d36",
+  "unsafe": {
+    "artifact_integrity_valid": true,
+    "producer": "worker-A",
+    "producer_fence": 1,
+    "artifact_digest": "sha256:24d74ba731844d1c644f56428e51fd4c75a168454f1925beac3c32c40ceeeba8",
+    "input_state_version": 100,
+    "input_snapshot_digest": "sha256:a7f43d9c6748240032cbc401b3b2cfd7ef8f094422ed09916b393c8867ba079a",
+    "artifact_output": 20,
+    "current_state_version": 101,
+    "current_snapshot_digest": "sha256:b0cae5f079db7c2e75864a79e98aab562dd4af9a45fae58d7656559dc336a443",
+    "current_expected_output": 40,
+    "current_owner": "worker-B",
+    "current_owner_fence": 2,
+    "blind_adoption_rows": 1,
+    "external_effect_count": 1,
+    "committed_output": 20
+  },
+  "safe": {
+    "stale_adoption_rows": 0,
+    "stale_adoption_reason": "applicability_conflict",
+    "effects_before_recompute": 0,
+    "recomputed_input_state_version": 101,
+    "recomputed_artifact_digest": "sha256:f5fd67c92e007a01df04dc004cf40dae4bdc6516674782e5dd8dfa545a62e89d",
+    "recomputed_output": 40,
+    "fresh_adoption_rows": 1,
+    "final_effect_count": 1,
+    "final_output": 40
+  },
+  "same_version_snapshot_guard": {
+    "state_version": 100,
+    "original_value": 10,
+    "mutated_value": 11,
+    "original_snapshot_digest": "sha256:a7f43d9c6748240032cbc401b3b2cfd7ef8f094422ed09916b393c8867ba079a",
+    "mutated_snapshot_digest": "sha256:c7a08713d3d03146fcbcaaab3e056a74bf41d3e5278f2575ae6778a4a8b00d45",
+    "adoption_rows": 0
+  },
+  "control": {
+    "unchanged_state_version": 100,
+    "adoption_rows": 1,
+    "effect_count": 1,
+    "output": 20
+  },
+  "invariants": [
+    "INTEGRITY + PROVENANCE DOES NOT IMPLY CURRENT APPLICABILITY.",
+    "RESULT ADOPTION MUST BIND THE INPUT STATE VERSION OR EQUIVALENT SNAPSHOT IDENTITY THAT JUSTIFIED COMPUTATION.",
+    "STATE ADVANCE AFTER INPUT CAPTURE IS AN APPLICABILITY TRANSITION.",
+    "STALE-BUT-VALID ARTIFACT REQUIRES REVALIDATION, RECOMPUTATION, OR EXPLICIT DOMAIN PROOF BEFORE CONSEQUENCE."
+  ],
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
