@@ -9,10 +9,27 @@
   <link rel="alternate" hreflang="en" href="https://safal207.github.io/RESONANCE/memory-can-be-true-and-still-be-unsafe.html" />
   <link rel="alternate" hreflang="ru" href="https://safal207.github.io/RESONANCE/memory-can-be-true-and-still-be-unsafe.ru.html" />
   <link rel="alternate" hreflang="zh-CN" href="https://safal207.github.io/RESONANCE/memory-can-be-true-and-still-be-unsafe.zh.html" />
-  <link rel="stylesheet" href="styles.css" /><link rel="stylesheet" href="article.css" /><link rel="stylesheet" href="market.css" />
+  <link rel="alternate" hreflang="x-default" href="https://safal207.github.io/RESONANCE/memory-can-be-true-and-still-be-unsafe.html" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+  <link rel="stylesheet" href="market.css" />
 </head>
 <body data-share-text="AI 记忆可以在历史上仍然真实，却已不再适合驱动当前行动。什么变化应该让恢复的记忆在 Agent 行动前失去权限？">
-  <header class="site-header"><div class="masthead wrap"><a class="brand" href="index.zh.html">RESONANCE</a><p class="masthead-line">智能、科技与人类进步杂志</p></div></header>
+  <a class="skip-link" href="#article">跳到文章</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.zh.html" aria-label="RESONANCE">RESONANCE</a>
+      <p class="masthead-line">智能、科技与人类进步杂志</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">菜单</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="主导航">
+      <a href="ai-agents.html">AI</a>
+      <a href="open-problems.html">开放问题</a>
+      <a href="verified-workflow.html">Verified Workflow</a>
+      <a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
   <main id="article">
     <header class="article-hero wrap">
       <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
@@ -24,7 +41,11 @@
     </header>
 
     <div class="article-layout wrap">
-      <aside class="article-rail"><div class="rail-card"><p class="section-label">核心不变量</p><strong>历史真实 ≠ 当前行动权限</strong><span>行动之前重新验证。</span></div><div class="rail-card rail-dark"><p class="section-label">判定结果</p><code>MATCH · DRIFT · ORPHAN · UNRESOLVABLE · REJECT · REVALIDATE</code></div></aside>
+      <aside class="article-rail" aria-label="文章摘要">
+        <div class="rail-card"><p class="section-label">核心不变量</p><strong>历史真实 ≠ 当前行动权限</strong><span>行动之前重新验证。</span></div>
+        <div class="rail-card rail-dark"><p class="section-label">判定结果</p><code>MATCH · DRIFT · ORPHAN · UNRESOLVABLE · REJECT · REVALIDATE</code></div>
+        <div class="rail-card"><p class="section-label">Reference implementation</p><strong>CML PR #270</strong><span>Merged · CI + CodeQL green</span></div>
+      </aside>
       <article class="article-body">
         <p class="dropcap">持久记忆改变了 AI Agent 的风险边界。Agent 可以跨会话恢复之前的事实、决策、批准和计划，但它也可能非常自信地从一个“昨天正确、今天已不适用”的状态继续执行。</p>
 
@@ -33,9 +54,13 @@
         <h2>信号来自 provenance 讨论。</h2>
         <p>在 Claude Code 的记忆讨论中，贡献者 <strong>DanceNitra</strong> 区分了“看起来有来源”与“真的可以重新访问来源”。在其报告的数据集中，大约 98.3% 的记录拥有 <code>source</code> 字段，但只有 24 条记录——约 0.01%——使用了真正可以重新获取并验证的来源标识。</p>
         <p>像 <code>agent:scholar</code> 这样的值可能标识写入者，却不一定能定位原始内容。因此，拥有 provenance 元数据，并不等于系统能够检测来源漂移、删除或替换。</p>
+        <p>同一讨论还暴露了第二类风险：如果库之后把 caller-controlled metadata 当成自己可信验证路径产生的状态来解释，这些元数据就可能错误地获得信任。</p>
+
+        <div class="trajectory-box"><span>memory recovered</span><i>→</i><span>source appears valid</span><i>→</i><span>environment changed</span><i>→</i><span>action?</span></div>
 
         <h2>但 provenance 即使正确，也还不够。</h2>
         <p>假设 Agent 记得某个 pull request 在 commit <code>A</code> 上已经通过审查。这一历史事实可以完全真实。但当前 branch 可能已经移动到 commit <code>B</code>，策略可能改变，租户可能不同，API 可能升级，授权也可能过期。</p>
+        <p>如果 Agent 只问“这条记忆当时有效吗？”，它可能得到“是”，却仍然做出错误决定。</p>
         <section class="claim-panel"><p class="section-label">两个独立问题</p><div><b>1</b><p><strong>历史有效性：</strong>这条记忆是否真实地证明了过去发生的事情？</p></div><div><b>2</b><p><strong>当前适用性：</strong>这条历史证据现在是否仍可安全用于此环境、此时刻、此行动？</p></div></section>
 
         <div class="pull-quote"><strong>历史证据仍然有效 + 当前环境已经变化 ≠ 当前行动权限。</strong></div>
@@ -51,6 +76,18 @@
         <p>Review 中出现了一个重要边界案例：如果历史记忆从未绑定 repository 或 commit SHA，即使来源 digest 匹配，它也可能在新的代码上下文中错误地获得 <code>MATCH</code>。现在，只要当前 authoritative state 提供 repository 或 commit SHA，而历史证据缺少相应绑定，就必须返回 <code>REVALIDATE</code>。</p>
         <p><strong>缺少历史上下文，并不等于可以假设连续性。</strong></p>
 
+        <h2>环境应该按用途绑定，而不是整体做一个全局哈希。</h2>
+        <p>并不是每一种变化都应该使每一条记忆失效。修改一个无关 README，不一定要撤销关于 tenant-scoped billing rule 的记忆。Applicability 因此需要 purpose-bound context fingerprint：只让与当前行动真正相关的环境维度参与判定。</p>
+        <section class="claim-panel">
+          <p class="section-label">候选当前状态维度</p>
+          <div><b>R</b><p>Repository / commit / branch</p></div>
+          <div><b>W</b><p>Workspace / target resource state</p></div>
+          <div><b>A</b><p>Actor / tenant / authority</p></div>
+          <div><b>P</b><p>Policy digest / permissions</p></div>
+          <div><b>I</b><p>API / model / interface version</p></div>
+          <div><b>τ</b><p>Observed time / TTL / validity window</p></div>
+        </section>
+
         <h2>应该过期的是权限，不是真实。</h2>
         <p>过期的 approval 仍然应该保留在审计记录中。旧 commit 的 review 在 branch 移动之后仍然是历史事实。后来被删除的来源也不应该让过去“从未发生”。</p>
         <div class="pull-quote">不要因为现在发生了变化而重写过去。应该撤销的是过去对当前行动的自动权限。</div>
@@ -59,23 +96,52 @@
         <p>我们将这一提案同时分享给了 Anthropic 和 OpenAI。原因很简单：Memory Revalidation 作为跨生态的安全与互操作 primitive，比作为单一厂商的封闭功能更有价值。</p>
         <div class="market-kpi"><pre>memory
 → provenance verification
-→ source integrity
-→ current environment
+→ source re-fetch / integrity
+→ current environment comparison
 → applicability verdict
 → current authority
 → action</pre></div>
+
+        <p>更有用的覆盖率指标也可以拆成四类：</p>
+        <ol class="action-list">
+          <li><strong>Locator coverage：</strong>我们能否识别来源？</li>
+          <li><strong>Re-fetch verification coverage：</strong>我们能否重新访问并比较 digest？</li>
+          <li><strong>Source enumeration coverage：</strong>我们能否检测删除或 orphaning？</li>
+          <li><strong>Environment binding coverage：</strong>我们是否掌握足够的当前上下文来判断复用是否安全？</li>
+        </ol>
 
         <section class="market-question" id="open-question">
           <p class="section-label">给市场的问题</p>
           <h2>记忆应该在什么地方失去行动权限？</h2>
           <p class="hot-question"><strong>在 AI Agent 被允许行动之前，哪些变化应该使恢复的记忆失效——代码版本、策略/权限、租户、资源状态、API/模型版本、时间，还是其他因素？</strong></p>
           <p>欢迎描述一个经过安全泛化的真实场景：事实仍然是真的，但直接复用已经不再安全。</p>
+          <ul class="market-prompts">
+            <li><strong>Memory：</strong>Agent 恢复了什么？</li>
+            <li><strong>Change：</strong>当前环境发生了什么变化？</li>
+            <li><strong>Risk：</strong>如果旧记忆继续驱动行动，会发生什么？</li>
+            <li><strong>Revalidation：</strong>什么证据可以让这条记忆重新安全地被使用？</li>
+          </ul>
           <div class="market-actions"><a class="button" href="https://github.com/safal207/RESONANCE/issues/new?template=market-workflow.yml" target="_blank" rel="noreferrer">描述你的 workflow →</a><a class="text-link" href="verified-workflow.html">Verified Workflow →</a></div>
+          <p class="market-note">请勿提交 credentials、private keys、客户机密数据或可识别生产环境的细节；必要时请泛化案例。</p>
         </section>
 
         <p class="closing-line"><strong>记忆告诉 Agent 什么曾经是真实的；Applicability 告诉它，这个真实现在是否仍有资格驱动行动。</strong></p>
 
-        <section class="sources-block" id="sources"><p class="section-label">可检查来源</p><ol><li><a href="https://github.com/anthropics/claude-code/issues/34556#issuecomment-5244228930" target="_blank" rel="noreferrer">Claude Code issue #34556 — provenance / reconciliation 讨论</a></li><li><a href="https://github.com/safal207/Causal-Memory-Layer/pull/270" target="_blank" rel="noreferrer">CML PR #270 — Current-State Applicability and REVALIDATE</a></li><li><a href="https://github.com/safal207/Causal-Memory-Layer/blob/main/cml/integrations/memory_applicability.py" target="_blank" rel="noreferrer">已合并实现</a></li></ol></section>
+        <section class="share-panel" aria-label="分享这项研究">
+          <p class="section-label">Distribution</p><h3>分享问题，而不只是链接。</h3>
+          <div class="share-actions"><button type="button" data-share="native">分享</button><button type="button" data-share="x">X</button><button type="button" data-share="linkedin">LinkedIn</button><button type="button" data-share="reddit">Reddit</button><button type="button" data-share="telegram">Telegram</button><button type="button" data-share="copy">复制链接</button></div>
+        </section>
+
+        <section class="sources-block" id="sources">
+          <p class="section-label">可检查来源</p>
+          <ol>
+            <li><a href="https://github.com/anthropics/claude-code/issues/34556#issuecomment-5244228930" target="_blank" rel="noreferrer">Claude Code issue #34556 — provenance / reconciliation 讨论</a></li>
+            <li><a href="https://github.com/safal207/Causal-Memory-Layer/pull/270" target="_blank" rel="noreferrer">CML PR #270 — Current-State Applicability and REVALIDATE</a></li>
+            <li><a href="https://github.com/safal207/Causal-Memory-Layer/blob/main/cml/integrations/memory_applicability.py" target="_blank" rel="noreferrer">已合并实现 — memory_applicability.py</a></li>
+            <li><a href="https://github.com/safal207/Causal-Memory-Layer/blob/main/docs/integrations/MEMORY_APPLICABILITY_V0_1.md" target="_blank" rel="noreferrer">CML Memory Current-State Applicability v0.1 specification</a></li>
+          </ol>
+          <p class="source-note">Provenance 测量来自所链接的 Claude Code 讨论。Applicability model、verdicts 与 reference implementation 属于 RESONANCE/CML 的开放工程提案，并不代表 Anthropic 或 OpenAI 的产品承诺。</p>
+        </section>
       </article>
     </div>
   </main>

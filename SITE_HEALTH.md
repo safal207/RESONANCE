@@ -12,6 +12,13 @@ PUBLICATION CONTRACT
   ├─ SEO / canonical / structured-data checks
   └─ internal link integrity
   ↓
+TRANSLATION PARITY CONTRACT
+  ├─ managed EN / RU / zh-CN sibling existence
+  ├─ reciprocal canonical / hreflang / language-switcher mapping
+  ├─ article semantic-outline parity
+  ├─ CTA + critical ID + runtime-script parity
+  └─ primary / evidence source-link parity
+  ↓
 STATIC UI / MEDIA CONTRACT
   ├─ image alt + intrinsic width/height
   ├─ responsive large-image delivery
@@ -66,6 +73,42 @@ The Visual Regression Contract uses a broader multilingual matrix:
 That produces 24 candidate screenshots per run plus matching public-main baselines and diff PNGs when a baseline route exists.
 
 The post-deployment Live Experience Audit measures a smaller public subset again to detect deploy/runtime differences.
+
+## Translation Parity Contract
+
+Translation Parity v0.4 treats localization drift as a release property rather than a copy-editing afterthought.
+
+The initial **managed translation triplets** are:
+
+- homepage — `index.html` / `index.ru.html` / `index.zh.html`;
+- Article #004 — EN / RU / zh-CN;
+- Article #005 — EN / RU / zh-CN.
+
+The list is intentionally explicit. RESONANCE can contain a Russian-only or English-only publication without pretending that an unannounced translation is missing. A triplet becomes release-managed only when all three locales are deliberately part of the publication contract.
+
+### Release-blocking translation-parity invariants
+
+For every managed triplet, CI requires:
+
+- all three siblings to exist;
+- the expected `html lang` on each sibling;
+- correct canonical URLs and reciprocal `hreflang` mappings;
+- a visible EN / RU / zh-CN language switcher with only the active locale marked `aria-current="page"`.
+
+For managed article triplets, CI additionally requires:
+
+- the same Issue / Article identity;
+- the same major semantic outline: H2/H3 levels plus trajectory, invariant/evidence, market-question, distribution and source blocks in the same order;
+- the same critical IDs;
+- the same market CTA destinations;
+- the same primary/evidence source URLs;
+- the same runtime script set.
+
+This is **semantic-structure parity**, not sentence-by-sentence translation comparison. Natural translations may use different wording, sentence counts and paragraph lengths.
+
+### Evidence boundary
+
+A passing Translation Parity Contract proves that the managed localized publication siblings still expose the same structural/evidence surface and action destinations. It does **not** prove linguistic fluency, nuanced semantic equivalence, cultural appropriateness or factual correctness of translated prose. Those require editorial/human or separate language-model review evidence.
 
 ## UI Geometry Contract
 
@@ -138,12 +181,13 @@ Each pull-request Site Health stack can produce:
 - `lighthouse-summary.json` / `.md`;
 - `ui-geometry-summary.json` / `.md`;
 - `ui-markup-summary.json` / `.md`;
+- `translation-parity-summary.json` / `.md`;
 - candidate screenshot PNGs;
 - public-main baseline PNGs;
 - visual diff PNGs;
 - `visual-summary.json` / `.md`;
 - GitHub Actions job summaries;
-- compact PR comments for Lighthouse/geometry and visual regression.
+- compact PR comments for Lighthouse/geometry, translation parity and visual regression.
 
 The live audit adds `ui-geometry-live-summary.json` / `.md` against the deployed GitHub Pages site.
 
@@ -151,27 +195,27 @@ Artifacts are retained for 90 days in the initial implementation.
 
 ## Integrity boundary
 
-A Lighthouse score, geometry check or screenshot diff is controlled evidence for a particular browser profile and run. It does **not** prove:
+A Lighthouse score, geometry check, translation-parity result or screenshot diff is controlled evidence for a particular profile and run. It does **not** prove:
 
 - Google ranking;
 - production field Core Web Vitals;
 - identical rendering for every reader/device/network;
 - conversion or business impact;
 - editorial correctness;
+- nuanced linguistic translation quality;
 - visual taste or brand quality.
 
 Those require separate evidence.
 
 ## Next useful site-quality layers
 
-Prioritized after Lighthouse + geometry + visual regression are stable:
+Prioritized after publication, translation parity, Lighthouse, geometry and visual regression are stable:
 
-1. **Translation parity contract** — detect when EN/RU/zh-CN siblings drift, become stale or lose structural sections.
-2. **Corrections + version history** — expose how articles change and why.
-3. **RSS / newsletter feed** — make the journal subscribable outside social platforms.
-4. **Privacy-aware analytics** — measure reading and CTA funnels without building invasive identity profiles.
-5. **External citation-link health** — periodically detect broken or redirected evidence links without blocking every publication on transient third-party failures.
-6. **Field performance evidence** — add privacy-safe real-user Web Vitals only if there is enough traffic to interpret them responsibly.
-7. **Public health history** — trend Lighthouse, geometry, visual and publication-contract results across releases rather than presenting only the latest run.
+1. **Corrections + version history** — expose how articles change and why.
+2. **RSS / newsletter feed** — make the journal subscribable outside social platforms.
+3. **Privacy-aware analytics** — measure reading and CTA funnels without building invasive identity profiles.
+4. **External citation-link health** — periodically detect broken or redirected evidence links without blocking every publication on transient third-party failures.
+5. **Field performance evidence** — add privacy-safe real-user Web Vitals only if there is enough traffic to interpret them responsibly.
+6. **Public health history** — trend Lighthouse, translation parity, geometry, visual and publication-contract results across releases rather than presenting only the latest run.
 
-The order matters: deterministic publication integrity and visible UI regressions are more important to an evidence-first journal than maximizing a vanity score.
+The order matters: deterministic publication integrity, localization drift and visible UI regressions are more important to an evidence-first journal than maximizing a vanity score.
