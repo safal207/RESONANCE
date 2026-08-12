@@ -179,6 +179,8 @@ See [`issues/001-age-of-agents/`](issues/001-age-of-agents/) and the web edition
 
 ## Verified research
 
+**Current verified milestone — 2026-08-12:** CaPU v0.13 closes the checkpoint-content binding gap. The canonical finite replay-state snapshot is committed off-path with SHA-256 and the same commitment is bound across prepare → persistence → anchor commit → anchored recovery. Verified CaPU head: `5c69c997a30c872eee86137607feef816a98f289`. The full CaPU verification stack from v0.9 through v0.13 completed green on that head. See [`Verified Report #018`](reports/verified/018-capu-checkpoint-content/REPORT.md) and its [`machine-readable result`](reports/verified/018-capu-checkpoint-content/result.json).
+
 Key reproducible reports:
 
 - **#001** OpenAI Agents SDK structural baseline — 95/100;
