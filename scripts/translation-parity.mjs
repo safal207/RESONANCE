@@ -67,6 +67,25 @@ function allTags(html, name) {
   return [...html.matchAll(new RegExp(`<${name}\\b[^>]*>`, 'gi'))].map((match) => ({ tag: match[0], attrs: attrs(match[0]) }));
 }
 
+function classCount(html, className) {
+  let total = 0;
+  for (const match of html.matchAll(/<[^>]+\bclass\s*=\s*(["'])([^"']+)\1[^>]*>/gi)) {
+    if (match[2].split(/\s+/).includes(className)) total += 1;
+  }
+  return total;
+}
+
+function idCount(html, id) {
+  return [...html.matchAll(new RegExp(`\\bid\\s*=\\s*(["'])${id}\\1`, 'gi'))].length;
+}
+
+function normalizeLocalHref(href) {
+  const withoutFragment = (href || '').split('#')[0].split('?')[0];
+  const cleaned = withoutFragment.replace(/^\.\//, '');
+  if (!cleaned || cleaned === 'index.html') return 'index.html';
+  return cleaned;
+}
+
 function canonicalFor(file) {
   return file === 'index.html' ? BASE : `${BASE}${file}`;
 }
@@ -195,6 +214,12 @@ function inspect(file) {
     ids: body ? ids(body) : [],
     ctas: marketQuestion ? anchorHrefs(marketQuestion, ['button', 'text-link']) : [],
     sources: sourcesBlock ? anchorHrefs(sourcesBlock) : [],
+    shell: {
+      skipLinks: classCount(html, 'skip-link'),
+      menuToggles: classCount(html, 'menu-toggle'),
+      mainNavs: idCount(html, 'main-nav'),
+      railCards: classCount(html, 'rail-card'),
+    },
   };
 }
 
@@ -222,9 +247,7 @@ for (const group of groups) {
     if (page.canonical !== canonicalFor(file)) groupFailures.push(`${group.id}/${lang}: canonical mismatch (${page.canonical || '<missing>'})`);
 
     for (const [altLang, href] of Object.entries(expectedAlts)) {
-      if (page.alternates[altLang] !== href) {
-        groupFailures.push(`${group.id}/${lang}: hreflang ${altLang} != ${href}`);
-      }
+      if (page.alternates[altLang] !== href) groupFailures.push(`${group.id}/${lang}: hreflang ${altLang} != ${href}`);
     }
 
     const links = page.switcher;
@@ -236,7 +259,9 @@ for (const group of groups) {
         groupFailures.push(`${group.id}/${lang}: language switcher missing ${expected.hreflang}`);
         continue;
       }
-      if (link.href !== expected.href) groupFailures.push(`${group.id}/${lang}: switcher ${expected.hreflang} href ${link.href || '<missing>'} != ${expected.href}`);
+      if (normalizeLocalHref(link.href) !== normalizeLocalHref(expected.href)) {
+        groupFailures.push(`${group.id}/${lang}: switcher ${expected.hreflang} href ${link.href || '<missing>'} != ${expected.href}`);
+      }
       if (expected.hreflang === lang && !link.current) groupFailures.push(`${group.id}/${lang}: current-language switcher link is not aria-current=page`);
       if (expected.hreflang !== lang && link.current) groupFailures.push(`${group.id}/${lang}: non-current ${expected.hreflang} switcher link is marked current`);
     }
@@ -255,6 +280,9 @@ for (const group of groups) {
       if (page.articleIdentity !== reference.articleIdentity) {
         groupFailures.push(`${group.id}/${lang}: article identity ${page.articleIdentity || '<missing>'} != ${reference.articleIdentity || '<missing>'}`);
       }
+      if (JSON.stringify(page.shell) !== JSON.stringify(reference.shell)) {
+        groupFailures.push(`${group.id}/${lang}: article shell drift (${JSON.stringify(page.shell)} != ${JSON.stringify(reference.shell)})`);
+      }
       if (!equalArray(reference.outline, page.outline)) {
         const diff = firstDiff(reference.outline, page.outline);
         groupFailures.push(`${group.id}/${lang}: semantic outline drift at token ${diff.index} (${diff.actual} != ${diff.expected})`);
@@ -265,9 +293,7 @@ for (const group of groups) {
       if (!equalArray(reference.ctas, page.ctas)) {
         groupFailures.push(`${group.id}/${lang}: CTA destination drift (${page.ctas.join(' | ') || '<none>'})`);
       }
-      if (!equalArray(reference.sources, page.sources)) {
-        groupFailures.push(`${group.id}/${lang}: primary/evidence source-link drift`);
-      }
+      if (!equalArray(reference.sources, page.sources)) groupFailures.push(`${group.id}/${lang}: primary/evidence source-link drift`);
       if (!equalArray(reference.scripts, page.scripts)) {
         groupFailures.push(`${group.id}/${lang}: runtime script set drift (${page.scripts.join(', ') || '<none>'} != ${reference.scripts.join(', ') || '<none>'})`);
       }
@@ -324,7 +350,7 @@ const markdown = [
   '- EN / RU / zh-CN managed siblings must all exist and declare the correct `html lang`.',
   '- Canonical and reciprocal `hreflang` mappings must point to the same managed triplet.',
   '- The visible language switcher must contain EN / RU / zh-CN and mark only the current locale with `aria-current="page"`.',
-  '- Article siblings must preserve the same major semantic outline: heading levels plus evidence, trajectory, market-question, distribution and source blocks.',
+  '- Article siblings must preserve the same shell controls/rail count and the same major semantic outline: heading levels plus evidence, trajectory, market-question, distribution and source blocks.',
   '- Article identity, critical IDs, CTA destinations, primary/evidence source URLs and runtime script set must not drift across translations.',
   '',
   '## Evidence boundary',
