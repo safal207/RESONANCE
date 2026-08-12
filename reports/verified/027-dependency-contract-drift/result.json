@@ -1,0 +1,62 @@
+{
+  "benchmark": "RESONANCE Dependency Contract Drift / Model Version Race",
+  "benchmark_version": "1.0",
+  "classification": "Dependency contract drift protocol passes",
+  "score": 10,
+  "max_score": 10,
+  "github_actions_run": 31584552547,
+  "artifact": {
+    "name": "resonance-dependency-contract-drift-v1.0",
+    "id": 9136540015,
+    "digest": "sha256:1feadce415460da2149452ba614c8bea6dd5001df423bea2e603edb97c2413bd"
+  },
+  "models": {
+    "v1": {
+      "version": "model-v1",
+      "dependencies": ["price", "limit"],
+      "formula_id": "min_limit_2x_price",
+      "digest": "sha256:b6a3af2455410ab4efeafdd6eb7efed2d5595303c305e127129ff508f3c7622d",
+      "output_at_test_state": 20
+    },
+    "v2": {
+      "version": "model-v2",
+      "dependencies": ["price", "limit", "tax_rate"],
+      "formula_id": "min_limit_2x_price_plus_tax",
+      "digest": "sha256:8c1045c3ec1b05d84953b8d0d0862ea0135c09503fe593ef5829ff6308f01aef",
+      "output_at_test_state": 22
+    }
+  },
+  "business_state_changed_during_model_switch": false,
+  "unsafe": {
+    "mode": "artifact_bound",
+    "adoption_rows": 1,
+    "http_status": 200,
+    "committed_output": 20,
+    "current_expected_output": 22
+  },
+  "safe": {
+    "stale_model_adoption_rows": 0,
+    "stale_model_reason": "model_version_conflict",
+    "effects_before_recompute": 0,
+    "fresh_model_version": "model-v2",
+    "fresh_adoption_rows": 1,
+    "final_effect_count": 1,
+    "final_output": 22
+  },
+  "control": {
+    "current_model": "model-v1",
+    "adoption_rows": 1,
+    "final_effect_count": 1,
+    "final_output": 20
+  },
+  "invariants": [
+    "MODEL VALID THEN ≠ MODEL VALID NOW.",
+    "ARTIFACT MUST BIND THE CAUSAL-MODEL IDENTITY THAT AUTHORIZED ITS COMPUTATION.",
+    "ADOPTION MUST COMPARE ARTIFACT MODEL IDENTITY WITH THE CURRENT AUTHORITATIVE MODEL BEFORE VALUE FINGERPRINT.",
+    "MODEL DRIFT OR UNKNOWN COMPATIBILITY REQUIRES HOLD, REVALIDATION, RECOMPUTATION, OR EXPLICIT COMPATIBILITY PROOF BEFORE CONSEQUENCE."
+  ],
+  "database": "PostgreSQL 17.6",
+  "http_service_image_digest": "python@sha256:229a2c5bfa27522db7815ea81f9bed70af17ccb9de9fc7ad142b1877b5830d36",
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
