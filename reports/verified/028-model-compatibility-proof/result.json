@@ -1,0 +1,32 @@
+{
+  "report": 28,
+  "benchmark": "RESONANCE Model Compatibility Proof / Backward-Compatible Migration",
+  "benchmark_version": "1.0",
+  "score": 10,
+  "max_score": 10,
+  "classification": "Model compatibility proof protocol passes",
+  "github_actions_run": 31585859218,
+  "artifact": {
+    "id": 9137064805,
+    "name": "resonance-model-compatibility-proof-v1.0",
+    "digest": "sha256:eccd83344d2f34caa7a1b933500a32389572408c04bd1de3172340dd625e3b7e"
+  },
+  "models": {
+    "model-v1": "sha256:b6a3af2455410ab4efeafdd6eb7efed2d5595303c305e127129ff508f3c7622d",
+    "model-v2": "sha256:8c1045c3ec1b05d84953b8d0d0862ea0135c09503fe593ef5829ff6308f01aef"
+  },
+  "compatibility_rule": {
+    "id": "cap-dominates-tax-extension-v1",
+    "digest": "sha256:8d7a5c65924b77a058778c99c4defbe13699ec49a58f36176981be49639105f6",
+    "predicate": "tax_rate >= 0 AND 2*price >= limit"
+  },
+  "verified": {
+    "scoped_reuse": {"old_v1_output": 30, "current_v2_output": 30, "adoption_rows": 1, "effect_count": 1},
+    "unsafe_global_claim": {"old_v1_output": 20, "current_v2_output": 28, "adoption_rows": 1, "committed_output": 20},
+    "safe_out_of_scope": {"reason": "compatibility_scope_conflict", "adoption_rows": 0, "effects_before_recompute": 0, "recomputed_v2_output": 28, "final_effect_count": 1},
+    "proof_binding_tamper": {"wrong_target_model_rejected": true, "wrong_artifact_rejected": true, "effect_count": 0},
+    "current_model_control": {"output": 28, "effect_count": 1}
+  },
+  "external_safety_certification": false,
+  "vulnerability_claim": false
+}
