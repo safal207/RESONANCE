@@ -1,0 +1,50 @@
+{
+  "benchmark": "RESONANCE Authority Head Authenticity / Forged Freshness Watermark",
+  "benchmark_version": "1.0",
+  "protocol": "RESONANCE Transactional Trust Protocol v1.0",
+  "classification": "Authority head authenticity protocol passes",
+  "score": 10,
+  "max_score": 10,
+  "executed_at": "2026-08-12T14:11:45.611483+00:00",
+  "github_actions": {
+    "run_id": 31605405137,
+    "job_id": 94142947548,
+    "head_sha": "10e3ee2057fc5efe626e317764374a6eef006f60"
+  },
+  "evidence_artifact": {
+    "name": "resonance-authority-head-authenticity-v1.0",
+    "id": 9144883220,
+    "digest": "sha256:a9dd4504ae0f88f6caf5c2dc8dc896598515beed3ed4ebbbe2bdf5976b1a1d43",
+    "size_bytes": 3314
+  },
+  "environment": {
+    "postgresql": "17.6",
+    "python": "3.12.13",
+    "psycopg": "3.2.9",
+    "postgres_image_digest": "sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94",
+    "python_image_digest": "sha256:229a2c5bfa27522db7815ea81f9bed70af17ccb9de9fc7ad142b1877b5830d36"
+  },
+  "authentication_fixture": {
+    "algorithm": "HMAC-SHA256",
+    "key_id": "authority-head-demo-key-v1",
+    "production_pki": false,
+    "generation_7_mac": "88b9274db2521ba145212b8f70ae830d6781825d5c03459f3ff177d9b12fd970",
+    "generation_8_mac": "8f4f93434c40b01bf8ea6b79ed6b6fcc651807529b5d41e33db41232b5af53a6",
+    "generation_9_mac": "d67543ef6821ed9ec8d83db1cc4da2db538f861f9ef5087236f9377361305085"
+  },
+  "checks": [
+    {"id": "authentic_current_head_authorizes_synchronized_active_replica", "pass": true, "points": 2},
+    {"id": "unauthenticated_forged_head_makes_stale_replica_look_fresh_and_commit", "pass": true, "points": 2, "unsafe_effect_count": 1},
+    {"id": "authenticated_verifier_rejects_forged_head_with_zero_effects", "pass": true, "points": 2, "reason": "authority_head_authentication_failed", "effect_count": 0},
+    {"id": "authentic_generation_8_head_exposes_stale_view_then_propagation_converges_to_revoked", "pass": true, "points": 2, "stale_reason": "stale_authority_view", "converged_reason": "compatibility_proof_revoked", "effect_count": 0},
+    {"id": "fresh_successor_proof_with_authentic_generation_9_head_succeeds", "pass": true, "points": 2, "effect_count": 1, "output": 30}
+  ],
+  "invariants": [
+    "FRESHNESS CLAIM DOES NOT IMPLY AUTHENTIC FRESHNESS EVIDENCE.",
+    "AUTHORITY HEAD IDENTITY, DOMAIN, GENERATION, AND CONTENT MUST BE AUTHENTICATED BEFORE THEY CAN FENCE A CONSEQUENCE.",
+    "AN UNAUTHENTICATED OR TAMPERED AUTHORITY HEAD MUST FAIL CLOSED BEFORE REGIONAL FRESHNESS IS EVALUATED.",
+    "AUTHENTIC HEAD EVIDENCE CAN FENCE A STALE REPLICA, BUT AUTHENTIC OLD-HEAD REPLAY REQUIRES AN ADDITIONAL MONOTONICITY MECHANISM."
+  ],
+  "external_safety_certification": false,
+  "vulnerability_claim": false
+}
