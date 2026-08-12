@@ -6,6 +6,29 @@ const SITE_DIR = path.join(ROOT, 'site');
 const DIST_DIR = path.join(ROOT, 'dist');
 const BASE = 'https://safal207.github.io/RESONANCE/';
 
+function resolveAnalyticsEndpoint(value = '') {
+  const candidate = value.trim();
+  if (!candidate) return '';
+  let url;
+  try {
+    url = new URL(candidate);
+  } catch {
+    throw new Error('RESONANCE_ANALYTICS_ENDPOINT must be a valid URL');
+  }
+  if (
+    url.protocol !== 'https:' ||
+    url.username ||
+    url.password ||
+    url.search ||
+    url.hash
+  ) {
+    throw new Error('RESONANCE_ANALYTICS_ENDPOINT must be clean HTTPS without credentials, query or fragment');
+  }
+  return url.toString();
+}
+
+const ANALYTICS_ENDPOINT = resolveAnalyticsEndpoint(process.env.RESONANCE_ANALYTICS_ENDPOINT || '');
+
 const metadata = {
   'index.html': {
     title: 'RESONANCE — AI Agents, Trust, Verification & Human Progress',
@@ -42,6 +65,12 @@ const metadata = {
     description: 'RESONANCE Verified Workflow maps one consequential AI-agent workflow across state, causality, phase, transition, time, recovery, verification and evidence before productization.',
     kind: 'article',
     keywords: ['AI agent audit', 'agent verification', 'workflow verification', 'AI reliability'],
+  },
+  'measurement.html': {
+    title: 'Measurement & Privacy | RESONANCE',
+    description: 'RESONANCE Measurement & Privacy documents default-off, no-identity analytics for the article-to-dialogue path and keeps behavioral signals separate from real Market OS demand evidence.',
+    kind: 'article',
+    keywords: ['privacy analytics', 'privacy-aware measurement', 'AI market research', 'evidence-first analytics'],
   },
   'before-you-let-an-ai-agent-move-money.html': {
     title: 'AI Agent Payments: Authorization vs Verification | RESONANCE',
@@ -168,6 +197,10 @@ function stripExistingSeo(html) {
     .replace(/\s*<script\s+type=["']application\/ld\+json["']\s+data-resonance-seo=["']true["'][^>]*>[\s\S]*?<\/script>\s*/gi, '\n');
 }
 
+function stripExistingAnalytics(html) {
+  return html.replace(/\n?\s*<!-- ANALYTICS:START -->[\s\S]*?<!-- ANALYTICS:END -->\s*\n?/i, '\n');
+}
+
 function replaceTitle(html, title) {
   if (/<title>[\s\S]*?<\/title>/i.test(html)) {
     return html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${title}</title>`);
@@ -246,6 +279,20 @@ function buildSchema(file, html, cfg, canonical, description) {
   return schema;
 }
 
+function injectAnalytics(source) {
+  let html = stripExistingAnalytics(source);
+  const mode = ANALYTICS_ENDPOINT ? 'enabled' : 'disabled';
+  const endpointMeta = ANALYTICS_ENDPOINT
+    ? `  <meta name="resonance-analytics-endpoint" content="${ANALYTICS_ENDPOINT.replace(/"/g, '&quot;')}" />\n`
+    : '';
+  const analyticsBlock = `\n  <!-- ANALYTICS:START -->\n  <meta name="resonance-analytics-mode" content="${mode}" />\n${endpointMeta}  <script src="analytics.js" defer></script>\n  <!-- ANALYTICS:END -->\n`;
+  html = html.replace(
+    /<strong\s+data-analytics-status>[^<]*<\/strong>/i,
+    `<strong data-analytics-status>${ANALYTICS_ENDPOINT ? 'Enabled — privacy collector configured.' : 'Disabled — no event collector configured.'}</strong>`,
+  );
+  return html.replace('</head>', `${analyticsBlock}</head>`);
+}
+
 function injectSeo(file, source) {
   const cfg = metadata[file] || {
     title: textContent(source.match(/<title>([\s\S]*?)<\/title>/i)?.[1] || file),
@@ -280,7 +327,7 @@ fs.cpSync(SITE_DIR, DIST_DIR, { recursive: true });
 const htmlFiles = fs.readdirSync(SITE_DIR).filter((name) => name.endsWith('.html')).sort();
 for (const file of htmlFiles) {
   const source = fs.readFileSync(path.join(SITE_DIR, file), 'utf8');
-  fs.writeFileSync(path.join(DIST_DIR, file), injectSeo(file, source));
+  fs.writeFileSync(path.join(DIST_DIR, file), injectAnalytics(injectSeo(file, source)));
 }
 
 const urls = htmlFiles.map(canonicalFor);
@@ -290,4 +337,4 @@ fs.writeFileSync(path.join(DIST_DIR, 'sitemap.xml'), sitemap);
 const robots = `User-agent: *\nAllow: /\n\nSitemap: ${BASE}sitemap.xml\n`;
 fs.writeFileSync(path.join(DIST_DIR, 'robots.txt'), robots);
 
-console.log(`RESONANCE SEO build: ${htmlFiles.length} HTML pages → dist/`);
+console.log(`RESONANCE SEO build: ${htmlFiles.length} HTML pages → dist/ · analytics ${ANALYTICS_ENDPOINT ? 'enabled' : 'disabled'}`);
