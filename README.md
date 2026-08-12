@@ -174,13 +174,14 @@ analysis
 → checkpoint authority commit protocol
 → checkpoint content commitment
 → full causal checkpoint state binding
+→ live causal execution resumption
 ```
 
 See [`issues/001-age-of-agents/`](issues/001-age-of-agents/) and the web edition at [`site/issue-001.html`](site/issue-001.html).
 
 ## Verified research
 
-**Current verified milestone — 2026-08-12:** CaPU v0.14 extends the checkpoint-content boundary from replay state to the explicit committed causal record: causal-head validity, transition ID, GEN and SEAL. The same committed causal state is fail-closed bound across prepare → persistence → authority acknowledgement → anchored recovery, while SHA-256 remains off the RTL critical path. Verified CaPU head: `604e8e437c1bc09058213e3c374e9b9fd8ce0c8e`. This milestone does not yet claim live continuation resumption after reset: the recovered causal record is verified but is not yet wired back into the v0.9 parent/GEN/SEAL controller. See [`Verified Report #019`](reports/verified/019-capu-full-causal-checkpoint/REPORT.md) and its [`machine-readable result`](reports/verified/019-capu-full-causal-checkpoint/result.json).
+**Current verified milestone — 2026-08-12:** CaPU v0.15 takes the v0.14 recovered full causal checkpoint record and makes it the live execution-policy state after recovery. Given an upstream-accepted v0.14 snapshot, CaPU restores the finite replay spent-set plus causal head, GEN and SEAL; all operations remain fail-closed until runtime restore completes; recovery/restore flushes pre-existing speculative STORE state; and ordinary continuation then reuses the same exact-parent / next-GEN / SEAL rules as before failure. Verified CaPU head: `7bdb355a1854db88230174db15adacf654b952d5`. The complete CaPU workflow stack from v0.9 through v0.15 completed green on that exact head. See [`Verified Report #020`](reports/verified/020-capu-live-causal-resume/REPORT.md) and its [`machine-readable result`](reports/verified/020-capu-live-causal-resume/result.json).
 
 Key reproducible reports:
 
@@ -193,7 +194,8 @@ Key reproducible reports:
 - **#016** CaPU v0.11 checkpoint freshness / anti-rollback — bounded formal PASS with exact-anchor recovery semantics;
 - **#017** CaPU v0.12 checkpoint authority commit — bounded formal PASS with persist-then-anchor commit semantics;
 - **#018** CaPU v0.13 checkpoint content commitment — bounded formal PASS with canonical replay-state content binding across prepare, persistence, authority commit and anchored recovery;
-- **#019** CaPU v0.14 full causal checkpoint state binding — bounded formal PASS binding replay state plus committed causal head, GEN and SEAL across checkpoint construction and recovery.
+- **#019** CaPU v0.14 full causal checkpoint state binding — bounded formal PASS binding replay state plus committed causal head, GEN and SEAL across checkpoint construction and recovery;
+- **#020** CaPU v0.15 live causal execution resumption — bounded formal PASS restoring replay state plus causal head / GEN / SEAL into live continuation control while recovery remains a fail-closed speculation barrier.
 
 All scores are scope-specific protocol/benchmark scores. They are **not percentages of safety** and are not external certifications.
 
