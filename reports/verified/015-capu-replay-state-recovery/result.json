@@ -1,0 +1,54 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "015",
+  "title": "CaPU v0.10 — Replay-State Recovery Across Reset",
+  "status": "PASS",
+  "scope": "bounded replay-state recovery guard",
+  "source_project": {
+    "repository": "safal207/CaPU",
+    "pull_request": 69,
+    "verified_head": "54e8d1ac78eda47c5a6ee0c11ba3835955a92c92"
+  },
+  "verification": {
+    "workflow": "CaPU vCML Recovery v0.10",
+    "run_id": 31574359848,
+    "formal": {
+      "result": "PASS",
+      "safety_literal": "DONE (PASS, rc=0)",
+      "cover_literal": "DONE (PASS, rc=0)",
+      "safety_depth": 20,
+      "cover_depth": 24,
+      "cover_witnesses": 5,
+      "authorization_ref_width": 4,
+      "spent_authorization_slots": 4,
+      "solver": "z3",
+      "yosys_version": "0.33",
+      "z3_version": "4.8.12",
+      "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+      "formal_input_sha256": "a5a1ab60af021f76f93216a6243adfd9d5fc7415032d77eae74d7cc3545a776e"
+    },
+    "artifacts": [
+      {
+        "name": "capu-vcml-v10-recovery-evidence",
+        "artifact_id": 9132556770,
+        "sha256": "4081d092c2baaf0667a01e621a4c2040a5fd85b0ceaaa6e14247afcd05033b74"
+      },
+      {
+        "name": "capu-vcml-v10-recovery-formal-evidence",
+        "artifact_id": 9132595097,
+        "sha256": "60319783a2a2fc322d5614e51678c49d5c2a7d286140d5b8de15d2656896bdac"
+      }
+    ]
+  },
+  "primary_invariants": [
+    "RECOVERY_NOT_READY => NO_ROOT_AUTHORIZATION_ACCEPT",
+    "RESTORE_ACCEPT => SNAPSHOT_WELL_FORMED && !RECOVERY_READY",
+    "MALFORMED_SNAPSHOT => NO_RESTORE_ACCEPT",
+    "RESTORED_SPENT_REF => NO_ROOT_AUTHORIZATION_ACCEPT",
+    "RECOVERY_BEGIN => NEXT_STATE_NOT_READY_AND_EMPTY_LOCAL_SET",
+    "LIVE_RECOVERY_STATE + RESTORE_VALID => RESTORE_REJECTED",
+    "AUTHORIZATION_CAPACITY_EXHAUSTED => NO_FRESH_ROOT_ACCEPT"
+  ],
+  "claim_boundary": "The result covers a finite bounded recovery guard. Restore snapshot bytes are trusted upstream input with structural validation. No durable storage, autonomous power-loss persistence, snapshot freshness, cryptographic authentication, rollback resistance, distributed recovery, or complete CPU proof is claimed.",
+  "next_discriminating_step": "Authenticated rollback-resistant recovery checkpoint with snapshot_id, monotonic recovery epoch, integrity/authenticity and rollback rejection."
+}
