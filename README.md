@@ -168,6 +168,8 @@ analysis
 → atomic transition
 → Transactional Trust Protocol v1.0
 → end-to-end adversarial verification
+→ PostgreSQL transactional boundaries
+→ causal hardware replay-state recovery
 ```
 
 See [`issues/001-age-of-agents/`](issues/001-age-of-agents/) and the web edition at [`site/issue-001.html`](site/issue-001.html).
@@ -179,7 +181,9 @@ Key reproducible reports:
 - **#001** OpenAI Agents SDK structural baseline — 95/100;
 - **#002** Docker containment — 8/10;
 - **#003–#010** recovery, evidence, authority, time and atomic-transition protocols — 10/10 each in their defined synthetic scopes;
-- **#011** Transactional Trust Protocol v1.0 End-to-End — 10/10, unsafe compounded path 3 effects vs TTP-safe path 1 effect.
+- **#011** Transactional Trust Protocol v1.0 End-to-End — 10/10, unsafe compounded path 3 effects vs TTP-safe path 1 effect;
+- **#012–#014** PostgreSQL transactional trust, isolation and external-effect boundaries — reproducible scoped results;
+- **#015** CaPU v0.10 replay-state recovery across reset — bounded formal PASS with fail-closed restore semantics.
 
 All scores are scope-specific protocol/benchmark scores. They are **not percentages of safety** and are not external certifications.
 
