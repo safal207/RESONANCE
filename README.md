@@ -170,6 +170,8 @@ analysis
 → end-to-end adversarial verification
 → PostgreSQL transactional boundaries
 → causal hardware replay-state recovery
+→ checkpoint freshness / anti-rollback
+→ checkpoint authority commit protocol
 ```
 
 See [`issues/001-age-of-agents/`](issues/001-age-of-agents/) and the web edition at [`site/issue-001.html`](site/issue-001.html).
@@ -183,7 +185,9 @@ Key reproducible reports:
 - **#003–#010** recovery, evidence, authority, time and atomic-transition protocols — 10/10 each in their defined synthetic scopes;
 - **#011** Transactional Trust Protocol v1.0 End-to-End — 10/10, unsafe compounded path 3 effects vs TTP-safe path 1 effect;
 - **#012–#014** PostgreSQL transactional trust, isolation and external-effect boundaries — reproducible scoped results;
-- **#015** CaPU v0.10 replay-state recovery across reset — bounded formal PASS with fail-closed restore semantics.
+- **#015** CaPU v0.10 replay-state recovery across reset — bounded formal PASS with fail-closed restore semantics;
+- **#016** CaPU v0.11 checkpoint freshness / anti-rollback — bounded formal PASS with exact-anchor recovery semantics;
+- **#017** CaPU v0.12 checkpoint authority commit — bounded formal PASS with persist-then-anchor commit semantics.
 
 All scores are scope-specific protocol/benchmark scores. They are **not percentages of safety** and are not external certifications.
 
