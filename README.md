@@ -121,6 +121,26 @@ RESONANCE focuses on five connected domains:
 - **Trust & Verification** — safety, security, provenance, evidence, governance;
 - **Human** — cognition, flow, learning, creativity, health, meaning and adaptation.
 
+## Science Desk
+
+RESONANCE Science is the evidence-first desk for biology, AI for Science, computational research, reproducibility and scientific decision-making.
+
+Its working chain is:
+
+**Observation → Evidence State → Interpretation → Causal Boundary → Translation Gap → Decision Readiness → Next Discriminating Evidence**
+
+The desk complements live **Science Signals** such as X(2370): a signal verifies a concrete claim; the desk provides the reusable method for asking where evidence stops, what remains unresolved and what additional observation would change confidence.
+
+Science infrastructure:
+
+- [`science/README.md`](science/README.md) — Science Desk manifesto and editorial contract;
+- [`reports/science/001-discovery-to-decision.md`](reports/science/001-discovery-to-decision.md) — founding translation-readiness report;
+- `site/science.html` — English Science Desk;
+- `site/science.ru.html` — Russian Science Desk;
+- `site/science.zh.html` — Simplified Chinese Science Desk.
+
+The research-only boundary excludes wet-lab instructions, guide/construct design, clinical advice, biological safety approval and experiment authorization.
+
 ## Founding Edition
 
 ### Issue 001 — THE AGE OF AGENTS
@@ -172,6 +192,7 @@ Machine-readable evidence and reports live under [`reports/verified/`](reports/v
 - `site/index.html` — English magazine homepage;
 - `site/index.ru.html` — Russian homepage;
 - `site/index.zh.html` — Simplified Chinese homepage;
+- `site/science.html`, `site/science.ru.html`, `site/science.zh.html` — localized Science Desk editions;
 - `site/before-you-let-an-ai-agent-move-money*.html` — Article #004 in EN/RU/ZH;
 - `site/open-problems.html` — public Demand Graph / Open Problems view;
 - `site/verified-workflow.html` — service-first verification pilot;
@@ -193,10 +214,12 @@ RESONANCE/
 ├── content/
 ├── distribution/
 ├── market/
+├── science/
 ├── protocols/
 │   └── transactional-trust-v1.0/
 ├── benchmarks/
 ├── reports/
+│   ├── science/
 │   └── verified/
 ├── issues/
 │   └── 001-age-of-agents/
