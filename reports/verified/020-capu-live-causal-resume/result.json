@@ -1,0 +1,81 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "020-capu-live-causal-resume",
+  "title": "CaPU v0.15 — Live Causal Execution Resumption",
+  "status": "PASS",
+  "scope": "bounded restoration of finite replay state plus committed causal head, GEN and SEAL into the live local STORE continuation controllers after an upstream-accepted v0.14 checkpoint restore",
+  "project": "safal207/CaPU",
+  "pull_request": 69,
+  "verified_content_head": "7bdb355a1854db88230174db15adacf654b952d5",
+  "workflow": {
+    "name": "CaPU vCML Live Causal Resume v0.15",
+    "run_id": 31603759854,
+    "rtl_job_id": 94137351710,
+    "rtl_job_status": "success",
+    "formal_job_id": 94137473225,
+    "formal_job_status": "success"
+  },
+  "formal": {
+    "solver": "z3",
+    "yosys": "0.33",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "safety_depth": 24,
+    "cover_depth": 28,
+    "cover_witness_files": 7,
+    "safety_result": "DONE (PASS, rc=0)",
+    "cover_result": "DONE (PASS, rc=0)",
+    "formal_input_sha256": "ef4846e071b3e559f4236c4929491a6ae65b84d6bacd87fee2c68e5793c75963",
+    "formal_log_sha256": "fbc5bceb0b6112dee1eedf7322175a4e4c604cc6eed7ce9a2a32568e876bc757",
+    "cover_log_sha256": "46a6f09c7b878ec9d2608ba33023541334fcf1ed75f9d4006848de31aeee7d94"
+  },
+  "artifacts": [
+    {
+      "name": "capu-vcml-v15-live-resume-evidence",
+      "artifact_id": 9144210426,
+      "sha256": "25a55198e082f453322c1989d185a7e303d9a4f4d4c26f855639acd99d9d1dfb"
+    },
+    {
+      "name": "capu-vcml-v15-live-resume-formal-evidence",
+      "artifact_id": 9144259726,
+      "sha256": "528ca761f932645ded7db8e87ec051a0f321d77400be63891366c7cfa0d09032"
+    }
+  ],
+  "runtime_invariants": [
+    "EXECUTION_BEFORE_RUNTIME_RESTORE => REJECT",
+    "RECOVERY_OR_RESTORE_ACTIVITY => SPECULATION_FLUSHED && NO_VISIBLE_EFFECT",
+    "RESTORE_ACCEPT => NEXT_LIVE_CAUSAL_STATE == ACCEPTED_CAUSAL_SNAPSHOT",
+    "NORMAL_CONTINUATION_ADMIT => PARENT == LIVE_HEAD && GEN == LIVE_GEN+1 && !SEAL && LIVE_GEN != F",
+    "RECOVERED_SEAL => AUTOMATIC_CONTINUATION_REJECT",
+    "RECOVERED_GEN_F => AUTOMATIC_WRAP_REJECT",
+    "RESTORED_SPENT_AUTHORIZATION_REF => ROOT_REPLAY_REJECT"
+  ],
+  "deterministic_paths": [
+    "restore head 0x2201 GEN 6 SEAL 0 plus spent authorization A110",
+    "restored A110 root replay rejected",
+    "wrong-parent continuation rejected",
+    "wrong-GEN continuation rejected",
+    "exact parent 0x2201 GEN 7 child visibly retires and advances live head to 0x2202",
+    "recovery_begin immediately closes admission and flushes speculation",
+    "recovered sealed chain blocks automatic continuation",
+    "fresh explicit root remains possible from a recovered sealed chain",
+    "recovered GEN F blocks automatic F-to-0 wrap"
+  ],
+  "exact_head_regression": {
+    "all_green": true,
+    "workflows": [
+      "Validate Examples",
+      "CaPU Core v0 RTL Smoke",
+      "CaPU vCML Bridge v0 / v0.9",
+      "CaPU vCML Recovery v0.10",
+      "CaPU vCML Checkpoint v0.11",
+      "CaPU vCML Checkpoint Commit v0.12",
+      "CaPU vCML Checkpoint Content v0.13",
+      "CaPU vCML Full Causal Checkpoint v0.14",
+      "CaPU vCML Live Causal Resume v0.15"
+    ]
+  },
+  "upstream_assumption": "restore_valid is asserted only for a structurally valid snapshot already accepted by the v0.14 full causal checkpoint authority and commitment boundary",
+  "claim_boundary": "bounded reduced-width local STORE runtime proof; does not independently prove SHA-256 or commitment verification, checkpoint freshness, external anchor or CAS correctness, durable media, source-history completeness, full CPU architectural-state recovery, register/cache/predictor/TLB/ISA/coherence recovery, distributed recovery, or unbounded/parametric correctness",
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
