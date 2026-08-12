@@ -1,0 +1,61 @@
+{
+  "benchmark": "RESONANCE Revocation Propagation / Stale Proof Registry Split-Brain",
+  "benchmark_version": "1.0",
+  "classification": "Revocation propagation protocol passes",
+  "database": {
+    "server_version": "17.6"
+  },
+  "evidence": {
+    "artifact_digest": "sha256:fab0b5b45d82cfad8cdce00913e6e9a269e2c6b4cc139a3be366cea2ced52a9a",
+    "artifact_id": 9144285482,
+    "artifact_name": "resonance-revocation-propagation-v1.0",
+    "head_sha": "7ad8c35ad4a27bda720ccd2f26b9d03a94802ffa",
+    "run_id": 31603943840
+  },
+  "executed_at": "2026-08-12T13:55:29.053463+00:00",
+  "external_safety_certification": false,
+  "invariants": [
+    "I79 — VALIDATION AGAINST A STALE AUTHORITY VIEW DOES NOT IMPLY CURRENT AUTHORIZATION.",
+    "I80 — REVOCATION PROPAGATION IS PART OF THE CONSEQUENCE SAFETY BOUNDARY.",
+    "I81 — REGIONAL AUTHORITY VIEWS MUST PROVE CURRENTNESS AGAINST A MONOTONIC AUTHORITATIVE GENERATION OR HOLD.",
+    "I82 — SPLIT-BRAIN AUTHORITY VERDICTS REQUIRE FAIL-CLOSED RECONCILIATION BEFORE CONSEQUENCE."
+  ],
+  "observations": {
+    "safe_stale_view": {
+      "adoption_rows": 0,
+      "authoritative_head": 8,
+      "effect_count": 0,
+      "reason": "stale_authority_view",
+      "region": "region-B",
+      "replica_generation": 7,
+      "replica_status": "ACTIVE"
+    },
+    "split_brain": {
+      "authoritative_head": 8,
+      "region_A": {
+        "generation": 8,
+        "status": "REVOKED",
+        "verdict": "compatibility_proof_revoked"
+      },
+      "region_B": {
+        "generation": 7,
+        "status": "ACTIVE",
+        "verdict": "regional_proof_authorized"
+      },
+      "unsafe_effect_count": 1,
+      "unsafe_output": 30
+    },
+    "successor": {
+      "authoritative_head": 9,
+      "effect_count": 1,
+      "output": 30,
+      "region_B_generation": 9,
+      "rule": "cap-equivalence-r2",
+      "status": "ACTIVE"
+    }
+  },
+  "protocol": "RESONANCE Transactional Trust Protocol v1.0",
+  "score": 10,
+  "max_score": 10,
+  "vulnerability_claim": false
+}
