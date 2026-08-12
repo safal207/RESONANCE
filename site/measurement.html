@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="RESONANCE Measurement & Privacy explains the journal's default-off, no-identity analytics contract and the boundary between reading signals and real Market OS evidence." />
+  <meta name="description" content="RESONANCE Measurement & Privacy documents the no-identity analytics contract, the v0.8 collector selection and the boundary between reading signals and real Market OS evidence." />
   <meta name="theme-color" content="#f4f0e8" />
   <title>Measurement & Privacy | RESONANCE</title>
   <link rel="stylesheet" href="styles.css" />
@@ -27,17 +27,17 @@
 
   <main id="article">
     <header class="article-hero wrap">
-      <p class="section-label">Site Health v0.7 · Measurement & Privacy</p>
+      <p class="section-label">Site Health v0.8 · Measurement & Privacy</p>
       <h1 class="article-title">Measure the path. Do not identify the reader.</h1>
-      <p class="article-dek">RESONANCE wants to know whether an article reaches its hot question and creates a real workflow conversation. It does not need a persistent reader profile to answer that question.</p>
+      <p class="article-dek">RESONANCE wants to know whether an article reaches its hot question and creates a real workflow conversation. It does not need a persistent reader profile, a session graph or IP-derived geography to answer that question.</p>
     </header>
 
     <div class="article-layout wrap">
       <aside class="article-rail">
         <div class="rail-card">
           <p class="section-label">Runtime status</p>
-          <strong data-analytics-status>Disabled — no event collector configured.</strong>
-          <span>The build exposes the current transport mode.</span>
+          <strong data-analytics-status>Disabled — collector selected, production endpoint not configured.</strong>
+          <span>v0.8 selects the collector architecture without silently activating collection.</span>
         </div>
         <div class="rail-card rail-dark">
           <p class="section-label">Core invariant</p>
@@ -47,7 +47,7 @@
       </aside>
 
       <article class="article-body">
-        <div class="status-chip ready">RESONANCE Privacy-Aware Analytics v0.7</div>
+        <div class="status-chip ready">RESONANCE Privacy-Aware Analytics v0.8</div>
 
         <h2>What we measure</h2>
         <div class="protocol-flow" aria-label="Measurement path">
@@ -57,14 +57,15 @@
 
         <h2>What we do not measure</h2>
         <table class="market-table">
-          <thead><tr><th>Surface</th><th>v0.7 rule</th><th>Reason</th></tr></thead>
+          <thead><tr><th>Surface</th><th>v0.8 rule</th><th>Reason</th></tr></thead>
           <tbody>
             <tr><td>Cookies</td><td>Not used</td><td>No cross-session reader identity is needed.</td></tr>
             <tr><td>Persistent browser storage</td><td>Not used</td><td>No local anonymous profile or visitor ID.</td></tr>
             <tr><td>Fingerprinting</td><td>Not used</td><td>Device characteristics are irrelevant to product discovery.</td></tr>
-            <tr><td>Referrer / user agent / screen size</td><td>Not sent</td><td>Avoid collecting contextual identifiers that are not necessary for the question.</td></tr>
+            <tr><td>Referrer / user agent / screen size</td><td>Not sent by RESONANCE</td><td>Avoid collecting contextual identifiers that are not necessary for the question.</td></tr>
+            <tr><td>IP-derived geography</td><td>Not written by the collector</td><td>The Market OS question does not require visitor location.</td></tr>
             <tr><td>Email / name / free text</td><td>Never part of the analytics payload</td><td>Market submissions are explicit GitHub evidence, not analytics exhaust.</td></tr>
-            <tr><td>Exact client timestamp</td><td>Not sent</td><td>The collector may timestamp receipt without increasing the client payload.</td></tr>
+            <tr><td>Exact client timestamp</td><td>Not sent</td><td>The collector uses platform receipt time without increasing the client payload.</td></tr>
           </tbody>
         </table>
 
@@ -76,12 +77,35 @@
   "language": "en",
   "content_kind": "article"
 }</pre></div>
+        <p>The collector rejects a sixth field rather than silently accepting it. That makes data minimization an executable boundary instead of a documentation preference.</p>
+
+        <h2>Collector selection v0.8</h2>
+        <p>We compared Plausible, Umami and a minimal first-party collector against the five-field contract. The selected architecture is a <strong>Cloudflare Worker + Workers Analytics Engine</strong>.</p>
+        <table class="market-table">
+          <thead><tr><th>Option</th><th>Useful strengths</th><th>Mismatch with this spine</th><th>Decision</th></tr></thead>
+          <tbody>
+            <tr><td>Plausible</td><td>Mature, cookieless, EU-hosted analytics and custom events.</td><td>Unique-visitor counting intentionally uses request IP + User-Agent in a rotating daily identifier.</td><td>Not selected for this narrow spine.</td></tr>
+            <tr><td>Umami</td><td>Open source, flexible events, hosted free tier and self-hosting.</td><td>Session-oriented model; send API requires a valid User-Agent and location metrics use sender IP.</td><td>Not selected for this narrow spine.</td></tr>
+            <tr><td>Minimal Worker</td><td>Exact five-field allowlist, no session/user ID, no geography, simple aggregate time-series storage.</td><td>We own deployment and aggregate reporting; Cloudflare still processes network metadata as infrastructure provider.</td><td><strong>Selected, not activated.</strong></td></tr>
+          </tbody>
+        </table>
+
+        <h2>What the selected collector stores</h2>
+        <div class="market-kpi"><pre>blob1   = event
+blob2   = path
+blob3   = language
+blob4   = content_kind
+blob5   = schema_version
+double1 = 1
+
+platform timestamp = receipt time</pre></div>
+        <p>The Worker source does not read, hash, persist or export client IP, User-Agent, referrer, cookies, device/location fields, visitor IDs or session IDs. Cloudflare as the infrastructure provider necessarily processes connection metadata at the transport boundary; RESONANCE does not claim otherwise.</p>
 
         <h2>Privacy signals are authoritative</h2>
-        <p>If Global Privacy Control or Do Not Track is enabled, the runtime does not emit analytics events. Automated browser audits are also excluded so Site Health does not manufacture its own readership.</p>
+        <p>If Global Privacy Control or Do Not Track is enabled, the browser runtime does not emit analytics events. Automated browser audits are also excluded so Site Health does not manufacture its own readership.</p>
 
-        <h2>Transport is default-off</h2>
-        <p>The journal only sends events when an HTTPS collector endpoint is explicitly configured during the publication build. Requests omit credentials and referrer information. Until a collector passes a separate provider/retention/privacy review, the runtime remains measurement-ready but transport-disabled.</p>
+        <h2>Selection is not activation</h2>
+        <p>The journal still sends nothing because `RESONANCE_ANALYTICS_ENDPOINT` is not configured. The repository now contains a deploy-ready Worker, adversarial unit tests, a source/privacy verifier and a pinned Wrangler dry-run. Production activation requires a deployed endpoint, live CORS/schema smoke tests and a synthetic Analytics Engine write before the existing live analytics contract is allowed to report <strong>enabled</strong>.</p>
 
         <h2>Analytics is not demand evidence</h2>
         <p>Reading and clicking are useful behavioral signals, but they do not prove a real workflow, a real failure, willingness to test, product-market fit or revenue. Those claims begin only when a person submits a generalized workflow and it enters the existing Problem Card / Product Signal / Demand Graph process.</p>
@@ -92,10 +116,20 @@
           <div><b>MARKET</b><p><strong>Demand:</strong> submitted workflow → Problem Card → Product Signal → pilot evidence.</p></div>
         </section>
 
+        <h2>Primary references used for the collector decision</h2>
+        <ul class="source-list">
+          <li><a href="https://plausible.io/data-policy" target="_blank" rel="noreferrer">Plausible Data Policy</a> — IP / User-Agent handling and rotating daily identifier.</li>
+          <li><a href="https://plausible.io/docs/events-api" target="_blank" rel="noreferrer">Plausible Events API</a> — request headers and unique-visitor behavior.</li>
+          <li><a href="https://docs.umami.is/docs/guides/send-server-side-events" target="_blank" rel="noreferrer">Umami server-side events</a> — valid User-Agent requirement.</li>
+          <li><a href="https://docs.umami.is/docs/metric-definitions" target="_blank" rel="noreferrer">Umami metric definitions</a> — IP-derived location metrics.</li>
+          <li><a href="https://developers.cloudflare.com/analytics/analytics-engine/" target="_blank" rel="noreferrer">Workers Analytics Engine</a> — custom time-series data points.</li>
+          <li><a href="https://developers.cloudflare.com/analytics/analytics-engine/limits/" target="_blank" rel="noreferrer">Analytics Engine limits</a> — documented three-month retention.</li>
+        </ul>
+
         <section class="market-question">
           <p class="section-label">Inspect the contract</p>
-          <h2>The measurement rules live with the publication.</h2>
-          <p>The machine-readable event schema, runtime and CI verifier are public in the RESONANCE repository.</p>
+          <h2>The collector decision and implementation live with the publication.</h2>
+          <p>The machine-readable event schema, v0.8 decision, Worker source, adversarial tests and CI verifier are public in the RESONANCE repository.</p>
           <div class="market-actions">
             <a class="button" href="https://github.com/safal207/RESONANCE/tree/main/analytics" target="_blank" rel="noreferrer">Open analytics contract →</a>
             <a class="text-link" href="quality.html">Back to Site Health →</a>
