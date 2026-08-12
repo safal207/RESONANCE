@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "allowedPayloadFields": [
+    "schema_version",
+    "event",
+    "path",
+    "language",
+    "content_kind"
+  ],
+  "events": {
+    "meaningful_read": {
+      "definition": "Article page was visible for at least 45 seconds and reached at least 60% scroll depth in the same page load.",
+      "evidenceBoundary": "Signals sustained on-page reading behavior. Does not prove comprehension, agreement or demand."
+    },
+    "hot_question_view": {
+      "definition": "A market hot-question block became at least 60% visible in the viewport.",
+      "evidenceBoundary": "Signals exposure to the question. Does not prove the reader considered or answered it."
+    },
+    "workflow_intake_open": {
+      "definition": "Reader activated a link to the RESONANCE market-workflow GitHub issue form.",
+      "evidenceBoundary": "Signals intent to inspect the intake. Does not prove a workflow was submitted."
+    },
+    "verified_workflow_open": {
+      "definition": "Reader activated a link to the Verified Workflow pilot from a market-question surface.",
+      "evidenceBoundary": "Signals interest in the pilot description. Does not prove pilot intent or qualification."
+    }
+  },
+  "prohibitedCollection": [
+    "cookies",
+    "localStorage",
+    "sessionStorage",
+    "IndexedDB",
+    "persistent anonymous identifiers",
+    "fingerprints",
+    "IP address fields in the client payload",
+    "referrer",
+    "user agent",
+    "screen dimensions",
+    "device memory",
+    "hardware concurrency",
+    "exact client timestamp",
+    "email",
+    "name",
+    "free-text form contents"
+  ],
+  "privacySignals": {
+    "globalPrivacyControl": "honor",
+    "doNotTrack": "honor"
+  },
+  "transport": {
+    "defaultMode": "disabled",
+    "activation": "Set RESONANCE_ANALYTICS_ENDPOINT at publication build time.",
+    "requirements": [
+      "HTTPS endpoint",
+      "POST JSON",
+      "credentials omitted",
+      "no-referrer request policy",
+      "collector privacy and retention contract reviewed separately"
+    ]
+  }
+}
