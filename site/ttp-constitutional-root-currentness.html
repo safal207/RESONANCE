@@ -1,0 +1,20 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="TTP constitutional root currentness: authentic root records must remain consistent with a monotonic root epoch and trusted record digest."><title>TTP — Constitutional Root Currentness | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · ROOT CURRENTNESS</p><h1>Root authority is still temporal state.</h1><p class="dek">The highest configured trust authority does not make every historical root record permanently reusable. Root currentness must be proven before consequence.</p><blockquote><p><strong>ROOT AUTHORITY ≠ TIMELESS AUTHORITY.</strong></p></blockquote><h2>Rule</h2><pre><code>RECEIVE ROOT RECORD R
+        ↓
+AUTHENTICATE R
+        ↓
+VALIDATE ROOT-BOUND QUORUM + HEAD
+        ↓
+READ TRUSTED ROOT HIGH-WATERMARK H*
+        ↓
+R.epoch &lt; H*.epoch ?
+  ├─ yes → ROOT AUTHORITY ROLLBACK → HOLD
+  └─ no
+       ↓
+R.epoch == H*.epoch
+AND digest(R) != H*.digest ?
+  ├─ yes → ROOT SAME-EPOCH CONFLICT → HOLD
+  └─ no
+       ↓
+CURRENT ROOT AUTHORITY
+       ↓
+FENCED CONSEQUENCE</code></pre><h2>I123–I126</h2><ul><li><strong>I123</strong> — ROOT AUTHORITY ≠ TIMELESS AUTHORITY.</li><li><strong>I124</strong> — AUTHENTIC ROOT RECORD BELOW A TRUSTED ROOT HIGH-WATERMARK = ROOT-AUTHORITY ROLLBACK EVIDENCE.</li><li><strong>I125</strong> — ROOT CURRENTNESS MUST BIND A MONOTONIC ROOT EPOCH AND ROOT-RECORD DIGEST BEFORE CONSEQUENTIAL AUTHORIZATION.</li><li><strong>I126</strong> — A RETIRED ROOT RECORD MAY REMAIN HISTORICALLY VALID BUT MUST NOT REGAIN LIVE AUTHORITY AFTER A NEWER ROOT EPOCH IS OBSERVED.</li></ul><h2>Why both epoch and digest?</h2><p>The epoch prevents backward movement. The digest prevents different same-epoch content from silently inheriting the trusted checkpoint.</p><h2>Boundary</h2><p>This rule assumes the root high-watermark itself has not been rolled back. Storage rollback and same-epoch root equivocation remain separate verification surfaces.</p><div class="article-actions"><a class="button" href="verified-041-constitutional-root-replay.html">Open Verified Report #041</a><a class="text-link" href="transactional-trust-protocol-v1.html">Back to TTP v1.0 →</a></div></article></main><footer class="site-footer"><div class="wrap"><a href="index.html">← RESONANCE home</a></div></footer></body></html>
