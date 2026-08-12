@@ -1,0 +1,78 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "019-capu-full-causal-checkpoint",
+  "title": "CaPU v0.14 — Full Causal Checkpoint State Binding",
+  "status": "PASS",
+  "scope": "bounded full causal checkpoint-state binding for replay spent-set plus committed causal head, GEN and SEAL",
+  "project": "safal207/CaPU",
+  "pull_request": 69,
+  "verified_content_head": "604e8e437c1bc09058213e3c374e9b9fd8ce0c8e",
+  "workflow": {
+    "name": "CaPU vCML Full Causal Checkpoint v0.14",
+    "run_id": 31587270416,
+    "rtl_job_id": 94083890867,
+    "rtl_job_status": "success",
+    "formal_job_id": 94083964805,
+    "formal_job_status": "success"
+  },
+  "canonical_checkpoint": {
+    "algorithm": "SHA-256",
+    "computed_in_rtl": false,
+    "domain": "CaPU-vCML-causal-checkpoint-v0.14",
+    "authoritative_state_scope": [
+      "checkpoint reference",
+      "checkpoint epoch",
+      "finite semantic set of spent root authorization references",
+      "causal_head_valid",
+      "causal_head_transition_id",
+      "committed 4-bit GEN",
+      "sealed_chain"
+    ],
+    "speculative_state_included": false,
+    "unknown_or_speculative_fields": "rejected"
+  },
+  "formal": {
+    "solver": "z3",
+    "yosys": "0.33",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "safety_depth": 16,
+    "cover_depth": 20,
+    "cover_witness_files": 6,
+    "safety_result": "DONE (PASS, rc=0)",
+    "cover_result": "DONE (PASS, rc=0)",
+    "formal_input_sha256": "51eb509935488ccd082ffa05564bed1df7a37306ce2d7132fb3cc5db6517bd1f",
+    "formal_log_sha256": "767ad83379cf46c41e1e49073e19eb6975d963e894474ccc478b75e95360545a",
+    "cover_log_sha256": "fdba25c06f29489f342a228080382566e58d1583ba5d38b7ccdde74451496d00"
+  },
+  "artifacts": [
+    {
+      "name": "capu-vcml-v14-full-causal-state-evidence",
+      "artifact_id": 9137624035,
+      "sha256": "45de55d34cb3a7a58498c99a1764eeb0726dc0c726164f8967f5c863e20d6400"
+    },
+    {
+      "name": "capu-vcml-v14-full-causal-state-formal-evidence",
+      "artifact_id": 9137691431,
+      "sha256": "8704431b8d4c3c031d168979a98f57dd80cdbac412ddc86ea20d75c3ad1348f3"
+    }
+  ],
+  "invariants": [
+    "PREPARE_ACCEPT => CANDIDATE_CAUSAL_STATE == COMMITTED_CAUSAL_STATE",
+    "PERSIST_ACCEPT => PERSISTED_CAUSAL_STATE == REQUEST_CAUSAL_STATE",
+    "CHECKPOINT_COMMIT_EVENT => ACK_CAUSAL_STATE == REQUEST_CAUSAL_STATE",
+    "ANCHORED_RESTORE_ACCEPT => SNAPSHOT_CAUSAL_STATE == ANCHOR_CAUSAL_STATE",
+    "CAUSAL_STATE_MISMATCH => NO_RESTORE_ACCEPT",
+    "RECOVERED_STATE_READY_AFTER_ACCEPT => RECOVERED_CAUSAL_STATE == ACCEPTED_SNAPSHOT_CAUSAL_STATE"
+  ],
+  "deterministic_fail_closed_cases": [
+    "wrong causal head at checkpoint prepare",
+    "changed GEN at persistence acknowledgement",
+    "changed SEAL at authority acknowledgement",
+    "mismatched causal state at anchored recovery",
+    "speculative or buffered field included in canonical checkpoint schema"
+  ],
+  "claim_boundary": "the checkpoint binds and recovers the explicit committed causal record plus finite replay state, but the recovered causal record is not yet wired back into the live v0.9 parent/GEN/SEAL continuation controller after reset; no complete CPU architectural state, cryptographic RTL implementation, trusted commitment-engine integrity, durable-media correctness, external anchor correctness, source-history omission resistance, distributed consensus or unbounded proof is claimed",
+  "live_causal_continuation_resumed_after_reset": false,
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
