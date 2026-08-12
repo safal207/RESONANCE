@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="TTP dependency-aware applicability rule: bind results to the causal state subgraph that justified computation."><title>TTP Dependency-Aware Applicability Rule | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol v1.0 · Experimental Extension</p></div></header><main><header class="article-hero wrap"><a class="back-link" href="transactional-trust-protocol-v1.html">← Transactional Trust Protocol</a><p class="section-label">TTP Extension · Verified #025</p><h1 class="article-title">Dependency-Aware Applicability</h1><p class="article-dek">A global state change is a signal. A consequential applicability decision should ask whether the causal state subgraph that justified the result actually changed.</p></header><div class="article-layout wrap"><aside class="article-rail"><div class="rail-card rail-dark"><p class="section-label">Rule</p><code>declared dependencies + dependency fingerprint + current comparison → applicability</code></div></aside><article class="article-body"><h2>The boundary</h2><pre><code>result
+├─ depends_on → price
+├─ depends_on → limit
+└─ does_not_depend_on → theme</code></pre><section class="claim-panel"><div><b>I59</b><p><strong>State changed does not imply relevant state changed.</strong></p></div><div><b>I60</b><p><strong>Applicability should bind to the state subgraph that causally justified the result.</strong></p></div><div><b>I61</b><p><strong>Global version mismatch may be a conservative signal, not proof of invalidity.</strong></p></div><div><b>I62</b><p><strong>Relevant dependency drift requires revalidation, recomputation or domain proof before consequence.</strong></p></div></section><h2>Canonical path</h2><pre><code>DECLARE DEPENDENCY SET
+↓
+CAPTURE DEPENDENCY VALUES
+↓
+COMPUTE DEPENDENCY FINGERPRINT
+↓
+COMPUTE ARTIFACT
+↓
+STATE CHANGES
+↓
+OBSERVE CURRENT DEPENDENCY SUBGRAPH
+↓
+COMPARE FINGERPRINT
+├─ same → MAY REMAIN APPLICABLE
+├─ mismatch → REVALIDATE / RECOMPUTE / HOLD
+└─ dependency model unknown → CONSERVATIVE BROADER CHECK
+↓
+CURRENT AUTHORITY ADOPTS
+↓
+CURRENT FENCE AT MUTATION BOUNDARY
+↓
+PROVE DEPENDENCIES → ARTIFACT → APPLICABILITY → EFFECT</code></pre><h2>Safety boundary</h2><p>A matching fingerprint proves only that the declared dependency representation matches. It does not prove that the dependency set is complete or causally correct. If dependency completeness is uncertain, use broader revalidation or conservative invalidation.</p><p><a class="button" href="verified-025-dependency-aware-applicability.html">Open Verified Report #025</a></p></article></div></main></body></html>
