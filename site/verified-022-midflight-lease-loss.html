@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified Report #022 — mid-flight lease loss during a long-running action, with commit-time revalidation and resource-side fencing." />
+  <title>Verified #022 — Mid-flight Lease Loss | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p></div></header>
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Verified Report #022</p><p class="article-status">Reproducible · 12 Aug 2026</p></div>
+      <h1 class="article-title">The Work Was Valid. The Final Commit Was Not.</h1>
+      <p class="article-dek">Worker A legitimately started a long-running action with fence 1. While it worked, the lease expired and Worker B took over with fence 2. Reusing A's start authorization produced a duplicate; commit-time revalidation or resource-side fencing preserved one effect.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>Score: <strong>10/10</strong></p></div>
+    </header>
+
+    <div class="article-layout wrap"><aside class="article-rail">
+      <div class="rail-card"><p class="section-label">Benchmark</p><strong>10 / 10</strong><span>PostgreSQL 17.6</span><span>HTTP commit boundary</span></div>
+      <div class="rail-card rail-dark"><p class="section-label">Core invariant</p><code>authorized at start ≠ authorized at commit</code><span>bind irreversible completion to current authority</span></div>
+    </aside><article class="article-body">
+      <p class="dropcap">Long-running agent work creates a subtle authority gap. A worker can be completely correct when it starts and completely stale when it finishes. The final external mutation therefore needs its own authority check.</p>
+
+      <h2>The race</h2>
+      <div class="trajectory-box"><span>A / fence 1 / START AUTHORIZED</span><i>→</i><span>LONG WORK</span><i>→</i><span>LEASE EXPIRES</span></div>
+      <div class="trajectory-box"><span>B / fence 2 / COMMIT</span><i>→</i><span>A FINISHES</span><i>→</i><span>?</span></div>
+
+      <h2>Unsafe · the start proof becomes a stale capability</h2>
+      <p>At logical time 1020, A was current and authorized. Its lease expired at 1060. At 1070, B took over with fence 2 and committed one external effect.</p>
+      <p>At 1080, the unsafe path let A reuse its valid start proof. The HTTP resource did not enforce fencing and accepted A/fence 1 as a second effect.</p>
+      <div class="pull-quote">The start decision was correct. The final mutation was no longer legal.</div>
+      <p>Final state: <strong>2 effects / CONFLICT</strong>.</p>
+
+      <h2>Safe · revalidate at the irreversible boundary</h2>
+      <p>Before A could commit, the coordinator was re-read using the exact epoch that authorized the start: owner A, fence 1, lease version 1, and valid lease at commit time.</p>
+      <div class="trajectory-box"><span>START: AUTHORIZED</span><i>→</i><span>TAKEOVER</span><i>→</i><span>FINISH: AUTHORIZED=false</span></div>
+      <p>The current state was B/fence 2/version 2, so A made no external call. Final effect count stayed at <strong>1</strong>.</p>
+
+      <h2>Defense in depth · resource fencing</h2>
+      <p>The next scenario deliberately skipped the coordinator recheck. B had already committed with token 2, so the resource retained <code>highest_fence=2</code>. A's final commit presented token 1.</p>
+      <div class="trajectory-box"><span>A presents fence 1</span><i>→</i><span>resource has fence 2</span><i>→</i><span>HTTP 409 / FENCED_OUT</span></div>
+      <p>The old worker finished its work, but its completion could not escape into the protected world.</p>
+
+      <h2>Control · valid completion still works</h2>
+      <p>A separate control finished at logical time 1050, before expiry at 1060. Start and finish authorization were both true, the fenced HTTP commit returned 200, and the final effect count was one.</p>
+
+      <section class="claim-panel">
+        <p class="section-label">New TTP invariants</p>
+        <div><b>I47</b><p><strong>AUTHORIZED AT START DOES NOT IMPLY AUTHORIZED AT COMMIT</strong></p></div>
+        <div><b>I48</b><p><strong>LEASE LOSS WHILE WORK IS IN FLIGHT INVALIDATES THE OLD COMMIT AUTHORITY</strong></p></div>
+        <div><b>I49</b><p><strong>LONG-RUNNING CONSEQUENTIAL WORK MUST BIND FINAL MUTATION TO CURRENT AUTHORITY</strong></p></div>
+        <div><b>I50</b><p><strong>PROOF MUST PRESERVE BOTH START EPOCH AND COMMIT EPOCH</strong></p></div>
+      </section>
+
+      <h2>Evidence</h2>
+      <ul>
+        <li>GitHub Actions run <code>31554618911</code> — success.</li>
+        <li>Artifact <code>resonance-midflight-lease-loss-v1.0</code>, ID <code>9125526467</code>.</li>
+        <li>Digest <code>sha256:0dd9aa7c11547a916b75e6c739ba8d009e233de8f5bafbf9e4cb6412cab973c6</code>.</li>
+        <li>Unsafe effects: 2. Commit-recheck effects: 1. Resource-fenced effects: 1.</li>
+      </ul>
+
+      <h2>Interpretation boundary</h2>
+      <p>This is a deterministic local protocol benchmark using PostgreSQL coordination and a separate Dockerized HTTP resource. It is not a vulnerability claim, production lease certification, exactly-once guarantee, universal scheduler design or arbitrary agent-safety claim.</p>
+
+      <section class="sources-block"><p class="section-label">Inspect / reproduce</p><ol>
+        <li><a href="https://github.com/safal207/RESONANCE/tree/main/benchmarks/midflight-lease-loss-v1.0">Benchmark source</a></li>
+        <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/022-midflight-lease-loss/REPORT.md">Canonical report</a></li>
+        <li><a href="ttp-midflight-lease-loss.html">TTP Mid-flight Commit Authority rule</a></li>
+      </ol></section>
+
+      <p class="closing-line"><strong>Verdict:</strong> finishing the work does not preserve the right to commit it.</p>
+      <div class="article-end"><p><strong>RESONANCE Verified #022</strong></p><p>start authority → long work → ownership change → commit authority → resource fence → proof.</p><a class="button" href="ttp-midflight-lease-loss.html">Read the protocol rule</a></div>
+    </article></div>
+  </main>
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Verified #022</p><p>Mid-flight Lease Loss</p></div><div><a href="https://github.com/safal207/RESONANCE">Repository ↗</a></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
