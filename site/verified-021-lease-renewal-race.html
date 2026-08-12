@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verified Report #021 — delayed heartbeat lease renewal race across PostgreSQL coordination and a fenced HTTP resource." />
+  <title>Verified #021 — Lease Renewal Race | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+</head>
+<body>
+  <a class="skip-link" href="#report">Skip to report</a>
+  <header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p></div></header>
+  <main id="report">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row"><p class="section-label">Verified Report #021</p><p class="article-status">Reproducible · 12 Aug 2026</p></div>
+      <h1 class="article-title">The Heartbeat Arrived. The Owner Was Already Gone.</h1>
+      <p class="article-dek">A delayed heartbeat from Worker A arrived after lease expiry and Worker B takeover. Blind renewal resurrected A and produced a second effect. Compare-and-renew preserved B; resource-side fencing still blocked stale A when the coordinator was deliberately corrupted.</p>
+      <div class="byline-row"><p>By <strong>RESONANCE Research</strong></p><p>Score: <strong>10/10</strong></p></div>
+    </header>
+
+    <div class="article-layout wrap"><aside class="article-rail">
+      <div class="rail-card"><p class="section-label">Benchmark</p><strong>10 / 10</strong><span>PostgreSQL 17.6</span><span>HTTP resource boundary</span></div>
+      <div class="rail-card rail-dark"><p class="section-label">Core invariant</p><code>late heartbeat ≠ renewed authority</code><span>bind renewal to the exact lease epoch</span></div>
+    </aside><article class="article-body">
+      <p class="dropcap">Heartbeats are often treated as liveness signals. In a consequential distributed workflow they are also authority mutations: a successful renewal extends one specific ownership epoch. That means a heartbeat can become stale while it is still in flight.</p>
+
+      <h2>The race</h2>
+      <div class="trajectory-box"><span>A / fence 1 / expires 1060</span><i>→</i><span>EXPIRED</span><i>→</i><span>B / fence 2</span></div>
+      <div class="trajectory-box"><span>B COMMIT</span><i>→</i><span>LATE HEARTBEAT A</span><i>→</i><span>?</span></div>
+
+      <h2>Unsafe · blind heartbeat resurrects A</h2>
+      <p>At logical time 1070, B legitimately took over the expired lease: owner B, fence 2, lease version 2, expiry 1130. B then committed one external effect.</p>
+      <p>At 1075, A's delayed heartbeat blindly overwrote the coordinator from its cached lease snapshot. PostgreSQL accepted one row update and the lease regressed to owner A, fence 1, expiry 1135.</p>
+      <div class="pull-quote">A newer owner existed. The late heartbeat made the older owner look current again.</div>
+      <p>Without resource-side fencing, resurrected A then applied another effect. Final remote state: <strong>2 effects / CONFLICT</strong>.</p>
+
+      <h2>Safe · compare-and-renew</h2>
+      <p>The safe heartbeat bound its renewal to <code>owner=A + fence=1 + lease_version=1 + not expired</code>. After B's takeover none of those ownership facts were current.</p>
+      <div class="trajectory-box"><span>LATE HEARTBEAT A</span><i>→</i><span>conditional UPDATE</span><i>→</i><span>0 ROWS</span></div>
+      <p>Zero rows became a safety result. B remained owner with fence 2, A made no external call, and the remote effect count stayed at <strong>1</strong>.</p>
+
+      <h2>Defense in depth · resource fencing</h2>
+      <p>We then deliberately re-enabled the unsafe blind heartbeat, corrupting the coordinator back to A/fence 1. The external resource had already accepted B/fence 2 and retained <code>highest_fence=2</code>.</p>
+      <div class="trajectory-box"><span>A presents fence 1</span><i>→</i><span>resource has fence 2</span><i>→</i><span>HTTP 409 / FENCED_OUT</span></div>
+      <p>Coordinator state was wrong. The protected resource still preserved one effect.</p>
+
+      <h2>Control · current heartbeat still works</h2>
+      <p>A valid A heartbeat before expiry updated exactly one row, extended expiry from 1060 to 1090, advanced lease version 1→2 and retained fence 1. Safe compare-and-renew therefore rejects stale epochs, not renewal itself.</p>
+
+      <section class="claim-panel">
+        <p class="section-label">New TTP invariants</p>
+        <div><b>I43</b><p><strong>LATE HEARTBEAT MUST NOT RESURRECT A SUPERSEDED OWNERSHIP EPOCH</strong></p></div>
+        <div><b>I44</b><p><strong>RENEWAL MUST COMPARE OWNER + FENCE + LEASE VERSION + EXPIRY</strong></p></div>
+        <div><b>I45</b><p><strong>ZERO-ROW COMPARE-AND-RENEW IS STALE-OWNER EVIDENCE</strong></p></div>
+        <div><b>I46</b><p><strong>RESOURCE-SIDE FENCING REMAINS THE FINAL GUARD</strong></p></div>
+      </section>
+
+      <h2>Evidence</h2>
+      <ul>
+        <li>GitHub Actions run <code>31551799739</code> — success.</li>
+        <li>Artifact <code>resonance-lease-renewal-race-v1.0</code>, ID <code>9124531164</code>.</li>
+        <li>Digest <code>sha256:7c78f54350d392fae2a508bda16e8cabdf73932a2a2ef59346d9d261fc64068a</code>.</li>
+        <li>Unsafe effects: 2. Compare-and-renew effects: 1. Resource-fenced effects after coordinator corruption: 1.</li>
+      </ul>
+
+      <h2>Interpretation boundary</h2>
+      <p>This is a deterministic local protocol benchmark using PostgreSQL coordination and a separate Dockerized HTTP resource. It is not a vulnerability claim, production lease certification, universal lock algorithm, consensus replacement or arbitrary agent-safety claim.</p>
+
+      <section class="sources-block"><p class="section-label">Inspect / reproduce</p><ol>
+        <li><a href="https://github.com/safal207/RESONANCE/tree/main/benchmarks/lease-renewal-race-v1.0">Benchmark source</a></li>
+        <li><a href="https://github.com/safal207/RESONANCE/blob/main/reports/verified/021-lease-renewal-race/REPORT.md">Canonical report</a></li>
+        <li><a href="ttp-lease-renewal-race.html">TTP Lease Renewal rule</a></li>
+      </ol></section>
+
+      <p class="closing-line"><strong>Verdict:</strong> a heartbeat is valid only for the ownership epoch it can still prove current.</p>
+      <div class="article-end"><p><strong>RESONANCE Verified #021</strong></p><p>liveness → ownership epoch → compare-and-renew → resource fence → proof.</p><a class="button" href="ttp-lease-renewal-race.html">Read the protocol rule</a></div>
+    </article></div>
+  </main>
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Verified #021</p><p>Lease Renewal Race</p></div><div><a href="https://github.com/safal207/RESONANCE">Repository ↗</a></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
