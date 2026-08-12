@@ -19,6 +19,13 @@ TRANSLATION PARITY CONTRACT
   ├─ CTA + critical ID + runtime-script parity
   └─ primary / evidence source-link parity
   ↓
+CORRECTIONS + VERSION HISTORY CONTRACT
+  ├─ public machine-readable corrections ledger
+  ├─ unbroken version chains per managed route
+  ├─ append-only immutable historical entries
+  ├─ published-page change → new version-history event
+  └─ reason + claim impact + evidence linkage
+  ↓
 STATIC UI / MEDIA CONTRACT
   ├─ image alt + intrinsic width/height
   ├─ responsive large-image delivery
@@ -110,6 +117,45 @@ This is **semantic-structure parity**, not sentence-by-sentence translation comp
 
 A passing Translation Parity Contract proves that the managed localized publication siblings still expose the same structural/evidence surface and action destinations. It does **not** prove linguistic fluency, nuanced semantic equivalence, cultural appropriateness or factual correctness of translated prose. Those require editorial/human or separate language-model review evidence.
 
+## Corrections + Version History Contract
+
+Corrections + Version History v0.5 treats the published state of an article as a time-dependent claim surface rather than timeless text.
+
+The public ledger lives at `site/corrections.json`, with a human-readable view at `/corrections.html`. The initial version-managed publication set is deliberately narrow:
+
+- Article #004 EN / RU / zh-CN;
+- Article #005 EN / RU / zh-CN.
+
+Each history entry records:
+
+- a stable event ID and effective date;
+- change type: publication, correction, clarification, evidence update, translation repair or structural change;
+- whether the change leaves the claim untouched, changes presentation, clarifies it or changes the claim itself;
+- affected publication, locale and route;
+- version before and version after;
+- a plain-language summary and reason;
+- inspectable evidence URLs.
+
+### Release-blocking corrections/version invariants
+
+Once v0.5 exists on the base branch, CI requires:
+
+- every registered route to exist and end at the version declared by the registry;
+- each route's history to form an unbroken chain from initial publication to current version;
+- existing history entries to remain byte-for-byte append-only: they cannot be deleted, reordered or rewritten;
+- registered route mappings to remain stable rather than silently moving historical identity to another path;
+- a modified managed published page to be covered by a newly appended version-history entry in the same change;
+- every entry to carry reason, claim-impact classification and evidence;
+- every non-initial-publication event to include RESONANCE GitHub evidence.
+
+The first v0.5 release bootstraps the ledger from known history. Append-only diff enforcement activates automatically on subsequent changes because the base branch will then contain the ledger.
+
+The first recorded repair is the Article #005 localization drift found by Translation Parity v0.4: the RU and zh-CN siblings were restored from 17 semantic tokens / 3 source links to the English publication's 23 semantic tokens / 4 source links. That repair changes the localized publication package, not the underlying English claim, so its claim impact is recorded as `presentation`.
+
+### Evidence boundary
+
+A passing Corrections + Version History Contract proves version bookkeeping, append-only historical integrity and evidence linkage for the routes explicitly registered in the ledger. It does **not** prove that a correction is factually sufficient, that an editor chose the perfect wording, or that an unregistered page has complete version history. Those are separate editorial/evidence questions.
+
 ## UI Geometry Contract
 
 Site health treats rendered geometry as a release property, not only a visual preference.
@@ -182,12 +228,13 @@ Each pull-request Site Health stack can produce:
 - `ui-geometry-summary.json` / `.md`;
 - `ui-markup-summary.json` / `.md`;
 - `translation-parity-summary.json` / `.md`;
+- `corrections-history-summary.json` / `.md`;
 - candidate screenshot PNGs;
 - public-main baseline PNGs;
 - visual diff PNGs;
 - `visual-summary.json` / `.md`;
 - GitHub Actions job summaries;
-- compact PR comments for Lighthouse/geometry, translation parity and visual regression.
+- compact PR comments for Lighthouse/geometry, translation parity, corrections/version history and visual regression.
 
 The live audit adds `ui-geometry-live-summary.json` / `.md` against the deployed GitHub Pages site.
 
@@ -195,7 +242,7 @@ Artifacts are retained for 90 days in the initial implementation.
 
 ## Integrity boundary
 
-A Lighthouse score, geometry check, translation-parity result or screenshot diff is controlled evidence for a particular profile and run. It does **not** prove:
+A Lighthouse score, geometry check, translation-parity result, corrections-history result or screenshot diff is controlled evidence for a particular profile and run. It does **not** prove:
 
 - Google ranking;
 - production field Core Web Vitals;
@@ -203,19 +250,19 @@ A Lighthouse score, geometry check, translation-parity result or screenshot diff
 - conversion or business impact;
 - editorial correctness;
 - nuanced linguistic translation quality;
+- factual sufficiency of a correction;
 - visual taste or brand quality.
 
 Those require separate evidence.
 
 ## Next useful site-quality layers
 
-Prioritized after publication, translation parity, Lighthouse, geometry and visual regression are stable:
+Prioritized after publication, translation parity, corrections/version history, Lighthouse, geometry and visual regression are stable:
 
-1. **Corrections + version history** — expose how articles change and why.
-2. **RSS / newsletter feed** — make the journal subscribable outside social platforms.
-3. **Privacy-aware analytics** — measure reading and CTA funnels without building invasive identity profiles.
-4. **External citation-link health** — periodically detect broken or redirected evidence links without blocking every publication on transient third-party failures.
-5. **Field performance evidence** — add privacy-safe real-user Web Vitals only if there is enough traffic to interpret them responsibly.
-6. **Public health history** — trend Lighthouse, translation parity, geometry, visual and publication-contract results across releases rather than presenting only the latest run.
+1. **RSS / newsletter feed** — make the journal subscribable outside social platforms.
+2. **Privacy-aware analytics** — measure reading and CTA funnels without building invasive identity profiles.
+3. **External citation-link health** — periodically detect broken or redirected evidence links without blocking every publication on transient third-party failures.
+4. **Field performance evidence** — add privacy-safe real-user Web Vitals only if there is enough traffic to interpret them responsibly.
+5. **Public health history** — trend Lighthouse, translation parity, corrections/version history, geometry, visual and publication-contract results across releases rather than presenting only the latest run.
 
-The order matters: deterministic publication integrity, localization drift and visible UI regressions are more important to an evidence-first journal than maximizing a vanity score.
+The order matters: deterministic publication integrity, localization drift, historical accountability and visible UI regressions are more important to an evidence-first journal than maximizing a vanity score.
