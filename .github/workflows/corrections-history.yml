@@ -1,0 +1,100 @@
+name: RESONANCE Corrections + Version History Contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - 'scripts/build-seo-site.mjs'
+      - 'scripts/verify-seo.mjs'
+      - 'scripts/verify-corrections.mjs'
+      - '.github/workflows/corrections-history.yml'
+      - 'SITE_HEALTH.md'
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - 'scripts/build-seo-site.mjs'
+      - 'scripts/verify-seo.mjs'
+      - 'scripts/verify-corrections.mjs'
+      - '.github/workflows/corrections-history.yml'
+      - 'SITE_HEALTH.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: resonance-corrections-history-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  corrections-history:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+
+    steps:
+      - name: Checkout exact revision with history
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Build publication
+        run: node scripts/build-seo-site.mjs
+
+      - name: Verify publication contract first
+        run: node scripts/verify-seo.mjs
+
+      - name: Enforce corrections and version history
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.sha }}
+          GITHUB_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          BASE_ARGS=()
+          if [[ -n "$BASE_REF" ]]; then
+            BASE_ARGS=(--base "$BASE_REF")
+          fi
+          node scripts/verify-corrections.mjs \
+            --root site \
+            --public-root dist \
+            --ledger site/corrections.json \
+            --output corrections-history-results \
+            "${BASE_ARGS[@]}" \
+            --enforce
+          cat corrections-history-results/corrections-history-summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload immutable corrections-history evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-corrections-history-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: corrections-history-results/
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Post or update PR corrections-history summary
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const marker = '<!-- resonance-corrections-history -->';
+            const summaryPath = 'corrections-history-results/corrections-history-summary.md';
+            const fallback = '# RESONANCE Corrections + Version History Contract\n\nThe run did not produce a summary. Inspect workflow logs/artifacts.';
+            const body = `${marker}\n${fs.existsSync(summaryPath) ? fs.readFileSync(summaryPath, 'utf8') : fallback}`;
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number, per_page: 100 });
+            const previous = comments.find((comment) => comment.user?.type === 'Bot' && comment.body?.includes(marker));
+            if (previous) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: previous.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
