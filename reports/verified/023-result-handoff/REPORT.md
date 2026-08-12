@@ -209,6 +209,29 @@ SAFE RESULT HANDOFF =
 + end-to-end proof
 ```
 
+## Independent reproduction B
+
+A second implementation reproduced the same protocol invariant with a separate harness and state vocabulary (`PRODUCED → ADOPTED` rather than `READY → ADOPTED`).
+
+```text
+GitHub Actions run: 31580229908
+Artifact: resonance-result-handoff-stale-work-v1.0
+Artifact ID: 9134843992
+Artifact digest: sha256:315f2b156339a19de87380dac57c28047a950384350cdca087a4c2be27dabe38
+Score: 10/10
+```
+
+The second implementation independently reproduced:
+
+- stale A auto-publish + B/current-owner adoption → two effects for the same artifact digest;
+- inert stale artifact before adoption → zero effects;
+- exact-digest adoption by B/fence 2 → one committed effect;
+- stale A/fence 1 after B commit → HTTP 409 / `fenced_out`;
+- wrong digest → zero adoption rows;
+- current-owner self-adoption control → one effect.
+
+This is not an independent external-party replication, but it is a separate executable implementation and CI evidence bundle inside RESONANCE. The agreement across two harnesses strengthens the protocol claim while remaining within the same research project.
+
 ## Interpretation boundary
 
 This is a deterministic local protocol benchmark. PostgreSQL is the ownership/adoption authority and a separate Dockerized HTTP service is the protected resource boundary. It does not prescribe a universal distributed scheduler, artifact store, workflow engine or exactly-once protocol.
@@ -217,19 +240,24 @@ It does **not** claim a vulnerability in PostgreSQL or another external product,
 
 ## Reproducibility
 
-Benchmark: `benchmarks/result-handoff-v1.0/`  
-Workflow: `.github/workflows/benchmark-result-handoff.yml`  
-Machine-readable result: `reports/verified/023-result-handoff/result.json`  
-GitHub Actions: `https://github.com/safal207/RESONANCE/actions/runs/31555333762`
+Primary benchmark: `benchmarks/result-handoff-v1.0/`  
+Primary workflow: `.github/workflows/benchmark-result-handoff.yml`  
+Primary machine-readable result: `reports/verified/023-result-handoff/result.json`  
+Primary GitHub Actions: `31555333762`  
+Reproduction B benchmark: `benchmarks/result-handoff-stale-work-v1.0/`  
+Reproduction B workflow: `.github/workflows/benchmark-result-handoff-stale-work.yml`  
+Reproduction B GitHub Actions: `31580229908`
 
 ## Verdict
 
-**Worker A lost execution authority but still produced a useful immutable result. Auto-publishing that stale result duplicated the consequence when current owner B later published the same digest. Keeping the artifact inert as READY data, then explicitly adopting the exact digest under B's current ownership epoch and committing with B's fencing token preserved one effect while stale A was rejected with HTTP 409.**
+**Worker A lost execution authority but still produced a useful immutable result. Auto-publishing that stale result duplicated the consequence when current owner B later published the same digest. Keeping the artifact inert as READY data, then explicitly adopting the exact digest under B's current ownership epoch and committing with B's fencing token preserved one effect while stale A was rejected with HTTP 409. A second executable harness reproduced the same result independently within the RESONANCE repository.**
 
 ---
 
 **RESONANCE Verified Report #023**  
 **Score:** 10/10  
+**Primary run:** 31555333762  
+**Independent reproduction B:** 31580229908 / 10/10  
 **Unsafe effects:** 2  
 **Safe adopted effects:** 1  
 **Wrong-digest effects:** 0  
