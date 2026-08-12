@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="TTP rule: authenticate recovery records, compare peer recovery views, detect same-epoch resolution forks, and fail closed before consequence."><title>TTP — Recovery Authority Equivocation | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · RECOVERY CONSISTENCY</p><h1>Recovery authority equivocation</h1><blockquote><p><strong>AUTHENTIC RECOVERY RECORD ≠ UNIQUE RECOVERY HISTORY.</strong></p></blockquote><p>A recovery signature proves that one resolution record came from the named recovery authority. It does not prove that the authority issued only one resolution for the same recovery epoch and inherited dispute.</p><h2>Decision rule</h2><pre><code>RECEIVE RECOVERY RECORD R
+        ↓
+AUTHENTICATE R
+        ↓
+COMPARE AUTHENTIC PEER VIEW
+same namespace + recovery epoch + dispute set
+        ↓
+same issuer + different recovery digest?
+  ├─ yes → RECOVERY-AUTHORITY EQUIVOCATION
+  │        → quarantine issuer
+  │        → hold all disputed branches
+  │        → 0 consequence
+  └─ no
+        ↓
+CHECK RECOVERY CURRENTNESS
+        ↓
+VALIDATE QUORUM + HEAD + AUTHORITY VIEW
+        ↓
+FENCED CONSEQUENCE</code></pre><h2>I115–I118</h2><ul><li><strong>I115</strong> — Authentic recovery record ≠ unique recovery history.</li><li><strong>I116</strong> — Same recovery authority + same recovery epoch + same dispute set + different authentic resolution digests = equivocation evidence.</li><li><strong>I117</strong> — Recovery-authority equivocation must hold every disputed resolution branch and quarantine the recovery issuer before consequence.</li><li><strong>I118</strong> — Resume only through a higher-epoch independent resolution that binds every conflicting recovery digest.</li></ul><h2>Recovery pattern</h2><pre><code>R3-A ─┐
+      ├─ same issuer / epoch / dispute → CONFLICT
+R3-B ─┘
+      ↓
+QUARANTINE ISSUER
+      ↓
+HOLD BOTH BRANCHES
+      ↓
+R4 FROM INDEPENDENT RESOLVER
++ higher epoch
++ digest(R3-A)
++ digest(R3-B)
++ fresh quorum
+      ↓
+RESUME</code></pre><p>This extension defines an evidence invariant, not a production governance implementation.</p><div class="article-actions"><a class="button" href="verified-039-recovery-authority-equivocation.html">Open Verified Report #039</a><a class="text-link" href="transactional-trust-protocol-v1.html">Transactional Trust Protocol v1.0 →</a></div></article></main><footer class="site-footer"><div class="wrap"><a href="index.html">← RESONANCE home</a></div></footer></body></html>
