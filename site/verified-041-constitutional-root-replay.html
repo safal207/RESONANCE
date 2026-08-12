@@ -1,0 +1,42 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified #041: an authentic old constitutional root replays after epoch 5; a monotonic root high-watermark blocks consequence."><title>Verified #041 — Constitutional Root Replay | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #041</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #041</p><h1>The root signature was valid. The root was retired.</h1><p class="dek">Verified #040 reached constitutional/root recovery. #041 asks whether an old authentic root record can regain live authority after a newer root epoch is already known.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><blockquote><p><strong>ROOT AUTHORITY ≠ TIMELESS AUTHORITY.</strong></p></blockquote><h2>Root history</h2><pre><code>C3 — historical
+epoch 3 / set-R
+W25 W26 W27 / threshold 2
+authentic ✅
+digest = sha256:4378e3e8...
+
+C5 — current
+epoch 5 / set-H
+W22 W23 W24 / threshold 2
+authentic ✅
+predecessor = digest(C3)
+digest = sha256:07826e04...</code></pre><p>Both records remain cryptographically authentic and both local 2-of-3 root-bound quorums validate over the same H9.</p><h2>The monotonic root checkpoint</h2><pre><code>root_namespace = resonance-constitutional-root
+max_root_epoch = 5
+root_record_digest = digest(C5)</code></pre><p>The checkpoint stays intact during the attack. This benchmark isolates root-record replay, not checkpoint-storage rollback.</p><h2>Unsafe replay</h2><pre><code>C3 authentic = true
+QC-root-epoch3 valid = true
+H9 authentic = true
+root binds H9 = true
+
+→ presented_root_treated_as_current
+→ adoption rows = 1
+→ HTTP 200
+→ effect_count = 1</code></pre><h2>Safe currentness gate</h2><pre><code>presented root epoch = 3
+trusted root epoch = 5
+
+3 &lt; 5
+→ root_authority_rollback_detected
+→ adoption rows = 0
+→ effects = 0</code></pre><p>The record remains valid evidence about history; it no longer carries live authorization.</p><h2>Fresh control</h2><pre><code>C5 / epoch 5
+presented digest = trusted digest
+QC-root-epoch5 valid = true
+
+→ current_root_authorized
+→ adoption rows = 1
+→ HTTP 200
+→ effect_count = 1</code></pre><h2>I123–I126</h2><ul><li><strong>I123</strong> — Root authority ≠ timeless authority.</li><li><strong>I124</strong> — Authentic root below a trusted root high-watermark = rollback evidence.</li><li><strong>I125</strong> — Root currentness binds monotonic root epoch + root-record digest before consequence.</li><li><strong>I126</strong> — A retired root may remain historically valid but must not regain live authority after a newer root epoch is observed.</li></ul><h2>Evidence</h2><pre><code>GitHub Actions run: 31621380899
+Job: 94196799768
+Benchmark SHA:
+7590bd8ce2c894d5a72ffb9c639896e87ce3dbfd
+Artifact ID: 9151370681
+Artifact digest:
+sha256:672ef3a413da475bb038989add5d97f109198a5b41cd865da4207823b67f6bf2
+Score: 10/10</code></pre><h2>Boundary</h2><p>The benchmark uses deterministic HMAC identities and PostgreSQL as a local durable high-watermark. It does not claim rollback-resistant storage, production PKI, hardware-root security, BFT finality or constitutional governance.</p><div class="article-actions"><a class="button" href="ttp-constitutional-root-currentness.html">Read TTP Constitutional Root Currentness Rule</a><a class="text-link" href="verified-040-governance-resolution-equivocation.html">Previous: Verified #040 →</a></div></article></main><footer class="site-footer"><div class="wrap"><a href="index.html">← RESONANCE home</a></div></footer></body></html>
