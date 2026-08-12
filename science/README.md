@@ -92,6 +92,10 @@ A focused analysis of what would be required to move from controlled evidence to
 ### Research Conversation
 A short publication built around a scientist's correction, unresolved question or methodological pain point. Quotes are used only with permission; otherwise insights are generalized.
 
+First live example:
+
+- [`Research Conversation 001 — When a metadata blocker becomes a context-dependent scientific rule`](../reports/science/conversations/001-live-seq-replicate-semantics.md)
+
 ### Verified Research Artifact
 A report paired with reproducible code, source manifests, deterministic checks or evidence bundles.
 
