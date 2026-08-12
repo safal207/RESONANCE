@@ -85,6 +85,7 @@ jobs:
           audit_mobile article-en 'before-you-let-an-ai-agent-move-money.html'
           audit_mobile open-problems 'open-problems.html'
           audit_mobile quality 'quality.html'
+          audit_mobile corrections 'corrections.html'
           audit_desktop home ''
           audit_desktop article-en 'before-you-let-an-ai-agent-move-money.html'
 
