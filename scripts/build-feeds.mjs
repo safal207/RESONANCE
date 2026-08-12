@@ -75,11 +75,23 @@ function readLanguage(file, html) {
 }
 
 function readPublishedDate(html) {
-  const match = html.match(/(?:Verified|Executed|Published)\s*·\s*(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{4})/i);
-  if (!match) return null;
-  const months = { Jan: '01', Feb: '02', Mar: '03', Apr: '04', May: '05', Jun: '06', Jul: '07', Aug: '08', Sep: '09', Oct: '10', Nov: '11', Dec: '12' };
-  const key = match[2][0].toUpperCase() + match[2].slice(1, 3).toLowerCase();
-  return `${match[3]}-${months[key]}-${String(match[1]).padStart(2, '0')}`;
+  const english = html.match(/(?:Verified|Executed|Published)\s*·\s*(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+(\d{4})/i);
+  if (english) {
+    const months = { Jan: '01', Feb: '02', Mar: '03', Apr: '04', May: '05', Jun: '06', Jul: '07', Aug: '08', Sep: '09', Oct: '10', Nov: '11', Dec: '12' };
+    const key = english[2][0].toUpperCase() + english[2].slice(1, 3).toLowerCase();
+    return `${english[3]}-${months[key]}-${String(english[1]).padStart(2, '0')}`;
+  }
+
+  const russian = html.match(/(?:Опубликовано|Проверено|Выполнено)\s*·\s*(\d{1,2})\s+(янв|фев|мар|апр|май|мая|июн|июл|авг|сен|сент|окт|ноя|дек)\s+(\d{4})/i);
+  if (russian) {
+    const months = { янв: '01', фев: '02', мар: '03', апр: '04', май: '05', мая: '05', июн: '06', июл: '07', авг: '08', сен: '09', сент: '09', окт: '10', ноя: '11', дек: '12' };
+    return `${russian[3]}-${months[russian[2].toLowerCase()]}-${String(russian[1]).padStart(2, '0')}`;
+  }
+
+  const chinese = html.match(/(?:发布|已发布|验证|执行)\s*·\s*(\d{4})年(\d{1,2})月(\d{1,2})日/i);
+  if (chinese) return `${chinese[1]}-${String(chinese[2]).padStart(2, '0')}-${String(chinese[3]).padStart(2, '0')}`;
+
+  return null;
 }
 
 function readCanonical(file, html) {
@@ -98,10 +110,6 @@ function readTitle(file, html) {
 
 function toRfc2822(date) {
   return new Date(`${date}T12:00:00Z`).toUTCString();
-}
-
-function feedFileFor(language) {
-  return feedProfiles[language]?.file || feedProfiles.en.file;
 }
 
 function injectAutodiscovery(file, html) {
