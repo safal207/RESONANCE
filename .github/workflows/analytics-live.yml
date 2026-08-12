@@ -1,0 +1,65 @@
+name: RESONANCE Live Privacy Analytics Audit
+
+on:
+  workflow_run:
+    workflows: ['Deploy RESONANCE to GitHub Pages']
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: resonance-privacy-analytics-live
+  cancel-in-progress: true
+
+jobs:
+  live-analytics:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    env:
+      RESONANCE_ANALYTICS_ENDPOINT: ${{ vars.RESONANCE_ANALYTICS_ENDPOINT }}
+
+    steps:
+      - name: Checkout exact deployed audit tooling
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify public privacy analytics mode
+        shell: bash
+        env:
+          GITHUB_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          set -euo pipefail
+          if [[ -n "${RESONANCE_ANALYTICS_ENDPOINT:-}" ]]; then
+            node scripts/verify-analytics-live.mjs \
+              --live-base 'https://safal207.github.io/RESONANCE/' \
+              --mode enabled \
+              --expected-endpoint "$RESONANCE_ANALYTICS_ENDPOINT" \
+              --output analytics-live-results \
+              --enforce
+          else
+            node scripts/verify-analytics-live.mjs \
+              --live-base 'https://safal207.github.io/RESONANCE/' \
+              --mode disabled \
+              --output analytics-live-results \
+              --enforce
+          fi
+          cat analytics-live-results/analytics-live-summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload immutable live analytics evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-privacy-analytics-live-${{ github.event.workflow_run.head_sha || github.sha }}-${{ github.run_id }}
+          path: analytics-live-results/
+          if-no-files-found: warn
+          retention-days: 90
