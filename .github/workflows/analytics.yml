@@ -1,0 +1,134 @@
+name: RESONANCE Privacy-Aware Analytics Contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'analytics/**'
+      - 'site/**'
+      - 'scripts/build-seo-site.mjs'
+      - 'scripts/verify-analytics.mjs'
+      - '.github/workflows/analytics.yml'
+      - '.github/workflows/pages.yml'
+      - '.github/workflows/seo.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'analytics/**'
+      - 'site/**'
+      - 'scripts/build-seo-site.mjs'
+      - 'scripts/verify-analytics.mjs'
+      - '.github/workflows/analytics.yml'
+      - '.github/workflows/pages.yml'
+      - '.github/workflows/seo.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: resonance-privacy-analytics-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  analytics-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Build default-off publication
+        env:
+          RESONANCE_ANALYTICS_ENDPOINT: ''
+        run: node scripts/build-seo-site.mjs
+
+      - name: Verify default-off analytics contract
+        run: |
+          node scripts/verify-analytics.mjs --mode disabled
+          cat analytics-summary-disabled.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Reject unsafe collector endpoints
+        shell: bash
+        run: |
+          set -euo pipefail
+          reject() {
+            local endpoint="$1"
+            if RESONANCE_ANALYTICS_ENDPOINT="$endpoint" node scripts/build-seo-site.mjs >/tmp/unsafe-analytics.log 2>&1; then
+              echo "Unsafe endpoint unexpectedly accepted: $endpoint"
+              cat /tmp/unsafe-analytics.log
+              exit 1
+            fi
+          }
+          reject 'http://collector.example.invalid/events'
+          reject 'https://user:secret@collector.example.invalid/events'
+          reject 'https://collector.example.invalid/events?token=secret'
+          reject 'https://collector.example.invalid/events#secret'
+
+      - name: Build synthetic enabled publication
+        env:
+          RESONANCE_ANALYTICS_ENDPOINT: 'https://collector.example.invalid/v1/events'
+        run: node scripts/build-seo-site.mjs
+
+      - name: Verify enabled analytics contract
+        run: |
+          node scripts/verify-analytics.mjs \
+            --mode enabled \
+            --expected-endpoint 'https://collector.example.invalid/v1/events'
+          cat analytics-summary-enabled.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Rebuild default-off publication for evidence
+        env:
+          RESONANCE_ANALYTICS_ENDPOINT: ''
+        run: node scripts/build-seo-site.mjs
+
+      - name: Verify publication compatibility
+        run: |
+          node scripts/verify-seo.mjs
+          node scripts/verify-analytics.mjs --mode disabled
+
+      - name: Upload immutable analytics evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-privacy-analytics-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            analytics/event-schema.json
+            analytics/README.md
+            analytics-summary-disabled.json
+            analytics-summary-disabled.md
+            analytics-summary-enabled.json
+            analytics-summary-enabled.md
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Post or update PR analytics summary
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const marker = '<!-- resonance-privacy-analytics -->';
+            const parts = [];
+            for (const file of ['analytics-summary-disabled.md', 'analytics-summary-enabled.md']) {
+              if (fs.existsSync(file)) parts.push(fs.readFileSync(file, 'utf8'));
+            }
+            const fallback = '# RESONANCE Privacy-Aware Analytics Contract\n\nThe run did not produce a summary. Inspect workflow logs/artifacts.';
+            const body = `${marker}\n${parts.length ? parts.join('\n---\n\n') : fallback}`;
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const comments = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number, per_page: 100 });
+            const previous = comments.find((comment) => comment.user?.type === 'Bot' && comment.body?.includes(marker));
+            if (previous) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: previous.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }
