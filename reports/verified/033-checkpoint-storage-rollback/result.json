@@ -1,0 +1,83 @@
+{
+  "benchmark": "RESONANCE Checkpoint Storage Rollback / Restored Verifier State",
+  "benchmark_version": "1.0",
+  "protocol": "RESONANCE Transactional Trust Protocol v1.0",
+  "executed_at": "2026-08-12T15:44:27.098800+00:00",
+  "database": {
+    "server_version": "17.6"
+  },
+  "benchmark_head_sha": "87a6016e4f09748eab2586c00dc4309bf5f65cc4",
+  "github_actions": {
+    "run_id": 31613901719,
+    "job_id": 94171789427,
+    "artifact_id": 9148374663,
+    "artifact_name": "resonance-checkpoint-storage-rollback-v1.0",
+    "artifact_digest": "sha256:2e2c598472898952094c0f14e0238d436ed019c0f5fed457fb190fa12ea9771b"
+  },
+  "restore_fixture": {
+    "type": "explicit verifier-local checkpoint row restore from previously captured snapshot",
+    "snapshot_generation": 7,
+    "pre_restore_generation": 9,
+    "post_restore_generation": 7
+  },
+  "witness": {
+    "witness_id": "witness-A",
+    "algorithm": "HMAC-SHA256",
+    "generation": 9,
+    "authentic": true,
+    "head_digest_matches_h9": true,
+    "head_digest": "sha256:8c85ea75094f2dd5dbb0195f25d400856750dbdd3e54b15e14a13a2ae320c131"
+  },
+  "unsafe_after_restore": {
+    "head": "H7",
+    "head_authentic": true,
+    "local_checkpoint_generation": 7,
+    "verdict": "proof_authorized_with_current_head",
+    "adoption_rows": 1,
+    "http_status": 200,
+    "effect_count": 1,
+    "output_value": 30
+  },
+  "safe_storage_guard": {
+    "local_checkpoint_generation": 7,
+    "witness_generation": 9,
+    "witness_authentic": true,
+    "verdict": "checkpoint_storage_rollback_detected",
+    "adoption_rows": 0,
+    "effect_count": 0
+  },
+  "reconstruction": {
+    "reason": "checkpoint_reconstructed_from_witness",
+    "checkpoint_generation": 9,
+    "replayed_h7_verdict": "authority_head_rollback_detected",
+    "replayed_h7_adoption_rows": 0,
+    "replayed_h7_effect_count": 0
+  },
+  "fresh_h9_after_reconstruction": {
+    "head_authentic": true,
+    "checkpoint_generation": 9,
+    "verdict": "proof_authorized_with_current_head",
+    "adoption_rows": 1,
+    "http_status": 200,
+    "effect_count": 1,
+    "output_value": 30
+  },
+  "checks": [
+    {"id": "generation7_checkpoint_control_succeeds_before_advance", "pass": true, "points": 2},
+    {"id": "local_checkpoint_really_advances_to9_then_restores_to7_while_witness_stays9", "pass": true, "points": 2},
+    {"id": "local_only_verifier_accepts_authentic_h7_after_storage_restore", "pass": true, "points": 2},
+    {"id": "witness_guard_detects_storage_rollback_then_reconstructs_checkpoint_with_zero_effects", "pass": true, "points": 2},
+    {"id": "fresh_authentic_h9_succeeds_once_after_reconstruction", "pass": true, "points": 2}
+  ],
+  "score": 10,
+  "max_score": 10,
+  "classification": "Checkpoint rollback resistance protocol passes",
+  "invariants": [
+    "I91 DURABLE CHECKPOINT DOES NOT IMPLY ROLLBACK-RESISTANT CHECKPOINT.",
+    "I92 VERIFIER STATE RECOVERY MUST NOT MOVE TRUST HISTORY BACKWARD.",
+    "I93 A LOCAL CHECKPOINT BELOW AN AUTHENTICATED INDEPENDENT HIGH-WATERMARK IS STORAGE-ROLLBACK EVIDENCE.",
+    "I94 AFTER CHECKPOINT ROLLBACK, RECONSTRUCT TRUST STATE FROM INDEPENDENT EVIDENCE BEFORE AUTHORIZING CONSEQUENCE."
+  ],
+  "external_safety_certification": false,
+  "vulnerability_claim": false
+}

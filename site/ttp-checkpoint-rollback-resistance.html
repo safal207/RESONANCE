@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="TTP checkpoint rollback-resistance rule: recovered verifier trust state must be reconciled against authenticated independent history before consequential verification resumes."><title>TTP — Checkpoint Rollback Resistance | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol v1.0</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · RECOVERY CURRENTNESS</p><h1>Checkpoint Rollback Resistance Rule</h1><p class="dek">A checkpoint can be durable and still come from the past. After verifier recovery, local trust history must be reconciled against an authenticated monotonic reference outside the restored state domain before it can authorize consequence.</p><blockquote><p><strong>DURABLE CHECKPOINT ≠ ROLLBACK-RESISTANT CHECKPOINT.</strong></p></blockquote><h2>Decision rule</h2><pre><code>RECOVER / START VERIFIER
+        ↓
+READ LOCAL CHECKPOINT G_local
+        ↓
+RESOLVE AUTHENTICATED INDEPENDENT CHECKPOINT G_ext
+        ↓
+VERIFY WITNESS AUTHENTICITY + SCOPE + HEAD BINDING
+        ↓
+G_local >= G_ext ?
+  ├─ no → checkpoint_storage_rollback_detected → HOLD
+  │          ↓
+  │      reconstruct / reconcile trusted history
+  │          ↓
+  │      persist monotonic checkpoint
+  └─ yes
+        ↓
+RECEIVE + AUTHENTICATE AUTHORITY HEAD H
+        ↓
+H.generation >= trusted checkpoint ?
+  ├─ no → authority_head_rollback_detected → HOLD
+  └─ yes
+        ↓
+VERIFY AUTHORITY VIEW / RULE / PROOF / SCOPE
+        ↓
+CURRENT OWNER ADOPTS
+        ↓
+FENCED COMMIT
+        ↓
+PROVE RECOVERY → STORAGE CURRENTNESS → HEAD CURRENTNESS → PROOF → EFFECT</code></pre><h2>Why durability is not enough</h2><p>Durability says state survives ordinary failure. It does not say a restore, snapshot rewind, replica rollback or administrative recovery cannot replace current state with an older durable state.</p><h2>I91–I94</h2><ul><li><strong>I91</strong> — Durable checkpoint ≠ rollback-resistant checkpoint.</li><li><strong>I92</strong> — Verifier state recovery must not move trust history backward.</li><li><strong>I93</strong> — A local checkpoint below an authenticated independent high-watermark is storage-rollback evidence.</li><li><strong>I94</strong> — After checkpoint rollback, reconstruct trust state from independent evidence before authorizing consequence.</li></ul><h2>Recovery evidence</h2><p>Preserve restored checkpoint identity, recovery/snapshot identity when available, independent witness/checkpoint identity, authentication and scope results, head/log binding, rollback comparison, reconstruction action, reconstructed checkpoint and the subsequent authority-head/currentness decision.</p><h2>Composition with authority-head anti-rollback</h2><pre><code>CHECKPOINT STORAGE CURRENTNESS
+        ↓
+AUTHORITY HEAD AUTHENTICITY
+        ↓
+AUTHORITY HEAD ANTI-ROLLBACK
+        ↓
+AUTHORITY VIEW CURRENTNESS
+        ↓
+PROOF AUTHORITY / APPLICABILITY
+        ↓
+CONSEQUENCE</code></pre><p>A perfect authority-head anti-rollback comparison is unsafe if the high-watermark supplied to it was itself restored from the past.</p><h2>Boundary</h2><p>Verified #033 uses an explicit PostgreSQL row restore and a deterministic HMAC witness fixture. Production systems may use independent witnesses, transparency logs, quorum checkpoints, secure hardware monotonic counters, append-only storage or other mechanisms. Witness rollback and equivocation are separate problems.</p><div class="article-actions"><a class="button" href="verified-033-checkpoint-storage-rollback.html">Open Verified Report #033</a><a class="text-link" href="ttp-authority-head-anti-rollback.html">Previous rule: Authority Head Anti-Rollback →</a></div></article></main><footer class="site-footer"><div class="wrap"><a href="transactional-trust-protocol-v1.html">← Transactional Trust Protocol</a></div></footer></body></html>
