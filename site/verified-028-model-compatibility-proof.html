@@ -1,0 +1,47 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #028: model-version mismatch need not force recomputation when scoped semantic compatibility is explicitly proved."><title>Verified #028 — Model Compatibility Proof | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #028</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #028</p><h1>The model changed. The result did not have to.</h1><p class="dek">Exact model identity is safe but conservative. This executable benchmark shows when an older artifact can be reused under a newer causal model — and why a blanket backward-compatible flag is not enough.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><h2>Two models, one scoped equivalence</h2><pre><code>model-v1:
+y = min(limit, 2 × price)
+
+model-v2:
+y = min(limit, 2 × price + tax_rate)
+
+compatibility predicate:
+tax_rate >= 0
+AND
+2 × price >= limit</code></pre><p>Inside that region, both models necessarily return <code>limit</code>.</p><h2>Safe reuse without recompute</h2><pre><code>price = 20
+limit = 30
+tax_rate = 8
+
+v1 output = 30
+v2 output = 30
+
+proof binds:
+from-model + to-model
++ rule identity
++ artifact digest
++ current values
++ predicate result
+
+→ adoption rows = 1
+→ HTTP 200
+→ effect_count = 1
+→ output = 30 ✅</code></pre><h2>Unsafe: global compatibility claim</h2><pre><code>price = 10
+limit = 30
+tax_rate = 8
+
+v1 output = 20
+v2 output = 28
+
+blanket compatible(v1,v2)=true
+→ adoption rows = 1
+→ committed output = 20 ❌</code></pre><p>The version pair is the same. The state is outside the proven equivalence scope.</p><h2>Safe out-of-scope path</h2><pre><code>predicate = false
+→ compatibility_scope_conflict
+→ adoption rows = 0
+→ effects = 0
+
+recompute under v2
+→ output = 28
+→ effect_count = 1 ✅</code></pre><p>Tampering either the target-model digest or artifact digest also produced <code>compatibility_proof_binding_conflict</code> with zero effects.</p><h2>I71–I74</h2><ul><li><strong>I71</strong> — Model-version mismatch does not by itself prove incompatibility; compatibility must be proved.</li><li><strong>I72</strong> — Compatibility proof must bind exact model identities, artifact identity, and current state/scope.</li><li><strong>I73</strong> — A global compatibility flag is not equivalence evidence for every artifact.</li><li><strong>I74</strong> — Failed or unknown compatibility proof requires hold, revalidation, or recomputation before consequence.</li></ul><blockquote><p><strong>COMPATIBILITY IS EVIDENCE, NOT METADATA.</strong></p></blockquote><h2>Evidence</h2><pre><code>GitHub Actions run: 31585859218
+Artifact ID: 9137064805
+Artifact digest:
+sha256:eccd83344d2f34caa7a1b933500a32389572408c04bd1de3172340dd625e3b7e
+Score: 10/10</code></pre><p>This is a deterministic protocol benchmark, not production safety certification or a universal semantic-equivalence algorithm.</p><div class="article-actions"><a class="button" href="ttp-model-compatibility-proof.html">Read TTP Model Compatibility Proof Rule</a><a class="text-link" href="verified-027-dependency-contract-drift.html">Previous: Verified #027 →</a></div></article></main><footer class="site-footer"><div class="wrap"><a href="index.html">← RESONANCE home</a></div></footer></body></html>
