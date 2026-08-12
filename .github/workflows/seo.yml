@@ -5,12 +5,14 @@ on:
     paths:
       - 'site/**'
       - 'market/**'
+      - 'analytics/**'
       - 'distribution/**'
       - 'protocols/**'
       - '.github/ISSUE_TEMPLATE/market-workflow.yml'
       - 'scripts/build-seo-site.mjs'
       - 'scripts/build-feeds.mjs'
       - 'scripts/verify-feed.mjs'
+      - 'scripts/verify-analytics.mjs'
       - 'scripts/verify-seo.mjs'
       - 'scripts/verify-links.mjs'
       - 'scripts/lighthouse-summary.mjs'
@@ -18,6 +20,8 @@ on:
       - '.github/workflows/pages.yml'
       - '.github/workflows/feed.yml'
       - '.github/workflows/feed-live.yml'
+      - '.github/workflows/analytics.yml'
+      - '.github/workflows/analytics-live.yml'
       - '.github/workflows/lighthouse.yml'
       - '.github/workflows/lighthouse-live.yml'
   push:
@@ -25,12 +29,14 @@ on:
     paths:
       - 'site/**'
       - 'market/**'
+      - 'analytics/**'
       - 'distribution/**'
       - 'protocols/**'
       - '.github/ISSUE_TEMPLATE/market-workflow.yml'
       - 'scripts/build-seo-site.mjs'
       - 'scripts/build-feeds.mjs'
       - 'scripts/verify-feed.mjs'
+      - 'scripts/verify-analytics.mjs'
       - 'scripts/verify-seo.mjs'
       - 'scripts/verify-links.mjs'
       - 'scripts/lighthouse-summary.mjs'
@@ -38,6 +44,8 @@ on:
       - '.github/workflows/pages.yml'
       - '.github/workflows/feed.yml'
       - '.github/workflows/feed-live.yml'
+      - '.github/workflows/analytics.yml'
+      - '.github/workflows/analytics-live.yml'
       - '.github/workflows/lighthouse.yml'
       - '.github/workflows/lighthouse-live.yml'
   workflow_dispatch:
@@ -62,6 +70,8 @@ jobs:
         run: node --test market/tests/*.test.mjs
 
       - name: Build SEO-ready publication
+        env:
+          RESONANCE_ANALYTICS_ENDPOINT: ''
         run: node scripts/build-seo-site.mjs
 
       - name: Build deterministic multilingual feeds
@@ -72,6 +82,9 @@ jobs:
 
       - name: Verify RSS / Subscribe contract
         run: node scripts/verify-feed.mjs --root dist --output feed-results --enforce
+
+      - name: Verify privacy analytics contract
+        run: node scripts/verify-analytics.mjs --mode disabled
 
       - name: Verify internal publication links
         run: node scripts/verify-links.mjs
