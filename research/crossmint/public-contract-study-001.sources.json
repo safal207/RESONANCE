@@ -1,0 +1,66 @@
+{
+  "schema": "resonance.public-contract-source-manifest.v0.1",
+  "study": "crossmint-public-contract-001",
+  "generated_at": "2026-08-12",
+  "scope": "public-documentation-only",
+  "testing_performed": false,
+  "sources": [
+    {
+      "title": "How Agents Pay",
+      "url": "https://docs.crossmint.com/agents/how-agents-pay",
+      "supports": [
+        "scoped wallet permissions",
+        "spend caps",
+        "allowed counterparties",
+        "time windows",
+        "revocation"
+      ]
+    },
+    {
+      "title": "Create Transaction",
+      "url": "https://docs.crossmint.com/api-reference/wallets/create-transaction",
+      "supports": [
+        "x-idempotency-key",
+        "transaction id",
+        "awaiting-approval/pending/failed/success lifecycle"
+      ]
+    },
+    {
+      "title": "Get Transaction",
+      "url": "https://docs.crossmint.com/api-reference/wallets/get-transaction",
+      "supports": [
+        "transaction status reconciliation by transaction id"
+      ]
+    },
+    {
+      "title": "Get Wallet Transactions",
+      "url": "https://docs.crossmint.com/api-reference/wallets/get-transactions",
+      "supports": [
+        "wallet transaction history reconciliation"
+      ]
+    },
+    {
+      "title": "Transfer Webhooks",
+      "url": "https://docs.crossmint.com/wallets/guides/webhooks",
+      "supports": [
+        "outgoing transfer success/failure events",
+        "transferId linkage for API-originated transfers"
+      ]
+    },
+    {
+      "title": "x402",
+      "url": "https://docs.crossmint.com/agents/payment-flows/x402",
+      "supports": [
+        "402 negotiation",
+        "payment-proof retry",
+        "settlement receipt extraction"
+      ]
+    }
+  ],
+  "non_claims": [
+    "No Crossmint vulnerability is claimed.",
+    "No production or staging API testing was performed.",
+    "No internal recovery architecture is inferred.",
+    "No endorsement or affiliation is implied."
+  ]
+}
