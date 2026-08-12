@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #033: a durable verifier checkpoint can still be rolled back by restored storage unless recovery reconciles against independent authenticated history."><title>Verified #033 — Checkpoint Storage Rollback | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #033</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #033</p><h1>The checkpoint survived. Then recovery moved it backward.</h1><p class="dek">Verified #032 made authority-head history monotonic. #033 attacks that memory itself: after the verifier reached generation 9, restoring an older checkpoint snapshot to generation 7 made an untouched authentic H7 look current again to a local-only verifier.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><blockquote><p><strong>DURABLE CHECKPOINT ≠ ROLLBACK-RESISTANT CHECKPOINT.</strong></p></blockquote><h2>The restore</h2><pre><code>baseline:
+local checkpoint = 7
+capture snapshot S7
+
+history advances:
+local checkpoint = 9
+witness W9 = authenticated generation 9
+
+restore S7:
+local checkpoint = 7
+witness W9 remains = 9</code></pre><h2>Unsafe: local-only anti-rollback</h2><pre><code>H7 authentic = true
+H7 generation = 7
+local checkpoint = 7
+regional generation = 7
+
+7 >= 7
+→ proof_authorized_with_current_head
+→ adoption rows = 1
+→ HTTP 200
+→ effect_count = 1</code></pre><p>The local anti-rollback algorithm is internally correct. Its trusted input was rolled back.</p><h2>Safe: independent recovery witness</h2><pre><code>local checkpoint = 7
+W9 authentic = true
+W9 generation = 9
+W9 head_digest = digest(H9)
+
+7 < 9
+→ checkpoint_storage_rollback_detected
+→ adoption rows = 0
+→ effects = 0</code></pre><p>Before any authority head can authorize consequence, the verifier first checks whether its own recovered trust state has moved backward relative to authenticated history outside the restored state domain.</p><h2>Reconstruct, then verify</h2><pre><code>checkpoint reconstruction:
+7 → 9
+reason = checkpoint_reconstructed_from_witness
+
+replay H7:
+7 < 9
+→ authority_head_rollback_detected
+→ adoption rows = 0
+→ effects = 0</code></pre><p>The two guards address different failures: storage rollback is repaired first; head rollback is rejected second.</p><h2>Fresh-current control</h2><pre><code>H9 authentic = true
+checkpoint = 9
+region-B = R2 / generation 9 / ACTIVE
+
+→ adoption rows = 1
+→ HTTP 200
+→ effect_count = 1
+→ output = 30</code></pre><h2>I91–I94</h2><ul><li><strong>I91</strong> — Durable checkpoint ≠ rollback-resistant checkpoint.</li><li><strong>I92</strong> — Verifier state recovery must not move trust history backward.</li><li><strong>I93</strong> — A local checkpoint below an authenticated independent high-watermark is storage-rollback evidence.</li><li><strong>I94</strong> — After checkpoint rollback, reconstruct trust state from independent evidence before authorizing consequence.</li></ul><h2>Evidence</h2><pre><code>GitHub Actions run: 31613901719
+Job: 94171789427
+Benchmark SHA:
+87a6016e4f09748eab2586c00dc4309bf5f65cc4
+Artifact ID: 9148374663
+Artifact digest:
+sha256:2e2c598472898952094c0f14e0238d436ed019c0f5fed457fb190fa12ea9771b
+Score: 10/10</code></pre><h2>Boundary</h2><p>The restore is an explicit benchmark rollback of one verifier-local PostgreSQL checkpoint row; it is not a test of PostgreSQL backup tooling. The witness is a deterministic HMAC fixture with a separate test key. Production witness rollback, equivocation, quorum and bootstrap trust remain open verification surfaces.</p><div class="article-actions"><a class="button" href="ttp-checkpoint-rollback-resistance.html">Read TTP Checkpoint Rollback Resistance Rule</a><a class="text-link" href="verified-032-authority-head-replay.html">Previous: Verified #032 →</a></div></article></main><footer class="site-footer"><div class="wrap"><a href="index.html">← RESONANCE home</a></div></footer></body></html>
