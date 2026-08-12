@@ -173,13 +173,14 @@ analysis
 → checkpoint freshness / anti-rollback
 → checkpoint authority commit protocol
 → checkpoint content commitment
+→ full causal checkpoint state binding
 ```
 
 See [`issues/001-age-of-agents/`](issues/001-age-of-agents/) and the web edition at [`site/issue-001.html`](site/issue-001.html).
 
 ## Verified research
 
-**Current verified milestone — 2026-08-12:** CaPU v0.13 closes the checkpoint-content binding gap. The canonical finite replay-state snapshot is committed off-path with SHA-256 and the same commitment is bound across prepare → persistence → anchor commit → anchored recovery. Verified CaPU head: `5c69c997a30c872eee86137607feef816a98f289`. The full CaPU verification stack from v0.9 through v0.13 completed green on that head. See [`Verified Report #018`](reports/verified/018-capu-checkpoint-content/REPORT.md) and its [`machine-readable result`](reports/verified/018-capu-checkpoint-content/result.json).
+**Current verified milestone — 2026-08-12:** CaPU v0.14 extends the checkpoint-content boundary from replay state to the explicit committed causal record: causal-head validity, transition ID, GEN and SEAL. The same committed causal state is fail-closed bound across prepare → persistence → authority acknowledgement → anchored recovery, while SHA-256 remains off the RTL critical path. Verified CaPU head: `604e8e437c1bc09058213e3c374e9b9fd8ce0c8e`. This milestone does not yet claim live continuation resumption after reset: the recovered causal record is verified but is not yet wired back into the v0.9 parent/GEN/SEAL controller. See [`Verified Report #019`](reports/verified/019-capu-full-causal-checkpoint/REPORT.md) and its [`machine-readable result`](reports/verified/019-capu-full-causal-checkpoint/result.json).
 
 Key reproducible reports:
 
@@ -191,7 +192,8 @@ Key reproducible reports:
 - **#015** CaPU v0.10 replay-state recovery across reset — bounded formal PASS with fail-closed restore semantics;
 - **#016** CaPU v0.11 checkpoint freshness / anti-rollback — bounded formal PASS with exact-anchor recovery semantics;
 - **#017** CaPU v0.12 checkpoint authority commit — bounded formal PASS with persist-then-anchor commit semantics;
-- **#018** CaPU v0.13 checkpoint content commitment — bounded formal PASS with canonical replay-state content binding across prepare, persistence, authority commit and anchored recovery.
+- **#018** CaPU v0.13 checkpoint content commitment — bounded formal PASS with canonical replay-state content binding across prepare, persistence, authority commit and anchored recovery;
+- **#019** CaPU v0.14 full causal checkpoint state binding — bounded formal PASS binding replay state plus committed causal head, GEN and SEAL across checkpoint construction and recovery.
 
 All scores are scope-specific protocol/benchmark scores. They are **not percentages of safety** and are not external certifications.
 
