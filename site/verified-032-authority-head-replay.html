@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #032: an authentic old authority head can be replayed unless currentness is bound to monotonic anti-rollback state."><title>Verified #032 — Authentic Head Replay | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #032</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #032</p><h1>The head was authentic. It was no longer current.</h1><p class="dek">A signature can prove that an authority really issued a statement without proving that the statement is the newest one. After a verifier had already observed generation 9, replaying untouched authenticated generation 7 still fooled an authentication-only verifier into committing an effect.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><h2>The replay</h2><pre><code>H7:
+generation 7 / R1 ACTIVE
+HMAC valid ✅
+
+H9:
+generation 9 / R2 ACTIVE
+HMAC valid ✅
+
+verifier has already observed H9
+attacker replays untouched H7</code></pre><blockquote><p><strong>AUTHENTIC HEAD ≠ LATEST HEAD.</strong></p></blockquote><h2>Unsafe: authentication-only currentness</h2><pre><code>H7 authentic = true
+regional replica = generation 7 / R1 ACTIVE
+claimed head = generation 7
+
+7 >= 7
+→ proof_authorized_with_current_head
+→ adoption rows = 1
+→ HTTP 200
+→ effect_count = 1</code></pre><p>No signature was forged. No signed payload was changed. The failure is history rollback.</p><h2>Safe: monotonic checkpoint</h2><pre><code>trusted high-watermark = 9
+replayed H7 generation = 7
+H7 authentic = true
+
+7 < 9
+→ authority_head_rollback_detected
+→ adoption rows = 0
+→ effects = 0</code></pre><p>Authentication establishes origin and integrity. The trusted high-watermark establishes that an older authentic generation is no longer eligible to authorize consequence.</p><h2>Restart test</h2><p>The verifier connection was closed and reopened. The durable checkpoint remained at <strong>9</strong>, and replayed authentic H7 was still rejected with <code>authority_head_rollback_detected</code> and zero effects.</p><h2>Fresh-current control</h2><pre><code>H9 authentic = true
+checkpoint = 9
+region-B = R2 / generation 9 / ACTIVE
+
+→ adoption rows = 1
+→ HTTP 200
+→ effect_count = 1
+→ output = 30</code></pre><h2>I87–I90</h2><ul><li><strong>I87</strong> — Authentic head ≠ latest head.</li><li><strong>I88</strong> — Currentness must bind to monotonic anti-rollback state or an equivalent trusted checkpoint.</li><li><strong>I89</strong> — An authentic head below the trusted high-watermark must fail closed before consequence.</li><li><strong>I90</strong> — Anti-rollback state must survive verifier restart or be reconstructed from trusted witness/checkpoint evidence.</li></ul><h2>Evidence</h2><pre><code>GitHub Actions run: 31610109195
+Job: 94158970954
+Benchmark SHA:
+22ab35b452a346299ed23630d4204e9b610130cb
+Artifact ID: 9146858780
+Artifact digest:
+sha256:7ad4f44a363e0c58609fd797bc2ec29060630f02619d8a4d4541b315317fc57d
+Score: 10/10</code></pre><h2>Boundary</h2><p>The HMAC and verifier-local PostgreSQL checkpoint are deterministic benchmark fixtures, not production PKI or a universal anti-rollback architecture. First-contact trust and rollback of the checkpoint storage itself remain separate verification surfaces.</p><div class="article-actions"><a class="button" href="ttp-authority-head-anti-rollback.html">Read TTP Authority Head Anti-Rollback Rule</a><a class="text-link" href="verified-031-authority-head-authenticity.html">Previous: Verified #031 →</a></div></article></main><footer class="site-footer"><div class="wrap"><a href="index.html">← RESONANCE home</a></div></footer></body></html>

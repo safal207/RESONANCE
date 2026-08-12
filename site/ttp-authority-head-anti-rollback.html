@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="TTP authority-head anti-rollback rule: authenticated authority evidence must also satisfy a trusted monotonic currentness checkpoint."><title>TTP — Authority Head Anti-Rollback | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol v1.0</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · AUTHORITY CURRENTNESS</p><h1>Authority Head Anti-Rollback Rule</h1><p class="dek">Authenticity is not recency. A verifier must bind an authenticated authority head to monotonic trusted history before using that head to fence a consequential decision.</p><blockquote><p><strong>AUTHENTIC HEAD ≠ LATEST HEAD.</strong></p></blockquote><h2>Decision rule</h2><pre><code>RECEIVE AUTHORITY HEAD H
+        ↓
+AUTHENTICATE H
+        ↓
+READ TRUSTED HIGH-WATERMARK G*
+        ↓
+H.generation >= G* ?
+  ├─ no → authority_head_rollback_detected → HOLD
+  └─ yes
+       ↓
+   ADVANCE G* MONOTONICALLY
+       ↓
+   VERIFY AUTHORITY VIEW CURRENTNESS
+       ↓
+   VERIFY RULE / PROOF / SCOPE
+       ↓
+   CURRENT OWNER ADOPTS
+       ↓
+   FENCED COMMIT
+       ↓
+PROVE AUTHENTICITY → ANTI-ROLLBACK → VIEW → PROOF → EFFECT</code></pre><h2>Why the signature is not enough</h2><p>A signature or MAC can prove that an authority issued a statement and that its bytes were not modified. It cannot prove that no newer authentic statement has appeared since.</p><h2>I87–I90</h2><ul><li><strong>I87</strong> — Authentic head ≠ latest head.</li><li><strong>I88</strong> — Currentness must bind to monotonic anti-rollback state or an equivalent trusted checkpoint.</li><li><strong>I89</strong> — An authentic head below the trusted high-watermark must fail closed before consequence.</li><li><strong>I90</strong> — Anti-rollback state must survive verifier restart or be reconstructed from trusted witness/checkpoint evidence.</li></ul><h2>Recovery</h2><pre><code>checkpoint missing / conflicting / lower than trusted history
+→ CURRENTNESS UNKNOWN
+→ HOLD
+→ reconstruct / reconcile trusted history
+→ do not choose the permissive head</code></pre><h2>Evidence requirement</h2><p>Preserve head identity, authenticated payload, generation, prior accepted high-watermark, checkpoint update, authority-view state, proof binding, execution authority and the resulting effect in one inspectable trajectory.</p><h2>Boundary</h2><p>Verified #032 uses deterministic HMAC and a verifier-local PostgreSQL high-watermark. Production systems may use independent witnesses, transparency checkpoints, quorum/consensus or hardware-backed monotonic state. A durable local checkpoint that can itself be rolled back by storage restore is a separate trust problem.</p><div class="article-actions"><a class="button" href="verified-032-authority-head-replay.html">Open Verified Report #032</a><a class="text-link" href="ttp-authority-head-authenticity.html">Previous rule: Authority Head Authenticity →</a></div></article></main><footer class="site-footer"><div class="wrap"><a href="transactional-trust-protocol-v1.html">← Transactional Trust Protocol</a></div></footer></body></html>

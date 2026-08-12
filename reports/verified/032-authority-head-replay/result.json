@@ -1,0 +1,32 @@
+{
+  "artifact_digest": "sha256:7ad4f44a363e0c58609fd797bc2ec29060630f02619d8a4d4541b315317fc57d",
+  "artifact_id": 9146858780,
+  "benchmark": "RESONANCE Authentic Head Replay / Authority Rollback",
+  "benchmark_head_sha": "22ab35b452a346299ed23630d4204e9b610130cb",
+  "benchmark_version": "1.0",
+  "checks": [
+    {"id": "authentic_generation7_control_succeeds", "pass": true, "points": 2},
+    {"id": "authentic_old_head_replay_fools_authentication_only_verifier", "pass": true, "points": 2},
+    {"id": "monotonic_checkpoint_rejects_authentic_old_head_with_zero_effects", "pass": true, "points": 2},
+    {"id": "durable_checkpoint_survives_verifier_restart", "pass": true, "points": 2},
+    {"id": "fresh_authentic_generation9_head_succeeds_once", "pass": true, "points": 2}
+  ],
+  "classification": "Authority head anti-rollback protocol passes",
+  "database": {"server_version": "17.6"},
+  "executed_at": "2026-08-12T15:04:19.302923+00:00",
+  "external_safety_certification": false,
+  "http_service": {"boot_id": "6fa8fc464ea14484be4c38d824a6637f", "status": "ok"},
+  "invariants": [
+    "I87 — AUTHENTIC HEAD DOES NOT IMPLY LATEST HEAD.",
+    "I88 — CURRENTNESS MUST BIND TO MONOTONIC ANTI-ROLLBACK STATE OR AN EQUIVALENT TRUSTED CHECKPOINT.",
+    "I89 — AN AUTHENTIC HEAD BELOW THE TRUSTED HIGH-WATERMARK MUST FAIL CLOSED BEFORE CONSEQUENCE.",
+    "I90 — ANTI-ROLLBACK STATE MUST SURVIVE VERIFIER RESTART OR BE RECONSTRUCTED FROM TRUSTED WITNESS/CHECKPOINT EVIDENCE."
+  ],
+  "job_id": 94158970954,
+  "max_score": 10,
+  "protocol": "RESONANCE Transactional Trust Protocol v1.0",
+  "run_id": 31610109195,
+  "score": 10,
+  "trusted_checkpoint_generation": 9,
+  "vulnerability_claim": false
+}
