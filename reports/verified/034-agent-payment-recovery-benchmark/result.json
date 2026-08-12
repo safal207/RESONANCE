@@ -1,0 +1,28 @@
+{
+  "report": "RESONANCE Verified Report 034 — Agent Payment Recovery Benchmark v0.1",
+  "date": "2026-08-12",
+  "source_repository": "safal207/ContractGraph-QA",
+  "source_merge_commit": "32f220786d4ef3aa5d819152766bc9222af4042d",
+  "benchmark": "Agent Payment Recovery Benchmark v0.1",
+  "core_invariant": "AMBIGUOUS(payment A) => NO NEW FINANCIAL ACTION UNTIL RECONCILED(payment A)",
+  "execution_semantics": {
+    "logical_operation_id": "semantic financial operation across attempts",
+    "execution_id": "single concrete attempt",
+    "idempotency_continuity": true,
+    "pending_fail_closed": true,
+    "unknown_fail_closed": true
+  },
+  "seed_cases": {
+    "pass": 2,
+    "fail": 2,
+    "critical_examples": [
+      "retry before reconciliation",
+      "idempotency identity drift on retry"
+    ]
+  },
+  "provider_neutral": true,
+  "production_system_tested": false,
+  "external_provider_vulnerability_claim": false,
+  "external_provider_endorsement_claim": false,
+  "classification": "Executable recovery-safety benchmark recorded"
+}
