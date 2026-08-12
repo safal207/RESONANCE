@@ -1,0 +1,84 @@
+{
+  "schema": "resonance.corrections.v1",
+  "updatedAt": "2026-08-12",
+  "publications": [
+    {
+      "id": "article004",
+      "title": "Before You Let an AI Agent Move Money",
+      "routes": {
+        "en": "before-you-let-an-ai-agent-move-money.html",
+        "ru": "before-you-let-an-ai-agent-move-money.ru.html",
+        "zh-CN": "before-you-let-an-ai-agent-move-money.zh.html"
+      },
+      "currentVersions": {
+        "en": "1.0.0",
+        "ru": "1.0.0",
+        "zh-CN": "1.0.0"
+      }
+    },
+    {
+      "id": "article005",
+      "title": "Memory Can Be True and Still Be Unsafe",
+      "routes": {
+        "en": "memory-can-be-true-and-still-be-unsafe.html",
+        "ru": "memory-can-be-true-and-still-be-unsafe.ru.html",
+        "zh-CN": "memory-can-be-true-and-still-be-unsafe.zh.html"
+      },
+      "currentVersions": {
+        "en": "1.0.0",
+        "ru": "1.1.0",
+        "zh-CN": "1.1.0"
+      }
+    }
+  ],
+  "entries": [
+    {
+      "id": "article004-v1.0.0",
+      "effectiveAt": "2026-08-11",
+      "type": "publication",
+      "claimImpact": "none",
+      "summary": "Initial managed multilingual publication of Article #004.",
+      "reason": "Establish the first public EN / RU / zh-CN article package for the agent-payments market experiment.",
+      "affected": [
+        { "publication": "article004", "locale": "en", "path": "before-you-let-an-ai-agent-move-money.html", "fromVersion": null, "toVersion": "1.0.0" },
+        { "publication": "article004", "locale": "ru", "path": "before-you-let-an-ai-agent-move-money.ru.html", "fromVersion": null, "toVersion": "1.0.0" },
+        { "publication": "article004", "locale": "zh-CN", "path": "before-you-let-an-ai-agent-move-money.zh.html", "fromVersion": null, "toVersion": "1.0.0" }
+      ],
+      "evidence": [
+        "https://github.com/safal207/RESONANCE/pull/15"
+      ]
+    },
+    {
+      "id": "article005-v1.0.0",
+      "effectiveAt": "2026-08-11",
+      "type": "publication",
+      "claimImpact": "none",
+      "summary": "Initial multilingual publication of Article #005 on current-state applicability for agent memory.",
+      "reason": "Publish the memory-safety model and its Current-State Applicability framing in EN / RU / zh-CN.",
+      "affected": [
+        { "publication": "article005", "locale": "en", "path": "memory-can-be-true-and-still-be-unsafe.html", "fromVersion": null, "toVersion": "1.0.0" },
+        { "publication": "article005", "locale": "ru", "path": "memory-can-be-true-and-still-be-unsafe.ru.html", "fromVersion": null, "toVersion": "1.0.0" },
+        { "publication": "article005", "locale": "zh-CN", "path": "memory-can-be-true-and-still-be-unsafe.zh.html", "fromVersion": null, "toVersion": "1.0.0" }
+      ],
+      "evidence": [
+        "https://github.com/safal207/RESONANCE/commits/main/site/memory-can-be-true-and-still-be-unsafe.html"
+      ]
+    },
+    {
+      "id": "article005-localization-parity-v1.1.0",
+      "effectiveAt": "2026-08-12",
+      "type": "translation",
+      "claimImpact": "presentation",
+      "summary": "Restored Article #005 RU / zh-CN sections, source parity, x-default routing and mobile article shell that had drifted from the English publication.",
+      "reason": "Translation Parity v0.4 detected that the localized siblings exposed 17 semantic tokens and 3 source links while English exposed 23 semantic tokens and 4 source links.",
+      "affected": [
+        { "publication": "article005", "locale": "ru", "path": "memory-can-be-true-and-still-be-unsafe.ru.html", "fromVersion": "1.0.0", "toVersion": "1.1.0" },
+        { "publication": "article005", "locale": "zh-CN", "path": "memory-can-be-true-and-still-be-unsafe.zh.html", "fromVersion": "1.0.0", "toVersion": "1.1.0" }
+      ],
+      "evidence": [
+        "https://github.com/safal207/RESONANCE/pull/27",
+        "https://github.com/safal207/RESONANCE/actions/runs/31605108573"
+      ]
+    }
+  ]
+}

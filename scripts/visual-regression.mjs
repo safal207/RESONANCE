@@ -33,6 +33,7 @@ const routes = [
   { id: 'article005-ru', route: 'memory-can-be-true-and-still-be-unsafe.ru.html' },
   { id: 'article005-zh', route: 'memory-can-be-true-and-still-be-unsafe.zh.html' },
   { id: 'quality', route: 'quality.html' },
+  { id: 'corrections', route: 'corrections.html' },
 ];
 
 const chromeCandidates = [
