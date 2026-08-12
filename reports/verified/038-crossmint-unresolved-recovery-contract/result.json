@@ -1,0 +1,27 @@
+{
+  "report": "RESONANCE Verified Report 038 — Crossmint Public Recovery Contract → UNRESOLVED",
+  "date": "2026-08-12",
+  "source_repository": "safal207/ContractGraph-QA",
+  "provider_adapter_v0_1_merge": "c04ad1a07c6500c1210b57d7df29161072da74b6",
+  "crossmint_driven_v0_2_merge": "593d4a864b517fa210798ea5daf538e53d09ae19",
+  "provider_profile": "benchmarks/agent-payment-recovery-v0.1/provider-adapters/crossmint-public-contract.v0.1.json",
+  "provider_id": "crossmint-wallet-transactions-public",
+  "observed_contract": {
+    "idempotency_key_supported": true,
+    "same_key_replay_documented": false,
+    "get_transaction_surface": true,
+    "wallet_transfer_webhook_surface": true,
+    "evidence_precedence_status": "unresolved",
+    "evidence_precedence": []
+  },
+  "model_evolution": {
+    "before": "provider adapter required complete evidence precedence",
+    "after": "provider adapter can preserve undocumented precedence as explicit unresolved state",
+    "fail_closed": true,
+    "fabricated_precedence": false
+  },
+  "production_system_tested": false,
+  "external_provider_vulnerability_claim": false,
+  "external_provider_endorsement_claim": false,
+  "classification": "Verified market-to-model evolution recorded"
+}
