@@ -1,0 +1,68 @@
+name: RESONANCE — Witness-Set Rotation / Membership Epoch Confusion
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'benchmarks/witness-set-rotation-v1.0/**'
+      - '.github/workflows/benchmark-witness-set-rotation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  witness-set-rotation:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:17.6-alpine
+        env:
+          POSTGRES_USER: resonance
+          POSTGRES_PASSWORD: resonance
+          POSTGRES_DB: resonance
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U resonance -d resonance"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      DATABASE_URL: postgresql://resonance:resonance@127.0.0.1:5432/resonance
+      EXTERNAL_BASE_URL: http://127.0.0.1:18101
+      HTTP_SERVICE_IMAGE: python:3.12-slim
+    steps:
+      - name: Checkout RESONANCE
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install PostgreSQL client driver
+        run: python -m pip install 'psycopg[binary]==3.2.9'
+
+      - name: Pull external service image
+        run: docker pull "$HTTP_SERVICE_IMAGE"
+
+      - name: Run witness-set rotation benchmark
+        run: |
+          python benchmarks/witness-set-rotation-v1.0/run_witness_set_rotation.py \
+            --out benchmark-results/witness-set-rotation-v1.0
+
+      - name: Publish run summary
+        if: always()
+        run: |
+          if [ -f benchmark-results/witness-set-rotation-v1.0/RESULT.md ]; then
+            cat benchmark-results/witness-set-rotation-v1.0/RESULT.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload evidence bundle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-witness-set-rotation-v1.0
+          path: benchmark-results/witness-set-rotation-v1.0/
+          if-no-files-found: error

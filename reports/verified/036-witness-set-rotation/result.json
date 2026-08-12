@@ -1,0 +1,53 @@
+{
+  "report": "RESONANCE Verified Report #036 — Witness-Set Rotation / Membership Epoch Confusion",
+  "benchmark": "Witness-Set Rotation / Membership Epoch Confusion v1.0",
+  "score": 10,
+  "max_score": 10,
+  "classification": "Witness-set rotation protocol passes",
+  "law": "VALID QUORUM FOR AN OLD MEMBERSHIP != CURRENT QUORUM AUTHORITY",
+  "run_id": 31617000939,
+  "job_id": 94182207065,
+  "benchmark_head_sha": "d13b424e775e098fbbafa4461ea0f572f8fd7774",
+  "artifact_id": 9149649881,
+  "artifact_digest": "sha256:827ead873af366a27a19958413887356079c5afc0d22bdfe9fff6f9ea6e6c459",
+  "historical_membership": {
+    "set_id": "set-A",
+    "set_epoch": 1,
+    "members": ["W1", "W2", "W3"],
+    "threshold": 2
+  },
+  "current_membership": {
+    "set_id": "set-B",
+    "set_epoch": 2,
+    "members": ["W4", "W5", "W6"],
+    "threshold": 2
+  },
+  "unsafe": {
+    "certificate": "QC-old-epoch1",
+    "signers": ["W1", "W2"],
+    "certificate_valid_under_historical_membership": true,
+    "verdict": "historical_membership_quorum_authorized",
+    "adoption_rows": 1,
+    "http_status": 200,
+    "effect_count": 1
+  },
+  "safe": {
+    "certificate": "QC-old-epoch1",
+    "current_set_match": false,
+    "verdict": "witness_set_authority_conflict",
+    "adoption_rows": 0,
+    "effect_count": 0
+  },
+  "recovery": {
+    "certificate": "QC-current-epoch2",
+    "signers": ["W4", "W5"],
+    "verdict": "current_membership_quorum_authorized",
+    "adoption_rows": 1,
+    "http_status": 200,
+    "effect_count": 1,
+    "output": 30
+  },
+  "invariants": ["I103", "I104", "I105", "I106"],
+  "external_safety_certification": false,
+  "vulnerability_claim": false
+}
