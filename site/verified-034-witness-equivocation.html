@@ -1,0 +1,49 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #034: an independent witness can still equivocate by signing incompatible histories unless verifiers cross-check witness consistency."><title>Verified #034 — Witness Rollback / Equivocation | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #034</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #034</p><h1>The witness was independent. Its history was not unique.</h1><p class="dek">Verified #033 used an external witness to recover trust history after checkpoint storage rollback. #034 attacks that assumption: the same witness signs two different authenticated children at one witness sequence and parent, giving isolated verifiers two locally valid realities.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><blockquote><p><strong>INDEPENDENT WITNESS ≠ CONSISTENT WITNESS.</strong></p></blockquote><h2>The fork</h2><pre><code>WA42:
+witness-A / seq 42 / generation 7
+
+WA43-good:
+witness-A / seq 43
+parent = digest(WA42)
+generation = 9
+MAC valid ✅
+
+WA43-fork:
+witness-A / seq 43
+parent = digest(WA42)
+generation = 7
+MAC valid ✅</code></pre><p>Both sequence-43 statements authenticate under the same witness identity, but their statement digests differ. They cannot both occupy one linear history.</p><h2>Unsafe: isolated verifier</h2><pre><code>local checkpoint = 7
+H7 authentic = true
+WA43-fork authentic = true
+regional replica = R1 / generation 7 / ACTIVE
+
+→ witness_authorized_current_head
+→ adoption rows = 1
+→ HTTP 200
+→ effect_count = 1</code></pre><p>No signature fails. The verifier simply cannot see the other branch.</p><h2>Safe: gossip exposes the contradiction</h2><pre><code>same witness_id = true
+same witness_seq = 43
+same parent = true
+both authentic = true
+statement digests differ = true
+
+→ witness_equivocation_detected
+→ adoption rows = 0
+→ effects = 0
+→ quarantine witness-A</code></pre><p>The verifier does not choose the more permissive branch. The fork itself becomes first-class trust evidence.</p><h2>Recovery</h2><pre><code>witness-B:
+generation 9
+head_digest = digest(H9)
+MAC valid ✅
+
+checkpoint:
+7 → 9
+reason = checkpoint_reconstructed_from_independent_witness
+
+H7 after recovery:
+7 < 9
+→ authority_head_rollback_detected</code></pre><p>After region B synchronizes to R2/generation 9, authentic H9 plus the non-conflicting witness-B statement succeeds exactly once.</p><h2>I95–I98</h2><ul><li><strong>I95</strong> — Independent witness ≠ consistent witness.</li><li><strong>I96</strong> — Authentic witness statement ≠ unique witness history.</li><li><strong>I97</strong> — Same witness sequence + same parent + different authentic content = equivocation evidence.</li><li><strong>I98</strong> — Equivocating witness must be quarantined; reconstruct trust from non-conflicting independent evidence before consequence.</li></ul><h2>Evidence</h2><pre><code>GitHub Actions run: 31615206797
+Job: 94176189614
+Benchmark SHA:
+6021d88d946e1e91b54a8c64b4bd8c1ed2f48668
+Artifact ID: 9148905171
+Artifact digest:
+sha256:05b958a9d258fbdc8dfd5c0d5680782ce01f12ee66c486b315299471913b0036
+Score: 10/10</code></pre><h2>Boundary</h2><p>The benchmark uses deterministic HMAC identities and explicit cross-view comparison. It does not implement production PKI, gossip transport, transparency logs, Byzantine consensus or a universal quorum policy. Multi-witness disagreement and conflicting majorities remain separate verification surfaces.</p><div class="article-actions"><a class="button" href="ttp-witness-consistency.html">Read TTP Witness Consistency Rule</a><a class="text-link" href="verified-033-checkpoint-storage-rollback.html">Previous: Verified #033 →</a></div></article></main><footer class="site-footer"><div class="wrap"><a href="index.html">← RESONANCE home</a></div></footer></body></html>
