@@ -1,0 +1,24 @@
+{
+  "benchmark": "RESONANCE Compatibility Proof Revocation / Stale Compatibility Certificate",
+  "benchmark_version": "1.0",
+  "protocol": "RESONANCE Transactional Trust Protocol v1.0",
+  "github_actions_run": 31587611585,
+  "artifact": {
+    "name": "resonance-compatibility-proof-revocation-v1.0",
+    "id": 9137771205,
+    "digest": "sha256:5782654655249341994236b6d68ca875f74ceb1d8d22fd4eacc53454e7100e80"
+  },
+  "score": 10,
+  "max_score": 10,
+  "classification": "Compatibility proof revocation protocol passes",
+  "core_law": "PROOF VALID THEN != PROOF AUTHORIZED NOW",
+  "checks": [
+    "active_proof_authorizes_reuse_before_revocation",
+    "cached_verifier_accepts_revoked_but_semantically_correct_proof",
+    "live_registry_rejects_revoked_proof_with_zero_effects",
+    "active_successor_proof_reauthorizes_historical_artifact",
+    "active_rule_epoch_advance_invalidates_older_proof"
+  ],
+  "external_safety_certification": false,
+  "vulnerability_claim": false
+}
