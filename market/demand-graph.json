@@ -1,13 +1,24 @@
 {
-  "version": "0.1.0",
-  "generatedAt": "2026-08-11",
+  "version": "0.1.1",
+  "generatedAt": "2026-08-12",
   "evidencePolicy": {
-    "realSignalCount": 0,
+    "realSignalCount": 1,
     "syntheticSignalCount": 3,
     "syntheticExcludedFromMetrics": true,
-    "note": "Illustrative nodes validate the graph structure only. They are not market evidence."
+    "note": "Synthetic nodes validate the graph structure only. Real signals require an attributable external workflow/problem and are recorded as Problem Cards."
   },
   "nodes": [
+    {
+      "id": "RES-001-001",
+      "type": "problem",
+      "synthetic": false,
+      "label": "Recomputable conformance is not automatically neutral",
+      "domain": "agent guardrails / conformance governance",
+      "failureCoordinate": ["Verification", "Evidence", "Relationships", "Governance"],
+      "impact": "vendor-owned normative vectors can be mistaken for a neutral ecosystem conformance bar",
+      "missingCapability": "independent multi-party vector admission and ratification",
+      "source": "market/RES-001-001.json"
+    },
     {
       "id": "DEMO-001",
       "type": "problem",
@@ -39,14 +50,33 @@
       "missingCapability": "independent postcondition verification"
     }
   ],
-  "clusters": [],
-  "openProblems": [],
-  "productHypotheses": [],
+  "clusters": [
+    {
+      "id": "CLUSTER-CONFORMANCE-GOVERNANCE",
+      "label": "Independent verification and normative governance",
+      "members": ["RES-001-001"]
+    }
+  ],
+  "openProblems": [
+    {
+      "id": "OP-001",
+      "title": "How should neutral conformance vectors be admitted and ratified?",
+      "sourceSignals": ["RES-001-001"]
+    }
+  ],
+  "productHypotheses": [
+    {
+      "id": "PH-001",
+      "title": "Two-axis conformance trust model",
+      "hypothesis": "Agent-governance conformance should report computational independence and normative independence as separate properties.",
+      "sourceSignals": ["RES-001-001"]
+    }
+  ],
   "metrics": {
-    "meaningfulResponses": 0,
-    "realWorkflows": 0,
-    "qualifiedProblems": 0,
-    "productSignals": 0,
+    "meaningfulResponses": 1,
+    "realWorkflows": 1,
+    "qualifiedProblems": 1,
+    "productSignals": 1,
     "pilotCandidates": 0,
     "paidPilots": 0,
     "verifiedProductRequests": 0,
