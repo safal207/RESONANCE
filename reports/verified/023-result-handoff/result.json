@@ -1,0 +1,47 @@
+{
+  "benchmark": "RESONANCE Result Handoff / Stale Work Salvage",
+  "benchmark_version": "1.0",
+  "run_id": 31555333762,
+  "artifact": {
+    "id": 9125787638,
+    "name": "resonance-result-handoff-v1.0",
+    "digest": "sha256:c1f43812e27e29f8ae9dd2152884071bba4c807d8cc3cb94a0731c679cd38af9"
+  },
+  "score": 10,
+  "max_score": 10,
+  "unsafe": {
+    "producer": "worker-A",
+    "producer_fence": 1,
+    "adopter": "worker-B",
+    "adopter_fence": 2,
+    "artifact_digest": "be61d2051f582c57e0a96bfa4a90bcc85266e2cc3164a373cd621f709e20a993",
+    "stale_auto_publish_http": 200,
+    "final_effect_count": 2,
+    "final_status": "conflict"
+  },
+  "safe": {
+    "artifact_state_before_adoption": "READY",
+    "effects_before_adoption": 0,
+    "adoption_updated_rows": 1,
+    "adopted_by": "worker-B",
+    "adopted_fence": 2,
+    "current_owner_publish_http": 200,
+    "stale_producer_publish_http": 409,
+    "stale_producer_delivery": "fenced_out",
+    "final_effect_count": 1,
+    "final_status": "committed"
+  },
+  "digest_mismatch": {
+    "adoption_updated_rows": 0,
+    "artifact_state": "READY",
+    "final_effect_count": 0
+  },
+  "invariants": [
+    "STALE EXECUTOR MAY PRODUCE DATA; ONLY CURRENT AUTHORITY MAY ADOPT THE CONSEQUENCE.",
+    "RESULT ADOPTION MUST BIND THE EXACT ARTIFACT DIGEST AND PRODUCER EPOCH TO THE CURRENT OWNER EPOCH.",
+    "READY ARTIFACT IS DATA, NOT COMMIT AUTHORITY.",
+    "THE CONSEQUENTIAL COMMIT MUST PRESENT THE ADOPTER'S CURRENT FENCING TOKEN, NOT THE PRODUCER'S STALE TOKEN."
+  ],
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
