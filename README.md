@@ -172,6 +172,7 @@ analysis
 → causal hardware replay-state recovery
 → checkpoint freshness / anti-rollback
 → checkpoint authority commit protocol
+→ checkpoint content commitment
 ```
 
 See [`issues/001-age-of-agents/`](issues/001-age-of-agents/) and the web edition at [`site/issue-001.html`](site/issue-001.html).
@@ -187,7 +188,8 @@ Key reproducible reports:
 - **#012–#014** PostgreSQL transactional trust, isolation and external-effect boundaries — reproducible scoped results;
 - **#015** CaPU v0.10 replay-state recovery across reset — bounded formal PASS with fail-closed restore semantics;
 - **#016** CaPU v0.11 checkpoint freshness / anti-rollback — bounded formal PASS with exact-anchor recovery semantics;
-- **#017** CaPU v0.12 checkpoint authority commit — bounded formal PASS with persist-then-anchor commit semantics.
+- **#017** CaPU v0.12 checkpoint authority commit — bounded formal PASS with persist-then-anchor commit semantics;
+- **#018** CaPU v0.13 checkpoint content commitment — bounded formal PASS with canonical replay-state content binding across prepare, persistence, authority commit and anchored recovery.
 
 All scores are scope-specific protocol/benchmark scores. They are **not percentages of safety** and are not external certifications.
 
