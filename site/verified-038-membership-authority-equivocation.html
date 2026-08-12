@@ -1,0 +1,57 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified #038: two authentic same-epoch witness memberships expose membership-authority equivocation; cross-view evidence blocks consequence."><title>Verified #038 — Membership Authority Equivocation | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #038</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #038</p><h1>The signatures were valid. The authority had created two histories.</h1><p class="dek">Verified #037 blocked replay of an older membership epoch. #038 goes deeper: the same membership authority signs two different successor memberships for the same epoch, and each branch has a locally valid witness quorum.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><blockquote><p><strong>SAME AUTHORITY + SAME MEMBERSHIP EPOCH + DIFFERENT AUTHENTIC MEMBERSHIP DIGESTS = EQUIVOCATION EVIDENCE.</strong></p></blockquote><h2>The fork</h2><pre><code>M2-A:
+issuer = membership-authority-demo-key-v1
+set-B / epoch 2
+W4 W5 W6 / threshold 2
+predecessor = digest(M1)
+authentic ✅
+digest = sha256:aa0ad1f9...
+
+M2-B:
+issuer = membership-authority-demo-key-v1
+set-C / epoch 2
+W7 W8 W9 / threshold 2
+predecessor = digest(M1)
+authentic ✅
+digest = sha256:b1586f4d...</code></pre><p>Same issuer. Same namespace. Same epoch. Same predecessor. Different authentic membership content.</p><h2>Both local worlds validate</h2><pre><code>QC-A = W4 + W5 → H9
+valid under M2-A ✅
+
+QC-B = W7 + W8 → H9
+valid under M2-B ✅</code></pre><h2>Unsafe isolation</h2><pre><code>verifier sees only M2-B + QC-B
+M2-B authentic = true
+QC-B valid = true
+H9 authentic = true
+R2 / generation 9 / ACTIVE = true
+
+→ isolated_membership_branch_authorized
+→ adoption rows = 1
+→ HTTP 200
+→ effect_count = 1</code></pre><h2>Safe cross-view guard</h2><pre><code>same authority = true
+same epoch = 2
+same predecessor = true
+both authentic = true
+different membership digest = true
+
+→ membership_authority_equivocation_detected
+→ branch A effects = 0
+→ branch B effects = 0
+→ quarantine membership issuer</code></pre><p>The verifier does not choose the branch that arrived first or the one with a familiar set ID. The conflict itself becomes evidence.</p><h2>Explicit recovery</h2><pre><code>M3:
+issuer = separate recovery authority
+set-D / epoch 3
+W10 W11 W12 / threshold 2
+
+resolves = [digest(M2-A), digest(M2-B)]
+predecessors = [digest(M2-A), digest(M2-B)]
+
+QC-recovery = W10 + W11 → H9
+
+→ equivocation_resolved_by_fresh_recovery_membership
+→ adoption rows = 1
+→ HTTP 200
+→ effect_count = 1</code></pre><h2>I111–I114</h2><ul><li><strong>I111</strong> — Same authority + same membership epoch + different authentic membership digests = equivocation evidence.</li><li><strong>I112</strong> — Authentic membership record ≠ unique membership history.</li><li><strong>I113</strong> — Membership-authority equivocation must hold all disputed branches and quarantine the issuer before consequence.</li><li><strong>I114</strong> — Recovery requires a fresh higher-epoch membership from non-equivocating authority or explicit governance resolution binding all conflicting branch digests.</li></ul><h2>Evidence</h2><pre><code>GitHub Actions run: 31618790089
+Job: 94188104629
+Benchmark SHA:
+a90f9d903e74103dfead69134104c44761848982
+Artifact ID: 9150364287
+Artifact digest:
+sha256:bbd0de53bf4cc9690a4df11893ccaa7fbb5469d60fa4353aa96d2ff62bf8039b
+Score: 10/10</code></pre><h2>Boundary</h2><p>The benchmark uses deterministic HMAC identities and a test-only separate recovery authority. It does not implement production PKI, BFT governance, transparency logs or consensus finality.</p><div class="article-actions"><a class="button" href="ttp-membership-authority-equivocation.html">Read TTP Membership Authority Equivocation Rule</a><a class="text-link" href="verified-037-membership-authority-replay.html">Previous: Verified #037 →</a></div></article></main><footer class="site-footer"><div class="wrap"><a href="index.html">← RESONANCE home</a></div></footer></body></html>
