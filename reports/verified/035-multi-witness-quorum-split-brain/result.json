@@ -1,0 +1,48 @@
+{
+  "benchmark": "RESONANCE Multi-Witness Quorum Split-Brain / Conflicting Majorities",
+  "benchmark_version": "1.0",
+  "classification": "Multi-witness quorum consistency protocol passes",
+  "score": 10,
+  "max_score": 10,
+  "github_actions_run": 31616232956,
+  "job": 94179611299,
+  "benchmark_head_sha": "74076e8aab3aed95f3d52ecec8b8efd4f9504b9a",
+  "evidence_artifact_id": 9149326423,
+  "evidence_artifact_digest": "sha256:4b41a442c86b03438df17fd8663a85d1609d2f33390ed73c6d73f3053660ceda",
+  "witness_set": {
+    "set_id": "set-A",
+    "epoch": 1,
+    "members": ["W1", "W2", "W3"],
+    "threshold": 2
+  },
+  "conflict": {
+    "round": 50,
+    "qc_a": {"signers": ["W1", "W2"], "generation": 9, "valid": true},
+    "qc_b": {"signers": ["W2", "W3"], "generation": 7, "valid": true},
+    "intersection": ["W2"],
+    "equivocators": ["W2"],
+    "reason": "conflicting_quorum_certificates"
+  },
+  "unsafe": {
+    "verdict": "local_quorum_authorized_current_head",
+    "updated_rows": 1,
+    "http_status": 200,
+    "effect_count": 1
+  },
+  "safe": {
+    "verdict": "conflicting_quorum_certificates",
+    "updated_rows": 0,
+    "effect_count": 0
+  },
+  "recovery": {
+    "quarantined": ["W2"],
+    "old_qc_a_valid": false,
+    "old_qc_b_valid": false,
+    "fresh_round": 51,
+    "fresh_signers": ["W1", "W3"],
+    "fresh_generation": 9,
+    "fresh_effect_count": 1
+  },
+  "external_safety_certification": false,
+  "vulnerability_claim": false
+}
