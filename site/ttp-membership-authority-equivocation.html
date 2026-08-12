@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="TTP rule: authentic same-epoch membership forks are equivocation evidence and must fail closed until explicit higher-epoch recovery."><title>TTP — Membership Authority Equivocation | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol v1.0</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · MEMBERSHIP AUTHORITY EQUIVOCATION</p><h1>One epoch must not have two authentic membership histories.</h1><blockquote><p><strong>SAME AUTHORITY + SAME MEMBERSHIP EPOCH + DIFFERENT AUTHENTIC MEMBERSHIP DIGESTS = EQUIVOCATION EVIDENCE.</strong></p></blockquote><p>A signature proves who issued one membership record. It does not prove the issuer did not sign another incompatible record for the same epoch. Consequential authorization therefore needs cross-view consistency, not only local signature validity.</p><h2>Required comparison</h2><ul><li>membership namespace</li><li>issuer identity / key authority</li><li>set epoch</li><li>predecessor membership digest</li><li>membership digest</li><li>set identity and members</li><li>threshold policy</li></ul><h2>Decision rule</h2><pre><code>AUTHENTICATE MEMBERSHIP M
+        ↓
+LOOK FOR AUTHENTIC PEER VIEW M_peer
+AT SAME NAMESPACE + EPOCH
+        ↓
+same issuer?
+same epoch?
+same predecessor?
+different membership digest?
+        ↓
+all true?
+  ├─ yes → membership_authority_equivocation_detected
+  │        → quarantine issuer
+  │        → hold all disputed branches
+  │        → 0 consequence
+  └─ no
+       ↓
+CHECK MEMBERSHIP CURRENTNESS / ANTI-ROLLBACK
+       ↓
+VALIDATE QUORUM + HEAD + AUTHORITY VIEW
+       ↓
+FENCED CONSEQUENCE</code></pre><h2>Recovery</h2><pre><code>fork digests = [A, B]
+        ↓
+fresh higher epoch
+        +
+non-equivocating recovery authority
+or explicit governance resolution
+        +
+bind A and B explicitly
+        +
+fresh quorum
+        ↓
+resume</code></pre><h2>I111–I114</h2><ul><li><strong>I111</strong> — Same authority + same membership epoch + different authentic membership digests = equivocation evidence.</li><li><strong>I112</strong> — Authentic membership record ≠ unique membership history.</li><li><strong>I113</strong> — Membership-authority equivocation must hold all disputed branches and quarantine the equivocating issuer before consequence.</li><li><strong>I114</strong> — Recovery requires a fresh higher-epoch membership from non-equivocating authority or explicit governance resolution binding all conflicting branch digests.</li></ul><h2>Failure disposition</h2><pre><code>membership_authority_equivocation_detected
+→ no branch selection
+→ no adoption
+→ no external effect
+→ preserve both records
+→ quarantine issuer
+→ obtain explicit higher-epoch resolution</code></pre><p>This rule does not define production PKI, BFT reconfiguration, governance voting, transparency-log architecture or consensus finality. It defines the evidence invariant that same-epoch authentic membership forks must fail closed.</p><div class="article-actions"><a class="button" href="verified-038-membership-authority-equivocation.html">Open Verified Report #038</a><a class="text-link" href="transactional-trust-protocol-v1.html">Back to TTP v1.0 →</a></div></article></main><footer class="site-footer"><div class="wrap"><a href="index.html">← RESONANCE home</a></div></footer></body></html>
