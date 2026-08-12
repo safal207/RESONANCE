@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="TTP witness consistency rule: independently authenticated witness statements must be checked for fork/equivocation before they can anchor recovery or consequence."><title>TTP — Witness Consistency / Equivocation | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol v1.0</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · WITNESS HISTORY</p><h1>Witness Consistency / Equivocation Rule</h1><p class="dek">A witness can be independent from verifier storage and still fork the history it presents. Before witness evidence can anchor checkpoint recovery or consequential authorization, its history must be consistency-checked across views.</p><blockquote><p><strong>INDEPENDENT WITNESS ≠ CONSISTENT WITNESS.</strong></p></blockquote><h2>Decision rule</h2><pre><code>RECEIVE WITNESS STATEMENT W
+        ↓
+AUTHENTICATE W
+        ↓
+BIND witness_id + sequence + parent + head_digest
+        ↓
+GOSSIP / CROSS-CHECK WITNESS VIEW
+        ↓
+conflicting authentic statement
+for same witness sequence + parent?
+  ├─ yes → witness_equivocation_detected → HOLD
+  │          ↓
+  │      QUARANTINE WITNESS
+  │          ↓
+  │      RESOLVE NON-CONFLICTING INDEPENDENT EVIDENCE
+  │          ↓
+  │      RECONSTRUCT TRUST CHECKPOINT
+  └─ no
+        ↓
+VERIFY WITNESS → HEAD → CHECKPOINT CURRENTNESS
+        ↓
+VERIFY AUTHORITY VIEW / RULE / PROOF
+        ↓
+CURRENT OWNER ADOPTS
+        ↓
+FENCED COMMIT
+        ↓
+PROVE WITNESS CONSISTENCY → CHECKPOINT → HEAD → EFFECT</code></pre><h2>Why authenticity is not enough</h2><p>A valid signature or MAC proves that the witness issued a statement and that its bytes were not modified. It cannot prove that the same witness did not issue a different incompatible statement for the same logical history position.</p><h2>I95–I98</h2><ul><li><strong>I95</strong> — Independent witness ≠ consistent witness.</li><li><strong>I96</strong> — Authentic witness statement ≠ unique witness history.</li><li><strong>I97</strong> — Same witness sequence + same parent + different authentic content = equivocation evidence.</li><li><strong>I98</strong> — Equivocating witness must be quarantined; reconstruct trust from non-conflicting independent evidence before consequence.</li></ul><h2>Direct fork evidence</h2><pre><code>same witness_id
++ same witness_seq
++ same parent digest
++ both statements authentic
++ different statement digests
+= witness_equivocation_detected</code></pre><h2>Recovery</h2><pre><code>equivocation detected
+→ preserve both signed branches
+→ HOLD
+→ quarantine conflicted witness
+→ resolve policy-approved non-conflicting evidence
+→ reconstruct checkpoint
+→ re-run authority-head currentness
+→ only then resume consequence</code></pre><h2>Boundary</h2><p>Verified #034 models gossip by explicitly presenting two signed statements to one verifier and recovers from a second non-conflicting witness. Production systems may require transparency logs, quorum witnesses, consensus, hardware roots or another independently justified consistency mechanism. Conflicting witness majorities remain an open verification surface.</p><div class="article-actions"><a class="button" href="verified-034-witness-equivocation.html">Open Verified Report #034</a><a class="text-link" href="ttp-checkpoint-rollback-resistance.html">Previous rule: Checkpoint Rollback Resistance →</a></div></article></main><footer class="site-footer"><div class="wrap"><a href="transactional-trust-protocol-v1.html">← Transactional Trust Protocol</a></div></footer></body></html>
