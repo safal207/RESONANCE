@@ -54,11 +54,11 @@ jobs:
 
       - name: Enforce corrections and version history
         env:
-          BASE_REF: ${{ github.event.pull_request.base.sha }}
+          BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
           GITHUB_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           BASE_ARGS=()
-          if [[ -n "$BASE_REF" ]]; then
+          if [[ -n "$BASE_REF" && ! "$BASE_REF" =~ ^0+$ ]]; then
             BASE_ARGS=(--base "$BASE_REF")
           fi
           node scripts/verify-corrections.mjs \
