@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE note: why multi-agent systems may need verifiable causal handoff, not only inter-session messaging." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <title>Verifiable Causal Handoff | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+  <link rel="stylesheet" href="market.css" />
+</head>
+<body data-share-text="Multi-agent systems may need more than messaging: they need verifiable causal handoff across retries, stale state, crashes and dependency gates.">
+  <a class="skip-link" href="#article">Skip to article</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="ai-agents.html">AI</a>
+      <a href="index.html#science">Science</a>
+      <a href="index.html#trust">Trust</a>
+      <a href="open-problems.html">Open Problems</a>
+      <a href="verified-workflow.html">Verified Workflow</a>
+      <a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="article">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row">
+        <p class="section-label">Research Note · Multi-Agent Coordination / Trust</p>
+        <p class="article-status">Published · 12 Aug 2026</p>
+      </div>
+      <h1 class="article-title">The Missing Primitive May Be Verifiable Causal Handoff</h1>
+      <p class="article-dek">Inter-session messaging moves information. A causal handoff should let a downstream agent prove which logical operation produced the state, whether that state is current, and whether the dependency conditions still hold.</p>
+      <div class="byline-row">
+        <p>By <strong>RESONANCE Editorial</strong></p>
+        <p>Issue 001 · Research Note</p>
+      </div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Article summary">
+        <div class="rail-card">
+          <p class="section-label">Core claim</p>
+          <strong>Messaging ≠ causal authorization</strong>
+          <span>Receipt of state should not automatically authorize a dependent action.</span>
+        </div>
+        <div class="rail-card rail-dark">
+          <p class="section-label">Minimal spine</p>
+          <code>intent → operation → execution → evidence → gate → execution</code>
+        </div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">Run several AI coding sessions against one codebase and a familiar pattern appears quickly: the human becomes the message bus. State moves through copied terminal output, markdown files, JSON, shared directories, SQLite, or an improvised coordinator. These techniques can be useful transports. But transport is not the same thing as causality.</p>
+
+        <div class="pull-quote">The important question is not only “did Task B receive a message from Task A?” It is “can B prove that this state came from the right logical operation, is still current, and satisfies the conditions that authorize B to proceed?”</div>
+
+        <h2>A message is weaker than a handoff.</h2>
+        <p>Consider a migration workflow. A producer emits <code>migration_complete</code>. Before the consumer acts, another session changes the schema again. The event is genuine, but the state it represented is stale.</p>
+
+        <div class="trajectory-box">
+          <span>operation</span><i>→</i><span>execution</span><i>→</i><span>state/evidence digest</span><i>→</i><span>dependency gate</span><i>→</i><span>consumer execution</span>
+        </div>
+
+        <p>A useful handoff therefore needs more than an event name. A minimal record could bind:</p>
+        <section class="claim-panel">
+          <p class="section-label">Candidate causal fields</p>
+          <div><b>1</b><p><strong>logical_operation_id</strong> — stable across retries and re-drives.</p></div>
+          <div><b>2</b><p><strong>execution_id</strong> — one concrete attempt.</p></div>
+          <div><b>3</b><p><strong>state/evidence digest</strong> — immutable reference to what was actually produced.</p></div>
+          <div><b>4</b><p><strong>outcome + invariants</strong> — what completed and what was verified.</p></div>
+          <div><b>5</b><p><strong>dependency conditions</strong> — what must still be true before the consumer may run.</p></div>
+        </section>
+
+        <h2>Retries should not invent new intent.</h2>
+        <p>If an execution times out and a scheduler re-drives it, the new attempt should normally receive a new <code>execution_id</code> while preserving the same <code>logical_operation_id</code>. That separation prevents recovery from being misread as a second independent semantic operation.</p>
+
+        <div class="market-kpi"><pre>logical_operation_id: migrate_schema_17
+
+execution_001 → timeout
+execution_002 → success
+                   ↓
+              verified handoff
+                   ↓
+              deploy_api_18</pre></div>
+
+        <h2>Receipt should not equal permission.</h2>
+        <p>The consumer rule can stay deliberately small:</p>
+        <div class="pull-quote"><strong>handoff valid ∧ producer outcome accepted ∧ invariants satisfied ∧ state current ∧ dependency conditions true</strong></div>
+        <p>If any term fails, the downstream action should not silently proceed.</p>
+
+        <h2>The transport can stay boring.</h2>
+        <p>JSONL, SQLite WAL mode, append-only files, queues, named pipes, or native agent messaging can all carry the record. The proposal is transport-agnostic. The extra layer is the semantic contract above the transport: atomic publication, immutable evidence binding, freshness checks, retry identity, and explicit dependency gates.</p>
+
+        <h2>Where this model should be attacked.</h2>
+        <p>The useful next step is not to declare a protocol finished. It is to pressure-test the causal spine against production failure modes: partial writes, conflicting agents, stale state, duplicate delivery, crash recovery, revocation, concurrent valid producers, and long-running consumers that outlive the state they were bootstrapped from.</p>
+
+        <section class="market-question" id="open-question">
+          <p class="section-label">The Open Question</p>
+          <h2>What breaks this model first?</h2>
+          <p class="hot-question"><strong>If you run multi-agent coding workflows in production, which edge case would defeat this minimal causal handoff?</strong></p>
+          <ul class="market-prompts">
+            <li>retry after ambiguous completion;</li>
+            <li>partial or torn handoff write;</li>
+            <li>two agents producing conflicting successor states;</li>
+            <li>consumer acting on superseded state;</li>
+            <li>crash recovery after an external side effect;</li>
+            <li>revocation after a handoff was published.</li>
+          </ul>
+          <div class="market-actions">
+            <a class="button" href="https://github.com/safal207/RESONANCE/issues/new?template=market-workflow.yml" target="_blank" rel="noreferrer">Send a production edge case →</a>
+          </div>
+        </section>
+
+        <p class="closing-line"><strong>A message says something happened. A causal handoff should make it possible to verify what happened, why it happened, whether it is still valid, and what may safely happen next.</strong></p>
+
+        <section class="share-panel" aria-label="Share this research">
+          <p class="section-label">Distribution</p>
+          <h3>Share the failure mode, not just the link.</h3>
+          <div class="share-actions">
+            <button type="button" data-share="native">Share</button>
+            <button type="button" data-share="x">X</button>
+            <button type="button" data-share="linkedin">LinkedIn</button>
+            <button type="button" data-share="reddit">Reddit</button>
+            <button type="button" data-share="telegram">Telegram</button>
+            <button type="button" data-share="copy">Copy link</button>
+          </div>
+        </section>
+
+        <section class="sources-block" id="sources">
+          <p class="section-label">Context</p>
+          <p class="source-note">This note was prompted by public discussion around multi-session Claude Code coordination and field reports of shared-file, JSONL and coordinator-session workarounds. The causal-handoff framing is RESONANCE analysis and is intended as a testable hypothesis, not a claim of a finished standard.</p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div>
+      <div><p class="footer-title">Market OS</p><p>Article → Dialogue → Problem → Pilot → Evidence → Product.</p></div>
+      <div><p class="footer-title">Open publication</p><a href="https://github.com/safal207/RESONANCE">GitHub repository ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+  <script src="market.js"></script>
+</body>
+</html>
