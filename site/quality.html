@@ -97,7 +97,7 @@
         </table>
 
         <h2>5. Experience Contract</h2>
-        <p>Pull requests that change the publication run Lighthouse against a local build. Representative pages are measured on mobile, with key pages also measured on desktop. The UI Geometry Contract separately records target size, image dimensions, aspect ratio, responsive sizing, contrast and viewport checks.</p>
+        <p>Pull requests that change the publication run Lighthouse against a local build. Representative pages — including the public Corrections history — are measured on mobile, with key pages also measured on desktop. The UI Geometry Contract separately records target size, image dimensions, aspect ratio, responsive sizing, contrast and viewport checks.</p>
         <table class="market-table">
           <thead><tr><th>Signal</th><th>Initial budget</th><th>Why it matters</th></tr></thead>
           <tbody>
@@ -112,7 +112,7 @@
         </table>
 
         <h2>6. Multilingual Visual Regression</h2>
-        <p>Visual Regression v0.3 captures the homepage, Article #004 EN/RU/中文, Article #005 EN/RU/中文 and this Quality page at three fixed viewports. That gives us 24 candidate screenshots per PR plus public-main baselines and pixel-diff images.</p>
+        <p>Visual Regression v0.3 captures the homepage, Article #004 EN/RU/中文, Article #005 EN/RU/中文, this Quality page and the public Corrections history at three fixed viewports. That gives us 27 candidate screenshots per PR plus public-main baselines and pixel-diff images when a baseline route already exists.</p>
         <table class="market-table">
           <thead><tr><th>Profile</th><th>Viewport</th><th>Release use</th></tr></thead>
           <tbody>
@@ -124,7 +124,7 @@
         <p>The hard gate blocks horizontal overflow, clipped key text/controls, watched elements outside the viewport and visible primary button targets below 44 × 44 px. Raw pixel-diff percentage remains advisory in v0.3 because legitimate editorial edits also change screenshots.</p>
 
         <h2>7. Live Experience Audit</h2>
-        <p>After a successful GitHub Pages deployment, Lighthouse measures the public site again. UI geometry is re-checked against the deployed pages, and the result is stored as an immutable workflow artifact with the audited commit/run context.</p>
+        <p>After a successful GitHub Pages deployment, Lighthouse measures the public site again, including the Corrections history. UI geometry is re-checked against the deployed pages, and the result is stored as an immutable workflow artifact with the audited commit/run context.</p>
 
         <h2>Evidence produced</h2>
         <div class="signal-grid-market">
