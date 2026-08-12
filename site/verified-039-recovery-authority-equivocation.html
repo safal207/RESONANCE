@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified #039: two authentic same-epoch recovery resolutions expose recovery-authority equivocation and force independent higher-epoch recovery."><title>Verified #039 — Recovery Authority Equivocation | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #039</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #039</p><h1>The recovery was signed. Then the recovery authority created two recoveries.</h1><p class="dek">Verified #038 used an independent recovery authority to resolve a membership fork. #039 attacks that assumption: the same recovery issuer signs two different epoch-3 resolutions for the same preserved dispute, and each branch carries a locally valid quorum.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><blockquote><p><strong>AUTHENTIC RECOVERY RECORD ≠ UNIQUE RECOVERY HISTORY.</strong></p></blockquote><h2>The recovery fork</h2><pre><code>R3-A:
+issuer = membership-recovery-authority-demo-key-v1
+set-D / epoch 3
+W10 W11 W12 / threshold 2
+resolves = [M2-A, M2-B]
+authentic ✅
+digest = sha256:96ba32f2...
+
+R3-B:
+same issuer
+set-E / epoch 3
+W13 W14 W15 / threshold 2
+same dispute set
+authentic ✅
+digest = sha256:fc503419...</code></pre><h2>Both recovery worlds validate</h2><pre><code>QC-A = W10 + W11 → H9
+valid under R3-A ✅
+
+QC-B = W13 + W14 → H9
+valid under R3-B ✅</code></pre><h2>Unsafe isolation</h2><pre><code>verifier sees only R3-B + QC-B
+R3-B authentic = true
+QC-B valid = true
+H9 authentic = true
+
+→ isolated_recovery_branch_authorized
+→ adoption rows = 1
+→ HTTP 200
+→ effect_count = 1</code></pre><h2>Safe cross-view guard</h2><pre><code>same recovery issuer = true
+same recovery epoch = 3
+same dispute set = true
+both authentic = true
+different resolution digest = true
+
+→ recovery_authority_equivocation_detected
+→ R3-A effects = 0
+→ R3-B effects = 0
+→ quarantine recovery issuer</code></pre><p>The verifier does not choose whichever recovery arrived first. The recovery conflict is itself evidence.</p><h2>Recovery from recovery</h2><pre><code>R4:
+issuer = independent governance-resolution authority
+set-F / epoch 4
+W16 W17 W18 / threshold 2
+
+binds = [digest(R3-A), digest(R3-B)]
+
+QC-final = W16 + W17 → H9
+
+→ recovery_equivocation_resolved_by_governance_epoch4
+→ adoption rows = 1
+→ HTTP 200
+→ effect_count = 1</code></pre><h2>I115–I118</h2><ul><li><strong>I115</strong> — Authentic recovery record ≠ unique recovery history.</li><li><strong>I116</strong> — Same recovery authority + same recovery epoch + same dispute set + different authentic resolution digests = equivocation evidence.</li><li><strong>I117</strong> — Recovery-authority equivocation must hold all disputed resolution branches and quarantine the issuer before consequence.</li><li><strong>I118</strong> — Recovery from recovery-equivocation requires a higher-epoch independent resolution binding every conflicting recovery digest.</li></ul><h2>Evidence</h2><pre><code>GitHub Actions run: 31619761478
+Job: 94191344408
+Benchmark SHA:
+fbb8d596e526785676b10f5c0dcf3d666d0cae3f
+Artifact ID: 9150741985
+Artifact digest:
+sha256:14f960e31edaabab4e599910387685cdf6dca51cd89cda995a0d6ebe29384677
+Score: 10/10</code></pre><h2>Boundary</h2><p>The benchmark uses deterministic HMAC identities and an explicit governance-resolution authority. It does not implement production PKI, voting, consensus finality, transparency logs or key revocation.</p><div class="article-actions"><a class="button" href="ttp-recovery-authority-equivocation.html">Read TTP Recovery Authority Equivocation Rule</a><a class="text-link" href="verified-038-membership-authority-equivocation.html">Previous: Verified #038 →</a></div></article></main><footer class="site-footer"><div class="wrap"><a href="index.html">← RESONANCE home</a></div></footer></body></html>
