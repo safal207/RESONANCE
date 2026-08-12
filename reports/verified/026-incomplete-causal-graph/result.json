@@ -1,0 +1,26 @@
+{
+  "report": 26,
+  "benchmark": "RESONANCE Missing Dependency / Incomplete Causal Graph",
+  "benchmark_version": "1.0",
+  "score": 10,
+  "max_score": 10,
+  "classification": "Incomplete causal graph protocol passes",
+  "github_actions_run": 31583719848,
+  "artifact": {
+    "id": 9136209133,
+    "name": "resonance-incomplete-causal-graph-v1.0",
+    "digest": "sha256:6bbe0b9a78e19ea9933f3389b3c9d99e7931b2d5d87b183b9d950aaaf8930f48"
+  },
+  "database": "PostgreSQL 17.6",
+  "authoritative_dependency_contract": ["price", "limit", "tax_rate"],
+  "incomplete_declared_dependencies": ["price", "limit"],
+  "omitted_dependency": "tax_rate",
+  "before": {"price": 10, "limit": 30, "tax_rate": 2, "theme": "light", "expected_output": 22},
+  "after_tax_drift": {"price": 10, "limit": 30, "tax_rate": 8, "theme": "light", "expected_output": 28},
+  "incomplete_fingerprint_unchanged": true,
+  "unsafe": {"adoption_rows": 1, "http_status": 200, "committed_output": 22, "current_expected_output": 28},
+  "safe": {"stale_adoption_rows": 0, "reason": "dependency_manifest_conflict", "effects_before_recompute": 0, "recomputed_output": 28, "final_effect_count": 1},
+  "irrelevant_theme_control": {"global_version": "100->101", "authoritative_fingerprint_unchanged": true, "adoption_rows": 1, "committed_output": 22},
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
