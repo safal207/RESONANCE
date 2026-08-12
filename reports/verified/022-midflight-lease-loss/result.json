@@ -1,0 +1,65 @@
+{
+  "benchmark": "RESONANCE Mid-flight Lease Loss / Long-Running Action",
+  "benchmark_version": "1.0",
+  "executed_at": "2026-08-12T01:45:10.047217+00:00",
+  "protocol": "RESONANCE Transactional Trust Protocol v1.0",
+  "database": {"server_version": "17.6"},
+  "http_service_image": "python:3.12-slim",
+  "http_service_image_digest": "python@sha256:229a2c5bfa27522db7815ea81f9bed70af17ccb9de9fc7ad142b1877b5830d36",
+  "lease_model": {"ttl_seconds": 60, "initial_time": 1000, "start_time": 1020, "takeover_time": 1070, "finish_time": 1080, "control_finish_time": 1050},
+  "unsafe_start_only": {
+    "start_authorized": true,
+    "start_owner": "worker-A",
+    "start_fence": 1,
+    "start_lease_version": 1,
+    "start_expires_at": 1060,
+    "takeover_owner": "worker-B",
+    "takeover_fence": 2,
+    "takeover_lease_version": 2,
+    "worker_b_commit_http": 200,
+    "worker_a_stale_finish_http": 200,
+    "worker_a_stale_finish_delivery": "applied",
+    "final_effect_count": 2,
+    "final_status": "conflict"
+  },
+  "safe_commit_recheck": {
+    "start_authorized": true,
+    "finish_authorized": false,
+    "finish_decision_time": 1080,
+    "finish_observed_owner": "worker-B",
+    "finish_observed_fence": 2,
+    "worker_a_write_made": false,
+    "final_effect_count": 1,
+    "final_status": "committed"
+  },
+  "resource_fence_defense": {
+    "worker_b_fence": 2,
+    "worker_b_commit_http": 200,
+    "worker_a_presented_fence": 1,
+    "worker_a_finish_http": 409,
+    "worker_a_finish_delivery": "fenced_out",
+    "highest_fence": 2,
+    "final_effect_count": 1,
+    "final_status": "committed"
+  },
+  "valid_control": {
+    "start_authorized": true,
+    "finish_authorized": true,
+    "finish_decision_time": 1050,
+    "worker_a_commit_http": 200,
+    "final_effect_count": 1
+  },
+  "score": 10,
+  "max_score": 10,
+  "classification": "Mid-flight authority protocol passes",
+  "invariants": [
+    "AUTHORIZED AT START DOES NOT IMPLY AUTHORIZED AT COMMIT.",
+    "LONG-RUNNING CONSEQUENTIAL WORK MUST REVALIDATE OR PRESENT A CURRENT FENCING EPOCH AT THE COMMIT BOUNDARY.",
+    "LEASE LOSS WHILE WORK IS IN FLIGHT IS AN AUTHORITY-LIFECYCLE TRANSITION.",
+    "RESOURCE-SIDE FENCING IS THE FINAL GUARD AGAINST A STALE COMPLETION."
+  ],
+  "github_actions_run": 31554618911,
+  "artifact": {"name": "resonance-midflight-lease-loss-v1.0", "id": 9125526467, "digest": "sha256:0dd9aa7c11547a916b75e6c739ba8d009e233de8f5bafbf9e4cb6412cab973c6"},
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
