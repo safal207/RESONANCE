@@ -1,0 +1,54 @@
+{
+  "protocol": "RESONANCE Transactional Trust Protocol v1.0",
+  "benchmark": "RESONANCE Constitutional Root Authority Replay / Root Currentness",
+  "benchmark_version": "1.0",
+  "classification": "Constitutional root currentness protocol passes",
+  "score": 10,
+  "max_score": 10,
+  "github_actions": {
+    "run_id": 31621380899,
+    "job_id": 94196799768,
+    "benchmark_head_sha": "7590bd8ce2c894d5a72ffb9c639896e87ce3dbfd",
+    "artifact_id": 9151370681,
+    "artifact_name": "resonance-constitutional-root-replay-v1.0",
+    "artifact_digest": "sha256:672ef3a413da475bb038989add5d97f109198a5b41cd865da4207823b67f6bf2"
+  },
+  "root_history": {
+    "historical": {
+      "record": "C3",
+      "root_epoch": 3,
+      "set_id": "set-R",
+      "root_record_digest": "sha256:4378e3e85eea7912642969d0b6adb6c3668063c9c5cba8c1a5c59c16d0417a45",
+      "authentic": true,
+      "local_quorum_valid": true
+    },
+    "current": {
+      "record": "C5",
+      "root_epoch": 5,
+      "set_id": "set-H",
+      "root_record_digest": "sha256:07826e04fd06ff733141b8f4a97117d819b2ee26b27554e4d16883fe4e5875f7",
+      "authentic": true,
+      "local_quorum_valid": true
+    }
+  },
+  "root_checkpoint": {
+    "root_namespace": "resonance-constitutional-root",
+    "max_root_epoch": 5,
+    "root_record_digest": "sha256:07826e04fd06ff733141b8f4a97117d819b2ee26b27554e4d16883fe4e5875f7"
+  },
+  "checks": [
+    {"id": "historical_and_current_root_records_authenticate_and_local_quorums_validate", "pass": true, "points": 2},
+    {"id": "observing_current_root_establishes_monotonic_high_watermark_epoch5", "pass": true, "points": 2},
+    {"id": "unsafe_verifier_accepts_replayed_authentic_old_root_and_commits_one_effect", "pass": true, "points": 2, "effect_count": 1, "http_status": 200},
+    {"id": "root_currentness_verifier_rejects_old_root_below_high_watermark_with_zero_effects", "pass": true, "points": 2, "reason": "root_authority_rollback_detected", "effect_count": 0},
+    {"id": "fresh_current_root_passes_currentness_gate_and_restores_liveness_once", "pass": true, "points": 2, "reason": "current_root_authorized", "effect_count": 1, "http_status": 200}
+  ],
+  "invariants": [
+    "I123 — ROOT AUTHORITY ≠ TIMELESS AUTHORITY",
+    "I124 — AUTHENTIC ROOT RECORD BELOW A TRUSTED ROOT HIGH-WATERMARK = ROOT-AUTHORITY ROLLBACK EVIDENCE",
+    "I125 — ROOT CURRENTNESS MUST BIND A MONOTONIC ROOT EPOCH AND ROOT-RECORD DIGEST BEFORE CONSEQUENTIAL AUTHORIZATION",
+    "I126 — A RETIRED ROOT RECORD MAY REMAIN HISTORICALLY VALID BUT MUST NOT REGAIN LIVE AUTHORITY AFTER A NEWER ROOT EPOCH IS OBSERVED"
+  ],
+  "external_safety_certification": false,
+  "vulnerability_claim": false
+}
