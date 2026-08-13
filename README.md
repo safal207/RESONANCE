@@ -184,13 +184,14 @@ analysis
 → multi-hart shootdown delivery / acknowledgement quorum
 → shootdown delivery provenance / bounded retry reliability
 → cross-generation message reordering / stale-message quarantine
+→ generation-wrap / ABA protection
 ```
 
 See [`issues/001-age-of-agents/`](issues/001-age-of-agents/) and the web edition at [`site/issue-001.html`](site/issue-001.html).
 
 ## Verified research
 
-**Current verified milestone — 2026-08-13:** CaPU v0.24 extends verified v0.23 delivery/retry authority across two successive shootdown generations. After generation N retires, only its exact successor N+1 may launch in the bounded no-wrap model. A delayed N delivery or acknowledgement arriving while N+1 is pending is quarantined into separate evidence state and cannot mutate N+1 delivery or acknowledgement authority; a current-generation ACK arriving before delivery also fails closed. Safety passed to depth 38 by k-induction; reachability passed to depth 48 with eight VCD witnesses, while v0.23 deterministic, canonical and bounded-safety regressions remained green. Verified CaPU head: `140b3394b3d5ca4ef2d0fa3dcc43e6ac0f5ad5ac`. See [`Verified Report #029`](reports/verified/029-capu-cross-generation-reordering/REPORT.md) and its [`machine-readable result`](reports/verified/029-capu-cross-generation-reordering/result.json).
+**Current verified milestone — 2026-08-13:** CaPU v0.25 extends verified v0.24 cross-generation quarantine across a real numeric generation-counter wrap. The bounded model uses a 2-bit generation and a separate 3-bit incarnation identity: non-wrap successors increment generation under the same incarnation, while `MAX → 0` requires an incarnation increment. Historical messages whose numeric generation matches after wrap but whose incarnation is stale are quarantined and cannot mutate current delivery or acknowledgement authority. Safety passed to depth 40 by k-induction; reachability passed to depth 52 with six VCD witnesses, while v0.24 deterministic, canonical and bounded-safety regressions remained green. Verified CaPU head: `1343afbf5dedca6cc478e8a7f3a38f763a589d54`. See [`Verified Report #030`](reports/verified/030-capu-generation-wrap-aba/REPORT.md) and its [`machine-readable result`](reports/verified/030-capu-generation-wrap-aba/result.json).
 
 Key reproducible reports:
 
@@ -213,7 +214,8 @@ Key reproducible reports:
 - **#026** CaPU v0.21 TLB freshness / shootdown authority — bounded formal PASS gating cached translations by exact ASID/translation epoch/VPN and permissions, binding modeled TLB/shootdown state, rejecting foreign acknowledgements and destroying stale cached authority across recovery;
 - **#027** CaPU v0.22 multi-hart shootdown delivery / acknowledgement quorum — bounded formal PASS binding two-hart acknowledgements to an exact shootdown generation and target, rejecting stale/foreign/duplicate acknowledgements, keeping partial quorum fail-closed, and reopening global translation authority only after exact required-hart coverage;
 - **#028** CaPU v0.23 shootdown delivery reliability / bounded retry — bounded formal PASS separating send attempt, observed delivery and acknowledgement authority, rejecting phantom ACKs, recovering lost delivery/ACK through exact retries and keeping retry exhaustion fail-closed;
-- **#029** CaPU v0.24 cross-generation message reordering / stale-message quarantine — bounded formal PASS quarantining delayed prior-generation delivery/ACK evidence, preventing it from mutating successor-generation authority, enforcing exact no-wrap successor progression and preserving delivery-before-ACK causality.
+- **#029** CaPU v0.24 cross-generation message reordering / stale-message quarantine — bounded formal PASS quarantining delayed prior-generation delivery/ACK evidence, preventing it from mutating successor-generation authority, enforcing exact no-wrap successor progression and preserving delivery-before-ACK causality;
+- **#030** CaPU v0.25 generation-wrap / ABA protection — bounded formal PASS separating incarnation identity from a wrapping generation counter, quarantining historical same-generation messages with stale incarnations and preventing numeric identifier reuse from recreating authority.
 
 All scores are scope-specific protocol/benchmark scores. They are **not percentages of safety** and are not external certifications.
 
