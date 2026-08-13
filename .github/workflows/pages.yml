@@ -10,6 +10,7 @@ on:
       - 'scripts/build-feeds.mjs'
       - 'scripts/verify-feed.mjs'
       - 'scripts/verify-analytics.mjs'
+      - 'scripts/verify-analytics-live.mjs'
       - 'scripts/verify-seo.mjs'
       - 'scripts/verify-links.mjs'
       - '.github/workflows/pages.yml'
