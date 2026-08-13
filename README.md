@@ -182,13 +182,15 @@ analysis
 → MMU translation / precise page-fault recovery
 → TLB freshness / shootdown authority
 → multi-hart shootdown delivery / acknowledgement quorum
+→ shootdown delivery provenance / bounded retry reliability
+→ cross-generation message reordering / stale-message quarantine
 ```
 
 See [`issues/001-age-of-agents/`](issues/001-age-of-agents/) and the web edition at [`site/issue-001.html`](site/issue-001.html).
 
 ## Verified research
 
-**Current verified milestone — 2026-08-13:** CaPU v0.22 extends the exact v0.21 TLB freshness / shootdown authority with a bounded two-hart distributed invalidation authority. Each acknowledgement is bound to one exact shootdown generation, ASID, translation epoch and VPN, and it counts only for a required hart that has not already acknowledged. Stale-generation, foreign-target and duplicate acknowledgements fail closed; partial quorum keeps global translation authority closed; only exact required-hart coverage completes the shootdown; and recovery / restore destroys pending partial-quorum authority. Safety passed to depth 34; reachability passed to depth 40 with six VCD witnesses, while the v0.21 deterministic, canonical and bounded-safety regressions remained green. Verified CaPU head: `c898007f4cac2127374bd6c468d523c6818e6e25`. See [`Verified Report #027`](reports/verified/027-capu-multihart-shootdown-quorum/REPORT.md) and its [`machine-readable result`](reports/verified/027-capu-multihart-shootdown-quorum/result.json).
+**Current verified milestone — 2026-08-13:** CaPU v0.24 extends verified v0.23 delivery/retry authority across two successive shootdown generations. After generation N retires, only its exact successor N+1 may launch in the bounded no-wrap model. A delayed N delivery or acknowledgement arriving while N+1 is pending is quarantined into separate evidence state and cannot mutate N+1 delivery or acknowledgement authority; a current-generation ACK arriving before delivery also fails closed. Safety passed to depth 38 by k-induction; reachability passed to depth 48 with eight VCD witnesses, while v0.23 deterministic, canonical and bounded-safety regressions remained green. Verified CaPU head: `140b3394b3d5ca4ef2d0fa3dcc43e6ac0f5ad5ac`. See [`Verified Report #029`](reports/verified/029-capu-cross-generation-reordering/REPORT.md) and its [`machine-readable result`](reports/verified/029-capu-cross-generation-reordering/result.json).
 
 Key reproducible reports:
 
@@ -209,7 +211,9 @@ Key reproducible reports:
 - **#024** CaPU v0.19 delegated + nested trap authority — bounded formal PASS binding delegation policy and a two-frame trap stack to the exact checkpoint authority, rejecting unauthorized delegation, bounded overflow/underflow and foreign parent contexts while preserving exact nested parent capture/return and visible-effect containment;
 - **#025** CaPU v0.20 MMU translation / precise page-fault recovery — bounded formal PASS binding a reduced memory view and precise page-fault state to the exact checkpoint authority, rejecting foreign/stale translation state and blocking modeled visible effects across fault/recovery boundaries;
 - **#026** CaPU v0.21 TLB freshness / shootdown authority — bounded formal PASS gating cached translations by exact ASID/translation epoch/VPN and permissions, binding modeled TLB/shootdown state, rejecting foreign acknowledgements and destroying stale cached authority across recovery;
-- **#027** CaPU v0.22 multi-hart shootdown delivery / acknowledgement quorum — bounded formal PASS binding two-hart acknowledgements to an exact shootdown generation and target, rejecting stale/foreign/duplicate acknowledgements, keeping partial quorum fail-closed, and reopening global translation authority only after exact required-hart coverage.
+- **#027** CaPU v0.22 multi-hart shootdown delivery / acknowledgement quorum — bounded formal PASS binding two-hart acknowledgements to an exact shootdown generation and target, rejecting stale/foreign/duplicate acknowledgements, keeping partial quorum fail-closed, and reopening global translation authority only after exact required-hart coverage;
+- **#028** CaPU v0.23 shootdown delivery reliability / bounded retry — bounded formal PASS separating send attempt, observed delivery and acknowledgement authority, rejecting phantom ACKs, recovering lost delivery/ACK through exact retries and keeping retry exhaustion fail-closed;
+- **#029** CaPU v0.24 cross-generation message reordering / stale-message quarantine — bounded formal PASS quarantining delayed prior-generation delivery/ACK evidence, preventing it from mutating successor-generation authority, enforcing exact no-wrap successor progression and preserving delivery-before-ACK causality.
 
 All scores are scope-specific protocol/benchmark scores. They are **not percentages of safety** and are not external certifications.
 
