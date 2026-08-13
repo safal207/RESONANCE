@@ -1,0 +1,98 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "024-capu-delegated-nested-trap-authority",
+  "title": "CaPU v0.19 — Delegated + Nested Trap Authority",
+  "status": "PASS",
+  "scope": "bounded reduced-width two-level delegated trap authority model binding delegation policy, trap depth and two trap frames to the exact embedded v0.18 checkpoint authority",
+  "project": "safal207/CaPU",
+  "pull_request": 72,
+  "verified_content_head": "16ac81286cf6542189021f6a9aa3a3773c003e31",
+  "workflow": {
+    "name": "CaPU vCML Delegated Nested Trap Authority v0.19",
+    "run_id": 31656176115,
+    "rtl_job_id": 94311014663,
+    "rtl_job_status": "success",
+    "formal_job_id": 94311060795,
+    "formal_job_status": "success"
+  },
+  "canonical_checkpoint_digest": "90543218d6e93fed2dd58169a815a01453dcc88196f42b5851ce8f555d180f38",
+  "formal": {
+    "solver": "z3 4.8.12",
+    "yosys": "0.33 (git sha1 2584903a060)",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "safety_depth": 28,
+    "cover_depth": 34,
+    "cover_witness_files": 9,
+    "safety_result": "DONE (PASS, rc=0)",
+    "cover_result": "DONE (PASS, rc=0)",
+    "formal_input_sha256": "09a014afe4d886c53c48e01e56405935f1996c483b34e710addc2c2f09d5ff0a",
+    "formal_log_sha256": "50617924cea12b7a638e12339e3e1011054cb3b690b880212669e891914f6dcf",
+    "cover_log_sha256": "8c1a6ff8b9c86a430d847a360213f5ffcfb64f5aabb61498d6f5436aa7eee9f1",
+    "v0_18_regression_log_sha256": "63ac89bd78d513f678e1cd62723fc9ab90bc76c6e4a2266fe382f93e8d20bc2c"
+  },
+  "artifacts": [
+    {
+      "name": "capu-vcml-v19-delegated-nested-trap-evidence",
+      "artifact_id": 9164456375,
+      "sha256": "4d1425c3a2c32f2f1348f84ce04d548eb04ce472ca84c0ce91f531a44412364a"
+    },
+    {
+      "name": "capu-vcml-v19-delegated-nested-trap-formal-evidence",
+      "artifact_id": 9164504572,
+      "sha256": "4eca67ce324a6a89bc884a1f07061a4978406459f8efaa4ee9b446a5e9d3b0c0"
+    }
+  ],
+  "executable_hashes": {
+    "v19_rtl_sha256": "7d1d03f7c0629f3f34731ca504d1cc8e312b378918488de8a9e45d8f4084f116",
+    "v19_tb_sha256": "7d5ef37d2ce21e470b09ffc7fa8406af21cc6085a0bde3d5f04a698340179907",
+    "v19_canonical_encoder_sha256": "a5582fc0972a6ef6a41545c246366e2f89e26202a0e18baad0444c7c1a6bf393",
+    "v19_canonical_test_sha256": "ae09890cf0185c327a02f4eb5ee7be79c68f966fa0e7c83778ee00ee58c7863b",
+    "trajectory_log_sha256": "ceb61b3722b98560fb5aa0bdfe9b2ababd8f88ad67d2670c2aab4419c737209d",
+    "canonical_python_log_sha256": "d40f657b18a8285760b8d4f4da6534925c04c10f54fef6a0d4870ca7c01f5c29"
+  },
+  "checkpoint_state": [
+    "complete v0.18 checkpoint state",
+    "current_privilege",
+    "delegation_mask",
+    "trap_depth_0_to_2",
+    "outer_trap_frame",
+    "inner_trap_frame"
+  ],
+  "runtime_invariants": [
+    "RESTORE_ACCEPT => EXACT_BOUND_DELEGATION_AND_TRAP_STACK",
+    "UNAUTHORIZED_DELEGATION => NO_TRAP_ENTER",
+    "DEPTH_2_TRAP_ENTER => REJECT",
+    "NESTED_TRAP_ENTER => EXACT_PARENT_CONTEXT_CAPTURE",
+    "TRAP_RETURN => EXACT_TOP_PARENT_CONTEXT",
+    "DEPTH_0_RETURN => REJECT",
+    "TRAP_OR_RECOVERY_BOUNDARY => NO_VISIBLE_EFFECT"
+  ],
+  "deterministic_paths": [
+    "unauthorized target privilege is rejected",
+    "outer trap captures base PC and privilege at depth one",
+    "nested trap captures exact outer parent PC and privilege at depth two",
+    "pre-nested speculative effect is killed and not visible",
+    "third trap is rejected at bounded depth two",
+    "inner return restores exact outer context",
+    "outer return restores exact base context",
+    "return at depth zero is rejected",
+    "wrong-privilege normal continuation is rejected",
+    "mutated delegation checkpoint candidate is rejected",
+    "exact checkpoint authority path completes",
+    "recovery closes runtime readiness"
+  ],
+  "exact_head_regression": {
+    "all_registered_pull_request_workflows_green": true,
+    "workflows": [
+      "CaPU vCML Delegated Nested Trap Authority v0.19",
+      "Validate Examples",
+      "CaPU Core v0 RTL Smoke"
+    ],
+    "v0_18_deterministic_regression": "PASS",
+    "v0_18_canonical_regression": "PASS",
+    "v0_18_bounded_safety_regression": "PASS"
+  },
+  "claim_boundary": "bounded reduced-width two-level delegated trap authority result; no full ISA CSR/delegation semantics, arbitrary nesting, production trap-stack storage, MMU/TLB/page faults, NMI/debug, interrupt-controller or asynchronous synchronization correctness, production speculation/reorder-buffer semantics, cache/coherence/multicore recovery, RTL SHA-256/off-path verifier correctness, durable-media correctness, production-width or unbounded correctness is claimed",
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
