@@ -1,0 +1,85 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "035-capu-overlapping-dma-fragment-recovery",
+  "title": "CaPU v0.30 — Out-of-Order / Overlapping DMA Fragment Recovery Authority",
+  "status": "PASS",
+  "scope": "bounded reduced-width one-command four-fragment four-byte-lane DMA recovery authority with fixed overlapping masks and durable visible-owner provenance",
+  "project": "safal207/CaPU",
+  "pull_request": 84,
+  "verified_content_head": "f2a70b31393e52f0fbb4f43dd14739c96a8a8bd0",
+  "base_content_head": "64b7f26ec58e1f1f6a1f8553b458098610ec5c96",
+  "workflow": {
+    "name": "CaPU vCML Overlapping DMA Fragment Recovery v0.30",
+    "run_id": 31682249200,
+    "deterministic_job_id": 94390124242,
+    "deterministic_job_status": "success",
+    "formal_job_id": 94390124320,
+    "formal_job_status": "success",
+    "core_rtl_smoke_run_id": 31682249314,
+    "core_rtl_smoke_status": "success",
+    "validate_examples_run_id": 31682249263,
+    "validate_examples_status": "success"
+  },
+  "model": {
+    "fragment_count": 4,
+    "byte_lane_count": 4,
+    "out_of_order_completion": true,
+    "fixed_overlap_masks": {
+      "fragment0": [0, 1],
+      "fragment1": [1, 2],
+      "fragment2": [2, 3],
+      "fragment3": [3, 0]
+    },
+    "durable_evidence": [
+      "issue_receipt_bitmap",
+      "negative_receipt_bitmap",
+      "completion_receipt_bitmap",
+      "visible_owner_provenance"
+    ]
+  },
+  "canonical": {
+    "digest_sha256": "116e51eed5468aebd1bc51aa6d9cfcf946a09384e0ead0db8fdd1fe69ccc4da9",
+    "mutation_checks": {
+      "committed_without_completion_receipt_rejected": true,
+      "foreign_receipt_identity_mixed_state_rejected": true,
+      "owner_without_fragment_commit_rejected": true,
+      "overlap_owner_wrong_lane_rejected": true
+    }
+  },
+  "formal": {
+    "result": "PASS",
+    "proof_method": "bounded model checking",
+    "depth": 14,
+    "cover_depth": 26,
+    "cover_witnesses": 10,
+    "formal_identity_width_bits": 2,
+    "v0_29_safety_regression": "PASS",
+    "formal_input_sha256": "0fd1c9f178b41676792fc0552f7147b0877562e4c797a097a80eba3b4d0fb1da",
+    "formal_log_sha256": "94223361fdb329097a0c49bbac1b7296fedebee884f7629c47dd8633c51ac84f",
+    "cover_log_sha256": "ad82448766692d0f7ac886f576c7536b7617787161e0d22c66ec269aba13af63",
+    "v0_29_regression_log_sha256": "45f919f39ac0a3171aeb1715f14a34f774949d16f43659877643b1a08b3c45f7",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "yosys_version": "Yosys 0.33",
+    "z3_version": "Z3 4.8.12"
+  },
+  "artifacts": {
+    "executable": {
+      "id": 9173931194,
+      "sha256": "75f19dcc94d3564e0d98d22cfd9216d71a962856f91c7b4f44a3acad765a3553"
+    },
+    "formal": {
+      "id": 9174077812,
+      "sha256": "179270f31180cfec524166c3f118ef1ca48b7567b3c9605307f6021de0489156"
+    }
+  },
+  "sealed_hashes": {
+    "rtl": "9b5b62b4f1962b2dcca9cada8eb194920a709ae4ab9d243b534a81b65efe70a8",
+    "testbench": "4c66b8e175cf00ded1fde659766cd2c23f7e91f2b561c49916e93f247c6474a9",
+    "canonical_encoder": "53ac2c5d10d116d37dbf3464d48c74f01e576924c5be12d3a1ff59fdde66367b",
+    "canonical_test": "ec084cbc13531b1dde54383295451de123d8369901aa203bc4912dab90557c66",
+    "trajectory_log": "9deb465ce9c7af718a3475d523431ebf5103f6d9417e7990d7e09171ca139fda",
+    "canonical_log": "e66e0688ead909dbf6d26b2b569db4b0d049e87e3df800e884d5c8c36009643f"
+  },
+  "verification_note": "The first deterministic candidate used an incorrect testbench packed-state expectation (0x88 instead of 0x22) for committed fragments 0 and 2. The final fix changed only the testbench expectation; RTL, formal properties and canonical semantics were unchanged. Only the final exact-head evidence is authoritative.",
+  "claim_boundary": "No production PCIe/CXL/NoC transport semantics, arbitrary addresses/masks, payload-value correctness, byte tearing, cache/coherence/IOMMU behavior, multiple concurrent transactions, arbitrary overlap graphs, persistence implementation, evidence authenticity, liveness/fairness, production widths or unbounded correctness are claimed."
+}
