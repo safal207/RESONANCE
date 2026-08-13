@@ -1,0 +1,22 @@
+{
+  "schema": "resonance.collector.live-activation.v1",
+  "verdict": "pass",
+  "collector": "Cloudflare Worker + Workers Analytics Engine",
+  "endpoint": "https://resonance-analytics-collector.resonance-safal207.workers.dev",
+  "dataset": "resonance_market_events_v1",
+  "binding": "RESONANCE_EVENTS",
+  "github": {
+    "workflow": "RESONANCE Collector Live Activation",
+    "run_id": 31660978803,
+    "head_sha": "be8b1cb4b9981c83e115c4d2d2a15c85875cfda3"
+  },
+  "verified_gates": [
+    "worker_deploy",
+    "allowed_origin_cors_preflight",
+    "disallowed_origin_rejection",
+    "unexpected_field_rejection",
+    "valid_five_field_event_acceptance",
+    "analytics_engine_sql_readback"
+  ],
+  "evidence_boundary": "This proves the deployed collector contract and synthetic write/readback path. It does not prove readership, delivery completeness, demand, product-market fit or revenue."
+}
