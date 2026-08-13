@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="RESONANCE Site Health v0.7 documents publication, translation parity, corrections, RSS, browser and visual quality, live deployment, and privacy-aware measurement contracts." />
+  <meta name="description" content="RESONANCE Site Health v0.8 documents publication, translation, corrections, feeds, browser quality, live deployment, privacy-aware measurement and collector contracts." />
   <meta name="theme-color" content="#f4f0e8" />
   <title>Site Health & Quality | RESONANCE</title>
   <link rel="stylesheet" href="styles.css" />
@@ -49,7 +49,7 @@
       </aside>
 
       <article class="article-body">
-        <div class="status-chip ready">RESONANCE Site Health v0.7</div>
+        <div class="status-chip ready">RESONANCE Site Health v0.8</div>
 
         <h2>1. Publication Contract</h2>
         <p>The deterministic publication contract builds the journal and checks canonical URLs, structured data, multilingual metadata, sitemap coverage, internal links, Market OS evidence boundaries and other release invariants before deployment.</p>
@@ -94,27 +94,28 @@
         <h2>7. Live Experience Audit</h2>
         <p>After GitHub Pages reports success, the public site is measured again. This closes the gap between “the branch built correctly” and “the reader can actually reach the deployed surface.” Live evidence is retained with deploy/run context.</p>
 
-        <h2>8. Measurement & Privacy Contract</h2>
-        <p>Site Health v0.7 adds a separate measurement layer for the article-to-dialogue path:</p>
+        <h2>8. Measurement, Privacy & Collector Contract</h2>
+        <p>Site Health v0.8 keeps the v0.7 browser measurement boundary and adds a selected collector architecture without activating production transport:</p>
         <div class="protocol-flow" aria-label="Privacy-aware measurement path">
           <span>Article</span><i>→</i><span>Meaningful read</span><i>→</i><span>Hot question</span><i>→</i><span>Workflow intake</span><i>→</i><span>Market evidence</span>
         </div>
         <p>The browser runtime has four allowlisted events and a five-field payload. It creates no cookie, local/session storage identity or fingerprint, sends no referrer, user-agent, screen/device fields, email/name, free text or exact client timestamp, and honors Global Privacy Control and Do Not Track. Automated browser audits are suppressed so Site Health cannot manufacture its own readership.</p>
         <table class="market-table">
-          <thead><tr><th>Measurement surface</th><th>v0.7 contract</th><th>What it does not prove</th></tr></thead>
+          <thead><tr><th>Measurement surface</th><th>v0.8 contract</th><th>What it does not prove</th></tr></thead>
           <tbody>
             <tr><td><code>meaningful_read</code></td><td>Visible ≥ 45 s and scroll depth ≥ 60%</td><td>Comprehension, agreement or demand.</td></tr>
             <tr><td><code>hot_question_view</code></td><td>Hot question ≥ 60% visible</td><td>That the reader considered or answered it.</td></tr>
             <tr><td><code>workflow_intake_open</code></td><td>Public GitHub intake link activated</td><td>That a workflow was submitted.</td></tr>
             <tr><td><code>verified_workflow_open</code></td><td>Pilot description activated from a market-question surface</td><td>Pilot qualification or willingness to pay.</td></tr>
+            <tr><td>Collector</td><td>Minimal Cloudflare Worker → Workers Analytics Engine; exact five-field allowlist</td><td>That Cloudflare transport metadata does not exist, or that aggregate events represent a person/session.</td></tr>
           </tbody>
         </table>
-        <p>Transport is default-off. A collector can only be enabled at publication build time through a clean HTTPS endpoint, and collector-side IP handling, retention, jurisdiction and data-processing policy require their own review.</p>
+        <p>The selected Worker does not read, hash, persist or export IP, User-Agent, referrer, cookies, geography, visitor IDs or session IDs. Production remains <strong>disabled</strong> until a deployed endpoint passes live CORS/schema and synthetic-write checks and `RESONANCE_ANALYTICS_ENDPOINT` is explicitly configured.</p>
         <p><a class="button" href="measurement.html">Open Measurement & Privacy →</a></p>
 
         <h2>Evidence produced</h2>
         <div class="signal-grid-market">
-          <div class="signal-card"><strong>Machine contracts</strong><p>Publication, feed, translation, history and analytics rules are executable rather than implied.</p></div>
+          <div class="signal-card"><strong>Machine contracts</strong><p>Publication, feed, translation, history, analytics and collector rules are executable rather than implied.</p></div>
           <div class="signal-card"><strong>Browser evidence</strong><p>Lighthouse, UI geometry and visual artifacts expose rendered regressions that static checks cannot see.</p></div>
           <div class="signal-card"><strong>Public state</strong><p>Corrections, Subscribe and Measurement pages expose important trust boundaries outside the CI interface.</p></div>
           <div class="signal-card"><strong>Live proof</strong><p>Post-deploy audits re-fetch public Pages surfaces instead of assuming deployment from a successful local build.</p></div>
@@ -126,7 +127,7 @@
         <section class="market-question">
           <p class="section-label">Inspect the evidence</p>
           <h2>Every health claim should be traceable.</h2>
-          <p>Use GitHub Actions for current contracts, the public history for managed corrections, and Measurement & Privacy for the analytics boundary.</p>
+          <p>Use GitHub Actions for current contracts, the public history for managed corrections, and Measurement & Privacy for the analytics and collector boundary.</p>
           <div class="market-actions">
             <a class="button" href="https://github.com/safal207/RESONANCE/actions" target="_blank" rel="noreferrer">Open Actions →</a>
             <a class="text-link" href="measurement.html">Measurement & Privacy →</a>
