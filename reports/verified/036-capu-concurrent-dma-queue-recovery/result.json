@@ -1,0 +1,95 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "036-capu-concurrent-dma-queue-recovery",
+  "title": "CaPU v0.31 — Concurrent DMA Queue Ordering Recovery Authority",
+  "status": "PASS",
+  "scope": "bounded reduced-width two-transaction, two-fragments-per-transaction, four-byte-lane, one-queue-epoch recovery-authority model with fixed overlap and non-reusable durable transaction slots",
+  "project": "safal207/CaPU",
+  "pull_request": 85,
+  "verified_content_head": "bd3786a8a63912d34686d0ec87363caf85d60efc",
+  "base_content_head": "f2a70b31393e52f0fbb4f43dd14739c96a8a8bd0",
+  "merge_ref": "1dee90e38415c60f7322fca8f5e40a5dfb71e07b",
+  "workflow": {
+    "name": "CaPU vCML Concurrent DMA Queue Recovery v0.31",
+    "run_id": 31688676864,
+    "deterministic_job_id": 94410690842,
+    "deterministic_job_status": "success",
+    "formal_job_id": 94410690643,
+    "formal_job_status": "success",
+    "validate_examples_run_id": 31688676837,
+    "validate_examples_job_id": 94410692160,
+    "validate_examples_status": "success",
+    "core_rtl_smoke_run_id": 31688676858,
+    "core_rtl_smoke_deterministic_job_id": 94410690856,
+    "core_rtl_smoke_formal_job_id": 94410776111,
+    "core_rtl_smoke_status": "success"
+  },
+  "model": {
+    "transaction_count": 2,
+    "fragments_per_transaction": 2,
+    "byte_lane_count": 4,
+    "queue_epoch_count": 1,
+    "fixed_overlap": true,
+    "durable_non_reusable_transaction_slots": true,
+    "ordered_retirement": true
+  },
+  "canonical": {
+    "digest_sha256": "b9f2a008513d6676e3c279f49ae25c4fb189f452672d6fee608face6318e729c",
+    "mutation_checks": [
+      "transaction_slot_swap_digest_changed",
+      "younger_retired_before_older_rejected",
+      "owner_without_fragment_commit_rejected",
+      "younger_overlap_without_older_completion_rejected",
+      "younger_fragment_evidence_without_durable_slot_rejected",
+      "durable_slot_identity_mismatch_rejected",
+      "stale_checkpoint_predates_younger_slot_preserved"
+    ]
+  },
+  "formal": {
+    "schema": "capu.hardware.concurrent-dma-queue-recovery-formal-proof.v0.31",
+    "proof_method": "bounded model checking",
+    "formal_identity_width_bits": 2,
+    "safety_depth": 12,
+    "safety_status": "PASS",
+    "cover_depth": 24,
+    "cover_status": "PASS",
+    "cover_witnesses": 11,
+    "v0_30_safety_regression": "PASS",
+    "formal_input_sha256": "ca1b45d637f6815e8745d25997fcfd0f542152084457d0c57fb0d3bfd87aa6e8",
+    "formal_log_sha256": "421cce2fe45bbcacd53811067d961fa3fbe049d3c89c75cb44d5dcdcf6d44b81",
+    "cover_log_sha256": "92a1ea104e729c3bd4541f3fbdd458c397204d59aed46e80871162e929a2cd0f",
+    "v0_30_regression_log_sha256": "ef2d732993402afe7011e422a5028a00cc78604ac4eea5356d473abe40d11eb0",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "yosys_version": "Yosys 0.33 (git sha1 2584903a060)",
+    "z3_version": "Z3 version 4.8.12 - 64 bit"
+  },
+  "artifacts": {
+    "executable": {
+      "name": "capu-vcml-v31-concurrent-dma-queue-evidence",
+      "id": 9176458080,
+      "zip_sha256": "67dcc03dd73dd1a9d4e32ca72ed5fcebf59df7f61a4081992253c6cea5b6665e"
+    },
+    "formal": {
+      "name": "capu-vcml-v31-concurrent-dma-queue-formal-evidence",
+      "id": 9176549963,
+      "zip_sha256": "bda40b43be684a48a24bb0225ed73a346bdc663199a665706d04a0f6d5a76ff7"
+    }
+  },
+  "sealed_hashes": {
+    "rtl": "7218b1a3c706ab67019659ec765d91998981f872dd16632d831e96bccd397f04",
+    "testbench": "ff709804e346e9cb651713c4599d89512f2229256184c85bbbacae4770394394",
+    "canonical_encoder": "61f8c9c8ca35980fa5a3752136d5376f45f48a7fa28b586130d615887f65ed91",
+    "canonical_test": "f5a7eb9db156b8b5e357be6571e88c9d2f845b119e5721a7fec4950a6b20dd55",
+    "trajectory_log": "0607d7e316e7f794edf5ea6d9b5cc34a474ec28df6e34ca54038d011fd8aa5da",
+    "canonical_python_log": "5440e55cf4227405c5c7f76073d4b4a5d9ebb3769f11d9bc9da8e823e78eaa3f",
+    "v0_30_deterministic_regression_log": "9deb465ce9c7af718a3475d523431ebf5103f6d9417e7990d7e09171ca139fda",
+    "v0_30_canonical_regression_log": "e66e0688ead909dbf6d26b2b569db4b0d049e87e3df800e884d5c8c36009643f"
+  },
+  "verification_history": {
+    "genuine_counterexample": "stale checkpoint predating TX1 could erase the younger slot while younger durable fragment/owner evidence survived, allowing slot identity resurrection",
+    "architectural_fix": "durable non-reusable transaction-slot authority within the modeled queue epoch",
+    "final_harness_fix": "replace unsupported hierarchical DUT-local durable-register observations with a formal-side ghost ledger derived from accepted submissions",
+    "rtl_changed_by_final_harness_fix": false
+  },
+  "claim_boundary": "No arbitrary queue depth, slot reuse across epochs, cancellation, arbitrary transaction reordering, arbitrary overlap graphs, production PCIe/CXL/NoC transport, payload-value semantics, byte tearing, IOMMU/cache/coherence, production persistence, evidence authenticity, production widths, liveness/fairness, or unbounded correctness."
+}
