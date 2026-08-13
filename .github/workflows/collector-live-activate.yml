@@ -93,11 +93,19 @@ jobs:
           MARKER="/RESONANCE/__collector-smoke-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.html"
           echo "marker=$MARKER" >> "$GITHUB_OUTPUT"
 
-          preflight_code="$(curl -sS -o /tmp/preflight.body -w '%{http_code}' -X OPTIONS "$ENDPOINT" \
-            -H "Origin: $ORIGIN" \
-            -H 'Access-Control-Request-Method: POST' \
-            -H 'Access-Control-Request-Headers: content-type')"
-          test "$preflight_code" = '204'
+          ready=0
+          for attempt in $(seq 1 20); do
+            preflight_code="$(curl -sS -o /tmp/preflight.body -w '%{http_code}' -X OPTIONS "$ENDPOINT" \
+              -H "Origin: $ORIGIN" \
+              -H 'Access-Control-Request-Method: POST' \
+              -H 'Access-Control-Request-Headers: content-type' || true)"
+            if [ "$preflight_code" = '204' ]; then
+              ready=1
+              break
+            fi
+            sleep 2
+          done
+          test "$ready" = '1'
 
           bad_origin_code="$(curl -sS -o /tmp/bad-origin.json -w '%{http_code}' -X POST "$ENDPOINT" \
             -H 'Origin: https://evil.example' \
