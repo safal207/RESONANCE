@@ -1,0 +1,60 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "028-capu-shootdown-delivery-reliability",
+  "title": "CaPU v0.23 — Shootdown Delivery Reliability / Retry / Lost-ACK Recovery",
+  "status": "PASS",
+  "scope": "bounded reduced-width two-hart one-generation shootdown delivery/retry authority layered on verified v0.22 quorum authority",
+  "project": "safal207/CaPU",
+  "pull_request": 76,
+  "verified_content_head": "9a19bb8e21b2cef9f5cd1d110b6e930ae27194ab",
+  "workflow": {
+    "name": "CaPU vCML Shootdown Delivery Reliability v0.23",
+    "run_id": 31658894304,
+    "rtl_job_id": 94319326051,
+    "rtl_job_status": "success",
+    "formal_job_id": 94319367152,
+    "formal_job_status": "success",
+    "validate_examples_run_id": 31658894284,
+    "core_rtl_smoke_run_id": 31658894277
+  },
+  "canonical_checkpoint_digest": "c00fbcd530c4183e9266ecddb44720bbce7bb3a0141c4b0ca4977c64707faac0",
+  "formal": {
+    "schema": "capu.hardware.shootdown-delivery-reliability-formal-proof.v0.23",
+    "solver": "z3 4.8.12",
+    "yosys": "0.33 (git sha1 2584903a060)",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "safety_depth": 36,
+    "cover_depth": 44,
+    "cover_witness_files": 8,
+    "safety_result": "DONE (PASS, rc=0)",
+    "cover_result": "DONE (PASS, rc=0)",
+    "formal_input_sha256": "5724df45f05f9d0fdc5b5b944c8cee6b99c6d7fd6ea81949f3ee23d6adc297f4",
+    "formal_log_sha256": "818f48977102aaf10adb6b7603790a3865a0ead0a7ad644d8c8b69f906f82893",
+    "cover_log_sha256": "a87c0aa769f63429f68d4d370a2dc33d938281832ad4dc8b30273cf40189f2e1",
+    "v0_22_regression_log_sha256": "7c59fb2c9f13fcc84a5ec50303473c4cb43e39be7f24d979d48221e200f0cb24",
+    "v0_22_safety_regression": "PASS"
+  },
+  "artifacts": [
+    {
+      "name": "capu-vcml-v23-shootdown-delivery-evidence",
+      "artifact_id": 9165439331,
+      "sha256": "4c66bc969955cabfe57ce4064f0adf9043d699de9974688c205118daf21be010"
+    },
+    {
+      "name": "capu-vcml-v23-shootdown-delivery-formal-evidence",
+      "artifact_id": 9165481741,
+      "sha256": "9f4751d6ea4fbf409e34d847e8190ba5ad21cdb9a36abe9cde26d4bb0424f177"
+    }
+  ],
+  "sealed_hashes": {
+    "rtl": "0fe6a4de0ae5bb12fbd9594b48c24b2fa8d2814aaf53a51b49a067ebee91289f",
+    "testbench": "3b333c6d3bc473e23a1be1e594887c5d7de9dde12ce87c3d19c2fa17e6ecc27d",
+    "canonical_encoder": "fb24fa7cabd39c7eb947de67df5afb6afab7fd031c48aa7931b644d8b60238c7",
+    "canonical_test": "ac2c774ddbeb0efbbf12b710b21e06059fa53afaebec2624064e6e8f395cc5f4",
+    "trajectory_log": "da575ed048ca5818abda2585e184b112a8e57ce5a8ef1077d48c3bdb075d7b75",
+    "canonical_python_log": "a50ea8c6db3645988bf1a5c15308e7e54fe3b236f09fbbc364c1fc43cf965900",
+    "v0_22_deterministic_regression_log": "f77b18fc3755d0b26e22b6f8390c5894b5fca2f93c0742139b4fdde67201cede",
+    "v0_22_canonical_regression_log": "7a6939d7d0f9a7ba4082b6bec2398205ffc2000f93e8af2ccaf7a71a3c6ebb04"
+  },
+  "claim_boundary": "bounded reduced-width two-hart one pending shootdown generation one target maximum three delivery attempts per hart; no production transport, probabilistic reliability, timing/fairness/liveness guarantees, arbitrary hart count, concurrent shootdowns, cache coherence, virtualization, durable distributed recovery, production widths or unbounded correctness"
+}
