@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="RESONANCE Measurement & Privacy documents the no-identity analytics contract, the v0.8 collector selection and the boundary between reading signals and real Market OS evidence." />
+  <meta name="description" content="RESONANCE Measurement & Privacy documents the no-identity analytics contract, the verified v0.8 collector activation and the boundary between reading signals and real Market OS evidence." />
   <meta name="theme-color" content="#f4f0e8" />
   <title>Measurement & Privacy | RESONANCE</title>
   <link rel="stylesheet" href="styles.css" />
@@ -36,8 +36,8 @@
       <aside class="article-rail">
         <div class="rail-card">
           <p class="section-label">Runtime status</p>
-          <strong data-analytics-status>Disabled — collector selected, production endpoint not configured.</strong>
-          <span>v0.8 selects the collector architecture without silently activating collection.</span>
+          <strong data-analytics-status>Active &amp; verified — production collector enabled.</strong>
+          <span>v0.8 is deployed and the public runtime has passed the enabled-mode live analytics audit.</span>
         </div>
         <div class="rail-card rail-dark">
           <p class="section-label">Core invariant</p>
@@ -86,7 +86,7 @@
           <tbody>
             <tr><td>Plausible</td><td>Mature, cookieless, EU-hosted analytics and custom events.</td><td>Unique-visitor counting intentionally uses request IP + User-Agent in a rotating daily identifier.</td><td>Not selected for this narrow spine.</td></tr>
             <tr><td>Umami</td><td>Open source, flexible events, hosted free tier and self-hosting.</td><td>Session-oriented model; send API requires a valid User-Agent and location metrics use sender IP.</td><td>Not selected for this narrow spine.</td></tr>
-            <tr><td>Minimal Worker</td><td>Exact five-field allowlist, no session/user ID, no geography, simple aggregate time-series storage.</td><td>We own deployment and aggregate reporting; Cloudflare still processes network metadata as infrastructure provider.</td><td><strong>Selected, not activated.</strong></td></tr>
+            <tr><td>Minimal Worker</td><td>Exact five-field allowlist, no session/user ID, no geography, simple aggregate time-series storage.</td><td>We own deployment and aggregate reporting; Cloudflare still processes network metadata as infrastructure provider.</td><td><strong>Active &amp; verified.</strong></td></tr>
           </tbody>
         </table>
 
@@ -104,8 +104,9 @@ platform timestamp = receipt time</pre></div>
         <h2>Privacy signals are authoritative</h2>
         <p>If Global Privacy Control or Do Not Track is enabled, the browser runtime does not emit analytics events. Automated browser audits are also excluded so Site Health does not manufacture its own readership.</p>
 
-        <h2>Selection is not activation</h2>
-        <p>The journal still sends nothing because `RESONANCE_ANALYTICS_ENDPOINT` is not configured. The repository now contains a deploy-ready Worker, adversarial unit tests, a source/privacy verifier and a pinned Wrangler dry-run. Production activation requires a deployed endpoint, live CORS/schema smoke tests and a synthetic Analytics Engine write before the existing live analytics contract is allowed to report <strong>enabled</strong>.</p>
+        <h2>Activation is evidence-gated</h2>
+        <p>`RESONANCE_ANALYTICS_ENDPOINT` is now configured for the production Pages build. Activation followed the same proof discipline as the rest of Site Health: deploy the Worker, pass live CORS and schema rejection tests, accept an exact five-field synthetic event, read that event back from Workers Analytics Engine via SQL, build the public site in <strong>enabled</strong> mode, then pass the post-deploy live analytics audit.</p>
+        <p><a href="collector-live-activation.json">Open the machine-readable collector activation proof →</a></p>
 
         <h2>Analytics is not demand evidence</h2>
         <p>Reading and clicking are useful behavioral signals, but they do not prove a real workflow, a real failure, willingness to test, product-market fit or revenue. Those claims begin only when a person submits a generalized workflow and it enters the existing Problem Card / Product Signal / Demand Graph process.</p>
@@ -128,8 +129,8 @@ platform timestamp = receipt time</pre></div>
 
         <section class="market-question">
           <p class="section-label">Inspect the contract</p>
-          <h2>The collector decision and implementation live with the publication.</h2>
-          <p>The machine-readable event schema, v0.8 decision, Worker source, adversarial tests and CI verifier are public in the RESONANCE repository.</p>
+          <h2>The collector decision, implementation and activation evidence live with the publication.</h2>
+          <p>The machine-readable event schema, v0.8 decision, Worker source, adversarial tests, CI verifier and live activation proof are public in the RESONANCE repository.</p>
           <div class="market-actions">
             <a class="button" href="https://github.com/safal207/RESONANCE/tree/main/analytics" target="_blank" rel="noreferrer">Open analytics contract →</a>
             <a class="text-link" href="quality.html">Back to Site Health →</a>
