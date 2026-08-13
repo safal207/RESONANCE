@@ -1,0 +1,111 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "025-capu-mmu-translation-recovery",
+  "title": "CaPU v0.20 — MMU Translation + Precise Page-Fault Recovery",
+  "status": "PASS",
+  "scope": "bounded reduced-width exact recovery of a one-entry address-translation memory view and precise page-fault context bound to the already-verified v0.19 architectural/causal/privilege/nested-trap checkpoint authority",
+  "project": "safal207/CaPU",
+  "pull_request": 73,
+  "verified_content_head": "9fdb2ea1eaabeebce18c9d15b12cb6cfd109e1a9",
+  "workflow": {
+    "name": "CaPU vCML MMU Translation Recovery v0.20",
+    "run_id": 31657042934,
+    "rtl_job_id": 94313690788,
+    "rtl_job_status": "success",
+    "formal_job_id": 94313742357,
+    "formal_job_status": "success"
+  },
+  "canonical_checkpoint_digest": "4d9df3fc8b25c1025e08e1a41211c9f42e09d15c1843837240f46857466c4f99",
+  "formal": {
+    "solver": "z3 4.8.12",
+    "yosys": "0.33 (git sha1 2584903a060)",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "safety_depth": 30,
+    "cover_depth": 36,
+    "cover_witness_files": 8,
+    "safety_result": "DONE (PASS, rc=0)",
+    "cover_result": "DONE (PASS, rc=0)",
+    "formal_input_sha256": "685ec5828d58d7523158d55f0b05ef212c8fd28e61bfe5462023764f264ad5d0",
+    "formal_log_sha256": "8fabbdec657bd0cfb928ca5ff2d670a6b71596356a060708c112c5c98b672a06",
+    "cover_log_sha256": "dc79e43f8c077e91b617ae6dcc81ee667aeddcc30dd51fdbc9fdf89d5f134ea7",
+    "v0_19_regression_log_sha256": "057b7d7755caa52021be2656bad6d12bc61f73ed73a6d3dadd7e4a261ccd5b9a",
+    "v0_19_safety_regression": "PASS"
+  },
+  "artifacts": [
+    {
+      "name": "capu-vcml-v20-mmu-translation-evidence",
+      "artifact_id": 9164763988,
+      "sha256": "6a71ef942d5f03e439e64a19826dc0a5e039c51d41aa06a311bbc8d2678e0421"
+    },
+    {
+      "name": "capu-vcml-v20-mmu-translation-formal-evidence",
+      "artifact_id": 9164801987,
+      "sha256": "fec5c1ffd40cd12b758f7b6256eb627bbbfa63271a1518b6e40e46c083e06ebe"
+    }
+  ],
+  "executable_hashes": {
+    "v20_rtl_sha256": "91aeb6a38d4a7fde3357ff3ef092c0c4dfdb7b8e50b6d59fac59b0f76abddaea",
+    "v20_tb_sha256": "7fa20cc3cd934dfcead2baf8b33a3f0e0d5bdb8763e2747406ce288fe91e81a7",
+    "v20_canonical_encoder_sha256": "c9abbdedebe2705c5706ac030343ae093cf2bef00be8821b75b34ae7a945491d",
+    "v20_canonical_test_sha256": "f88b656ffd12b07013a2c3e91db32106a9ad8987d17f27bbd093b1796f9b42b7",
+    "trajectory_log_sha256": "ac253779973f407b51774da370a5612b1ebba8a076cd6c436adcb256b112193f",
+    "canonical_python_log_sha256": "6bd2b8d3099427dd6245e624ca44a08bd617af7c14a75645e7374d16a72571da",
+    "v0_19_deterministic_regression_log_sha256": "ceb61b3722b98560fb5aa0bdfe9b2ababd8f88ad67d2670c2aab4419c737209d",
+    "v0_19_canonical_regression_log_sha256": "d40f657b18a8285760b8d4f4da6534925c04c10f54fef6a0d4870ca7c01f5c29"
+  },
+  "checkpoint_state": [
+    "complete v0.19 checkpoint state",
+    "translation_root",
+    "asid",
+    "translation_epoch",
+    "canonical_vpn",
+    "canonical_ppn",
+    "permission_r",
+    "permission_w",
+    "permission_x",
+    "permission_u",
+    "fault_pending",
+    "fault_vaddr",
+    "fault_cause"
+  ],
+  "runtime_invariants": [
+    "RESTORE_ACCEPT => EXACT_BOUND_MEMORY_VIEW",
+    "FOREIGN_OR_STALE_MEMORY_VIEW => RESTORE_REJECT",
+    "TRANSLATION_HIT => EXACT_PPN_PLUS_OFFSET",
+    "PAGE_FAULT => NO_VISIBLE_EFFECT",
+    "PAGE_FAULT => SPECULATION_KILL",
+    "RECOVERY_OR_RESTORE => NO_VISIBLE_EFFECT",
+    "PREPARE_ACCEPT => EXACT_COMMITTED_MEMORY_VIEW"
+  ],
+  "deterministic_paths": [
+    "exact restore re-establishes root 3, ASID 5 and translation epoch 7",
+    "exact translation maps the checkpoint-bound VPN to PPN while preserving page offset",
+    "write against a non-writable mapping raises a precise permission fault and kills the pending speculative effect",
+    "foreign translation root is rejected",
+    "foreign ASID is rejected",
+    "stale translation epoch is rejected",
+    "foreign fault context is rejected",
+    "stale candidate memory view is rejected before checkpoint authority",
+    "exact current memory view completes checkpoint prepare/persist/authority",
+    "recovery closes runtime readiness"
+  ],
+  "exact_head_regression": {
+    "all_registered_pull_request_workflows_green": true,
+    "workflows": [
+      "CaPU vCML MMU Translation Recovery v0.20",
+      "Validate Examples",
+      "CaPU Core v0 RTL Smoke"
+    ],
+    "v0_19_deterministic_regression_in_v0_20_workflow": "PASS",
+    "v0_19_canonical_regression_in_v0_20_workflow": "PASS",
+    "v0_19_bounded_safety_regression_in_v0_20_workflow": "PASS"
+  },
+  "verification_notes": [
+    "an early canonical-test failure was caused by a missing repository-root Python import bootstrap and did not change RTL semantics",
+    "an early formal-run failure was caused by SBY source-path packaging after files were copied into the SBY src directory and did not change RTL semantics"
+  ],
+  "upstream_assumption": "the embedded v0.19 checkpoint state remains the authoritative base and canonical SHA-256 commitment verification is trusted off-path; v0.20 does not implement SHA-256 internally",
+  "claim_boundary": "bounded reduced-width one-entry translation/page-fault recovery result; no full or multi-level page-table walk, TLB refill/shootdown, accessed/dirty bits, huge pages, PMP/PMA, complete CSR semantics, virtualization/nested translation, cache/coherence, multicore address-space synchronization, production speculation/reorder-buffer semantics, RTL SHA-256/verifier correctness, durable-media correctness, production widths or unbounded correctness is claimed",
+  "vulnerability_claim": false,
+  "external_safety_certification": false
+}
