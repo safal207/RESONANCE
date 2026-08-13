@@ -1,0 +1,118 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "037-capu-queue-epoch-slot-reuse",
+  "title": "CaPU v0.32 — Queue-Epoch Slot Reuse / Cross-Epoch ABA Protection",
+  "status": "PASS",
+  "scope": "bounded reduced-width one-slot lifecycle model with exact-successor queue-epoch reuse, stale prior-epoch evidence rejection/quarantine, stale-checkpoint dominance by the current durable slot identity and fail-closed queue-epoch exhaustion",
+  "project": "safal207/CaPU",
+  "pull_request": 86,
+  "verified_content_head": "a3f1336825f245166e042fb14ed0f7184789a8e8",
+  "base_content_head": "bd3786a8a63912d34686d0ec87363caf85d60efc",
+  "merge_ref": "b7ad892acdd41e2bf7b11c1cf9baf47f23cad65a",
+  "workflow": {
+    "name": "CaPU vCML Queue-Epoch Slot Reuse v0.32",
+    "run_id": 31691123695,
+    "deterministic_job_id": 94418442925,
+    "deterministic_job_status": "success",
+    "formal_job_id": 94418442982,
+    "formal_job_status": "success",
+    "validate_examples_run_id": 31691123656,
+    "validate_examples_job_id": 94418442653,
+    "validate_examples_status": "success",
+    "core_rtl_smoke_run_id": 31691123726,
+    "core_rtl_smoke_deterministic_job_id": 94418443277,
+    "core_rtl_smoke_formal_job_id": 94418541790,
+    "core_rtl_smoke_status": "success"
+  },
+  "model": {
+    "slot_count": 1,
+    "formal_identity_width_bits": 2,
+    "exact_successor_epoch_reuse": true,
+    "epoch_wrap_policy": "fail-closed",
+    "same_numeric_transaction_ids_reused_across_epochs": true,
+    "stale_evidence_quarantine": true
+  },
+  "canonical": {
+    "digest_sha256": "177223eea1fc5915e80667531b40f4f134a4493b05667e39defbd3c52a3873c1",
+    "mutation_checks": [
+      "queue_epoch_change_digest_changed",
+      "retired_epoch_change_digest_changed",
+      "checkpoint_epoch_change_digest_changed",
+      "durable_identity_change_digest_changed",
+      "issue_receipt_change_digest_changed",
+      "stale_evidence_quarantine_digest_changed",
+      "same_epoch_slot_reuse_rejected",
+      "skipped_epoch_slot_reuse_rejected",
+      "unknown_without_issue_receipt_rejected",
+      "committed_without_completion_receipt_rejected",
+      "future_checkpoint_epoch_rejected",
+      "stale_checkpoint_predates_reused_slot_preserved"
+    ]
+  },
+  "formal": {
+    "schema": "capu.hardware.queue-epoch-slot-reuse-formal-proof.v0.32",
+    "proof_method": "bounded model checking",
+    "safety_depth": 14,
+    "safety_status": "PASS",
+    "cover_depth": 28,
+    "cover_status": "PASS",
+    "cover_witnesses": 8,
+    "v0_31_safety_regression": "PASS",
+    "formal_input_sha256": "acb04bca813dbea2d52e1dafc31c80b29aaa84b45911a80c22b8dcebdb4e53c7",
+    "safety_log_sha256": "36b7a222e173ed4d70efb922661d6b9709c1170a26450f58398b775127116454",
+    "cover_log_sha256": "03882adcb519fd757da7cf6e1513e7fec630a36089bc490e609dd4a2da2374ce",
+    "v0_31_regression_log_sha256": "d0be005b4dcf3cd489c94ae975b45e31af16fae91921fcdec9c6c049abbf2bbb",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "yosys_version": "Yosys 0.33 (git sha1 2584903a060)",
+    "z3_version": "Z3 version 4.8.12 - 64 bit"
+  },
+  "artifacts": {
+    "executable": {
+      "id": 9177420960,
+      "sha256": "a0de73e3a83dec8450f3f5eb7a16ab341f1bd85bbc7bc6599d80f7899dd61946"
+    },
+    "formal": {
+      "id": 9177465671,
+      "sha256": "bc32595403c668ca34f276e052306d85ef9f7e7d8787971753637ee373700b01"
+    }
+  },
+  "sealed_hashes": {
+    "rtl": "6edbba22ecde859836ac024c5c59d3249afcf16232854685ca69a447b43f246d",
+    "testbench": "ffe58ba0eccd95fada1a5f3bbd4867383b3a78419344632ab7039e0b72c60171",
+    "canonical_encoder": "d3e26cfe8d0d2128955eb710bc69796e9e97d8589d65b8af9916fc03cc4f4199",
+    "canonical_test": "5113fb3d0738b6d52a90c4ff12146c69af7beded65c3ee06ff297b1da827fe03",
+    "trajectory_log": "3634200a0d166088843f88038f6d1be5d1617de9b1c56576a42efef63f68748e",
+    "canonical_log": "0339e7409ec9b08bf2226ea508a4946c4c6b0dcf983c057a3eec42a050d306dc",
+    "v0_31_deterministic_regression_log": "0607d7e316e7f794edf5ea6d9b5cc34a474ec28df6e34ca54038d011fd8aa5da",
+    "v0_31_canonical_regression_log": "5440e55cf4227405c5c7f76073d4b4a5d9ebb3769f11d9bc9da8e823e78eaa3f"
+  },
+  "verified": [
+    "exact-successor queue-epoch slot reuse",
+    "same-epoch and skipped-epoch reuse rejection",
+    "stale prior-epoch evidence rejection and quarantine",
+    "no current authority mutation from stale prior-epoch evidence",
+    "current durable slot dominance over stale predecessor checkpoint",
+    "retired slot non-resurrection from stale checkpoint",
+    "durable receipt preservation across recovery",
+    "fail-closed queue-epoch exhaustion",
+    "v0.31 deterministic, canonical and bounded-safety regressions"
+  ],
+  "out_of_scope": [
+    "queue-epoch wrap safety",
+    "arbitrary queue depth",
+    "multiple reusable slots",
+    "asynchronous free lists",
+    "persistent monotonic epochs across real power loss",
+    "cancellation",
+    "arbitrary transaction reordering",
+    "arbitrary overlap graphs",
+    "production PCIe/CXL/NoC transport",
+    "payload-value semantics",
+    "byte tearing",
+    "IOMMU/cache/coherence",
+    "evidence authenticity",
+    "production widths",
+    "liveness/fairness",
+    "unbounded correctness"
+  ]
+}
