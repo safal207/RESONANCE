@@ -1,0 +1,19 @@
+{
+  "schema":"resonance.verified-report.v1",
+  "report_id":"038-capu-queue-epoch-wrap-incarnation",
+  "title":"CaPU v0.33 — Queue-Epoch Wrap / Authority Incarnation",
+  "status":"PASS",
+  "project":"safal207/CaPU",
+  "pull_request":87,
+  "verified_content_head":"f9d3832d84dc2415617a782cb226af83943b5ecd",
+  "base_content_head":"a3f1336825f245166e042fb14ed0f7184789a8e8",
+  "merge_ref":"43220a1f5587d7b276537d2914f3bde095f6361e",
+  "runs":{"v33":31705641935,"evidence":31705641770,"core":31705641812,"validate":31705641746},
+  "jobs":{"deterministic":94465382435,"formal":94465382553,"evidence":94465382308,"core_smoke":94465391993,"core_formal":94465534308,"validate":94465381660},
+  "canonical_digest_sha256":"b2a12198076c7b58ef193648bababa2d64a24b80db6581c0849481ab611634ca",
+  "formal":{"method":"bounded model checking","identity_width_bits":2,"slot_count":1,"depth":24,"cover_depth":44,"cover_witnesses":4,"v0_32_regression":"PASS","input_sha256":"1056503e0fe76ebb432e859d41157e393c51652f53a6da09e168123b8ab7edbf","safety_sha256":"499aa048dfedad377311e189883999bc77fad697401d7cae86f488a935baae03","cover_sha256":"8046f95526d80e4d906eed0121fdce4b14b070f662b17e640244d129a4f63d79","v0_32_regression_sha256":"4e9f79ab33ce5f22390f56f036f388e7457e440bf64a3dec26dbb379df7f1645","sby_sha":"b1a1e98cba941ec8433f8dc27f416cd7bb7f14be"},
+  "artifacts":[{"id":9183052862,"name":"capu-vcml-v33-queue-epoch-wrap-evidence","zip_sha256":"ef9a09e4412d6dd20088338f5345e3c1df53e6407f745aec75ba6a25ce9b026d"},{"id":9183088442,"name":"capu-vcml-v33-queue-epoch-wrap-formal-evidence","zip_sha256":"c14527a9392abae54457f1ee8cb97c968f24be53bf0de42e32c0b3e7d2a35490"}],
+  "verified":["queue-epoch wrap requires successor incarnation","older-incarnation same-numeric-epoch evidence has no current resolution authority","stale pre-wrap checkpoint cannot override durable post-wrap identity","recovery preserves durable incarnation and queue epoch","incarnation exhaustion fails closed"],
+  "out_of_scope":["incarnation wrap safety","persistent monotonic incarnation across real power loss","cryptographic anti-replay","arbitrary queue depth","production transport","liveness/fairness","production widths","unbounded correctness"],
+  "recovery_boundary":"Live-runtime stale evidence is rejected/quarantined; recovery-time external inputs carry no resolution authority and are outside quarantine-ledger persistence claim."
+}
