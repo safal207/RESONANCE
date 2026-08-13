@@ -7,7 +7,7 @@ const base = baseArg >= 0 ? process.argv[baseArg + 1] : 'https://safal207.github
 const modeArg = process.argv.indexOf('--mode');
 const mode = modeArg >= 0 ? process.argv[modeArg + 1] : 'disabled';
 const endpointArg = process.argv.indexOf('--expected-endpoint');
-const expectedEndpoint = endpointArg >= 0 ? process.argv[endpointArg + 1] : '';
+const expectedEndpoint = endpointArg >= 0 ? new URL(process.argv[endpointArg + 1]).toString() : '';
 const outputArg = process.argv.indexOf('--output');
 const output = outputArg >= 0 ? process.argv[outputArg + 1] : 'analytics-live-results';
 const enforce = process.argv.includes('--enforce');
