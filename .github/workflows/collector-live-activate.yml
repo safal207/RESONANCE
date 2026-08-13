@@ -1,0 +1,164 @@
+name: RESONANCE Collector Live Activation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - agent/collector-live-activate-v09
+    paths:
+      - '.github/workflows/collector-live-activate.yml'
+      - 'collector/**'
+      - 'scripts/verify-collector.mjs'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: resonance-collector-live-activation
+  cancel-in-progress: false
+
+jobs:
+  deploy-and-verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify deployment secrets are present
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          test -n "$CLOUDFLARE_ACCOUNT_ID"
+          test "${#CLOUDFLARE_ACCOUNT_ID}" -eq 32
+
+      - name: Re-run collector source and adversarial contracts
+        run: |
+          node --test collector/tests/*.test.mjs
+          node scripts/verify-collector.mjs
+
+      - name: Deploy collector with pinned Wrangler
+        id: deploy
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes wrangler@4.115.0 deploy --config collector/wrangler.jsonc 2>&1 | tee deploy.log
+          ENDPOINT="$(grep -Eo 'https://[A-Za-z0-9.-]+\.workers\.dev/?' deploy.log | tail -1 | sed 's#/$##')"
+          if [ -z "$ENDPOINT" ]; then
+            echo 'Could not resolve workers.dev endpoint from Wrangler output.' >&2
+            exit 1
+          fi
+          echo "endpoint=$ENDPOINT" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "$ENDPOINT" > collector-live-endpoint.txt
+
+      - name: Live CORS, schema and synthetic-write smoke
+        id: smoke
+        shell: bash
+        env:
+          ENDPOINT: ${{ steps.deploy.outputs.endpoint }}
+        run: |
+          set -euo pipefail
+          ORIGIN='https://safal207.github.io'
+          MARKER="/RESONANCE/__collector-smoke-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.html"
+          echo "marker=$MARKER" >> "$GITHUB_OUTPUT"
+
+          preflight_code="$(curl -sS -o /tmp/preflight.body -w '%{http_code}' -X OPTIONS "$ENDPOINT" \
+            -H "Origin: $ORIGIN" \
+            -H 'Access-Control-Request-Method: POST' \
+            -H 'Access-Control-Request-Headers: content-type')"
+          test "$preflight_code" = '204'
+
+          bad_origin_code="$(curl -sS -o /tmp/bad-origin.json -w '%{http_code}' -X POST "$ENDPOINT" \
+            -H 'Origin: https://evil.example' \
+            -H 'Content-Type: application/json' \
+            --data '{"schema_version":1,"event":"meaningful_read","path":"/RESONANCE/bad-origin.html","language":"en","content_kind":"article"}')"
+          test "$bad_origin_code" = '403'
+
+          extra_field_code="$(curl -sS -o /tmp/extra-field.json -w '%{http_code}' -X POST "$ENDPOINT" \
+            -H "Origin: $ORIGIN" \
+            -H 'Content-Type: application/json' \
+            --data '{"schema_version":1,"event":"meaningful_read","path":"/RESONANCE/extra-field.html","language":"en","content_kind":"article","email":"forbidden@example.invalid"}')"
+          test "$extra_field_code" = '400'
+          jq -e '.error == "unexpected_fields"' /tmp/extra-field.json >/dev/null
+
+          valid_payload="$(jq -nc --arg path "$MARKER" '{schema_version:1,event:"meaningful_read",path:$path,language:"en",content_kind:"article"}')"
+          valid_code="$(curl -sS -o /tmp/valid.body -w '%{http_code}' -X POST "$ENDPOINT" \
+            -H "Origin: $ORIGIN" \
+            -H 'Content-Type: application/json' \
+            --data "$valid_payload")"
+          test "$valid_code" = '204'
+
+          SQL="SELECT blob1 AS event, blob2 AS path, blob3 AS language, blob4 AS content_kind, blob5 AS schema_version, SUM(_sample_interval * double1) AS event_count FROM resonance_market_events_v1 WHERE timestamp > NOW() - INTERVAL '30' MINUTE AND blob2 = '$MARKER' GROUP BY event, path, language, content_kind, schema_version"
+          found=0
+          for attempt in $(seq 1 15); do
+            curl --fail-with-body -sS \
+              "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/analytics_engine/sql" \
+              -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+              --data "$SQL" > analytics-query.json
+            if grep -Fq "$MARKER" analytics-query.json; then
+              found=1
+              break
+            fi
+            sleep 4
+          done
+          test "$found" = '1'
+
+          jq -n \
+            --arg schema 'resonance.collector.live-activation.v1' \
+            --arg verdict 'pass' \
+            --arg endpoint "$ENDPOINT" \
+            --arg marker "$MARKER" \
+            --arg preflight "$preflight_code" \
+            --arg bad_origin "$bad_origin_code" \
+            --arg extra_field "$extra_field_code" \
+            --arg valid "$valid_code" \
+            --arg run_id "$GITHUB_RUN_ID" \
+            --arg sha "$GITHUB_SHA" \
+            '{schema:$schema,verdict:$verdict,endpoint:$endpoint,marker:$marker,http:{preflight:$preflight,bad_origin:$bad_origin,extra_field:$extra_field,valid:$valid},analytics_engine:{synthetic_marker_observed:true},github:{run_id:$run_id,sha:$sha}}' \
+            > collector-live-evidence.json
+
+          cat > collector-live-evidence.md <<EOF
+          # RESONANCE Collector Live Activation
+
+          **Verdict:** PASS
+          **Endpoint:** \`$ENDPOINT\`
+          **Synthetic marker:** \`$MARKER\`
+
+          | Gate | Result |
+          |---|---:|
+          | Allowed-origin CORS preflight | $preflight_code |
+          | Disallowed origin | $bad_origin_code |
+          | Sixth-field rejection | $extra_field_code |
+          | Valid five-field event | $valid_code |
+          | Analytics Engine synthetic marker | observed |
+
+          Evidence boundary: this proves the deployed Worker accepted only the tested live contract and that the synthetic event became queryable in Workers Analytics Engine. It does not prove delivery completeness, readership, demand or product-market fit.
+          EOF
+          cat collector-live-evidence.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload immutable live activation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-collector-live-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            deploy.log
+            collector-live-endpoint.txt
+            collector-live-evidence.json
+            collector-live-evidence.md
+            analytics-query.json
+            collector-contract-summary.json
+            collector-contract-summary.md
+          if-no-files-found: warn
+          retention-days: 90
