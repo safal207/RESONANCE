@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import { pathToFileURL } from 'node:url';
+
 const DATASET = 'resonance_market_events_v1';
 
 function arg(name) {
@@ -42,7 +44,7 @@ GROUP BY event, path, language, content_kind, schema_version
 ORDER BY path ASC, language ASC, content_kind ASC, event ASC`;
 }
 
-if (import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
     process.stdout.write(`${buildQuery(arg('--window-start'), arg('--window-end'))}\n`);
   } catch (error) {
