@@ -48,6 +48,26 @@ jobs:
           node --test collector/tests/*.test.mjs
           node scripts/verify-collector.mjs
 
+      - name: Ensure account workers.dev subdomain exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          API="https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/workers/subdomain"
+          current_code="$(curl -sS -o subdomain-current.json -w '%{http_code}' "$API" \
+            -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}")"
+          if [ "$current_code" = '200' ] && jq -e '.success == true and (.result.subdomain | type == "string" and length > 0)' subdomain-current.json >/dev/null 2>&1; then
+            jq -r '.result.subdomain' subdomain-current.json > workers-dev-subdomain.txt
+          else
+            desired='resonance-safal207'
+            create_code="$(curl -sS -o subdomain-registration.json -w '%{http_code}' -X PUT "$API" \
+              -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
+              -H 'Content-Type: application/json' \
+              --data "{\"subdomain\":\"${desired}\"}")"
+            test "$create_code" = '200'
+            jq -e '.success == true and .result.subdomain == "resonance-safal207"' subdomain-registration.json >/dev/null
+            printf '%s\n' "$desired" > workers-dev-subdomain.txt
+          fi
+
       - name: Deploy collector with pinned Wrangler
         id: deploy
         shell: bash
@@ -56,8 +76,8 @@ jobs:
           npx --yes wrangler@4.115.0 deploy --config collector/wrangler.jsonc 2>&1 | tee deploy.log
           ENDPOINT="$(grep -Eo 'https://[A-Za-z0-9.-]+\.workers\.dev/?' deploy.log | tail -1 | sed 's#/$##')"
           if [ -z "$ENDPOINT" ]; then
-            echo 'Could not resolve workers.dev endpoint from Wrangler output.' >&2
-            exit 1
+            SUBDOMAIN="$(cat workers-dev-subdomain.txt)"
+            ENDPOINT="https://resonance-analytics-collector.${SUBDOMAIN}.workers.dev"
           fi
           echo "endpoint=$ENDPOINT" >> "$GITHUB_OUTPUT"
           printf '%s\n' "$ENDPOINT" > collector-live-endpoint.txt
@@ -154,6 +174,9 @@ jobs:
           name: resonance-collector-live-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             deploy.log
+            workers-dev-subdomain.txt
+            subdomain-current.json
+            subdomain-registration.json
             collector-live-endpoint.txt
             collector-live-evidence.json
             collector-live-evidence.md
