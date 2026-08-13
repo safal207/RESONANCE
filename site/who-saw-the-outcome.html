@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Who Saw the Outcome? RESONANCE examines the missing provenance layer after an AI agent acts: observer identity, vantage, evidence and causal binding." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:title" content="Who Saw the Outcome? | RESONANCE" />
+  <meta property="og:description" content="Authorization is only the first half of agent trust. The consequence needs a witness, and the witness needs provenance." />
+  <meta property="og:type" content="article" />
+  <meta property="article:published_time" content="2026-08-13" />
+  <link rel="canonical" href="https://safal207.github.io/RESONANCE/who-saw-the-outcome.html" />
+  <title>Who Saw the Outcome? | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+  <link rel="stylesheet" href="market.css" />
+</head>
+<body data-share-text="Who saw the outcome? Authorization is only half of agent trust. The consequence needs a witness, and the witness needs provenance.">
+  <a class="skip-link" href="#article">Skip to article</a>
+
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Primary navigation">
+      <a href="ai-agents.html">AI</a>
+      <a href="index.html#science">Science</a>
+      <a href="index.html#trust">Trust</a>
+      <a href="open-problems.html">Open Problems</a>
+      <a href="verified-workflow.html">Verified Workflow</a>
+      <a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="article">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row">
+        <p class="section-label">Feature · Trust / Verification</p>
+        <p class="article-status">Published · 13 Aug 2026</p>
+      </div>
+      <h1 class="article-title">Who Saw the Outcome?</h1>
+      <p class="article-dek">Authorization is only the first half of agent trust. After an AI system acts, a harder question begins: who observed what actually happened, from where, and against which evidence?</p>
+      <div class="byline-row">
+        <p>By <strong>RESONANCE Editorial</strong></p>
+        <p>Issue 001 · The Age of Agents</p>
+      </div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Article summary">
+        <div class="rail-card">
+          <p class="section-label">Core claim</p>
+          <strong>The consequence needs a witness.</strong>
+          <span>And the witness needs provenance.</span>
+        </div>
+        <div class="rail-card rail-dark">
+          <p class="section-label">Invariant</p>
+          <code>decision_provenance != outcome_provenance</code>
+        </div>
+        <div class="rail-card">
+          <p class="section-label">Missing axis</p>
+          <strong>observer + vantage</strong>
+          <span>Source class alone cannot tell us who saw the outcome or from where.</span>
+        </div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">AI-agent safety is usually framed around a pre-action question: <em>was the agent allowed to do this?</em> That matters. It is not enough. Once an agent touches money, code, infrastructure, permissions or another consequential system, a second question becomes equally important: <strong>who says what actually happened?</strong></p>
+
+        <div class="pull-quote">A valid authorization can prove that an action was permitted. It cannot, by itself, prove that the action happened, happened once, settled correctly, or was independently observed.</div>
+
+        <h2>The authorization trap</h2>
+        <p>Imagine an agent asks to transfer funds. A guardrail evaluates the proposal and returns <code>ALLOW</code>. The transfer API is called. A response arrives. The agent reports success.</p>
+
+        <div class="trajectory-box">
+          <span>proposed action</span><i>→</i><span>decision</span><i>→</i><span>ALLOW</span><i>→</i><span>execution</span><i>→</i><span>?</span>
+        </div>
+
+        <p>The question mark is where many trust architectures become vague. The pre-action decision and the post-action outcome are different facts, potentially produced by different parties, from different observation positions, with different evidence.</p>
+
+        <h2>Decision provenance is not outcome provenance</h2>
+        <p>The boundary is simple enough to write as an invariant:</p>
+
+        <div class="protocol-box"><code>decision_provenance != outcome_provenance</code></div>
+
+        <p>A decision issuer could be an in-process policy engine, an external guardrail service, a human approver or an independent verifier. The later outcome could be observed by the agent itself, the tool provider, an internal ledger, a settlement network, a blockchain RPC endpoint or an external auditor.</p>
+
+        <p>Those roles should not collapse into one trust domain by convenience. Otherwise a system can silently become both actor and grader.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Four questions</p>
+          <div><b>1</b><p><strong>Was the action authorized?</strong><br />Which policy and authority produced the decision?</p></div>
+          <div><b>2</b><p><strong>Is this the same operation?</strong><br />Bind the later claim to the same logical operation and concrete execution.</p></div>
+          <div><b>3</b><p><strong>What outcome was observed?</strong><br />Settled, failed, uncertain, rolled back, duplicated or something else?</p></div>
+          <div><b>4</b><p><strong>Who observed it?</strong><br />From what vantage, and against which evidence?</p></div>
+        </section>
+
+        <h2>`source_class` is necessary — and insufficient</h2>
+        <p>A public architecture discussion around CrewAI's proposed <code>GuardrailProvider</code> produced an unusually useful comparison. A RESONANCE causal-provenance proposal was checked against an independently developed, already-shipped <code>verdict_outcome</code> mechanism.</p>
+
+        <p>The comparison found that the shipped mechanism had independently arrived at several of the same boundaries: outcome-side source class was separate from decision-side source class, the outcome cited the earlier decision, and the evidence mechanism travelled with the outcome observation.</p>
+
+        <p>Then the comparison exposed a concrete gap: there was no distinct <code>outcome_observer_id</code> or <code>outcome_vantage</code> beyond <code>source_class</code>.</p>
+
+        <div class="pull-quote"><strong>Source class tells us how the outcome was established. Observer identity and vantage tell us who observed it, and from where.</strong></div>
+
+        <p>Consider two records:</p>
+
+        <div class="market-kpi"><pre>source_class: attested
+outcome_observer_id: verifier-A
+outcome_vantage: ethereum_rpc</pre></div>
+
+        <div class="market-kpi"><pre>source_class: attested
+outcome_observer_id: wallet-provider
+outcome_vantage: internal_ledger</pre></div>
+
+        <p>Both can be honestly labelled <code>attested</code>. They are not equivalent observations. One may see public settlement state; the other may see internal accounting state. Their blind spots and independence properties differ.</p>
+
+        <h2>A minimal outcome-provenance receipt</h2>
+        <p>The answer is not necessarily a giant schema. A deliberately small provider-neutral spine can preserve the identities that matter:</p>
+
+        <div class="market-kpi"><pre>logical_operation_id: op-123
+execution_id: attempt-2
+pre_action_decision_ref: sha256:...
+observed_outcome: settled
+outcome_provenance:
+  source_class: attested
+  observer_id: verifier-A
+  vantage: ethereum_rpc
+  observation_basis: on-chain-settlement
+  evidence_ref: sha256:...
+observed_at: 2026-08-13T00:00:00Z</pre></div>
+
+        <p>The exact field names can change. The causal structure should not.</p>
+
+        <div class="protocol-flow" aria-label="Outcome provenance causal spine">
+          <span>intent</span><i>→</i><span>decision</span><i>→</i><span>execution</span><i>→</i><span>outcome</span><i>→</i><span>observer</span><i>→</i><span>vantage</span><i>→</i><span>evidence</span>
+        </div>
+
+        <h2>Why independent convergence matters</h2>
+        <p>The interesting part was not that two people liked the same architecture. The external comparison was made against a shipped mechanism, named concrete field-level overlap, and exposed one missing dimension.</p>
+
+        <div class="trajectory-box">
+          <span>causal proposal</span><i>→</i><span>shipped implementation comparison</span><i>→</i><span>field convergence</span><i>→</i><span>observer/vantage gap</span>
+        </div>
+
+        <p>That makes the sequence falsifiable. Another reader can inspect the public comments and challenge the mapping.</p>
+
+        <p>The claim boundary is equally important: this is <strong>not</strong> CrewAI adoption, endorsement or certification. It is an externally observed architecture convergence that generated a concrete next test.</p>
+
+        <h2>Do not patch the schema just because the gap is interesting</h2>
+        <p>The external implementer explicitly chose not to perform another reactive schema edit after several real bug-fix rounds. That restraint is part of the signal.</p>
+
+        <p>Before observer and vantage become a standard field pair, they should survive mutation and conformance tests that distinguish:</p>
+
+        <ul>
+          <li>same source class, different observer;</li>
+          <li>same observer, different vantage;</li>
+          <li>missing observer identity;</li>
+          <li>missing or ambiguous vantage;</li>
+          <li>an evidence mechanism incompatible with the claimed vantage;</li>
+          <li>two observers reporting conflicting outcomes;</li>
+          <li>self-observation incorrectly promoted to independent observation.</li>
+        </ul>
+
+        <p>If changing the observer or vantage never changes a verification outcome, the new fields may be decoration. If intentionally wrong provenance changes the verdict, the axis is load-bearing.</p>
+
+        <h2>The money case makes the problem obvious</h2>
+        <p>Consider a programmable wallet with a spending policy. The policy service says the transaction was allowed. The wallet provider says the debit succeeded. A chain observer says settlement reverted. A webhook says <code>completed</code>. The accounting ledger remains unchanged.</p>
+
+        <p>There is no useful universal label called <code>verified=true</code> for that situation.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">A verifier now needs</p>
+          <div><b>A</b><p><strong>Authorization identity</strong><br />Which action and policy were approved?</p></div>
+          <div><b>B</b><p><strong>Execution identity</strong><br />Which attempt produced each observation?</p></div>
+          <div><b>C</b><p><strong>Observation identity</strong><br />Who produced each outcome claim?</p></div>
+          <div><b>D</b><p><strong>Observation vantage</strong><br />API, ledger, chain, webhook, audit log or another plane?</p></div>
+          <div><b>E</b><p><strong>Evidence</strong><br />What can another party inspect or recompute?</p></div>
+          <div><b>F</b><p><strong>Cross-plane invariants</strong><br />Which states must agree before the action is considered settled?</p></div>
+        </section>
+
+        <p>This is where outcome provenance stops being metadata and becomes financial control infrastructure.</p>
+
+        <h2>And it is not only about payments</h2>
+        <p><strong>Code agents:</strong> did the patch merge, or did the agent only observe a local branch?</p>
+        <p><strong>Infrastructure agents:</strong> did the deployment reach the target environment, or only the orchestrator's desired state?</p>
+        <p><strong>Data agents:</strong> did the write commit to the source of record, or only to a replica or cache?</p>
+        <p><strong>Security agents:</strong> was a credential revoked at the authority, or only marked revoked in a local control plane?</p>
+        <p><strong>Scientific agents:</strong> was a result independently reproduced, or merely re-reported from the originating pipeline?</p>
+
+        <div class="pull-quote"><strong>The consequence needs a witness. The witness needs provenance.</strong></div>
+
+        <h2>A new layer in the agent economy</h2>
+        <p>As agents gain permission to create durable consequences, a market is likely to grow around independent observation of those consequences. The valuable layer may not be another agent framework. It may be infrastructure that can answer across heterogeneous systems:</p>
+
+        <div class="market-kpi"><pre>What was intended?
+What was authorized?
+What executed?
+What changed?
+Who observed it?
+From where?
+Against which evidence?
+Can another party recompute the claim?</pre></div>
+
+        <p>That layer is relevant to agent payments, programmable wallets, deployment systems, governance, compliance and any workflow where software can cause an irreversible or expensive state transition.</p>
+
+        <section class="market-question" id="open-question">
+          <p class="section-label">Hot question</p>
+          <h2>When your AI agent says a consequential action succeeded, who is allowed to declare that outcome?</h2>
+          <p>And can a third party verify that observer's identity, vantage and evidence without trusting the agent itself?</p>
+          <div class="market-actions">
+            <a class="button" href="https://github.com/crewAIInc/crewAI/issues/4877#issuecomment-5276112082" target="_blank" rel="noreferrer">Inspect the external comparison →</a>
+            <a class="text-link" href="https://github.com/safal207/RESONANCE/blob/main/signals/008-independent-outcome-provenance-convergence.md" target="_blank" rel="noreferrer">Open Engineering Signal 008 →</a>
+          </div>
+        </section>
+
+        <h2>What builders can do now</h2>
+        <p>Take one consequential workflow and draw two records instead of one:</p>
+
+        <div class="market-kpi"><pre>PRE-ACTION
+intent → policy → decision → decision provenance
+
+POST-ACTION
+execution → observed outcome → observer → vantage → evidence</pre></div>
+
+        <p>Then try to join them using only stable references that a third party could inspect. Where the join breaks, you have found a real trust boundary.</p>
+
+        <p class="closing-line"><strong>Authorization asks whether the action was permitted. Outcome provenance asks what the world became — and who can prove it.</strong></p>
+
+        <section class="sources-block" id="sources">
+          <p class="section-label">Evidence & claim boundary</p>
+          <ol>
+            <li><a href="https://github.com/crewAIInc/crewAI/issues/4877" target="_blank" rel="noreferrer">CrewAI Issue #4877 — GuardrailProvider interface for pre-tool-call authorization</a></li>
+            <li><a href="https://github.com/crewAIInc/crewAI/issues/4877#issuecomment-5274665965" target="_blank" rel="noreferrer">RESONANCE comment — separate decision and outcome provenance</a></li>
+            <li><a href="https://github.com/crewAIInc/crewAI/issues/4877#issuecomment-5276112082" target="_blank" rel="noreferrer">Independent implementation comparison — field convergence + observer/vantage gap</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/signals/008-independent-outcome-provenance-convergence.md" target="_blank" rel="noreferrer">RESONANCE Engineering Signal 008</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/04-who-saw-the-outcome.sources.md" target="_blank" rel="noreferrer">Companion source note</a></li>
+          </ol>
+          <p class="source-note">This article documents a public architecture comparison and a concrete schema gap. It does not claim CrewAI adoption, endorsement, certification, implementation correctness, or that the proposed observer/vantage extension is already standardized or production-validated.</p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div>
+      <div><p class="footer-title">Causal spine</p><p>Decision → Execution → Outcome → Observer → Vantage → Evidence.</p></div>
+      <div><p class="footer-title">Open publication</p><a href="https://github.com/safal207/RESONANCE">GitHub repository ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+  <script src="market.js"></script>
+</body>
+</html>
