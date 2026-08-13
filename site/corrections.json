@@ -1,6 +1,6 @@
 {
   "schema": "resonance.corrections.v1",
-  "updatedAt": "2026-08-12",
+  "updatedAt": "2026-08-13",
   "publications": [
     {
       "id": "article004",
@@ -28,6 +28,16 @@
         "en": "1.0.0",
         "ru": "1.1.0",
         "zh-CN": "1.1.0"
+      }
+    },
+    {
+      "id": "article006",
+      "title": "When Is an AI Agent Allowed to Pay Again?",
+      "routes": {
+        "en": "when-is-an-ai-agent-allowed-to-pay-again.html"
+      },
+      "currentVersions": {
+        "en": "1.0.1"
       }
     }
   ],
@@ -78,6 +88,35 @@
       "evidence": [
         "https://github.com/safal207/RESONANCE/pull/27",
         "https://github.com/safal207/RESONANCE/actions/runs/31605108573"
+      ]
+    },
+    {
+      "id": "article006-v1.0.0",
+      "effectiveAt": "2026-08-13",
+      "type": "publication",
+      "claimImpact": "none",
+      "summary": "Initial English publication of the agent-payment next-action authority synthesis.",
+      "reason": "Publish the market-to-model synthesis connecting evidence authority, payment finality, retry authority and fulfillment finality to one executable next-action gate.",
+      "affected": [
+        { "publication": "article006", "locale": "en", "path": "when-is-an-ai-agent-allowed-to-pay-again.html", "fromVersion": null, "toVersion": "1.0.0" }
+      ],
+      "evidence": [
+        "https://github.com/safal207/RESONANCE/pull/46"
+      ]
+    },
+    {
+      "id": "article006-numbering-correction-v1.0.1",
+      "effectiveAt": "2026-08-13",
+      "type": "correction",
+      "claimImpact": "presentation",
+      "summary": "Corrected the payment synthesis article number from #005 to #006 after detecting an existing earlier Article #005.",
+      "reason": "Article #005 was already assigned to 'Memory Can Be True and Still Be Unsafe' on 11 Aug 2026. The payment synthesis was published later and therefore belongs to Article #006; no research claim changed.",
+      "affected": [
+        { "publication": "article006", "locale": "en", "path": "when-is-an-ai-agent-allowed-to-pay-again.html", "fromVersion": "1.0.0", "toVersion": "1.0.1" }
+      ],
+      "evidence": [
+        "https://github.com/safal207/RESONANCE/pull/46",
+        "https://github.com/safal207/RESONANCE/commit/a32955ef396f80b97daaf5f952fdd3f0f4eb7138"
       ]
     }
   ]
