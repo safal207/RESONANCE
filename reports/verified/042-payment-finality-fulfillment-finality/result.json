@@ -1,0 +1,54 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "reportId": "042-payment-finality-fulfillment-finality",
+  "date": "2026-08-13",
+  "status": "verified_engineering_market_driven_model_evolution",
+  "claim": "Payment finality does not by itself prove fulfillment finality; a committed payment with unknown fulfillment must remain fail-closed for any new payment until fulfillment or compensation is reconciled.",
+  "invariant": "COMMITTED(payment A) AND UNKNOWN(fulfillment A) => NO NEW PAYMENT FOR A UNTIL fulfillment or compensation is reconciled",
+  "source": {
+    "repository": "safal207/ContractGraph-QA",
+    "pullRequest": 32,
+    "mergeCommit": "3c928d380c5d3963b4ba4ee4f3620dcf467876dc",
+    "benchmark": "payment-fulfillment-coupling-v0.1",
+    "cli": "cgqa payment-fulfillment-evaluate"
+  },
+  "marketSignal": {
+    "protocol": "x402-v2-http-public",
+    "financialFinalityImpliesFulfillment": false,
+    "fulfillmentRecoveryStatus": "unresolved"
+  },
+  "cases": [
+    {
+      "payment": "committed",
+      "fulfillment": "delivered",
+      "nextAction": "stop",
+      "expected": "pass"
+    },
+    {
+      "payment": "committed",
+      "fulfillment": "unknown",
+      "nextAction": "hold",
+      "expected": "pass_contained",
+      "safeToSpendAgain": false
+    },
+    {
+      "payment": "committed",
+      "fulfillment": "unknown",
+      "nextAction": "repurchase",
+      "expected": "critical_fail",
+      "violation": "PFC-001_COMMITTED_PAYMENT_UNKNOWN_FULFILLMENT_NEW_PAYMENT"
+    }
+  ],
+  "boundary": {
+    "vulnerabilityClaim": false,
+    "complianceClaim": false,
+    "productionAuthorization": false,
+    "networkOperationsPerformedForRecord": false
+  },
+  "lineage": [
+    "034-agent-payment-recovery-benchmark",
+    "038-crossmint-unresolved-recovery-contract",
+    "040-finality-retry-authority",
+    "042-payment-finality-fulfillment-finality"
+  ]
+}
