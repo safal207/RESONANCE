@@ -1,0 +1,61 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "031-capu-accelerator-dma-recovery",
+  "title": "CaPU v0.26 — Accelerator Command / DMA Recovery Authority",
+  "status": "PASS",
+  "scope": "bounded reduced-width one-command one-DMA-effect accelerator recovery authority layered on verified v0.25",
+  "project": "safal207/CaPU",
+  "pull_request": 79,
+  "verified_content_head": "ee9e1291c190d9aba0c7f6f389d25f82035b7b80",
+  "workflow": {
+    "name": "CaPU vCML Accelerator DMA Recovery v0.26",
+    "run_id": 31661107793,
+    "rtl_job_id": 94325939577,
+    "rtl_job_status": "success",
+    "formal_job_id": 94325939605,
+    "formal_job_status": "success",
+    "validate_examples_run_id": 31661107792,
+    "core_rtl_smoke_run_id": 31661107746
+  },
+  "canonical_checkpoint_digest": "ddfdc07cde04d3f732e8f479f4fbd8edd094494734801cf7c172468626809b9d",
+  "formal": {
+    "schema": "capu.hardware.accelerator-dma-recovery-formal-proof.v0.26",
+    "solver": "z3 4.8.12",
+    "yosys": "0.33 (git sha1 2584903a060)",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "safety_depth": 42,
+    "cover_depth": 56,
+    "cover_witness_files": 10,
+    "proof_method": "k-induction",
+    "safety_result": "DONE (PASS, rc=0)",
+    "cover_result": "DONE (PASS, rc=0)",
+    "formal_input_sha256": "a8ec3763f5b01b8134cc969472c39b0920732ccb0fcc6702ca7e96a856ddfc18",
+    "formal_log_sha256": "108e52fc87c21361b281f3829fd25e724e716c5c49515400cbf81a248239a91b",
+    "cover_log_sha256": "8e513620709eb30824176d385be377ff1f8c5c5a54d811295dfa087b7fda8eb2",
+    "v0_25_regression_log_sha256": "5968cde690fe28c015020aff0e3d0c8c25b6863002ffcc3da897f018f05df75e",
+    "v0_25_safety_regression": "PASS"
+  },
+  "artifacts": [
+    {
+      "name": "capu-vcml-v26-accelerator-dma-evidence",
+      "artifact_id": 9166208426,
+      "sha256": "53414914e7f05db01db8b7a9d45c8be8035a1e1be5107d2651132ba752435bdf"
+    },
+    {
+      "name": "capu-vcml-v26-accelerator-dma-formal-evidence",
+      "artifact_id": 9166281121,
+      "sha256": "52ca3d0c4b92749f42ed4d4f392733958e2258c734c2e5ebea7911c74377048c"
+    }
+  ],
+  "sealed_hashes": {
+    "rtl": "3707e600597ad173a0da64c3dbd51bee6892a8a6d0b31060d74ffecec30cc8dc",
+    "testbench": "f83ab8c4df5b7bef9224a86f0178ff32e07fa35363c286286762ebc3f1452c6c",
+    "canonical_encoder": "3ca75e7784a9dff7e750e7d32792b5c48fc8e7c1f99efc10d2c0a197765b27d8",
+    "canonical_test": "59c80d9c4fd79927f45bb8f365345b241b3aa5e8820c12ee15d3c058810e04e9",
+    "trajectory_log": "8e48910d24336844ad0e32ef6366ef56a54004188e19682cbde21f674d93f137",
+    "canonical_python_log": "a091d0fc080b55cbca0d590a71ee3da3012eb132e37239872f7edf9209c982a9",
+    "v0_25_deterministic_regression_log": "f214655a3656a87ff87565391741d5d39bd67520cde63c5163b4b707cb266d5b",
+    "v0_25_canonical_regression_log": "e519aa523130f47505490bac58acae6f86dbcb21f5f503d82d6886f82bfcb6c0"
+  },
+  "claim_boundary": "bounded reduced-width one-command one-DMA-effect recovery authority; durable receipt modeled authoritative; no receipt durability/authenticity proof, asynchronous in-flight DMA ambiguity before receipt creation, arbitrary queues, concurrent effects, production DMA fabric, accelerator firmware, IOMMU/cache/coherence/device-memory semantics, completion interrupts, durable-media correctness, production widths, liveness/fairness or unbounded correctness"
+}
