@@ -8,7 +8,7 @@ const DIST = path.join(ROOT, 'dist');
 const modeArg = process.argv.indexOf('--mode');
 const mode = modeArg >= 0 ? process.argv[modeArg + 1] : 'disabled';
 const endpointArg = process.argv.indexOf('--expected-endpoint');
-const expectedEndpoint = endpointArg >= 0 ? process.argv[endpointArg + 1] : '';
+const expectedEndpoint = endpointArg >= 0 ? new URL(process.argv[endpointArg + 1]).toString() : '';
 
 if (!['disabled', 'enabled'].includes(mode)) {
   console.error(`Unsupported mode: ${mode}`);
