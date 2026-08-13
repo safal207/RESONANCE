@@ -1,0 +1,76 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "032-capu-dma-completion-uncertainty",
+  "title": "CaPU v0.27 — In-Flight DMA Completion Uncertainty",
+  "status": "PASS",
+  "scope": "bounded reduced-width one-command one-DMA-effect tri-state completion uncertainty authority layered on verified v0.26",
+  "project": "safal207/CaPU",
+  "pull_request": 80,
+  "verified_content_head": "99470d9106a4ba8e38c92e831611d2739868004e",
+  "workflow": {
+    "name": "CaPU vCML DMA Completion Uncertainty v0.27",
+    "run_id": 31664439172,
+    "rtl_job_id": 94335876373,
+    "rtl_job_status": "success",
+    "formal_job_id": 94335876325,
+    "formal_job_status": "success",
+    "validate_examples_run_id": 31664439177,
+    "core_rtl_smoke_run_id": 31664439206
+  },
+  "canonical_checkpoint_digest": "0e823705c97b662ea3b49c0642a336fb8db240410e8a2f50881db760ac86120f",
+  "formal": {
+    "schema": "capu.hardware.dma-completion-uncertainty-formal-proof.v0.27",
+    "proof_method": "bounded model checking",
+    "solver": "z3 4.8.12",
+    "yosys": "0.33 (git sha1 2584903a060)",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "formal_identity_width_bits": 2,
+    "safety_depth": 16,
+    "cover_depth": 24,
+    "cover_witness_files": 9,
+    "safety_result": "DONE (PASS, rc=0)",
+    "cover_result": "DONE (PASS, rc=0)",
+    "formal_input_sha256": "cca6504ed48c6cf7aafe26b558f3255597a180f4302601aaf0b13e38b3a88ff4",
+    "formal_log_sha256": "3531a420137329dc89ab9708dd8de95f9c49cdebcc4bb1ba3e66cfb5d54ddf6e",
+    "cover_log_sha256": "c88b7f0cfa2566fb8cba36a2dd600b24cc1d193cfca548c57f07688200dbc88a",
+    "v0_26_regression_log_sha256": "0e78c5a59226d25c13bde0ad1dadf182bba6a85a292977fe73f9bcca4be8b8e1",
+    "v0_26_safety_regression": "PASS"
+  },
+  "artifacts": [
+    {
+      "name": "capu-vcml-v27-dma-completion-evidence",
+      "id": 9167387692,
+      "zip_sha256": "1e8fa03a41dfb65caf7cd8c0e7e808f14b8e1ae6ab2dbb331c8ac94c7322b81c"
+    },
+    {
+      "name": "capu-vcml-v27-dma-completion-formal-evidence",
+      "id": 9167432692,
+      "zip_sha256": "df0a2d94c6dbe3267d9bd06a9d94f4e030b1aa621eb071c4892d93f29a894285"
+    }
+  ],
+  "sealed_hashes": {
+    "rtl_sha256": "3aa3d7b3384e790b42eb8620cb77ce789a678705455943c1a6e9de4b1c3bc8c8",
+    "tb_sha256": "b18826f4a7b4802b3185ab00c66fbf01d293aa374909390a46f31a5486059a49",
+    "canonical_encoder_sha256": "1c631cd39a1835f8b9121d758b78c1fc45d7c0a8be83b082a91269ee2b49c7eb",
+    "canonical_test_sha256": "4936c0f2802bd1ec8ef7fd8007bc3e4b035951ea66cd45ec38e4415510aaa6ab",
+    "trajectory_log_sha256": "00118a5c6c4b40b1cec5b92a8ecbce7ee81cb4166e0a3f205d81b3a82af3ff17",
+    "canonical_python_log_sha256": "acc18a6d0fc6f833c38d8b75caebc2c4ef9a36c405440fc8d564b26c49d6501f",
+    "v0_26_deterministic_regression_log_sha256": "8e48910d24336844ad0e32ef6366ef56a54004188e19682cbde21f674d93f137",
+    "v0_26_canonical_regression_log_sha256": "a091d0fc080b55cbca0d590a71ee3da3012eb132e37239872f7edf9209c982a9"
+  },
+  "verified_invariants": [
+    "UNKNOWN blocks DMA replay authority",
+    "UNKNOWN blocks retirement authority",
+    "matching durable issue witness reconstructs UNKNOWN across stale pre-issue checkpoint restore",
+    "foreign completion evidence cannot resolve the live command",
+    "exact NOT_COMMITTED evidence may reopen replay absent a new recovery barrier",
+    "exact COMMITTED evidence creates a matching completion receipt and permanently closes replay for the effect",
+    "matching completion receipt dominates a later stale checkpoint for replay authority"
+  ],
+  "known_future_work": [
+    "durable negative completion evidence for stale-UNKNOWN convergence and liveness",
+    "partial and multi-beat DMA effect recovery",
+    "production transport and device-memory semantics"
+  ],
+  "claim_boundary": "bounded reduced-width one-command one-DMA-effect tri-state completion uncertainty with modeled authoritative durable issue/completion evidence; no evidence acquisition proof, transport, partial-write, liveness/fairness, production-width or unbounded correctness claim"
+}
