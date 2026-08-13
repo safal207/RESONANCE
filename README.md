@@ -187,13 +187,14 @@ analysis
 → generation-wrap / ABA protection
 → accelerator command / exactly-once DMA recovery authority
 → in-flight DMA completion uncertainty / evidence-gated recovery
+→ durable negative completion evidence / UNKNOWN convergence
 ```
 
 See [`issues/001-age-of-agents/`](issues/001-age-of-agents/) and the web edition at [`site/issue-001.html`](site/issue-001.html).
 
 ## Verified research
 
-**Current verified milestone — 2026-08-13:** CaPU v0.27 extends the accelerator recovery layer into the issued-but-unresolved DMA window. The bounded model uses three completion states — `NOT_COMMITTED`, `UNKNOWN`, and `COMMITTED` — and treats `UNKNOWN` as a fail-closed authority state: no replay and no retirement are permitted until exact discriminating evidence resolves the outcome. A modeled durable issue witness survives recovery, so restoring a stale pre-issue checkpoint reconstructs `UNKNOWN` rather than erasing the in-flight fact. Exact `NOT_COMMITTED` evidence may reopen replay when no new recovery barrier is active; exact `COMMITTED` evidence creates a completion receipt, marks the effect spent and prevents a later stale checkpoint from recreating replay authority. Safety passed bounded model checking to depth 16 on a reduced 2-bit identity instance; reachability passed to depth 24 with nine VCD witnesses, while v0.26 deterministic, canonical and bounded-formal regressions remained green. Verified CaPU head: `99470d9106a4ba8e38c92e831611d2739868004e`. See [`Verified Report #032`](reports/verified/032-capu-dma-completion-uncertainty/REPORT.md) and its [`machine-readable result`](reports/verified/032-capu-dma-completion-uncertainty/result.json).
+**Current verified milestone — 2026-08-13:** CaPU v0.28 closes the recovery-convergence gap left intentionally by v0.27. When exact evidence resolves an issued DMA effect as `NOT_COMMITTED`, the bounded model creates a durable negative-completion receipt and consumes the old issue witness. That receipt survives a later crash and dominates a stale checkpoint that still records `UNKNOWN`, reconstructing `NOT_COMMITTED` and allowing replay authority to reopen when no new recovery/restore barrier is active. A new retry consumes the old negative receipt and creates a fresh issue witness, so evidence from a previous non-committed attempt cannot describe a newer unresolved attempt; committed completion receipts continue to dominate stale checkpoints and keep replay closed. Safety passed bounded model checking to depth 18 on a reduced 2-bit identity instance; reachability passed to depth 28 with nine VCD witnesses, while v0.27 deterministic, canonical and bounded-safety regressions remained green. Verified CaPU head: `bc3594b187b4f5901d90db3bd76e1abaa60a80e4`. See [`Verified Report #033`](reports/verified/033-capu-durable-negative-completion/REPORT.md) and its [`machine-readable result`](reports/verified/033-capu-durable-negative-completion/result.json).
 
 Key reproducible reports:
 
@@ -219,7 +220,8 @@ Key reproducible reports:
 - **#029** CaPU v0.24 cross-generation message reordering / stale-message quarantine — bounded formal PASS quarantining delayed prior-generation delivery/ACK evidence, preventing it from mutating successor-generation authority, enforcing exact no-wrap successor progression and preserving delivery-before-ACK causality;
 - **#030** CaPU v0.25 generation-wrap / ABA protection — bounded formal PASS separating incarnation identity from a wrapping generation counter, quarantining historical same-generation messages with stale incarnations and preventing numeric identifier reuse from recreating authority;
 - **#031** CaPU v0.26 accelerator command / DMA recovery authority — bounded formal PASS reconciling stale pre-effect checkpoints against durable DMA-effect receipts, keeping replay authority closed and allowing retirement only after exact reconciliation of an already-committed effect;
-- **#032** CaPU v0.27 in-flight DMA completion uncertainty — bounded model-checking PASS preserving `UNKNOWN` across recovery via a durable issue witness, blocking replay/retirement without discriminating evidence, allowing exact negative evidence to reopen replay and exact committed evidence to create a completion receipt that dominates later stale checkpoints.
+- **#032** CaPU v0.27 in-flight DMA completion uncertainty — bounded model-checking PASS preserving `UNKNOWN` across recovery via a durable issue witness, blocking replay/retirement without discriminating evidence, allowing exact negative evidence to reopen replay and exact committed evidence to create a completion receipt that dominates later stale checkpoints;
+- **#033** CaPU v0.28 durable negative completion evidence / UNKNOWN convergence — bounded model-checking PASS making exact `NOT_COMMITTED` evidence durable across a later crash, allowing it to dominate stale `UNKNOWN`, while consuming that negative receipt on a new retry so prior-attempt evidence cannot authorize a newer unresolved attempt.
 
 All scores are scope-specific protocol/benchmark scores. They are **not percentages of safety** and are not external certifications.
 
