@@ -21,10 +21,16 @@ function arg(name, fallback = '') {
   return index >= 0 ? process.argv[index + 1] : fallback;
 }
 
+function requiredString(value, label) {
+  if (typeof value !== 'string') throw new Error(`invalid ${label}: expected string`);
+  return value;
+}
+
 function finiteCount(value) {
-  const count = Number(value);
-  if (!Number.isFinite(count) || count < 0) throw new Error(`invalid event_count: ${value}`);
-  return count;
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) {
+    throw new Error(`invalid event_count: ${String(value)}`);
+  }
+  return value;
 }
 
 function blankEvents() {
@@ -48,13 +54,15 @@ export function buildReadout(raw, windowStart, windowEnd) {
   let sourceRows = 0;
 
   for (const row of raw.data) {
+    if (!row || typeof row !== 'object' || Array.isArray(row)) throw new Error('invalid source row: expected object');
+
     sourceRows += 1;
-    const event = String(row.event ?? '');
-    const eventPath = String(row.path ?? '');
-    const language = String(row.language ?? '');
-    const contentKind = String(row.content_kind ?? '');
-    const schemaVersion = String(row.schema_version ?? '');
-    const count = finiteCount(row.event_count ?? 0);
+    const event = requiredString(row.event, 'event');
+    const eventPath = requiredString(row.path, 'path');
+    const language = requiredString(row.language, 'language');
+    const contentKind = requiredString(row.content_kind, 'content_kind');
+    const schemaVersion = requiredString(row.schema_version, 'schema_version');
+    const count = finiteCount(row.event_count);
 
     if (!ALLOWED_EVENTS.includes(event)) throw new Error(`unexpected event: ${event}`);
     if (!eventPath.startsWith('/RESONANCE/') || eventPath.includes('?') || eventPath.includes('#')) {
@@ -145,22 +153,25 @@ export function renderMarkdown(report) {
   return `${lines.join('\n')}\n`;
 }
 
-export function writeReadout(raw, windowStart, windowEnd, outputDir) {
+export function writeReadout(raw, windowStart, windowEnd, outputDir, rawEvidence = null) {
   const report = buildReadout(raw, windowStart, windowEnd);
   fs.mkdirSync(outputDir, { recursive: true });
+  const rawBytes = rawEvidence ?? `${JSON.stringify(raw, null, 2)}\n`;
+  fs.writeFileSync(path.join(outputDir, 'market-signals-raw.json'), rawBytes);
   fs.writeFileSync(path.join(outputDir, 'market-signals.json'), `${JSON.stringify(report, null, 2)}\n`);
   fs.writeFileSync(path.join(outputDir, 'market-signals.md'), renderMarkdown(report));
   return report;
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
     const input = arg('--input', 'market-signals-raw.json');
     const outputDir = arg('--output-dir', 'market-signals-evidence');
     const windowStart = arg('--window-start');
     const windowEnd = arg('--window-end');
-    const raw = JSON.parse(fs.readFileSync(input, 'utf8'));
-    const report = writeReadout(raw, windowStart, windowEnd, outputDir);
+    const rawEvidence = fs.readFileSync(input, 'utf8');
+    const raw = JSON.parse(rawEvidence);
+    const report = writeReadout(raw, windowStart, windowEnd, outputDir, rawEvidence);
     process.stdout.write(renderMarkdown(report));
   } catch (error) {
     console.error(error.message);
