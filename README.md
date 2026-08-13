@@ -180,13 +180,14 @@ analysis
 → precise trap / privilege recovery
 → delegated + nested trap authority
 → MMU translation / precise page-fault recovery
+→ TLB freshness / shootdown authority
 ```
 
 See [`issues/001-age-of-agents/`](issues/001-age-of-agents/) and the web edition at [`site/issue-001.html`](site/issue-001.html).
 
 ## Verified research
 
-**Current verified milestone — 2026-08-13:** CaPU v0.20 extends the exact v0.19 architectural/causal/privilege/nested-trap checkpoint authority with a bounded memory-view record: translation root, ASID, translation epoch, one canonical VPN→PPN mapping, R/W/X/U permissions, and precise page-fault pending/address/cause state. Foreign roots, foreign ASIDs, stale translation epochs, altered mappings/permissions, foreign fault context and stale candidate memory views fail closed; an exact translation preserves the page offset while using the checkpoint-bound PPN; and a precise page fault blocks visible effects and kills modeled speculation. Safety passed to depth 30; reachability passed to depth 36 with eight VCD witnesses, while the v0.19 deterministic, canonical and bounded-safety regressions remained green. Verified CaPU head: `9fdb2ea1eaabeebce18c9d15b12cb6cfd109e1a9`. See [`Verified Report #025`](reports/verified/025-capu-mmu-translation-recovery/REPORT.md) and its [`machine-readable result`](reports/verified/025-capu-mmu-translation-recovery/result.json).
+**Current verified milestone — 2026-08-13:** CaPU v0.21 extends the exact v0.20 memory-view authority with one bounded cached translation and one exact shootdown transaction. A TLB hit is authorized only when the cached ASID, translation epoch and VPN match the live memory view and the requested R/W/X/U permission is allowed. Stale epochs and foreign address-space identity fail closed; a matching shootdown invalidates the cached entry; a foreign acknowledgement cannot retire pending shootdown authority; only the exact pending ASID / epoch / VPN acknowledgement may do so; and recovery destroys pre-recovery TLB and pending-shootdown authority. Safety passed to depth 32; reachability passed to depth 38 with four VCD witnesses, while the v0.20 deterministic, canonical and bounded-safety regressions remained green. Verified CaPU head: `c32381b92e8654c7fbdb05cf6cd4601e082be458`. See [`Verified Report #026`](reports/verified/026-capu-tlb-shootdown-authority/REPORT.md) and its [`machine-readable result`](reports/verified/026-capu-tlb-shootdown-authority/result.json).
 
 Key reproducible reports:
 
@@ -205,7 +206,8 @@ Key reproducible reports:
 - **#022** CaPU v0.17 architectural checkpoint content binding — bounded formal PASS binding PC / four GPRs / status plus recovery epoch, causal head / GEN / SEAL and replay spent-state into one exact canonical checkpoint authority, rejecting same-epoch mixed snapshots;
 - **#023** CaPU v0.18 precise trap / privilege recovery — bounded formal PASS binding one trap/privilege context to that exact checkpoint authority, rejecting foreign trap bytes, wrong privilege and masked interrupts while preserving exception priority, return-context capture and pre-trap effect containment;
 - **#024** CaPU v0.19 delegated + nested trap authority — bounded formal PASS binding delegation policy and a two-frame trap stack to the exact checkpoint authority, rejecting unauthorized delegation, bounded overflow/underflow and foreign parent contexts while preserving exact nested parent capture/return and visible-effect containment;
-- **#025** CaPU v0.20 MMU translation / precise page-fault recovery — bounded formal PASS binding a reduced memory view and precise page-fault state to the exact checkpoint authority, rejecting foreign/stale translation state and blocking modeled visible effects across fault/recovery boundaries.
+- **#025** CaPU v0.20 MMU translation / precise page-fault recovery — bounded formal PASS binding a reduced memory view and precise page-fault state to the exact checkpoint authority, rejecting foreign/stale translation state and blocking modeled visible effects across fault/recovery boundaries;
+- **#026** CaPU v0.21 TLB freshness / shootdown authority — bounded formal PASS gating cached translations by exact ASID/translation epoch/VPN and permissions, binding modeled TLB/shootdown state, rejecting foreign acknowledgements and destroying stale cached authority across recovery.
 
 All scores are scope-specific protocol/benchmark scores. They are **not percentages of safety** and are not external certifications.
 
