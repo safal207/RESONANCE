@@ -1,0 +1,61 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "029-capu-cross-generation-reordering",
+  "title": "CaPU v0.24 — Cross-Generation Message Reordering / In-Flight Stale Message Quarantine",
+  "status": "PASS",
+  "scope": "bounded reduced-width two-hart two-successive-generation temporal-reordering authority layered on verified v0.23 delivery reliability",
+  "project": "safal207/CaPU",
+  "pull_request": 77,
+  "verified_content_head": "140b3394b3d5ca4ef2d0fa3dcc43e6ac0f5ad5ac",
+  "workflow": {
+    "name": "CaPU vCML Cross-Generation Reordering v0.24",
+    "run_id": 31659575820,
+    "rtl_job_id": 94321368026,
+    "rtl_job_status": "success",
+    "formal_job_id": 94321414146,
+    "formal_job_status": "success",
+    "validate_examples_run_id": 31659575766,
+    "core_rtl_smoke_run_id": 31659575731
+  },
+  "canonical_checkpoint_digest": "4c7656a9e36e9d921c8f72e2d43c5e3e00f919fef381f681ba45b4cb1d276ea2",
+  "formal": {
+    "schema": "capu.hardware.cross-generation-reordering-formal-proof.v0.24",
+    "solver": "z3 4.8.12",
+    "yosys": "0.33 (git sha1 2584903a060)",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "safety_depth": 38,
+    "cover_depth": 48,
+    "cover_witness_files": 8,
+    "proof_method": "k-induction",
+    "safety_result": "DONE (PASS, rc=0)",
+    "cover_result": "DONE (PASS, rc=0)",
+    "formal_input_sha256": "05bbccbe26ef44a45ef4b9f4407fc4f80c1c9b92a023a39ab6b6235b9aa2697d",
+    "formal_log_sha256": "f32ef9f98a0e5e91757dd0c483ae8b84f3e23ee4620f036c7ac4fb5746129e14",
+    "cover_log_sha256": "f6629238e768e0af408a3f1135c49d1b8618f5a02d752e2245dcd3f98bb47db1",
+    "v0_23_regression_log_sha256": "be8c31f0b2071f93ab1c413fdbe0790a3e17e1052ab9756eccdb2979afcaaf1a",
+    "v0_23_safety_regression": "PASS"
+  },
+  "artifacts": [
+    {
+      "name": "capu-vcml-v24-cross-generation-evidence",
+      "artifact_id": 9165678090,
+      "sha256": "30240252c282876cfe67eb8094a374417872aa8eae7a8cd9b0c212ee162437b5"
+    },
+    {
+      "name": "capu-vcml-v24-cross-generation-formal-evidence",
+      "artifact_id": 9165768881,
+      "sha256": "db8603cd320f1487c85c2840ad1fbfd24d502be8cf61fe018e3c4a6fe7f0605e"
+    }
+  ],
+  "sealed_hashes": {
+    "rtl": "a740156658ae6350b58e285e0b244bd0af5030e29c24767b07b35f1ddf67611c",
+    "testbench": "0e0fa2d6db80764ac43f14cdb412251b9c17983d2ec91ee9b5280f30e7262fe8",
+    "canonical_encoder": "6b2b8223963a452674112b3bf3b066f18c07906ad0f1ac8d95c110ba61d94acd",
+    "canonical_test": "ecc6081c5b44364a1bc864a99742bd80e10876d7b10c43277751eb4180ae7377",
+    "trajectory_log": "3b3604d5f0f9fecc00cb05cf391dcf1ea4837969da6e9e98782459203ca0d85d",
+    "canonical_python_log": "a0a1a6c9682c69a79815e71e8d40fc668867c4d5069b806573b78eecc3e9d711",
+    "v0_23_deterministic_regression_log": "da575ed048ca5818abda2585e184b112a8e57ce5a8ef1077d48c3bdb075d7b75",
+    "v0_23_canonical_regression_log": "a50ea8c6db3645988bf1a5c15308e7e54fe3b236f09fbbc364c1fc43cf965900"
+  },
+  "claim_boundary": "bounded reduced-width two-hart two-successive-generation temporal reordering; no generation wrap/reuse safety, arbitrary in-flight queues, production transport, timing/fairness/liveness, arbitrary hart count, concurrent shootdowns, cache coherence, virtualization, durable distributed recovery, production widths or unbounded correctness"
+}
