@@ -20,6 +20,15 @@ To:
 
 Issue 001 maps this transition.
 
+## Published features
+
+1. [`The Agentic Turn`](articles/01-the-agentic-turn.md)
+2. [`The Missing Trust Layer`](articles/02-the-missing-trust-layer.md)
+3. [`When Agents Fail`](articles/03-when-agents-fail.md)
+4. [`Who Saw the Outcome? — The Missing Provenance Layer After an AI Agent Acts`](articles/04-who-saw-the-outcome.md) — **published 2026-08-13**
+
+The fourth feature extends the trust question beyond pre-action authorization: a consequential outcome needs its own observer identity, vantage and evidence so decision provenance and outcome provenance remain separately inspectable.
+
 ## Editorial questions
 
 - What technically distinguishes an agent from a chatbot?
