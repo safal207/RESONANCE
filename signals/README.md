@@ -39,6 +39,19 @@ The portable transition remained stable at:
 - Portable Trust Receipt: `2235b07a4188628091cbe94af6a16dc30516d0acea743f9b4517b58a5cbd1a80`
 - next witness: `cc389524836b013bb5a416f0a9f6647d9ff252d2de79598e4df119c6e5760d2f`
 
+## External research signals
+
+These entries record externally observable engineering feedback and architecture convergence. They are evidence of public technical interaction, **not** verification milestones, endorsements, partnerships, or implementation certification.
+
+- [`007 — External Research Impact via Semantic Mutation`](007-external-research-impact-semantic-mutation.md)
+- [`008 — Independent Outcome-Provenance Convergence`](008-independent-outcome-provenance-convergence.md) — **OBSERVED 2026-08-13**
+
+### Current main finding
+
+**`source_class` answers how an outcome was established; it does not by itself answer who observed it or from what vantage.**
+
+A comparison against an independently developed, shipped `verdict_outcome` mechanism converged on the separation of decision provenance from outcome provenance and exposed `outcome_observer_id` + `outcome_vantage` as a concrete missing axis.
+
 ## Current open gate
 
 **Source-Producer + Control-Plane Portability v0.1**
