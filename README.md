@@ -179,13 +179,14 @@ analysis
 → architectural checkpoint content binding
 → precise trap / privilege recovery
 → delegated + nested trap authority
+→ MMU translation / precise page-fault recovery
 ```
 
 See [`issues/001-age-of-agents/`](issues/001-age-of-agents/) and the web edition at [`site/issue-001.html`](site/issue-001.html).
 
 ## Verified research
 
-**Current verified milestone — 2026-08-13:** CaPU v0.19 extends the exact v0.18 architectural/causal/trap checkpoint authority with a checkpoint-bound delegation policy and a bounded two-level trap stack. The delegation mask, trap depth and both parent/child trap frames participate in the same canonical checkpoint authority. Unauthorized target privilege fails closed; nested entry captures the exact parent PC/privilege; a third trap is rejected at depth two; return at depth zero is rejected; nested and outer returns restore the exact recorded parent contexts; and modeled speculative visible effects cannot cross accepted trap/recovery boundaries. Safety passed to depth 28; reachability passed to depth 34 with nine VCD witnesses, while the v0.18 bounded safety regression remained green. Verified CaPU head: `16ac81286cf6542189021f6a9aa3a3773c003e31`. See [`Verified Report #024`](reports/verified/024-capu-delegated-nested-trap-authority/REPORT.md) and its [`machine-readable result`](reports/verified/024-capu-delegated-nested-trap-authority/result.json).
+**Current verified milestone — 2026-08-13:** CaPU v0.20 extends the exact v0.19 architectural/causal/privilege/nested-trap checkpoint authority with a bounded memory-view record: translation root, ASID, translation epoch, one canonical VPN→PPN mapping, R/W/X/U permissions, and precise page-fault pending/address/cause state. Foreign roots, foreign ASIDs, stale translation epochs, altered mappings/permissions, foreign fault context and stale candidate memory views fail closed; an exact translation preserves the page offset while using the checkpoint-bound PPN; and a precise page fault blocks visible effects and kills modeled speculation. Safety passed to depth 30; reachability passed to depth 36 with eight VCD witnesses, while the v0.19 deterministic, canonical and bounded-safety regressions remained green. Verified CaPU head: `9fdb2ea1eaabeebce18c9d15b12cb6cfd109e1a9`. See [`Verified Report #025`](reports/verified/025-capu-mmu-translation-recovery/REPORT.md) and its [`machine-readable result`](reports/verified/025-capu-mmu-translation-recovery/result.json).
 
 Key reproducible reports:
 
@@ -203,7 +204,8 @@ Key reproducible reports:
 - **#021** CaPU v0.16 causally bound architectural execution resumption — bounded formal PASS coupling PC / four GPRs / status to the recovered causal/replay runtime by one accepted recovery epoch, rejecting split-state recovery and blocking visible effects across recovery/restore;
 - **#022** CaPU v0.17 architectural checkpoint content binding — bounded formal PASS binding PC / four GPRs / status plus recovery epoch, causal head / GEN / SEAL and replay spent-state into one exact canonical checkpoint authority, rejecting same-epoch mixed snapshots;
 - **#023** CaPU v0.18 precise trap / privilege recovery — bounded formal PASS binding one trap/privilege context to that exact checkpoint authority, rejecting foreign trap bytes, wrong privilege and masked interrupts while preserving exception priority, return-context capture and pre-trap effect containment;
-- **#024** CaPU v0.19 delegated + nested trap authority — bounded formal PASS binding delegation policy and a two-frame trap stack to the exact checkpoint authority, rejecting unauthorized delegation, bounded overflow/underflow and foreign parent contexts while preserving exact nested parent capture/return and visible-effect containment.
+- **#024** CaPU v0.19 delegated + nested trap authority — bounded formal PASS binding delegation policy and a two-frame trap stack to the exact checkpoint authority, rejecting unauthorized delegation, bounded overflow/underflow and foreign parent contexts while preserving exact nested parent capture/return and visible-effect containment;
+- **#025** CaPU v0.20 MMU translation / precise page-fault recovery — bounded formal PASS binding a reduced memory view and precise page-fault state to the exact checkpoint authority, rejecting foreign/stale translation state and blocking modeled visible effects across fault/recovery boundaries.
 
 All scores are scope-specific protocol/benchmark scores. They are **not percentages of safety** and are not external certifications.
 
