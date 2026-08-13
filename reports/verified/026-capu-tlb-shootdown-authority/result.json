@@ -1,0 +1,58 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "026-capu-tlb-shootdown-authority",
+  "title": "CaPU v0.21 — TLB Freshness / Shootdown Authority",
+  "status": "PASS",
+  "scope": "bounded reduced-width one-entry TLB plus one exact shootdown transaction layered on the verified v0.20 memory-view authority",
+  "project": "safal207/CaPU",
+  "pull_request": 74,
+  "verified_content_head": "c32381b92e8654c7fbdb05cf6cd4601e082be458",
+  "workflow": {
+    "name": "CaPU vCML TLB Shootdown Authority v0.21",
+    "run_id": 31657874752,
+    "rtl_job_id": 94316201089,
+    "rtl_job_status": "success",
+    "formal_job_id": 94316254006,
+    "formal_job_status": "success",
+    "validate_examples_run_id": 31657874707,
+    "core_rtl_smoke_run_id": 31657874790
+  },
+  "canonical_checkpoint_digest": "a712a5c668e856614bbab51ba9a772cb88c8740e4cb5e7bf18bf6b27a669812f",
+  "formal": {
+    "schema": "capu.hardware.tlb-shootdown-authority-formal-proof.v0.21",
+    "solver": "z3 4.8.12",
+    "yosys": "0.33 (git sha1 2584903a060)",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "safety_depth": 32,
+    "cover_depth": 38,
+    "cover_witness_files": 4,
+    "safety_result": "DONE (PASS, rc=0)",
+    "cover_result": "DONE (PASS, rc=0)",
+    "formal_input_sha256": "45a06e9ca9fad2e5412c38aa602ed6fe5a3781c04eb6e35eb9d30b5716dff073",
+    "formal_log_sha256": "e770a63fc1075a6d92fa8094c29f80b119026482b3a00af8d4ab2c839b513dc3",
+    "cover_log_sha256": "ce4b06d5ea6730edbfffd427f8b9fe3c22fb93d266ce45d21cd703ea1b6be46d",
+    "v0_20_regression_log_sha256": "c834ec87d19736362ff9608092e487468ad8fe359dca2ebcc499b65fbf7fc592",
+    "v0_20_safety_regression": "PASS"
+  },
+  "artifacts": [
+    {
+      "name": "capu-vcml-v21-tlb-shootdown-evidence",
+      "artifact_id": 9165054300,
+      "sha256": "74cba3f991a06bde1417ed1aa3255a89821a8829069ca4b9afa7da427d00aa35"
+    },
+    {
+      "name": "capu-vcml-v21-tlb-shootdown-formal-evidence",
+      "artifact_id": 9165080925,
+      "sha256": "754b013f850e083f87533e452f7a21791d2cfbb7e817f0ab0a80331f9e932e4c"
+    }
+  ],
+  "sealed_hashes": {
+    "rtl": "20c01b1512b7a31cd0cd883125786d1dd2b3b9c799ab816ef8260b3e388ce66c",
+    "testbench": "bce4417debf39f6ec7ea353cb63c49ff28428bfe45028b83804aad91ed8214a1",
+    "canonical_encoder": "115c36e4793a89f457077386c41c750a1037ed90324a222d1af1a060e8388174",
+    "canonical_test": "6eb3962b1defada6d998dc0affed712a2ccae9da232fec83442ad899e635c88a",
+    "trajectory_log": "a52d4a479106c809d717f4a3b1526b1ab321b1ebc55426fcae2c73aac42c2019",
+    "canonical_python_log": "0258ea5b3a110b4ff6c8f11770b0c5fb394a8fac9445bfb161c2f2bd754099ab"
+  },
+  "claim_boundary": "bounded one-entry TLB and one shootdown transaction only; excludes production multi-entry TLBs, replacement/refill/page-walker behavior, multi-hart shootdown delivery/quorum, cache coherence, virtualization, production speculation, durable media, production widths and unbounded correctness"
+}
