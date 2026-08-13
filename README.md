@@ -178,13 +178,14 @@ analysis
 → causally bound architectural execution resumption
 → architectural checkpoint content binding
 → precise trap / privilege recovery
+→ delegated + nested trap authority
 ```
 
 See [`issues/001-age-of-agents/`](issues/001-age-of-agents/) and the web edition at [`site/issue-001.html`](site/issue-001.html).
 
 ## Verified research
 
-**Current verified milestone — 2026-08-12:** CaPU v0.18 extends the exact v0.17 architectural/causal/replay checkpoint authority with a bounded trap and privilege context: current privilege mode, trap pending/kind/cause, recorded return PC and privilege, and an interrupt-mask bit. The exact v0.18 payload is committed as one canonical SHA-256 record off-path. Foreign trap/privilege bytes fail exact restore, wrong-privilege continuation fails closed, masked interrupts cannot enter the modeled trap path, exceptions have priority over simultaneous interrupts, trap entry captures return context, and a pre-trap abstract speculative effect cannot become visible across accepted trap entry. Safety passed to depth 26; reachability passed to depth 30 with seven VCD witnesses. Verified CaPU head: `dc47ba9801d8c17862d600d55c8795f7dfd9d61e`. See [`Verified Report #023`](reports/verified/023-capu-precise-trap-privilege-recovery/REPORT.md) and its [`machine-readable result`](reports/verified/023-capu-precise-trap-privilege-recovery/result.json). The immediately preceding exact architectural checkpoint binding result is preserved as [`Verified Report #022`](reports/verified/022-capu-architectural-checkpoint-content-binding/REPORT.md).
+**Current verified milestone — 2026-08-13:** CaPU v0.19 extends the exact v0.18 architectural/causal/trap checkpoint authority with a checkpoint-bound delegation policy and a bounded two-level trap stack. The delegation mask, trap depth and both parent/child trap frames participate in the same canonical checkpoint authority. Unauthorized target privilege fails closed; nested entry captures the exact parent PC/privilege; a third trap is rejected at depth two; return at depth zero is rejected; nested and outer returns restore the exact recorded parent contexts; and modeled speculative visible effects cannot cross accepted trap/recovery boundaries. Safety passed to depth 28; reachability passed to depth 34 with nine VCD witnesses, while the v0.18 bounded safety regression remained green. Verified CaPU head: `16ac81286cf6542189021f6a9aa3a3773c003e31`. See [`Verified Report #024`](reports/verified/024-capu-delegated-nested-trap-authority/REPORT.md) and its [`machine-readable result`](reports/verified/024-capu-delegated-nested-trap-authority/result.json).
 
 Key reproducible reports:
 
@@ -201,7 +202,8 @@ Key reproducible reports:
 - **#020** CaPU v0.15 live causal execution resumption — bounded formal PASS restoring replay state plus causal head / GEN / SEAL into live continuation control while recovery remains a fail-closed speculation barrier;
 - **#021** CaPU v0.16 causally bound architectural execution resumption — bounded formal PASS coupling PC / four GPRs / status to the recovered causal/replay runtime by one accepted recovery epoch, rejecting split-state recovery and blocking visible effects across recovery/restore;
 - **#022** CaPU v0.17 architectural checkpoint content binding — bounded formal PASS binding PC / four GPRs / status plus recovery epoch, causal head / GEN / SEAL and replay spent-state into one exact canonical checkpoint authority, rejecting same-epoch mixed snapshots;
-- **#023** CaPU v0.18 precise trap / privilege recovery — bounded formal PASS binding one trap/privilege context to that exact checkpoint authority, rejecting foreign trap bytes, wrong privilege and masked interrupts while preserving exception priority, return-context capture and pre-trap effect containment.
+- **#023** CaPU v0.18 precise trap / privilege recovery — bounded formal PASS binding one trap/privilege context to that exact checkpoint authority, rejecting foreign trap bytes, wrong privilege and masked interrupts while preserving exception priority, return-context capture and pre-trap effect containment;
+- **#024** CaPU v0.19 delegated + nested trap authority — bounded formal PASS binding delegation policy and a two-frame trap stack to the exact checkpoint authority, rejecting unauthorized delegation, bounded overflow/underflow and foreign parent contexts while preserving exact nested parent capture/return and visible-effect containment.
 
 All scores are scope-specific protocol/benchmark scores. They are **not percentages of safety** and are not external certifications.
 
