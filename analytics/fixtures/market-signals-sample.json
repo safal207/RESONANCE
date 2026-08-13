@@ -1,0 +1,55 @@
+{
+  "data": [
+    {
+      "event": "meaningful_read",
+      "path": "/RESONANCE/before-you-let-an-ai-agent-move-money.html",
+      "language": "en",
+      "content_kind": "article",
+      "schema_version": "1",
+      "event_count": 10
+    },
+    {
+      "event": "hot_question_view",
+      "path": "/RESONANCE/before-you-let-an-ai-agent-move-money.html",
+      "language": "en",
+      "content_kind": "article",
+      "schema_version": "1",
+      "event_count": 4
+    },
+    {
+      "event": "workflow_intake_open",
+      "path": "/RESONANCE/before-you-let-an-ai-agent-move-money.html",
+      "language": "en",
+      "content_kind": "article",
+      "schema_version": "1",
+      "event_count": 1
+    },
+    {
+      "event": "verified_workflow_open",
+      "path": "/RESONANCE/before-you-let-an-ai-agent-move-money.html",
+      "language": "en",
+      "content_kind": "article",
+      "schema_version": "1",
+      "event_count": 2
+    },
+    {
+      "event": "meaningful_read",
+      "path": "/RESONANCE/memory-can-be-true-and-still-be-unsafe.ru.html",
+      "language": "ru",
+      "content_kind": "article",
+      "schema_version": "1",
+      "event_count": 3
+    },
+    {
+      "event": "meaningful_read",
+      "path": "/RESONANCE/__collector-smoke-31660978803-1.html",
+      "language": "en",
+      "content_kind": "article",
+      "schema_version": "1",
+      "event_count": 1
+    }
+  ],
+  "meta": {
+    "served_by": "analytics-engine"
+  }
+}

@@ -1,0 +1,70 @@
+name: RESONANCE Market Signal Readout Contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'analytics/**'
+      - 'scripts/build-market-signal-*.mjs'
+      - 'scripts/tests/market-signal-readout.test.mjs'
+      - '.github/workflows/market-signals-contract.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'analytics/**'
+      - 'scripts/build-market-signal-*.mjs'
+      - 'scripts/tests/market-signal-readout.test.mjs'
+      - '.github/workflows/market-signals-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: resonance-market-signals-contract-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify deterministic query and readout contract
+        run: node --test scripts/tests/market-signal-readout.test.mjs
+
+      - name: Build fixture evidence
+        run: |
+          set -euo pipefail
+          node scripts/build-market-signal-query.mjs \
+            --window-start '2026-08-12T00:00:00Z' \
+            --window-end '2026-08-13T00:00:00Z' \
+            > market-signals-fixture.sql
+          node scripts/build-market-signal-readout.mjs \
+            --input analytics/fixtures/market-signals-sample.json \
+            --window-start '2026-08-12T00:00:00Z' \
+            --window-end '2026-08-13T00:00:00Z' \
+            --output-dir market-signals-fixture
+          cat market-signals-fixture/market-signals.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload immutable contract evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-market-signals-contract-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            analytics/MARKET_SIGNAL_READOUT_V0_9.md
+            analytics/fixtures/market-signals-sample.json
+            market-signals-fixture.sql
+            market-signals-fixture/
+          if-no-files-found: warn
+          retention-days: 90
