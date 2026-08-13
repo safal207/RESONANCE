@@ -181,13 +181,14 @@ analysis
 → delegated + nested trap authority
 → MMU translation / precise page-fault recovery
 → TLB freshness / shootdown authority
+→ multi-hart shootdown delivery / acknowledgement quorum
 ```
 
 See [`issues/001-age-of-agents/`](issues/001-age-of-agents/) and the web edition at [`site/issue-001.html`](site/issue-001.html).
 
 ## Verified research
 
-**Current verified milestone — 2026-08-13:** CaPU v0.21 extends the exact v0.20 memory-view authority with one bounded cached translation and one exact shootdown transaction. A TLB hit is authorized only when the cached ASID, translation epoch and VPN match the live memory view and the requested R/W/X/U permission is allowed. Stale epochs and foreign address-space identity fail closed; a matching shootdown invalidates the cached entry; a foreign acknowledgement cannot retire pending shootdown authority; only the exact pending ASID / epoch / VPN acknowledgement may do so; and recovery destroys pre-recovery TLB and pending-shootdown authority. Safety passed to depth 32; reachability passed to depth 38 with four VCD witnesses, while the v0.20 deterministic, canonical and bounded-safety regressions remained green. Verified CaPU head: `c32381b92e8654c7fbdb05cf6cd4601e082be458`. See [`Verified Report #026`](reports/verified/026-capu-tlb-shootdown-authority/REPORT.md) and its [`machine-readable result`](reports/verified/026-capu-tlb-shootdown-authority/result.json).
+**Current verified milestone — 2026-08-13:** CaPU v0.22 extends the exact v0.21 TLB freshness / shootdown authority with a bounded two-hart distributed invalidation authority. Each acknowledgement is bound to one exact shootdown generation, ASID, translation epoch and VPN, and it counts only for a required hart that has not already acknowledged. Stale-generation, foreign-target and duplicate acknowledgements fail closed; partial quorum keeps global translation authority closed; only exact required-hart coverage completes the shootdown; and recovery / restore destroys pending partial-quorum authority. Safety passed to depth 34; reachability passed to depth 40 with six VCD witnesses, while the v0.21 deterministic, canonical and bounded-safety regressions remained green. Verified CaPU head: `c898007f4cac2127374bd6c468d523c6818e6e25`. See [`Verified Report #027`](reports/verified/027-capu-multihart-shootdown-quorum/REPORT.md) and its [`machine-readable result`](reports/verified/027-capu-multihart-shootdown-quorum/result.json).
 
 Key reproducible reports:
 
@@ -207,7 +208,8 @@ Key reproducible reports:
 - **#023** CaPU v0.18 precise trap / privilege recovery — bounded formal PASS binding one trap/privilege context to that exact checkpoint authority, rejecting foreign trap bytes, wrong privilege and masked interrupts while preserving exception priority, return-context capture and pre-trap effect containment;
 - **#024** CaPU v0.19 delegated + nested trap authority — bounded formal PASS binding delegation policy and a two-frame trap stack to the exact checkpoint authority, rejecting unauthorized delegation, bounded overflow/underflow and foreign parent contexts while preserving exact nested parent capture/return and visible-effect containment;
 - **#025** CaPU v0.20 MMU translation / precise page-fault recovery — bounded formal PASS binding a reduced memory view and precise page-fault state to the exact checkpoint authority, rejecting foreign/stale translation state and blocking modeled visible effects across fault/recovery boundaries;
-- **#026** CaPU v0.21 TLB freshness / shootdown authority — bounded formal PASS gating cached translations by exact ASID/translation epoch/VPN and permissions, binding modeled TLB/shootdown state, rejecting foreign acknowledgements and destroying stale cached authority across recovery.
+- **#026** CaPU v0.21 TLB freshness / shootdown authority — bounded formal PASS gating cached translations by exact ASID/translation epoch/VPN and permissions, binding modeled TLB/shootdown state, rejecting foreign acknowledgements and destroying stale cached authority across recovery;
+- **#027** CaPU v0.22 multi-hart shootdown delivery / acknowledgement quorum — bounded formal PASS binding two-hart acknowledgements to an exact shootdown generation and target, rejecting stale/foreign/duplicate acknowledgements, keeping partial quorum fail-closed, and reopening global translation authority only after exact required-hart coverage.
 
 All scores are scope-specific protocol/benchmark scores. They are **not percentages of safety** and are not external certifications.
 
