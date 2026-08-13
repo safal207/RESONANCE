@@ -134,7 +134,7 @@ jobs:
               "https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/analytics_engine/sql" \
               -H "Authorization: Bearer ${CLOUDFLARE_API_TOKEN}" \
               --data "$SQL" > analytics-query.json
-            if grep -Fq "$MARKER" analytics-query.json; then
+            if jq -e --arg marker "$MARKER" 'any(.data[]?; .path == $marker and (.event_count // 0) >= 1)' analytics-query.json >/dev/null; then
               found=1
               break
             fi
