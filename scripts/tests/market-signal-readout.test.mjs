@@ -1,11 +1,15 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import test from 'node:test';
 
 import { buildQuery } from '../build-market-signal-query.mjs';
-import { buildReadout, renderMarkdown } from '../build-market-signal-readout.mjs';
+import { buildReadout, renderMarkdown, writeReadout } from '../build-market-signal-readout.mjs';
 
-const fixture = JSON.parse(fs.readFileSync(new URL('../../analytics/fixtures/market-signals-sample.json', import.meta.url), 'utf8'));
+const fixtureUrl = new URL('../../analytics/fixtures/market-signals-sample.json', import.meta.url);
+const fixtureText = fs.readFileSync(fixtureUrl, 'utf8');
+const fixture = JSON.parse(fixtureText);
 
 const START = '2026-08-12T00:00:00Z';
 const END = '2026-08-13T00:00:00Z';
@@ -56,4 +60,33 @@ test('readout fails closed on unknown dimensions', () => {
   const extraEvent = structuredClone(fixture);
   extraEvent.data[0].event = 'page_view';
   assert.throws(() => buildReadout(extraEvent, START, END), /unexpected event/);
+});
+
+test('readout rejects missing, null, array-valued, and coerced source fields', () => {
+  const cases = [
+    (row) => { delete row.event; },
+    (row) => { row.path = null; },
+    (row) => { row.event = ['meaningful_read']; },
+    (row) => { delete row.event_count; },
+    (row) => { row.event_count = null; },
+    (row) => { row.event_count = '10'; },
+  ];
+
+  for (const mutate of cases) {
+    const bad = structuredClone(fixture);
+    mutate(bad.data[0]);
+    assert.throws(() => buildReadout(bad, START, END), /invalid/);
+  }
+});
+
+test('writeReadout preserves raw provider response bytes with derived evidence', () => {
+  const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), 'resonance-market-signals-'));
+  try {
+    writeReadout(fixture, START, END, outputDir, fixtureText);
+    assert.equal(fs.readFileSync(path.join(outputDir, 'market-signals-raw.json'), 'utf8'), fixtureText);
+    assert.ok(fs.existsSync(path.join(outputDir, 'market-signals.json')));
+    assert.ok(fs.existsSync(path.join(outputDir, 'market-signals.md')));
+  } finally {
+    fs.rmSync(outputDir, { recursive: true, force: true });
+  }
 });
