@@ -1,0 +1,60 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "027-capu-multihart-shootdown-quorum",
+  "title": "CaPU v0.22 — Multi-Hart Shootdown Delivery / Acknowledgement Quorum",
+  "status": "PASS",
+  "scope": "bounded reduced-width two-hart one-generation shootdown quorum layered on verified v0.21 TLB freshness authority",
+  "project": "safal207/CaPU",
+  "pull_request": 75,
+  "verified_content_head": "c898007f4cac2127374bd6c468d523c6818e6e25",
+  "workflow": {
+    "name": "CaPU vCML Multi-Hart Shootdown Quorum v0.22",
+    "run_id": 31658440108,
+    "rtl_job_id": 94317944555,
+    "rtl_job_status": "success",
+    "formal_job_id": 94317988584,
+    "formal_job_status": "success",
+    "validate_examples_run_id": 31658440125,
+    "core_rtl_smoke_run_id": 31658440144
+  },
+  "canonical_checkpoint_digest": "72a3861a9a34f357e797d2f9781abe62a5cb30087c01dce9acd8af1b4060d15f",
+  "formal": {
+    "schema": "capu.hardware.multihart-shootdown-quorum-formal-proof.v0.22",
+    "solver": "z3 4.8.12",
+    "yosys": "0.33 (git sha1 2584903a060)",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "safety_depth": 34,
+    "cover_depth": 40,
+    "cover_witness_files": 6,
+    "safety_result": "DONE (PASS, rc=0)",
+    "cover_result": "DONE (PASS, rc=0)",
+    "formal_input_sha256": "2632fb1155e733633bdb03f61958aca70ae5155be3559cbe1e9d638a71227770",
+    "formal_log_sha256": "de8df088e80688a29391e238de85edb3fbc73332909282e58cfea26704a29e37",
+    "cover_log_sha256": "c0f206f70d95b97928c51fd89cb9be5b1123ea902c3fefe0a84472a3ad4e613a",
+    "v0_21_regression_log_sha256": "90f8ef3da1fcd4d7e1658c6e11da7d5650f42e306594f6791fc0a4fd09d2343c",
+    "v0_21_safety_regression": "PASS"
+  },
+  "artifacts": [
+    {
+      "name": "capu-vcml-v22-multihart-shootdown-evidence",
+      "artifact_id": 9165269712,
+      "sha256": "4b91f8c69e6beca1b1eecba6e6332aa95e784d4b4d29d7ca9b981c06241d9d6f"
+    },
+    {
+      "name": "capu-vcml-v22-multihart-shootdown-formal-evidence",
+      "artifact_id": 9165292458,
+      "sha256": "7fcf035f29d2b2f360b602c76c4e88ce942b52131a70a0af91bb560027c77b35"
+    }
+  ],
+  "sealed_hashes": {
+    "rtl": "cf5e4d7abbe39b1a86caba40d326cd9fa54ea0a3e049db1c89959b85bf6fca9a",
+    "testbench": "dd8b796949f9f41f1652aa44db99612716fc0604b3976cb3ffae0f76c21a3205",
+    "canonical_encoder": "d2edbd1f23f5145ad77946cce652947654454169bf82f9b89255d881e447dbdf",
+    "canonical_test": "c8566eb236dcddba3ec2a2fb5864853e1578efd735f7ef1be331107fbb7367f7",
+    "trajectory_log": "f77b18fc3755d0b26e22b6f8390c5894b5fca2f93c0742139b4fdde67201cede",
+    "canonical_python_log": "7a6939d7d0f9a7ba4082b6bec2398205ffc2000f93e8af2ccaf7a71a3c6ebb04",
+    "v0_21_deterministic_regression_log": "a52d4a479106c809d717f4a3b1526b1ab321b1ebc55426fcae2c73aac42c2019",
+    "v0_21_canonical_regression_log": "0258ea5b3a110b4ff6c8f11770b0c5fb394a8fac9445bfb161c2f2bd754099ab"
+  },
+  "claim_boundary": "bounded reduced-width two-hart one pending target one shootdown generation; no production IPI/message delivery, message-loss/retry liveness, arbitrary hart count, concurrent shootdowns, cache coherence, virtualization, durable distributed recovery, production widths or unbounded correctness"
+}
