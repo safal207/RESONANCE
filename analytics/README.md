@@ -1,10 +1,12 @@
-# RESONANCE Privacy-Aware Analytics v0.8
+# RESONANCE Privacy-Aware Analytics
 
 RESONANCE measures the article-to-dialogue path without creating a cross-session reader identity.
 
-v0.8 keeps the browser contract from v0.7 and selects a collector architecture: **a minimal Cloudflare Worker writing only the five allowlisted dimensions to Workers Analytics Engine**. The collector is selected and deployable, but production transport remains disabled until the explicit activation gate passes.
+- **v0.7** defined the five-field browser measurement contract.
+- **v0.8** selected and activated a minimal Cloudflare Worker + Workers Analytics Engine collector.
+- **v0.9** turns that already-verified stream into deterministic aggregate Market Signal readouts without adding identity semantics or treating attention as demand.
 
-See [`COLLECTOR_DECISION_V0_8.md`](./COLLECTOR_DECISION_V0_8.md) for the provider comparison and decision boundary.
+See [`COLLECTOR_DECISION_V0_8.md`](./COLLECTOR_DECISION_V0_8.md) for the collector decision and [`MARKET_SIGNAL_READOUT_V0_9.md`](./MARKET_SIGNAL_READOUT_V0_9.md) for the readout contract.
 
 ## Measurement spine
 
@@ -15,18 +17,18 @@ meaningful_read
   ↓
 hot_question_view
   ↓
-workflow_intake_open
+workflow_intake_open / verified_workflow_open
   ↓
-GitHub market workflow submission
+explicit workflow submission
   ↓
 Problem Card / Product Signal / pilot evidence
 ```
 
-The first three transitions are browser-measurement signals. A real workflow submission and every downstream Market OS claim remain evidence-backed GitHub/Problem Card events, not inferred conversions.
+The browser events are attention/action signals. A real workflow submission and every downstream Market OS claim remain explicit evidence, not inferred conversions.
 
 ## Event definitions
 
-- `meaningful_read`: article remained visible for at least 45 seconds and the reader reached at least 60% scroll depth in the same page load.
+- `meaningful_read`: article remained visible for at least 45 seconds and reached at least 60% scroll depth in the same page load.
 - `hot_question_view`: the market hot-question block reached at least 60% viewport visibility.
 - `workflow_intake_open`: a reader activated the GitHub market-workflow intake link.
 - `verified_workflow_open`: a reader activated the Verified Workflow pilot link from a market-question surface.
@@ -47,32 +49,17 @@ Only five fields may leave the page:
 }
 ```
 
-No client timestamp is sent. The selected collector uses Analytics Engine receipt time instead of widening the client payload.
+No client timestamp is sent. Analytics Engine receipt time is authoritative for aggregation.
 
 ## Privacy invariants
 
 The browser implementation must not use cookies, localStorage, sessionStorage, IndexedDB, persistent anonymous IDs, fingerprint surfaces, referrer, user-agent, screen dimensions, device characteristics, email/name fields, or free-text form contents.
 
-`navigator.globalPrivacyControl === true` or Do Not Track disables emission even when a collector endpoint is configured. Automated browsers used by Site Health are also suppressed.
+`navigator.globalPrivacyControl === true` or Do Not Track disables emission. Automated browsers used by Site Health are suppressed. Requests use `credentials: omit` and `referrerPolicy: no-referrer`.
 
-Requests use `credentials: omit` and `referrerPolicy: no-referrer`.
+## Collector v0.8 — active and verified
 
-## Collector selection v0.8
-
-The selected Worker is intentionally smaller than a general analytics product. It accepts the same five fields and rejects every unknown field.
-
-The Worker must not read, hash, persist or export:
-
-- IP address or IP-derived geography;
-- User-Agent;
-- referrer;
-- cookies;
-- device/browser characteristics;
-- visitor/session/distinct IDs.
-
-Cloudflare still processes network connection metadata as the infrastructure provider. The RESONANCE boundary is narrower: our collector code does not inspect or write those values into the analytics dataset.
-
-Analytics Engine mapping:
+The production collector is a minimal Cloudflare Worker that accepts the five fields above and rejects every unknown field. It writes:
 
 ```text
 blob1   event
@@ -83,31 +70,38 @@ blob5   schema_version
 double1 1
 ```
 
-The repository config keeps Worker observability logging disabled, and the collector contract statically checks that prohibited identity/header tokens are absent from the Worker source.
+The Worker source does not read, hash, persist or export IP address, IP-derived geography, User-Agent, referrer, cookies, device/browser characteristics, visitor IDs, session IDs or distinct IDs.
 
-## Default-off transport remains authoritative
+Cloudflare necessarily processes connection metadata as infrastructure provider. The RESONANCE boundary is narrower: our collector code does not inspect or write those values into the measurement dataset.
 
-Production analytics is **disabled unless `RESONANCE_ANALYTICS_ENDPOINT` is explicitly configured during the publication build**. A collector endpoint is not a hidden secret: browser clients must know where they send events. Provider credentials must stay server-side and must never be embedded in the journal.
+Production activation is complete: the Worker passed live CORS/schema gates, a synthetic write was read back from Workers Analytics Engine, `RESONANCE_ANALYTICS_ENDPOINT` was configured for Pages, and the public live analytics audit passed in enabled mode.
 
-v0.8 does not set this variable. Selection is not activation.
+Transport still remains fail-closed by design: a build without an explicit valid HTTPS `RESONANCE_ANALYTICS_ENDPOINT` exposes no collector endpoint.
 
-Activation requires:
+## Market Signal Readout v0.9
 
-1. collector adversarial tests pass;
-2. collector source/privacy verifier passes;
-3. pinned Wrangler dry-run passes;
-4. Worker is deployed to the intended Cloudflare account;
-5. live CORS and strict-schema smoke tests pass;
-6. one synthetic event is confirmed in Analytics Engine with no extra dimensions;
-7. only then is `RESONANCE_ANALYTICS_ENDPOINT` set;
-8. the existing public live analytics audit confirms enabled mode.
+v0.9 does not change the browser payload. It queries the existing dataset for an explicit closed UTC interval and produces deterministic JSON + Markdown evidence.
 
-## Why not Plausible / Umami for this spine
+Key rules:
 
-Both are credible privacy-oriented general analytics systems, but each carries semantics RESONANCE does not need. Plausible uses request IP + User-Agent for a rotating daily unique-visitor identifier. Umami exposes session-oriented analytics and uses the sender IP for location metrics while requiring a valid User-Agent for its send API. The v0.8 collector deliberately omits unique visitors, sessions and geography entirely.
+- counts use `SUM(_sample_interval * double1)` so Analytics Engine sampling is accounted for;
+- evidence windows are explicit `[start, end)` UTC intervals, never a rolling `NOW()-24h` artifact;
+- collector activation smoke paths remain in the source dataset but are explicitly classified and excluded from market totals;
+- output is grouped only by existing event/path/language/content-kind/schema dimensions;
+- aggregate signal ratios are not called user conversion rates because no visitor/session identity exists;
+- attention/action analytics never become qualified demand without explicit downstream workflow evidence.
 
 ## Evidence boundary
 
-Web analytics can tell us whether readers reached and acted on a market question. It cannot prove the question exposed a real workflow, a real failure, willingness to test, product-market fit, or revenue. Those claims remain downstream Market OS evidence.
+Analytics can establish aggregate attention/action signals for the configured measurement contract. It cannot establish unique readers, sessions, comprehension, causal conversion, qualified demand, product-market fit, revenue or complete delivery.
 
-Passing the v0.8 collector contract proves repository source/configuration minimization and deployability. It does not prove production deployment, Cloudflare account settings, provider-side legal compliance for a particular jurisdiction, event delivery completeness or real-user behavior.
+Demand begins only when explicit workflow evidence enters the Market OS path:
+
+```text
+workflow submission
+  → diagnostic dialogue
+  → Problem Card
+  → Product Signal
+  → client-specific pilot
+  → evidence
+```
