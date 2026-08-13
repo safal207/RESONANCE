@@ -1,0 +1,74 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "033-capu-durable-negative-completion",
+  "title": "CaPU v0.28 — Durable Negative Completion Evidence / UNKNOWN Convergence",
+  "status": "PASS",
+  "scope": "bounded reduced-width one-command one-DMA-effect durable negative completion evidence and UNKNOWN convergence layered on verified v0.27",
+  "project": "safal207/CaPU",
+  "pull_request": 81,
+  "verified_content_head": "bc3594b187b4f5901d90db3bd76e1abaa60a80e4",
+  "workflow": {
+    "name": "CaPU vCML Durable Negative Completion v0.28",
+    "run_id": 31668560389,
+    "rtl_job_id": 94348334634,
+    "rtl_job_status": "success",
+    "formal_job_id": 94348334759,
+    "formal_job_status": "success",
+    "validate_examples_run_id": 31668560406,
+    "validate_examples_status": "success",
+    "core_rtl_smoke_run_id": 31668560414,
+    "core_rtl_smoke_status": "success"
+  },
+  "canonical_checkpoint_digest": "2ef0d09873fa10b8e0c73ad436222b98b3d89f9ab2176a00862e8b20c94a0d53",
+  "formal": {
+    "schema": "capu.hardware.durable-negative-completion-formal-proof.v0.28",
+    "proof_method": "bounded model checking",
+    "solver": "z3 4.8.12",
+    "yosys": "0.33 (git sha1 2584903a060)",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "formal_identity_width_bits": 2,
+    "safety_depth": 18,
+    "cover_depth": 28,
+    "cover_witness_files": 9,
+    "safety_result": "DONE (PASS, rc=0)",
+    "cover_result": "DONE (PASS, rc=0)",
+    "formal_input_sha256": "047fa3373af10af585dbc0a4e2e5efe026778a9a659e2da21cd961d3d6b6d8d4",
+    "formal_log_sha256": "d0a125cc759556cabb1c754272607662fba7a0c7017c5e7bbf41942a212e8b0d",
+    "cover_log_sha256": "e536c2d91114d715a93d5134aeca3f10ce442d471db011b53f66ab11c24d8fd6",
+    "v0_27_regression_log_sha256": "6bee628b25d3666792368ae9e5e737600c959ba9e9ae153bde214f5c7a0d56bc",
+    "v0_27_safety_regression": "PASS"
+  },
+  "artifacts": [
+    {
+      "name": "capu-vcml-v28-durable-negative-evidence",
+      "id": 9168872581,
+      "zip_sha256": "4caa9f6a163446ea81bb3f5ba914a176cbbd6c82e809ede3a34b9cb06a4f5973"
+    },
+    {
+      "name": "capu-vcml-v28-durable-negative-formal-evidence",
+      "id": 9168927093,
+      "zip_sha256": "2c576cb0399c57f0ea00e1aa7a70dbaa4b1fb55eba71ad96bb81746675ebe581"
+    }
+  ],
+  "executable_hashes": {
+    "rtl_sha256": "4004219ce9e0e10f870b60cbd04f6b071553c07fc23f0339d152af4d96285f38",
+    "tb_sha256": "4f0fc5c9600c479d4ccdeef05f6eee38400935b66a0d1dfe9ab772a53ad41705",
+    "canonical_encoder_sha256": "2f43eb394b1bdbf276dd3a3bed391bc5f9d29fba955968179353e6fafd2662ed",
+    "canonical_test_sha256": "1dc2adae74dba5f128a1a78584bfe9703629669c4f87a8c1b716f7cfa24c0ea0",
+    "trajectory_log_sha256": "1dab18550b919b10c90a1c6983381bc5cdf3032b75c7337e474d8d2929b22a6c",
+    "canonical_python_log_sha256": "397306fcec5e07393de58c285407f807b9c3f5897b4644f6e11024d7d5a3c964",
+    "v0_27_deterministic_regression_log_sha256": "00118a5c6c4b40b1cec5b92a8ecbce7ee81cb4166e0a3f205d81b3a82af3ff17",
+    "v0_27_canonical_regression_log_sha256": "acc18a6d0fc6f833c38d8b75caebc2c4ef9a36c405440fc8d564b26c49d6501f"
+  },
+  "verified_invariants": [
+    "UNKNOWN implies no DMA replay authority, no retirement authority and discriminating evidence required",
+    "exact NOT_COMMITTED evidence creates a durable negative receipt and consumes the old issue witness",
+    "recovery preserves the durable negative receipt",
+    "a matching durable negative receipt dominates a stale UNKNOWN checkpoint and reconstructs NOT_COMMITTED",
+    "a new retry consumes the old negative receipt and creates a fresh issue witness returning the effect to UNKNOWN",
+    "a current issue witness prevents older negative evidence from describing a newer unresolved attempt",
+    "a matching committed completion receipt dominates stale UNKNOWN and keeps replay closed"
+  ],
+  "claim_boundary": "bounded reduced-width one-command one-DMA-effect durable negative completion evidence and UNKNOWN convergence; issue/negative/committed receipts are modeled as authoritative durable evidence; no claim about production transport, evidence authenticity or durability implementation, partial/multi-beat DMA, multiple outstanding effects, production widths, or unbounded correctness",
+  "next_boundary": "partial / multi-beat DMA recovery authority"
+}
