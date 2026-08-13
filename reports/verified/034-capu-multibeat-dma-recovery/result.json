@@ -1,0 +1,101 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "034-capu-multibeat-dma-recovery",
+  "title": "CaPU v0.29 — Partial / Multi-Beat DMA Recovery Authority",
+  "status": "PASS",
+  "scope": "bounded reduced-width one-command ordered four-beat DMA transaction recovery authority layered on verified v0.28",
+  "project": "safal207/CaPU",
+  "pull_request": 83,
+  "verified_content_head": "64b7f26ec58e1f1f6a1f8553b458098610ec5c96",
+  "base_content_head": "bc3594b187b4f5901d90db3bd76e1abaa60a80e4",
+  "workflow": {
+    "name": "CaPU vCML Multi-Beat DMA Recovery v0.29",
+    "run_id": 31672635544,
+    "deterministic_job_id": 94360334079,
+    "deterministic_job_status": "success",
+    "formal_job_id": 94360334250,
+    "formal_job_status": "success",
+    "validate_examples_run_id": 31672635539,
+    "validate_examples_job_id": 94360334147,
+    "validate_examples_status": "success",
+    "core_rtl_smoke_run_id": 31672635546,
+    "core_rtl_smoke_deterministic_job_id": 94360334443,
+    "core_rtl_smoke_formal_job_id": 94360383648,
+    "core_rtl_smoke_status": "success"
+  },
+  "model": {
+    "transaction_beats": 4,
+    "ordered_prefix": true,
+    "beat_states": [
+      "UNISSUED",
+      "UNKNOWN",
+      "COMMITTED",
+      "NOT_COMMITTED"
+    ],
+    "evidence_bitmaps": [
+      "issue_receipt_bitmap",
+      "negative_receipt_bitmap",
+      "completion_receipt_bitmap"
+    ],
+    "receipt_identity_fields": [
+      "command_id",
+      "execution_epoch",
+      "effect_id"
+    ]
+  },
+  "canonical_checkpoint_digest": "d5d75cc5050f6971bf1115aea89787f2c66eee212090fd5bb8de7295b8e1014d",
+  "formal": {
+    "schema": "capu.hardware.multibeat-dma-recovery-formal-proof.v0.29",
+    "proof_method": "bounded model checking",
+    "solver": "z3 4.8.12",
+    "yosys": "0.33 (git sha1 2584903a060)",
+    "sby_git_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be",
+    "formal_identity_width_bits": 2,
+    "beat_count": 4,
+    "safety_depth": 18,
+    "cover_depth": 36,
+    "cover_witness_files": 10,
+    "safety_result": "DONE (PASS, rc=0)",
+    "cover_result": "DONE (PASS, rc=0)",
+    "formal_input_sha256": "b685005e03e1dff7544ea1e3c8c488639e3084eea41308bb885b15b65e7b94f3",
+    "formal_log_sha256": "e555bbe7b407584795e2e59db01adfc588d1d5e65e098bee4d2056eadb93b5c1",
+    "cover_log_sha256": "47f6781e77241d4dd3d55410b75aa9392471aa7c8a83c8acf75f67ab70474590",
+    "v0_28_regression_log_sha256": "143b27e3de0721fa8797f3159b70a589050579bdb46c4c682b22af919e3b6e8d",
+    "v0_28_safety_regression": "PASS"
+  },
+  "artifacts": [
+    {
+      "name": "capu-vcml-v29-multibeat-dma-evidence",
+      "id": 9170272979,
+      "zip_sha256": "764d259499ae53f08a14d77d0131c747bc7a1c2acc5237591dfb395e9d2c8d43"
+    },
+    {
+      "name": "capu-vcml-v29-multibeat-dma-formal-evidence",
+      "id": 9170387478,
+      "zip_sha256": "12a4c0db84b3dd1836062fd74a8f4749874b5444f131ddbd62787c08bff91769"
+    }
+  ],
+  "executable_hashes": {
+    "rtl_sha256": "a93675cfcad7a46a2854e76d7e234cecd84d3ce5d5df28c880568a76e027982f",
+    "tb_sha256": "f7be9b55f5585f321a761f3925173629d494783245d24ab60df33c0ad44e3c4c",
+    "canonical_encoder_sha256": "ffe594f7425c8195f397ffdf2b1b7d34bd359450275d0df96678e9a0063f05a9",
+    "canonical_test_sha256": "584b6fffeb9218d5a65f182fad22aeb10ea4109c626cb6d52cd06c1d7b2d3bd2",
+    "trajectory_log_sha256": "afdde95759df8207b14e0dadcdaa8887e56e18fee58f72796bc15f274b58277b",
+    "canonical_python_log_sha256": "bab92f3012794e9f9472d47944cfa1dfd1239708e75d647e31f89a549db59943",
+    "v0_28_deterministic_regression_log_sha256": "1dab18550b919b10c90a1c6983381bc5cdf3032b75c7337e474d8d2929b22a6c",
+    "v0_28_canonical_regression_log_sha256": "397306fcec5e07393de58c285407f807b9c3f5897b4644f6e11024d7d5a3c964"
+  },
+  "verified_invariants": [
+    "a committed beat cannot regain replay authority",
+    "an UNKNOWN beat requires discriminating evidence and has no replay authority",
+    "a later beat cannot issue across an unresolved earlier beat",
+    "exact NOT_COMMITTED evidence may reopen replay only for the exact beat after a committed prefix",
+    "retry consumes the beat's old negative evidence and creates a fresh UNKNOWN issue witness",
+    "exact committed evidence creates a durable per-beat completion receipt",
+    "stale partial checkpoints cannot override fresher exact per-beat evidence",
+    "transaction retirement requires all four beats COMMITTED and completion_receipt_bitmap == 1111"
+  ],
+  "verification_note": "The first candidate requested safety depth 22. The final authoritative head scopes bounded safety at depth 18 because the four-beat state/evidence product materially increased no-incremental SMT cost. RTL, testbench, canonical encoding and safety invariants were not weakened; cover remains depth 36 and all predecessor regressions were re-run on the final head.",
+  "claim_boundary": "No production PCIe/CXL/NoC beat semantics, byte enables, cache-line tearing, burst splitting, device-memory ordering, IOMMU/cache/coherence, real persistence-domain atomicity, arbitrary burst length, out-of-order or overlapping fragments, multiple outstanding DMA transactions, queue ordering, completion interrupts, evidence authenticity/durability implementation, production widths, liveness/fairness, or unbounded correctness.",
+  "next_boundary": "out-of-order / overlapping DMA fragment recovery authority"
+}
