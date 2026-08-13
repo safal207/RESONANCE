@@ -17,8 +17,10 @@ execution-provider / transport independence
         ↓
 checkpoint source-producer / control-plane independence
         ↓
+upstream rotation-producer / control-plane independence
+        ↓
 ?
-upstream rotation-authority independence
+genesis / historical trust-base independence
 ```
 
 ## Verified milestones
@@ -30,26 +32,30 @@ upstream rotation-authority independence
 - [`006 — Trust-Provider Portability`](006-trust-provider-portability.md)
 - [`007 — Execution + Evidence-Transport Portability`](007-execution-transport-portability.md) — **VERIFIED 2026-08-13**
 - [`009 — Source-Producer + Control-Plane Portability`](009-source-producer-control-plane-portability.md) — **VERIFIED 2026-08-13**
+- [`010 — Upstream Rotation-Authority Portability`](010-upstream-rotation-authority-portability.md) — **VERIFIED 2026-08-13**
 
 ### Latest verified gate
 
-The checkpoint source producer and checkpoint authorization control plane were changed without impersonating the legacy GitHub signer:
+The upstream rotation producer and rotation control plane were changed while preserving the same portable rotation authority and downstream trusted state transition:
 
-- primary: GitHub Actions checkpoint producer + GitHub repository policy control plane;
-- secondary: standalone OpenAI-isolated-workspace producer + independently signed offline Ed25519 control plane.
+- primary: immutable GitHub rotation workflow + GitHub repository rotation policy;
+- secondary: standalone OpenAI-isolated rotation producer + separately signed offline Ed25519 control plane.
 
-Portable identities remained stable at:
+Portable identities converged at:
 
-- checkpoint SHA-256: `74096c48cd730c55dd2f486f1af4b211b4f7f1ce38613134be645055ff1f946a`
-- stronger v0.3 witness root: `8d2e44dab167f1f4613ef66257ca3c3be19f2168a87b620483628389b771ca8c`
-- next v0.3 witness: `efc242be9ebeb3bf898c3cee301391525d1609d499f44c7ae4eac9ce4e5cb4ed`
-- Portable Source-Control Receipt: `9d6a90e5f079b8c8bde01ab858fa9b9050603f3245d5008b0a90d61301a5c73a`
+- generation-1 registry: `5441072b0e550995a9ad0b27b4f3af7c7b5bf531f59e27c870ab1a8cf61789a1`
+- generation-1 manifest: `b9cb0b37da2d74ece6c1cf780b06b17fbbb96f02e073ac64fb26be49cae24277`
+- Portable Rotation-Authority Receipt: `9576a9f96acd278d873c65f4dcaf974a661bf5547319ba1fd60b874f89aef368`
+- checkpoint-v0.3 generation 1: `cfe0ede206da217fa774cd980c20032857692c461c421ffceeeacfe863276e1a`
+- next witness-v0.4: `ed385f07200b424937498374035ce11d0e4327a4c42ff701c7842bc74cee8dc6`
+
+Immutable one-shot `31690895530` completed successfully, and its independent audit recomputed the exact proof result bytes after separately reverifying the GitHub signer and all four external Ed25519 signatures.
 
 Core architecture lesson:
 
-> **Authority is a logical contract. A concrete signer/provider is evidence about that authority, not the authority itself.**
+> **A causal trust transition can remain stable across producer, control-plane, execution, transport, verifier, and signing-provider changes only when authority is expressed as explicit portable contracts and every migration is bound rather than inferred.**
 
-The latest stronger immutable one-shot is `31673608370`. An earlier successful source/control proof (`31669188983`) remains historical evidence but is superseded for current authority semantics by stronger exact-legacy-signer and canonical migration-claim binding.
+A first pinned run, `31689958160`, failed closed on `standalone_source_digest_mismatch`; restoring the exact signed source bytes produced the successful final proof without changing executable semantics or authority claims.
 
 ## External research signals
 
@@ -66,10 +72,10 @@ A comparison against an independently developed, shipped `verdict_outcome` mecha
 
 ## Current open gate
 
-**Upstream Rotation-Authority Portability v0.1**
+**Genesis / Historical Trust-Base Portability v0.1**
 
 Falsifiable question:
 
-> Can the causal rotation-authority input that permits checkpoint generation advance itself be independently produced and authorized under provider-neutral contracts while preserving the same downstream checkpoint subject and trusted transition?
+> Can materially independent trust-base providers establish equivalent genesis/history under a portable genesis contract and still reproduce the same downstream rotation, checkpoint, and witness semantics without inheriting the same historical Liminal predecessor registry/manifest bytes as ambient authority?
 
 This index is descriptive only. A milestone is marked VERIFIED only after immutable execution, external recomputation, and fail-closed agreement evidence exist.
