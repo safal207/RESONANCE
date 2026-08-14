@@ -182,6 +182,19 @@ The CaPU field map is deliberately outside the event list. This keeps execution
 admissibility adjacent to the proof route without making it a second semantic
 authority or a hidden seventh delivery hop.
 
+## P0-4 application — delivery receipt and ancestry
+
+The P0-4 gate adds a delivery receipt to the proof cargo. A verifier can now
+check, in one bounded artifact, that the subject observed at collection start,
+the subject observed at collection end, the expected ancestor, the workflow
+identity and the artifact subject all refer to the same route. The result is
+`PASS` only when each check is explicit; `HOLD`, `NOT_RUN` and `INCOMPLETE`
+remain non-green states.
+
+This is the logistics invariant that prevents a well-packed but stale package
+from being delivered as current evidence. It reduces retrieval ambiguity without
+collapsing authorization, observation, reflection or QA into one authority lane.
+
 ## Logistics metrics
 
 The following metrics are proposed for later measurement, not yet benchmark results:
