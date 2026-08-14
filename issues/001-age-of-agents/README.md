@@ -27,10 +27,13 @@ Issue 001 maps this transition.
 3. [`When Agents Fail`](articles/03-when-agents-fail.md)
 4. [`Who Saw the Outcome? — The Missing Provenance Layer After an AI Agent Acts`](articles/04-who-saw-the-outcome.md) — **published 2026-08-13**
 5. [`Fractal Causal Refactoring — как AI-агенту искать не ошибку, а точку расхождения системы с её идеей`](articles/05-fractal-causal-refactoring.md) — **published 2026-08-14**
+6. [`The System That Refactored Itself — что FCRP нашёл, когда мы применили его к собственной AI trust infrastructure`](articles/06-the-system-that-refactored-itself.md) — **published 2026-08-14**
 
 The fourth feature extends the trust question beyond pre-action authorization: a consequential outcome needs its own observer identity, vantage and evidence so decision provenance and outcome provenance remain separately inspectable.
 
 The fifth feature proposes a recursive causal-navigation protocol for autonomous engineering agents: choose the right system scale, recover the level's idea across past/present/future, find the first meaningful divergence, select a high-leverage refactor point, simulate impact, and verify affected parent invariants after the change.
+
+The sixth feature reports what happened after that protocol became executable and was applied to its own trust-infrastructure repositories. The self-tests exposed verification-boundary drift, local-success/parent-invariant failure, clock-semantics drift, canonical-reality drift, temporal contract drift, provenance/compatibility conflation, and parallel semantic authority — turning FCRP from a conceptual debugging model into a broader repository and verification governance experiment.
 
 ## Editorial questions
 
