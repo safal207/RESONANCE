@@ -17,16 +17,17 @@ prepared. The later P0-1 workflow binds freshness to the then-current PR subject
 
 | Subject | Base | Exact head | State | Required decision |
 |---|---|---|---|---|
-| `safal207/ContractGraph-QA#61` | `b54173530c675083426137176cde0aed0b90853a` | `fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e` | draft, open, unmerged | no human gate; machine exact-head and ancestry evidence |
+| `safal207/ContractGraph-QA#61` | `b54173530c675083426137176cde0aed0b90853a` | `6e51cbb176f6d891b758e3026744d1d4c4c5727a` | draft, open, unmerged | no human gate; machine exact-head and ancestry evidence |
 | `safal207/RESONANCE#53` | `717b4cc284812d1483313301c4be8e3ba3a49931` | `c844f22a106a539d789677915e4ef3e88b5f6e46` | draft, open, unmerged | no human gate; machine manifest/freshness evidence |
 
 ## Machine evidence available before review
 
-- ContractGraph-QA FCRP-SYSTEM-007 workflow run #5: `31815023084`, `success`.
+- ContractGraph-QA FCRP-SYSTEM-007 workflow run #6: `31817575291`, `success`.
 - Verify job: all 17 steps completed, including negative cases and artifact upload.
-- Uploaded artifact: `fcrp-system-007-61`, digest `sha256:db5c0a63560511e31f81843f0203c1c2538a2b4ff442b0dac954e79c2960fa66`.
-- ContractGraph-QA P0-4 ancestry workflow run #2: `31815023184`, `success`; five identity/ancestry checks passed and artifact digest is `sha256:21c900e7198e57db673eb280496efe142ba695a1ec0941ad52d1759fe83ee6de`.
-- ContractGraph-QA P1-1 negative-path matrix workflow run #1: `31815023228`, `success`; 16/16 cases replay-stable and evidence-complete, 15 `BLOCK`, one `ACCEPT` dry-run control, zero executed cases; artifact digest is `sha256:a8b801aa5251b7fe78bf7dc6286d58cd7eb3ac6fa73ec6b5f29813fb778bdb07`.
+- Uploaded artifact: `fcrp-system-007-61`, digest `sha256:7bb9f2fd42944a191aedda86d035bb5f52d14d5e0e7f0fa0f9eac01f82c87720`.
+- ContractGraph-QA P0-4 ancestry workflow run #3: `31817575301`, `success`; five identity/ancestry checks passed and artifact digest is `sha256:74a13d7efbc5753e9f5b4bf780e739a4cda06b4cc8eb96b3a4179a4c3b6e9382`.
+- ContractGraph-QA P1-1 negative-path matrix workflow run #2: `31817575339`, `success`; 16/16 cases replay-stable and evidence-complete, 15 `BLOCK`, one `ACCEPT` dry-run control, zero executed cases; artifact digest is `sha256:69ab3c313ce647dc6248380a42b2dd0392d89610568106b432e0f9f200885926`.
+- ContractGraph-QA P1-2 evidence-bundle/replay workflow run #1: `31817575465`, `success`; four exact component subjects, six artifacts, six replay steps and 1,410 bytes; replay was `SAME_RESULT`, no side effects executed; artifact digest is `sha256:9652aa541269ebcae8ee949c521b81d9bc3f5ccd437f63d087c3f944a0d4c4e8`.
 - Pinned external subjects:
   - ProofPath `4a05ee31d7497979c2505dd55bfef08823302e24`;
   - Causal-Memory-Layer `2a649903693fc61a560ee056834127ada3120206`;

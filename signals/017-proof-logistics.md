@@ -212,6 +212,55 @@ executor, wallet, real secret or external effect is involved. `BLOCK` and
 `HOLD` are fail-closed cargo states, so a missing or ambiguous receipt cannot be
 mistaken for a successful delivery.
 
+## P1-2 application — closed cargo manifest and replay route
+
+P1-2 turns the logistics metaphor into a bounded delivery receipt. The canonical
+bundle is `neo-resonance-p1-2-bundle-001`, collected by a read-only fixture at
+`2026-08-14T15:00:00Z`. Its verifier subject is
+`ContractGraph-QA@6e51cbb176f6d891b758e3026744d1d4c4c5727a`; the frozen
+ContractGraph-QA source records inside the bundle remain explicitly pinned to
+`fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e`. That distinction prevents a current
+verifier checkout from being confused with the source revision whose bytes were
+actually packed.
+
+The cargo inventory is closed and directly addressable:
+
+| Path | Role / component | Bytes | SHA-256 | Source revision |
+|---|---|---:|---|---|
+| `durable-record.json` | durable / LiminalDB | 201 | `e03db8b8fcc91f03be47b6e544a6287e1107842e9b0a3585e9de561dcb767852` | `61b02fc81e0cb5cf1f1ed4658ecff58f683cb728` |
+| `intent.json` | intent / ContractGraph-QA fixture | 267 | `c41ba09a3a64daaa1e43b1a81a5e67631da5a060444de85b7d509b765aa958ce` | `fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e` |
+| `reflection-trace.json` | reflection / RINSE | 227 | `370eb517be8c0263dd79cb452684f10ee8d08f22f544a6bcd1a37a6a4d5f1a42` | `3be0d2ceb1440641b141cdb80c82ed118e4186dd` |
+| `recovery-receipt.json` | recovery / LS | 261 | `cd47f28e1b6da26df8b11e2fab679fefa4eafa3f0887f6fff4827465a2003aff` | `fa7e3aba4ff9154856fa7d27c92f702137819ac1` |
+| `replay-trace.json` | replay / ContractGraph-QA fixture | 211 | `ed5d631ec09bb9e1a1b0a79698a38f7b1f13838770c61f8ad2f8809c107a929c` | `fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e` |
+| `verification-result.json` | verification / ContractGraph-QA fixture | 243 | `a4911ea841e2db477026f6e85282e3eb044086be529845b9cb36eeebf3e5187c` | `fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e` |
+
+The six cargo items total 1,410 bytes. Each item carries the same bounded
+collection and valid/transaction time, while its component revision preserves
+the provenance needed for a receiver to reject stale or misrouted cargo. The
+manifest itself is digest-bound as
+`sha256:7d122d8cb2bfdb29ddc36cda55e1c319a4c1d0c2f56f2af7fa62e681f3d5c7bd`.
+
+The replay route is a six-step indexed handoff:
+
+~~~
+intent → durable record → reopen/reflection → recovery receipt
+      → replay trace → independent verification
+~~~
+
+Every input and output is an explicit artifact ID, every sequence number is
+contiguous, and every step declares `side_effect_executed=false`. The verifier
+replayed the route to `SAME_RESULT`. Missing, unlisted, duplicated, duplicate-
+digest, path-traversal, size-mismatch, SHA-mismatch, source-drift, unknown
+reference, non-contiguous, or side-effect-marked cargo is rejected rather than
+silently repaired. This is retrieval-efficient because a downstream verifier
+can jump from the manifest to the smallest sufficient file set without scanning
+the repository, while still checking closure and integrity.
+
+The bundle remains evidence cargo, not an authority token: execution,
+external-effects and mutation flags are all `false`; reflection cannot authorize
+execution; and a valid manifest cannot authorize merge, deployment, production
+persistence or security decisions.
+
 ## Logistics metrics
 
 The following metrics are proposed for later measurement, not yet benchmark results:
