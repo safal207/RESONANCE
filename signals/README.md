@@ -18,6 +18,7 @@ Before inventing a new method, read the current line in this order:
 4. [`Signal 012 — Downstream Causal-State Portability`](012-downstream-causal-state-portability.md)
 5. [`Signal 013 — Recursive Verification Skill Mesh / Journal-Driven Agent Routing`](013-recursive-verification-skill-mesh.md)
 6. [`Signal 014 — Persistence Frontier / Native Consumer Acceptance Is Not Durable State`](014-persistence-frontier-native-consumer-acceptance.md)
+7. [`Signal 015 — Durability Frontier / Commit ≠ Ack ≠ Retry Permission`](015-durability-frontier-commit-ack-retry.md)
 
 Then inspect the **canonical skill registry and native repository contract** relevant to the target before execution.
 
@@ -70,6 +71,8 @@ downstream causal-state portability
 recursive verification / skill routing
         ↓
 native evidence handoff / persistence frontier
+        ↓
+durable local/test evidence / restart replay
 ```
 
 ## Verified portability milestones
@@ -135,6 +138,17 @@ Signal 014 adds:
 14. **Verifier-Invocation / Subject-Verdict Conflation** — a wrapper/tool invocation failure is reported as semantic rejection of the subject;
 15. **Integration-Base / Causal-Ancestor Conflation** — one repository SHA is asked to serve both as historical causal anchor and current integration base after `main` advances.
 
+Signal 015 adds:
+
+16. **Commit / Acknowledgement Conflation** — a durable effect commits but a missing acknowledgement is treated as proof of no effect;
+17. **Retry-Permission Inference Drift** — an error response is treated as permission to retry without reconciling possible committed state;
+18. **Payload-Identity Idempotency Drift** — payload bytes define operation identity, allowing changed evidence to become an accidental second operation;
+19. **Storage-Admission / Execution-Authority Conflation** — permission to persist evidence silently becomes permission to execute or mutate the represented subject;
+20. **Evidence-Dimension / Protocol-Domain Conflation** — implementation evidence is silently promoted into protocol ontology without verifier support;
+21. **Causal-Order Inversion** — a causal case places its claimed cause / First Meaningful Divergence after the symptom;
+22. **Semantic-Tamper / Byte-Tamper Conflation** — a negative control changes irrelevant representation bytes while claiming to test semantic mutation;
+23. **Pinned-Revision / Frozen-Default-Branch Conflation** — immutable capability pinning is implemented as a requirement that the dependency's default branch never advance.
+
 These names are a working engineering taxonomy, not an external standard. Apply them only when the exact causal shape is supported by evidence.
 
 ## Current verification mesh
@@ -173,11 +187,19 @@ verifier invocation failed
 verified subject rejected
 ```
 
+```text
+commit
+        ≠
+acknowledgement
+        ≠
+retry permission
+```
+
 A consequential agent run may require deterministic trace/replay verification even when its final object looks correct.
 
-## Persistence frontier
+## Persistence and durability frontier
 
-Signal 014 establishes the strongest currently verified native `ProofPath → LiminalDB` statement:
+Signal 014 established:
 
 ```text
 ProofPath native VALID
@@ -191,31 +213,64 @@ LTP strict inspect + replay PASS
 STOP BEFORE PERSISTENCE
 ```
 
+SYSTEM-005 has now crossed the next boundary under an explicit `local_test_only` storage admission:
+
+```text
+ProofPath native VALID
+        ↓
+LiminalDB artifact acceptance
+        ↓
+separate local/test storage admission
+        ↓
+canonical ProofPathDurableLedger
+        ↓
+WAL append + sync
+        ↓
+process restart
+        ↓
+byte-exact replay
+        ↓
+same retry = ALREADY_PRESENT
+semantic rewrite = IDEMPOTENCY_CONFLICT
+        ↓
+AfterSyncBeforeAck recovery = one durable effect
+        ↓
+LTP strict + replay PASS
+        ↓
+FCRP-SYSTEM-005 PASS
+```
+
 Current rule:
 
 ```text
 proof
 ≠ truth
 ≠ consumer compatibility
+≠ storage admission
 ≠ write
-≠ durability
-≠ persistence authority
+≠ acknowledgement
+≠ retry permission
 ≠ execution authority
 ```
 
-The canonical SYSTEM-004 merge is:
+Canonical SYSTEM-005 identities:
 
-`be860d7a6ca089a4514d12a8108d27873b04dfb9`
+```text
+LiminalDB durable consumer
+61b02fc81e0cb5cf1f1ed4658ecff58f683cb728
 
-Its evidence artifact is:
+ContractGraph-QA independent verification
+efe3efe637372815bef55ec3862c49cc69244b88
 
-`9211945351` — `sha256:ad4c484d53e6b519625d9030cba9e2a7635161b5e0fcf24f8205b5177cc79106`
+logical_operation_id
+crossmint-public-example-001
+```
 
-The real continued logical operation is:
+Final independent artifact:
 
-`crossmint-public-example-001`
+`9215228292` — `sha256:01146320a1d04aaedb9bc12a76c71935b6b474620b372119a802207d841845e9`
 
-Do not rename a native upstream operation merely to fit a synthetic global heartbeat ID unless an explicit operation-mapping contract exists.
+The durable boundary is currently **local/test only**. Do not promote it to production persistence authority.
 
 ## Finding lifecycle
 
@@ -256,7 +311,14 @@ PRIOR_INTERPRETATION
 
 The losing hypothesis remains in the evidence ledger with the reason it lost. It must not continue to influence the current verdict silently.
 
-SYSTEM-004 adds a concrete example: the first red LTP lane did **not** establish an inadmissible path. The strict inspector had not parsed the trace because the package wrapper received a literal `--` before `trace`. The supported cause was an invocation-contract failure. After correcting only the wrapper invocation, strict inspection and replay passed.
+Concrete preserved examples:
+
+- SYSTEM-004's first red LTP lane did **not** establish an inadmissible path; the wrapper invocation failed before the trace was parsed.
+- SYSTEM-005's early `cargo fmt --check` reds were **form-only** and did not reach durability tests.
+- SYSTEM-005's first conflict-control issue was unstable error classification, not absence of the idempotency rule.
+- SYSTEM-005's first independent FCRP red came from unsupported `VALID_TIME` / `TRANSACTION_TIME` protocol enum values; the native durable path had already passed.
+- SYSTEM-005's next FCRP red came from a bad causal narrative that placed cause after symptom; the implementation path had again passed.
+- a pre-review FULL GREEN was superseded after valid review findings hardened the admission literal, semantic tamper test and LTP revision check; only the post-review artifact is canonical.
 
 ## External research signals
 
@@ -273,35 +335,45 @@ Decision provenance and outcome provenance remain separately inspectable.
 
 ## Current open system gate
 
-**FCRP-SYSTEM-005 — Durable Proof Ingestion v0.1**
+**FCRP-SYSTEM-006 — Durable State → RINSE Reinterpretation**
 
 Falsifiable question:
 
-> Can an explicitly authorized local/test LiminalDB ingestion path take the currently accepted native ProofPath artifact across the persistence frontier and reproduce it after restart while preserving logical-operation identity, producer provenance, consumer contract identity, valid time, transaction time and idempotent append identity — while failing closed on duplicate, stale, incompatible, partially committed or rollback-required ingestion and leaking no execution authority?
+> Can canonical RINSE consume the exact durable SYSTEM-005 record as an immutable source trace, derive a reflection through its canonical interpretation semantics, preserve durable source identity and trace provenance, and remain `REFLECTION_ONLY` / non-executable without creating a second semantic authority?
 
 Minimum independent lanes should include:
 
-- exact source / capability / dependency identity;
-- explicit local/test persistence authorization;
-- namespace / tenant isolation;
-- idempotent append identity;
-- transaction atomicity and acknowledgement ordering;
-- valid-time / transaction-time preservation;
-- restart replay;
-- crash / partial-commit recovery;
-- stale / duplicate / incompatible negative controls;
+- current RINSE canonical capability / repository identity;
+- exact SYSTEM-005 durable source record identity;
+- immutable source-trace preservation;
+- content-derived reflection identity;
+- `SUPPORTED_BY` / `CONTRADICTED_BY` and supersession/refinement semantics where applicable;
+- valid / recorded / reviewed time separation where applicable;
+- recorded provenance vs independently verified provenance distinction;
+- `REFLECTION_ONLY` and `execution_allowed=false` enforcement;
+- no source-history rewrite;
+- no parallel interpretation authority;
+- deterministic evidence / replay;
 - LTP path admissibility;
-- evidence-to-execution authority-negative controls;
 - FCRP upward verification.
 
-Until this gate exists and passes, the system map must remain:
+Current architectural target:
 
 ```text
-ProofPath
-→ verified evidence
-→ LiminalDB-compatible artifact
-→ persistence frontier
+LiminalDB durable evidence state
+        ↓
+RINSE immutable source trace
+        ↓
+canonical reflection graph
+        ↓
+REFLECTION_ONLY interpretation
 ```
+
+Parent invariant:
+
+> **Meaning may change. Trace must not.**
+
+Production persistence authorization remains a separate frontier. SYSTEM-006 does not silently solve it.
 
 ## Skill creation rule
 
