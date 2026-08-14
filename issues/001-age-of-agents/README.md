@@ -56,6 +56,8 @@ Signal 013 — recursive verification skill mesh
         ↓
 Signal 014 — native consumer acceptance / persistence frontier
         ↓
+Signal 015 — durability frontier / commit ≠ ack ≠ retry permission
+        ↓
 canonical skill registry + native repository contract
         ↓
 smallest falsifiable test
@@ -70,16 +72,24 @@ Operational rules carried by this line:
 - `output correct` does not imply `agent path admissible`;
 - `verifier invocation failed` does not imply `verified subject rejected`;
 - `repository head` does not necessarily equal `capability identity`;
+- an immutable capability pin does not necessarily require the dependency's default branch head to remain frozen;
 - `source commit` does not necessarily bind the executed dependency graph;
 - `historically verified` does not imply `currently applicable`;
 - provenance may prove semantic state without becoming semantic state identity;
 - a native downstream continuation should inherit the actual upstream `logical_operation_id` unless an explicit mapping contract exists;
-- consumer compatibility does not imply write, a write does not imply durability, and durability does not imply authority;
-- evidence, readiness, memory and publication do not grant execution authority;
+- consumer compatibility does not imply storage admission;
+- storage admission does not imply execution authority;
+- `commit` does not imply `acknowledgement`, and acknowledgement failure does not imply safe retry permission;
+- idempotency identity belongs to the logical operation rather than payload bytes;
+- semantic-tamper tests must mutate semantic content, not merely representation noise;
+- implementation evidence may be valid while the causal case describing it is invalid;
+- evidence dimensions do not become protocol enum values merely because an implementation exposes them;
+- evidence, readiness, memory, durable storage and publication do not grant execution authority;
 - rejected, not-reproduced, fixed and superseded findings remain in append-only history rather than silently disappearing;
-- repository advancement during an experiment requires reconciliation/revalidation rather than suppression of stale-base evidence.
+- repository advancement during an experiment requires reconciliation/revalidation rather than suppression of stale-base evidence;
+- a green run superseded by valid review corrections must be re-executed before promotion.
 
-Current verified system boundary:
+Current verified local/test system boundary:
 
 ```text
 ProofPath native verification
@@ -88,12 +98,54 @@ LiminalDB-compatible AuditEvent artifact
         ↓
 canonical LiminalDB dry-run validation
         ↓
+separate local/test storage admission
+        ↓
+canonical durable WAL append + sync
+        ↓
+process restart / byte-exact replay
+        ↓
+idempotent retry + semantic-conflict rejection
+        ↓
+AfterSyncBeforeAck recovery
+        ↓
 LTP strict inspect + deterministic replay
         ↓
-STOP BEFORE PERSISTENCE
+FCRP-SYSTEM-005 PASS
 ```
 
-The next falsifiable system question is **FCRP-SYSTEM-005 — Durable Proof Ingestion v0.1**. Until that gate is proved, Issue 001 should not describe the ProofPath → LiminalDB boundary as durable verified state.
+Canonical implementation evidence:
+
+```text
+LiminalDB durable consumer
+61b02fc81e0cb5cf1f1ed4658ecff58f683cb728
+
+ContractGraph-QA independent SYSTEM-005 proof
+efe3efe637372815bef55ec3862c49cc69244b88
+
+final artifact
+9215228292
+sha256:01146320a1d04aaedb9bc12a76c71935b6b474620b372119a802207d841845e9
+```
+
+The qualifier **local/test** is load-bearing. Issue 001 must not describe this result as production persistence authority.
+
+The next falsifiable system question is **FCRP-SYSTEM-006 — Durable State → RINSE Reinterpretation**:
+
+```text
+LiminalDB durable evidence state
+        ↓
+RINSE immutable source trace
+        ↓
+canonical reflection graph
+        ↓
+REFLECTION_ONLY interpretation
+```
+
+The parent invariant is:
+
+> **Meaning may change. Trace must not.**
+
+SYSTEM-006 must preserve the exact durable source trace, avoid creating a second semantic authority, and keep interpretation non-executable. Production persistence authorization remains a separate frontier.
 
 The journal is the **operational memory / routing layer**. Skill specifications and native repository contracts remain the execution / verification layer. Authorization remains separate.
 
