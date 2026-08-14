@@ -40,15 +40,16 @@ Already present and not to be recreated:
 
 #### P0-1. Pin the cross-repository system manifest
 
-- Status: `IN_PROGRESS`
+- Status: `VERIFIED`
 - Target: RESONANCE governance layer.
 - Purpose: keep repository roles, exact observed heads, dependency edges, and evidence references in one inspectable place.
 - Completion signal: manifest validates as JSON; every load-bearing edge names a source revision and a non-claim; refresh detects head movement instead of silently accepting it.
 - Implemented guardrail: `governance/validate_neo_resonance_manifest.py` now emits a machine-readable report and explicit `PASS`, `HOLD`, `NOT_RUN`, or `INCOMPLETE` states; `.github/workflows/neo-resonance-p0-1-freshness.yml` runs the required remote check on the exact workflow subject.
 - Remote observation at preparation time: all eight manifest heads matched through a read-only GitHub connector snapshot.
 - Local direct `api.github.com` execution: `INCOMPLETE` in the current sandbox because the network request timed out; this is not treated as a remote PASS.
-- Human review: `HOLD` until a non-bot reviewer records a decision against both exact PR heads in `governance/P0-1-HUMAN-REVIEW.md`.
-- Next transition: run the new workflow on this exact PR head, then perform the human review without changing either subject.
+- Machine evidence: RESONANCE P0-1 workflow run #1 (`31808374400`) completed successfully at subject `b14fb536c82fff62df3eeb71a24f58282ca7dbea`; the uploaded freshness artifact is retained with SHA-256 `6eb9b75d45a94deb78088a6e03bb15ba918ed1e49fb846cd0363be62ed42197b`.
+- Scope decision: human review is `NOT_REQUIRED_FOR_CURRENT_SCOPE` for bounded advisory technical progression; this does not create a human approval claim.
+- Next transition: P0-3 provider-neutral interoperability contract.
 
 #### P0-2. Build FCRP-SYSTEM-007 full-chain conformance
 

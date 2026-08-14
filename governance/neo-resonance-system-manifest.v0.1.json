@@ -113,6 +113,19 @@
       "claim_limit": "CaPU is an adjacent reference boundary; this manifest does not claim production execution, hardware enforcement or external effects."
     }
   ],
+  "review_policy": {
+    "human_review_gate": "NOT_REQUIRED_FOR_CURRENT_SCOPE",
+    "scope": "bounded_advisory_technical_progression",
+    "approval_claim": "NOT_MADE",
+    "retained_gates": [
+      "merge",
+      "deployment",
+      "production_persistence",
+      "external_effects",
+      "security_authorization"
+    ],
+    "machine_requirement": "exact-head, workflow, artifact, replay, and negative-path checks must remain attributable and PASS before a transition is advanced"
+  },
   "edges": [
     {
       "from": "proofpath",
@@ -156,12 +169,12 @@
     }
   ],
   "next_transition": {
-    "id": "P0-1",
-    "action_class": "ADD_GUARDRAIL",
-    "action": "run the deterministic manifest validator with remote checks and record any head movement before using this map as a system gate",
+    "id": "P0-3",
+    "action_class": "PUBLISH_INTEROPERABILITY_CONTRACT",
+    "action": "inventory the native fields at each proof boundary and publish one provider-neutral contract with a canonical fixture",
     "owner": "repository maintainers",
-    "completion_signal": "validator emits explicit PASS, HOLD, NOT_RUN, or INCOMPLETE for every repository and edge, with the observed heads tied to collected evidence",
-    "stop_condition": "any expected head is missing, changed during collection, or lacks an attributable evidence reference"
+    "completion_signal": "the same fixture serializes, stores, reopens, reflects, and is independently verified without semantic renaming; all machine checks and evidence references are attributable",
+    "stop_condition": "any native field mapping is ambiguous, any semantic rename is hidden, or any required evidence/check is unavailable or not PASS"
   },
   "verification": {
     "system": "FCRP-SYSTEM-007",

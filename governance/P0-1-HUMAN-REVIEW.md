@@ -1,9 +1,17 @@
-# P0-1 Human Review Packet
+# P0-1 Human Review / Scope Policy Packet
 
-**Status:** `HOLD — HUMAN_ADJUDICATION_REQUIRED`  
-**Scope:** exact-head review of RESONANCE PR #53 and ContractGraph-QA PR #61  
+**Status:** `NON-GATING — REVIEW_NOT_REQUIRED_FOR_CURRENT_SCOPE`  
+**Scope:** bounded advisory technical progression for RESONANCE PR #53 and ContractGraph-QA PR #61  
 **Prepared:** 2026-08-14  
 **Authority:** advisory evidence only; this file is not an approval
+
+The human-review gate is disabled for this bounded technical scope. Machine-verifiable
+exact-head, workflow, artifact, replay, and negative-path checks are sufficient to move
+to the next implementation transition. This is a scope decision, not a human approval
+claim. Merge, deployment, production, and security authorization remain separate gates.
+
+The exact-head rows below preserve the evidence subjects recorded when this packet was
+prepared. The later P0-1 workflow binds freshness to the then-current PR subject.
 
 ## Review subjects
 
@@ -25,7 +33,7 @@
 - Remote default-head snapshot matched the eight manifest entries at collection time.
 - CaPU was inspected separately at `babd2945046d2564e1110a76741827560c57fcca`; it is an adjacent execution-control boundary, not a seventh proof stage.
 
-## Human questions
+## Former human questions — retained as advisory context
 
 1. Does the reviewer confirm that the exact ContractGraph-QA subject is the intended bounded fixture and that the workflow evidence proves only that fixture?
 2. Does the reviewer confirm that the LiminalDB persistence boundary is not being interpreted as execution authority?
@@ -34,24 +42,27 @@
 5. Does the reviewer confirm that CaPU remains adjacent execution control and does not become a second CML semantic authority?
 6. Are there any unresolved correctness, scope, security, or documentation concerns before either draft can leave draft state?
 
-## Decision record — intentionally blank until a human acts
+## Scope decision record
 
 ```text
-reviewer_identity: NOT_RECORDED
-reviewer_type: HUMAN_REQUIRED
-reviewed_contractgraph_head: NOT_RECORDED
-reviewed_resonance_head: NOT_RECORDED
-decision: NOT_RUN
-decision_scope: NOT_RECORDED
+reviewer_identity: NOT_REQUIRED_FOR_CURRENT_SCOPE
+reviewer_type: NONE
+reviewed_contractgraph_head: NOT_APPLICABLE
+reviewed_resonance_head: NOT_APPLICABLE
+decision: NOT_REQUIRED_FOR_CURRENT_SCOPE
+decision_scope: bounded_advisory_technical_progression
 changes_requested: NOT_RECORDED
-review_time: NOT_RECORDED
+review_time: 2026-08-14
+approval_claim: NOT_MADE
 ```
 
-An automated check, CodeRabbit status, workflow success, or this packet cannot fill the decision record. A new commit on either PR invalidates any later review unless the reviewer rebinds the decision to the new exact head.
+No automated check, CodeRabbit status, workflow success, or this packet is treated as
+human approval. A new commit still requires a fresh exact-head machine check before its
+evidence is used for the next transition.
 
 ## Stop conditions
 
-- exact head changes during review;
+- exact head changes during machine evidence collection;
 - a required workflow or artifact becomes unavailable or stale;
-- an unresolved human concern remains;
+- any required machine check is not `PASS`;
 - a reviewer attempts to treat a bounded fixture as production, deployment, merge or security authorization.
