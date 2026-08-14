@@ -1,0 +1,21 @@
+{
+  "article": "I001-RN-FCRP",
+  "slug": "fractal-causal-refactoring",
+  "canonical": "https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/05-fractal-causal-refactoring.md",
+  "goal": "Collect real workflows where the observed failure and the causal/refactor level differ.",
+  "targetChannels": ["Telegram", "Habr", "LinkedIn", "X"],
+  "intendedResponseMetric": "Qualified replies containing a concrete workflow, failure, causal level and trust condition.",
+  "languages": {
+    "ru": {
+      "url": "https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/05-fractal-causal-refactoring.md",
+      "title": "Fractal Causal Refactoring — как AI-агенту искать не ошибку, а точку расхождения системы с её идеей",
+      "description": "Фрактальный протокол причинного рефакторинга: Scale × Time × Causality × Intent, First Meaningful Divergence, выбор Refactor Point и восходящая проверка системы.",
+      "hotQuestion": "Если автономный AI-агент получит право рефакторить production, что он должен доказать перед изменением: только наличие локального бага или ещё правильность выбранного причинного уровня и безопасность ремонта для целого?",
+      "telegram": "Новая RESONANCE: баг может проявиться в одном месте, а причина жить на другом уровне системы. Предлагаем Fractal Causal Refactoring Protocol: определить масштаб → восстановить Idea → Past/Present/Future → найти First Meaningful Divergence → выбрать Refactor Point → симулировать → изменить → проверить систему вверх. Горячий вопрос: что AI-агент должен доказать до самостоятельного production-fix?",
+      "habr": "Что если AI-кодер перестанет искать только место ошибки и начнёт искать уровень, где система впервые разошлась со своей идеей? FCRP предлагает рекурсивную причинную навигацию по масштабу и времени — от продукта до state transition и обратно.",
+      "linkedin": "A local bug is not always a local cause. RESONANCE introduces Fractal Causal Refactoring: a proposed protocol for AI agents to locate the right system scale, recover intent across past/present/future, find the first meaningful divergence, select a high-leverage refactor point, simulate impact and verify affected parent invariants after the change.",
+      "x": "A bug can surface at D while the causal divergence happened at B. FCRP asks AI agents to navigate Scale × Time × Causality × Intent before they edit production: find the first meaningful divergence, choose the refactor point, simulate, then verify upward."
+    }
+  },
+  "shareBehavior": "Lead with the causal-level question and ask for one concrete real-world workflow rather than generic agreement."
+}
