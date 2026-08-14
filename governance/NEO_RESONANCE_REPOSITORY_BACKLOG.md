@@ -48,11 +48,14 @@ Already present and not to be recreated:
 
 #### P0-2. Build FCRP-SYSTEM-007 full-chain conformance
 
-- Status: `PLANNED`
+- Status: `VERIFIED`
 - Target: ContractGraph-QA, using the canonical repositories as external subjects.
 - Chain: proposal/intent → ProofPath decision → CML causal record → LiminalDB durable write/reopen → RINSE reflection → independent ContractGraph-QA verification.
 - Completion signal: one deterministic `logical_operation_id` travels through every stage; the final bundle is reproducible and proves reflection cannot authorize execution or mutate source truth.
 - Negative cases: missing intent, replayed nonce, changed argument digest, stale dependency head, tampered durable record, and attempted reflection escalation.
+- Evidence: bounded fixture `PASS` at ContractGraph-QA PR #61 subject `1a3e4b45de9ea8d495fa96c1069704476295df5c`, based on exact main `b54173530c675083426137176cde0aed0b90853a`; workflow run #3 (`31806175647`) completed successfully.
+- Exact external subjects: ProofPath `4a05ee31d7497979c2505dd55bfef08823302e24`, CML `2a649903693fc61a560ee056834127ada3120206`, LiminalDB `61b02fc81e0cb5cf1f1ed4658ecff58f683cb728`, RINSE `3be0d2ceb1440641b141cdb80c82ed118e4186dd`.
+- Scope boundary: this verifies the deterministic fixture, replay, durability/reopen/retry behavior, and reflection-only negative boundary; it does not authorize merge, deployment, production persistence, external effects, or a security claim.
 
 #### P0-3. Publish one provider-neutral interoperability contract
 
