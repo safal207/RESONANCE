@@ -1,73 +1,102 @@
 {
   "schema": "neo.resonance.system-manifest.v0.1",
   "manifest_status": "OBSERVED_SNAPSHOT",
-  "observed_at": "2026-08-14T13:09:32Z",
+  "observed_at": "2026-08-14T13:45:57Z",
   "collection": {
-    "source": "GitHub repository metadata and default-branch commit observations",
+    "source": "GitHub repository metadata, exact-head PR checks, and completed workflow run observations",
     "identity_state": "OBSERVED_ONLY",
-    "workflow_run_state": "NOT_COLLECTED",
+    "workflow_run_state": "COLLECTED",
     "authority": "advisory; not merge, release, deployment, or production authorization",
     "non_claims": [
       "A mutable main branch is not an immutable approval boundary.",
       "A workflow definition or commit message does not prove that the workflow passed.",
       "A repository role in this map does not prove a runtime integration.",
-      "This snapshot does not certify production readiness, security, or business impact."
+      "This snapshot does not certify production readiness, security, or business impact.",
+      "A bounded fixture PASS is not a production, security, or merge authorization."
     ]
   },
   "repositories": [
     {
       "id": "resonance",
       "full_name": "safal207/RESONANCE",
-      "role": ["journal", "system-map", "market-dialogue"],
+      "role": [
+        "journal",
+        "system-map",
+        "market-dialogue"
+      ],
       "default_branch": "main",
       "observed_head": "717b4cc284812d1483313301c4be8e3ba3a49931"
     },
     {
       "id": "liminalosai",
       "full_name": "safal207/LiminalOSAI",
-      "role": ["control", "experimental-runtime"],
+      "role": [
+        "control",
+        "experimental-runtime"
+      ],
       "default_branch": "main",
       "observed_head": "f84888a943c71041f7c31b41d70d592ad60b2157"
     },
     {
       "id": "proofpath",
       "full_name": "safal207/ProofPath",
-      "role": ["evidence", "pre-execution-authorization"],
+      "role": [
+        "evidence",
+        "pre-execution-authorization"
+      ],
       "default_branch": "main",
       "observed_head": "4a05ee31d7497979c2505dd55bfef08823302e24"
     },
     {
       "id": "cml",
       "full_name": "safal207/Causal-Memory-Layer",
-      "role": ["memory", "causal-lineage", "trust-gates"],
+      "role": [
+        "memory",
+        "causal-lineage",
+        "trust-gates"
+      ],
       "default_branch": "main",
       "observed_head": "2a649903693fc61a560ee056834127ada3120206"
     },
     {
       "id": "liminaldb",
       "full_name": "safal207/LiminalDB",
-      "role": ["durability", "append-only-evidence", "reopen-recovery"],
+      "role": [
+        "durability",
+        "append-only-evidence",
+        "reopen-recovery"
+      ],
       "default_branch": "main",
       "observed_head": "61b02fc81e0cb5cf1f1ed4658ecff58f683cb728"
     },
     {
       "id": "rinse",
       "full_name": "safal207/rinse",
-      "role": ["reflection", "interpretation-without-source-mutation"],
+      "role": [
+        "reflection",
+        "interpretation-without-source-mutation"
+      ],
       "default_branch": "main",
       "observed_head": "3be0d2ceb1440641b141cdb80c82ed118e4186dd"
     },
     {
       "id": "contractgraph-qa",
       "full_name": "safal207/ContractGraph-QA",
-      "role": ["application", "independent-verification", "smart-contract-qa"],
+      "role": [
+        "application",
+        "independent-verification",
+        "smart-contract-qa"
+      ],
       "default_branch": "main",
       "observed_head": "b54173530c675083426137176cde0aed0b90853a"
     },
     {
       "id": "ls",
       "full_name": "safal207/LS",
-      "role": ["governance", "exact-head-risk-audit"],
+      "role": [
+        "governance",
+        "exact-head-risk-audit"
+      ],
       "default_branch": "main",
       "observed_head": "fa7e3aba4ff9154856fa7d27c92f702137819ac1"
     }
@@ -77,33 +106,33 @@
       "from": "proofpath",
       "to": "liminaldb",
       "contract": "PROOFPATH_DURABLE_INGESTION_V0_1",
-      "evidence": "ContractGraph-QA FCRP-SYSTEM-005",
-      "status": "DECLARED_AND_PINNED_IN_WORKFLOW",
-      "claim_limit": "workflow-bound code evidence observed; run result not collected in this snapshot"
+      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31806175647",
+      "status": "VERIFIED_IN_BOUNDED_FIXTURE",
+      "claim_limit": "The exact bounded fixture passed at subject 1a3e4b45de9ea8d495fa96c1069704476295df5c with pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
     },
     {
       "from": "liminaldb",
       "to": "rinse",
       "contract": "LIMINALDB_DURABLE_PROOF_SOURCE_V0_1",
-      "evidence": "ContractGraph-QA FCRP-SYSTEM-006",
-      "status": "DECLARED_AND_PINNED_IN_WORKFLOW",
-      "claim_limit": "workflow-bound code evidence observed; run result not collected in this snapshot"
+      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31806175647",
+      "status": "VERIFIED_IN_BOUNDED_FIXTURE",
+      "claim_limit": "The exact bounded fixture passed at subject 1a3e4b45de9ea8d495fa96c1069704476295df5c with pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
     },
     {
       "from": "rinse",
       "to": "contractgraph-qa",
       "contract": "FCRP-SYSTEM-006",
-      "evidence": "durable reflection and independent verifier workflow",
-      "status": "DECLARED_AND_PINNED_IN_WORKFLOW",
-      "claim_limit": "current end-to-end acceptance still requires exact-head run evidence and independent replay"
+      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31806175647",
+      "status": "VERIFIED_IN_BOUNDED_FIXTURE",
+      "claim_limit": "The exact bounded fixture passed at subject 1a3e4b45de9ea8d495fa96c1069704476295df5c with pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
     },
     {
       "from": "cml",
       "to": "proofpath",
       "contract": "causal-lineage-and-current-trust-gates",
-      "evidence": "FCRP-SELF-006 and canonical CML integrations",
-      "status": "ROLE_AND_CONTRACT_OBSERVED",
-      "claim_limit": "runtime cross-repository consumption is not asserted by this map"
+      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31806175647",
+      "status": "VERIFIED_IN_BOUNDED_FIXTURE",
+      "claim_limit": "The exact bounded fixture passed at subject 1a3e4b45de9ea8d495fa96c1069704476295df5c with pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
     },
     {
       "from": "liminalosai",
@@ -117,9 +146,77 @@
   "next_transition": {
     "id": "P0-1",
     "action_class": "ADD_GUARDRAIL",
-    "action": "add deterministic manifest validation and stale-head reporting before using this map as a system gate",
+    "action": "run the deterministic manifest validator with remote checks and record any head movement before using this map as a system gate",
     "owner": "repository maintainers",
-    "completion_signal": "validator emits explicit PASS, HOLD, NOT_RUN, or INCOMPLETE for every repository and edge",
+    "completion_signal": "validator emits explicit PASS, HOLD, NOT_RUN, or INCOMPLETE for every repository and edge, with the observed heads tied to collected evidence",
     "stop_condition": "any expected head is missing, changed during collection, or lacks an attributable evidence reference"
+  },
+  "verification": {
+    "system": "FCRP-SYSTEM-007",
+    "status": "PASS",
+    "scope": "bounded exact-head fixture",
+    "repository": "safal207/ContractGraph-QA",
+    "pull_request": {
+      "number": 61,
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "base_sha": "b54173530c675083426137176cde0aed0b90853a",
+      "subject_sha": "1a3e4b45de9ea8d495fa96c1069704476295df5c"
+    },
+    "workflow": {
+      "name": "FCRP SYSTEM-007 Full-Chain Conformance",
+      "run_number": 3,
+      "run_id": 31806175647,
+      "conclusion": "success",
+      "job": "verify",
+      "job_conclusion": "success",
+      "started_at": "2026-08-14T13:45:07Z",
+      "completed_at": "2026-08-14T13:45:57Z",
+      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31806175647"
+    },
+    "standard_gates": [
+      {
+        "name": "CI",
+        "run_id": 31806175634,
+        "conclusion": "success"
+      },
+      {
+        "name": "Product",
+        "run_id": 31806175628,
+        "conclusion": "success"
+      },
+      {
+        "name": "FCRP v0.2 Contract Gate",
+        "run_id": 31806175645,
+        "conclusion": "success"
+      },
+      {
+        "name": "Finding report",
+        "run_id": 31806175681,
+        "conclusion": "success"
+      },
+      {
+        "name": "Portability",
+        "run_id": 31806175667,
+        "conclusion": "success"
+      }
+    ],
+    "exact_dependency_heads": {
+      "ProofPath": "4a05ee31d7497979c2505dd55bfef08823302e24",
+      "Causal-Memory-Layer": "2a649903693fc61a560ee056834127ada3120206",
+      "LiminalDB": "61b02fc81e0cb5cf1f1ed4658ecff58f683cb728",
+      "RINSE": "3be0d2ceb1440641b141cdb80c82ed118e4186dd"
+    },
+    "negative_cases": [
+      "missing intent",
+      "replayed nonce",
+      "changed argument digest",
+      "stale dependency head",
+      "tampered durable record",
+      "reflection execution escalation"
+    ],
+    "artifact": "immutable SYSTEM-007 evidence manifest uploaded by the workflow",
+    "authority": "advisory only; no merge, deployment, production persistence, external effects, or security authorization"
   }
 }
