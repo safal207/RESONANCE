@@ -1,0 +1,34 @@
+{
+  "article_id": "I001-RN-FCRP-SELF",
+  "issue": "001-age-of-agents",
+  "status": "published",
+  "published_at": "2026-08-14",
+  "canonical_url": "https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/06-the-system-that-refactored-itself.md",
+  "languages": ["ru"],
+  "title": {
+    "ru": "The System That Refactored Itself — что FCRP нашёл, когда мы применили его к собственной AI trust infrastructure"
+  },
+  "description": {
+    "ru": "Field report: FCRP превратился из архитектурной идеи в исполняемый causal contract и начал находить ошибки в собственных тестах, времени, canonical state, provenance и semantic authority."
+  },
+  "hot_question": {
+    "ru": "Где в вашей engineering-системе существует самая опасная ложная реальность: зелёный тест, устаревший verified-флаг, branch-only capability, записанный-but-unverified provenance или локальный fix без проверки parent invariant?"
+  },
+  "social": {
+    "x": {
+      "ru": "Мы применили Fractal Causal Refactoring не к чужому багу, а к собственной AI trust infrastructure. FCRP начал находить не только code defects, но и ложные green tests, canonical reality drift, clock-semantics drift, provenance/compatibility conflation и parallel semantic authority. Новый RESONANCE field report."
+    },
+    "linkedin": {
+      "ru": "Что произойдёт, если causal-refactoring protocol направить на систему, которая его создала? Мы сделали FCRP исполняемым и прогнали через ContractGraph-QA, ProofPath, CML, LiminalDB и RINSE. Самый интересный результат: First Meaningful Divergence часто оказался не в production code, а в доказательстве, времени, canonical status или границе semantic authority. Article 06 — evidence-first field report."
+    },
+    "telegram": {
+      "ru": "🔥 FCRP начал рефакторить собственную систему. SELF-001 поймал слабый regression proof. SELF-002 заблокировал локально успешный fix после upward verification. SELF-003 поймал ошибку в нашей модели времени. SELF-005–008 нашли drift в canonicality, memory contracts, provenance и semantic authority. Собрал всё в новую статью RESONANCE."
+    },
+    "hacker_news": {
+      "en": "Field report: applying a machine-readable causal refactoring protocol to its own AI trust infrastructure exposed verification-boundary, repository-canonicality, clock-semantics, provenance and semantic-authority drift."
+    }
+  },
+  "target_channels": ["X", "LinkedIn", "Telegram", "Hacker News", "Habr"],
+  "intended_response_metric": "real workflows where a locally green state is invalidated by a higher-level contract",
+  "share_behavior": "link to canonical article; invite one concrete counterexample or workflow rather than generic agreement"
+}
