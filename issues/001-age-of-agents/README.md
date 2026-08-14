@@ -35,6 +35,46 @@ The fifth feature proposes a recursive causal-navigation protocol for autonomous
 
 The sixth feature reports what happened after that protocol became executable and was applied to its own trust-infrastructure repositories. The self-tests exposed verification-boundary drift, local-success/parent-invariant failure, clock-semantics drift, canonical-reality drift, temporal contract drift, provenance/compatibility conflation, and parallel semantic authority — turning FCRP from a conceptual debugging model into a broader repository and verification governance experiment.
 
+## Agent operating line
+
+For engineering agents, this issue now has a canonical operational continuation in the Engineering Signals journal.
+
+**Start here:** [`Engineering Signals — Trust Portability & Verification Routing`](../../signals/README.md)
+
+The intended reading / execution loop is:
+
+```text
+Article 05 — FCRP origin
+        ↓
+Article 06 — self-refactoring lessons
+        ↓
+Signal 011 — independent historical trust-base portability
+        ↓
+Signal 012 — downstream causal-state portability
+        ↓
+Signal 013 — recursive verification skill mesh
+        ↓
+canonical skill registry + native repository contract
+        ↓
+smallest falsifiable test
+        ↓
+result / correction / rejection written back to RESONANCE
+```
+
+Operational rules carried by this line:
+
+- read the current journal state before inventing a new test method;
+- route to existing canonical skills before creating a new skill;
+- `output correct` does not imply `agent path admissible`;
+- `repository head` does not necessarily equal `capability identity`;
+- `source commit` does not necessarily bind the executed dependency graph;
+- `historically verified` does not imply `currently applicable`;
+- provenance may prove semantic state without becoming semantic state identity;
+- evidence, readiness, memory and publication do not grant execution authority;
+- rejected, not-reproduced, fixed and superseded findings remain in append-only history rather than silently disappearing.
+
+The journal is the **operational memory / routing layer**. Skill specifications and native repository contracts remain the execution / verification layer. Authorization remains separate.
+
 ## Editorial questions
 
 - What technically distinguishes an agent from a chatbot?
