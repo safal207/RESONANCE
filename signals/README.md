@@ -1,6 +1,49 @@
-# Engineering Signals — Trust Portability Track
+# Engineering Signals — Trust Portability & Verification Routing
 
-This index records the verified portability milestones produced by the Liminal trusted-recovery evidence program.
+This index records the engineering signals produced by the NEO REZONANS / Liminal trust and verification program.
+
+It is also the **default journal entrypoint for engineering agents** that need to understand what has already been learned before choosing or creating a testing skill.
+
+> **Journal = operational memory and routing guidance, not execution authority.**
+
+An agent may use this index to recover current assumptions, verified corrections, falsification questions and available verification routes. Publication in RESONANCE does not grant credentials, production mutation, deployment, disclosure, financial, merge or external-action authority.
+
+## Agent reading path
+
+Before inventing a new method, read the current line in this order:
+
+1. [`Article 05 — Fractal Causal Refactoring`](../issues/001-age-of-agents/articles/05-fractal-causal-refactoring.md)
+2. [`Article 06 — The System That Refactored Itself`](../issues/001-age-of-agents/articles/06-the-system-that-refactored-itself.md)
+3. [`Signal 011 — Genesis / Historical Trust-Base Portability`](011-genesis-historical-trust-base-portability.md)
+4. [`Signal 012 — Downstream Causal-State Portability`](012-downstream-causal-state-portability.md)
+5. [`Signal 013 — Recursive Verification Skill Mesh / Journal-Driven Agent Routing`](013-recursive-verification-skill-mesh.md)
+
+Then inspect the **canonical skill registry and native repository contract** relevant to the target before execution.
+
+Default loop:
+
+```text
+READ JOURNAL
+   ↓
+CLASSIFY DIVERGENCE
+   ↓
+ROUTE TO EXISTING SKILLS
+   ↓
+COLLECT + FALSIFY
+   ↓
+RUN NATIVE CONTRACTS
+   ↓
+VERIFY THE VERIFIER / PATH
+   ↓
+AUTHORIZE SEPARATELY
+   ↓
+PRESERVE CONFIRMED + REJECTED HISTORY
+   ↓
+WRITE NEW LEARNING BACK TO RESONANCE
+   ↺
+```
+
+## Trust portability track
 
 ```text
 physical location independence
@@ -19,11 +62,14 @@ checkpoint source-producer / control-plane independence
         ↓
 upstream rotation-producer / control-plane independence
         ↓
-?
 genesis / historical trust-base independence
+        ↓
+downstream causal-state portability
+        ↓
+recursive verification / skill routing
 ```
 
-## Verified milestones
+## Verified portability milestones
 
 - [`002 — Manifest-backed Witness Recovery`](002-manifest-backed-witness-recovery.md)
 - [`003 — Evidence Topology Portability`](003-evidence-topology-portability.md)
@@ -33,49 +79,165 @@ genesis / historical trust-base independence
 - [`007 — Execution + Evidence-Transport Portability`](007-execution-transport-portability.md) — **VERIFIED 2026-08-13**
 - [`009 — Source-Producer + Control-Plane Portability`](009-source-producer-control-plane-portability.md) — **VERIFIED 2026-08-13**
 - [`010 — Upstream Rotation-Authority Portability`](010-upstream-rotation-authority-portability.md) — **VERIFIED 2026-08-13**
+- [`011 — Genesis / Historical Trust-Base Portability`](011-genesis-historical-trust-base-portability.md) — **VERIFIED 2026-08-14**
+- [`012 — Downstream Causal-State Portability`](012-downstream-causal-state-portability.md) — **VERIFIED 2026-08-14**
 
-### Latest verified gate
+### Current portability lesson
 
-The upstream rotation producer and rotation control plane were changed while preserving the same portable rotation authority and downstream trusted state transition:
+Two independently rooted histories may carry distinct genesis, manifest, registry and provider identities while independently validating to the same normalized terminal authorization semantics.
 
-- primary: immutable GitHub rotation workflow + GitHub repository rotation policy;
-- secondary: standalone OpenAI-isolated rotation producer + separately signed offline Ed25519 control plane.
+Signal 012 then removes those historical identities from portable downstream checkpoint/witness identity when they are not semantically load-bearing.
 
-Portable identities converged at:
+```text
+History A provenance ─┐
+                      ├→ independent verification
+History B provenance ─┘
+                              ↓
+                      semantic trust state
+                              ↓
+                       CausalStateRef
+                              ↓
+                  checkpoint → witness
+```
 
-- generation-1 registry: `5441072b0e550995a9ad0b27b4f3af7c7b5bf531f59e27c870ab1a8cf61789a1`
-- generation-1 manifest: `b9cb0b37da2d74ece6c1cf780b06b17fbbb96f02e073ac64fb26be49cae24277`
-- Portable Rotation-Authority Receipt: `9576a9f96acd278d873c65f4dcaf974a661bf5547319ba1fd60b874f89aef368`
-- checkpoint-v0.3 generation 1: `cfe0ede206da217fa774cd980c20032857692c461c421ffceeeacfe863276e1a`
-- next witness-v0.4: `ed385f07200b424937498374035ce11d0e4327a4c42ff701c7842bc74cee8dc6`
+Core rule:
 
-Immutable one-shot `31690895530` completed successfully, and its independent audit recomputed the exact proof result bytes after separately reverifying the GitHub signer and all four external Ed25519 signatures.
+> **Provenance must prove a causal state; provenance must not become the causal state's portable identity when multiple independently valid histories can establish the same semantics.**
 
-Core architecture lesson:
+This does not erase provenance. The raw histories remain separately addressable and independently auditable.
 
-> **A causal trust transition can remain stable across producer, control-plane, execution, transport, verifier, and signing-provider changes only when authority is expressed as explicit portable contracts and every migration is bound rather than inferred.**
+## FCRP / self-refactoring track
 
-A first pinned run, `31689958160`, failed closed on `standalone_source_digest_mismatch`; restoring the exact signed source bytes produced the successful final proof without changing executable semantics or authority claims.
+Article 06 records the working taxonomy produced by recursive self-tests:
+
+1. **Verification Boundary Drift**
+2. **Local Success / Parent Invariant Failure**
+3. **Clock-Semantics Drift**
+4. **Canonical Reality Drift**
+5. **Temporal Contract Drift**
+6. **Provenance / Compatibility Conflation**
+7. **Parallel Semantic Authority**
+8. **Recorded / Verified Provenance Gap**
+
+Signal 013 extends the operational taxonomy with:
+
+9. **Execution-Path Admissibility Drift** — correct-looking output reached through an invalid or unsupported agent path;
+10. **Dependency-Resolution Identity Gap** — source revision is pinned but the executed dependency graph is not;
+11. **Verification-Method Omission Drift** — a stronger canonical verification lane exists but the agent silently uses a weaker method.
+
+## Current verification mesh
+
+The journal does not duplicate every skill specification. It routes agents to the current canonical skill registries.
+
+Primary reusable engineering lanes currently include:
+
+```text
+causal-deep-audit
+├ evidence-capture
+├ causal-adjudication
+├ exact-head-governance
+├ replay-memory
+├ product-impact
+├ transition-next-action
+├ cyber-causal-audit
+│  └ websocket-redis-lifecycle
+└ specialized lanes when applicable
+
+LTP
+└ ltp-agent-trace-auditor
+```
+
+Operational invariant:
+
+```text
+final output correct
+        ≠
+agent path admissible
+```
+
+A consequential agent run may require deterministic trace/replay verification even when its final object looks correct.
+
+## Finding lifecycle
+
+Do not silently delete findings after a better test changes the conclusion.
+
+Preserve an append-only history such as:
+
+```text
+DISCOVERY_SIGNAL
+→ NEEDS_EVIDENCE
+→ DEFECT_CANDIDATE
+→ CONFIRMED
+```
+
+or:
+
+```text
+DEFECT_CANDIDATE
+→ DISCRIMINATING_TEST
+→ REJECTED_FALSE_POSITIVE
+```
+
+or:
+
+```text
+CONFIRMED
+→ FIXED
+→ RETESTED
+→ REGRESSION_WATCH
+```
+
+or:
+
+```text
+PRIOR_INTERPRETATION
+→ SUPERSEDED_BY_STRONGER_EVIDENCE
+```
+
+The losing hypothesis remains in the evidence ledger with the reason it lost. It must not continue to influence the current verdict silently.
 
 ## External research signals
 
-These entries record externally observable engineering feedback and architecture convergence. They are evidence of public technical interaction, **not** verification milestones, endorsements, partnerships, or implementation certification.
+These entries record externally observable engineering feedback and architecture convergence. They are evidence of public technical interaction, **not** verification milestones, endorsements, partnerships or implementation certification.
 
 - [`007 — External Research Impact via Semantic Mutation`](007-external-research-impact-semantic-mutation.md)
 - [`008 — Independent Outcome-Provenance Convergence`](008-independent-outcome-provenance-convergence.md) — **OBSERVED 2026-08-13**
 
-### Current external-research finding
+Current external-research finding:
 
-**`source_class` answers how an outcome was established; it does not by itself answer who observed it or from what vantage.**
+> **`source_class` answers how an outcome was established; it does not by itself answer who observed it or from what vantage.**
 
-A comparison against an independently developed, shipped `verdict_outcome` mechanism converged on the separation of decision provenance from outcome provenance and exposed `outcome_observer_id` + `outcome_vantage` as a concrete missing axis.
+Decision provenance and outcome provenance remain separately inspectable.
 
-## Current open gate
+## Current open system gate
 
-**Genesis / Historical Trust-Base Portability v0.1**
+**FCRP-SYSTEM-004 — Native ProofPath → LiminalDB / Independent-History Durable Semantic State**
 
 Falsifiable question:
 
-> Can materially independent trust-base providers establish equivalent genesis/history under a portable genesis contract and still reproduce the same downstream rotation, checkpoint, and witness semantics without inheriting the same historical Liminal predecessor registry/manifest bytes as ambient authority?
+> Can native ProofPath evidence be persisted and deterministically replayed through LiminalDB while proving that provenance was independently verified rather than merely recorded, semantic compatibility remains separate from irrelevant historical repository identity, different valid histories may converge where the contract permits it, historical truth does not become current authority, persistence leaks no execution authority, and the agent trajectory itself remains admissible under deterministic trace replay?
 
-This index is descriptive only. A milestone is marked VERIFIED only after immutable execution, external recomputation, and fail-closed agreement evidence exist.
+Minimum independent lanes should include:
+
+- provenance verification;
+- semantic compatibility;
+- bi-temporal replay;
+- independent-history convergence;
+- authority-negative controls;
+- agent-path / LTP trace admissibility.
+
+## Skill creation rule
+
+Do **not** create a new skill merely because a new problem appears.
+
+First test whether an existing canonical skill already expresses the required invariant.
+
+Create a new skill only when the missing method is recurring, clearly scoped, evidence-bounded, distinguishable from existing lanes, fail-closed, authority-explicit and backed by at least one negative regression.
+
+Every new skill should link back to the journal signal that justified its creation.
+
+This is how the system prevents **skill sprawl from becoming another form of Canonical Reality Drift**.
+
+---
+
+This index is descriptive and operationally useful, but not ambient authority. A milestone is marked **VERIFIED** only after its stated execution, recomputation and fail-closed evidence requirements are satisfied.
