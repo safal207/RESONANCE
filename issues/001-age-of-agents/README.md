@@ -54,6 +54,8 @@ Signal 012 — downstream causal-state portability
         ↓
 Signal 013 — recursive verification skill mesh
         ↓
+Signal 014 — native consumer acceptance / persistence frontier
+        ↓
 canonical skill registry + native repository contract
         ↓
 smallest falsifiable test
@@ -66,12 +68,32 @@ Operational rules carried by this line:
 - read the current journal state before inventing a new test method;
 - route to existing canonical skills before creating a new skill;
 - `output correct` does not imply `agent path admissible`;
+- `verifier invocation failed` does not imply `verified subject rejected`;
 - `repository head` does not necessarily equal `capability identity`;
 - `source commit` does not necessarily bind the executed dependency graph;
 - `historically verified` does not imply `currently applicable`;
 - provenance may prove semantic state without becoming semantic state identity;
+- a native downstream continuation should inherit the actual upstream `logical_operation_id` unless an explicit mapping contract exists;
+- consumer compatibility does not imply write, a write does not imply durability, and durability does not imply authority;
 - evidence, readiness, memory and publication do not grant execution authority;
-- rejected, not-reproduced, fixed and superseded findings remain in append-only history rather than silently disappearing.
+- rejected, not-reproduced, fixed and superseded findings remain in append-only history rather than silently disappearing;
+- repository advancement during an experiment requires reconciliation/revalidation rather than suppression of stale-base evidence.
+
+Current verified system boundary:
+
+```text
+ProofPath native verification
+        ↓
+LiminalDB-compatible AuditEvent artifact
+        ↓
+canonical LiminalDB dry-run validation
+        ↓
+LTP strict inspect + deterministic replay
+        ↓
+STOP BEFORE PERSISTENCE
+```
+
+The next falsifiable system question is **FCRP-SYSTEM-005 — Durable Proof Ingestion v0.1**. Until that gate is proved, Issue 001 should not describe the ProofPath → LiminalDB boundary as durable verified state.
 
 The journal is the **operational memory / routing layer**. Skill specifications and native repository contracts remain the execution / verification layer. Authorization remains separate.
 
@@ -83,7 +105,7 @@ The journal is the **operational memory / routing layer**. Skill specifications 
 - How do identity, permissions, memory, payments, provenance, and recovery change?
 - What new failure modes appear?
 - How should humans verify actions performed by agents?
-- Which markets and companies are likely to emerge around agent infrastructure?
+- Which markets and companies are likely to emerge around agent identity, security, evaluation, payments, memory, observability, and verification?
 - How does human work change when intelligence becomes an operational layer?
 
 ## Planned features
