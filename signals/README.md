@@ -19,6 +19,7 @@ Before inventing a new method, read the current line in this order:
 5. [`Signal 013 — Recursive Verification Skill Mesh / Journal-Driven Agent Routing`](013-recursive-verification-skill-mesh.md)
 6. [`Signal 014 — Persistence Frontier / Native Consumer Acceptance Is Not Durable State`](014-persistence-frontier-native-consumer-acceptance.md)
 7. [`Signal 015 — Durability Frontier / Commit ≠ Ack ≠ Retry Permission`](015-durability-frontier-commit-ack-retry.md)
+8. [`Signal 016 — Meaning May Change / Trace Must Not`](016-meaning-may-change-trace-must-not.md)
 
 Then inspect the **canonical skill registry and native repository contract** relevant to the target before execution.
 
@@ -73,6 +74,8 @@ recursive verification / skill routing
 native evidence handoff / persistence frontier
         ↓
 durable local/test evidence / restart replay
+        ↓
+immutable source trace / bounded reinterpretation
 ```
 
 ## Verified portability milestones
@@ -149,6 +152,15 @@ Signal 015 adds:
 22. **Semantic-Tamper / Byte-Tamper Conflation** — a negative control changes irrelevant representation bytes while claiming to test semantic mutation;
 23. **Pinned-Revision / Frozen-Default-Branch Conflation** — immutable capability pinning is implemented as a requirement that the dependency's default branch never advance.
 
+Signal 016 adds:
+
+24. **Source-Trace / Reflection-Identity Conflation** — derived interpretation identity replaces or obscures durable source identity;
+25. **Durability / Truth Conflation** — persistence of evidence is treated as proof that the represented real-world claim is true;
+26. **Domain-Adapter / Interpretation-Authority Conflation** — a new source type creates a second interpretation engine instead of projecting into the canonical core;
+27. **Digest-Consistency / Semantic-Contract Conflation** — matching source bytes and digest are treated as sufficient despite incompatible authority semantics;
+28. **Recorded-Time / Review-Time Conflation** — durable recording time is silently reused as downstream review time;
+29. **Review-Unavailable / Review-Passed Conflation** — an unavailable or rate-limited reviewer is reported as approval.
+
 These names are a working engineering taxonomy, not an external standard. Apply them only when the exact causal shape is supported by evidence.
 
 ## Current verification mesh
@@ -195,6 +207,16 @@ acknowledgement
 retry permission
 ```
 
+```text
+source trace
+        ≠
+reflection
+        ≠
+truth
+        ≠
+authority
+```
+
 A consequential agent run may require deterministic trace/replay verification even when its final object looks correct.
 
 ## Persistence and durability frontier
@@ -213,7 +235,7 @@ LTP strict inspect + replay PASS
 STOP BEFORE PERSISTENCE
 ```
 
-SYSTEM-005 has now crossed the next boundary under an explicit `local_test_only` storage admission:
+SYSTEM-005 crossed the next boundary under an explicit `local_test_only` storage admission:
 
 ```text
 ProofPath native VALID
@@ -240,7 +262,7 @@ LTP strict + replay PASS
 FCRP-SYSTEM-005 PASS
 ```
 
-Current rule:
+Current durability rule:
 
 ```text
 proof
@@ -266,11 +288,60 @@ logical_operation_id
 crossmint-public-example-001
 ```
 
-Final independent artifact:
+Final independent SYSTEM-005 artifact:
 
 `9215228292` — `sha256:01146320a1d04aaedb9bc12a76c71935b6b474620b372119a802207d841845e9`
 
-The durable boundary is currently **local/test only**. Do not promote it to production persistence authority.
+The durable boundary remains **local/test only**. Do not promote it to production persistence authority.
+
+## Interpretation frontier
+
+SYSTEM-006 has now made the next edge native:
+
+```text
+LiminalDB durable evidence state
+        ↓
+exact durable replay
+        ↓
+canonical RINSE read-only source adapter
+        ↓
+source_trace.id = liminaldb-proof-durable:<record_hash>
+        ↓
+existing canonical reflection_graph v0.2
+        ↓
+SUPPORTED_WITH_LIMITS / ACCEPT_WITH_LIMITS
+        ↓
+REFLECTION_ONLY / execution_allowed=false
+        ↓
+semantic escalation negative control
+        ↓
+LTP strict + replay PASS
+        ↓
+FCRP-SYSTEM-006 PASS
+```
+
+Canonical SYSTEM-006 identities:
+
+```text
+RINSE durable-source consumer
+3be0d2ceb1440641b141cdb80c82ed118e4186dd
+
+ContractGraph-QA independent verification
+b54173530c675083426137176cde0aed0b90853a
+
+SYSTEM-006 exact-head subject
+d52787bb67d9bc33047e922adeffa0192d96445b
+```
+
+Final independent SYSTEM-006 artifact:
+
+`9215723726` — `sha256:a5b53c56bbb64d367b1b56ca602a0710de60f58ecc4ba9b7734782caa003c26c`
+
+SYSTEM-006 proves that the durable record hash remains the source-trace identity, exact source bytes are not rewritten, the existing RINSE core alone creates reflection identity, semantic authority escalation is rejected even when the source-event digest is recomputed, and the result remains bounded and non-executable.
+
+Parent invariant:
+
+> **Meaning may change. Trace must not.**
 
 ## Finding lifecycle
 
@@ -318,7 +389,8 @@ Concrete preserved examples:
 - SYSTEM-005's first conflict-control issue was unstable error classification, not absence of the idempotency rule.
 - SYSTEM-005's first independent FCRP red came from unsupported `VALID_TIME` / `TRANSACTION_TIME` protocol enum values; the native durable path had already passed.
 - SYSTEM-005's next FCRP red came from a bad causal narrative that placed cause after symptom; the implementation path had again passed.
-- a pre-review FULL GREEN was superseded after valid review findings hardened the admission literal, semantic tamper test and LTP revision check; only the post-review artifact is canonical.
+- a pre-review SYSTEM-005 FULL GREEN was superseded after valid review findings hardened the admission literal, semantic tamper test and LTP revision check; only the post-review artifact is canonical.
+- SYSTEM-006 did not claim an external review passed when CodeRabbit was rate-limited; promotion used exact-head execution plus a bounded manual diff review and unchanged canonical base.
 
 ## External research signals
 
@@ -335,45 +407,42 @@ Decision provenance and outcome provenance remain separately inspectable.
 
 ## Current open system gate
 
-**FCRP-SYSTEM-006 — Durable State → RINSE Reinterpretation**
+**FCRP-SYSTEM-007 — RINSE Reflection → RESONANCE Operational Memory**
 
 Falsifiable question:
 
-> Can canonical RINSE consume the exact durable SYSTEM-005 record as an immutable source trace, derive a reflection through its canonical interpretation semantics, preserve durable source identity and trace provenance, and remain `REFLECTION_ONLY` / non-executable without creating a second semantic authority?
+> Can RESONANCE ingest the exact bounded SYSTEM-006 reflection as append-only operational memory while preserving its durable source record reference, RINSE reflection identity/digest, `REFLECTION_ONLY` authority, missing-evidence boundaries, uncertainty, correction/supersession history, and deterministic evidence/path replay — without promoting publication to truth or journal routing to execution authority?
 
 Minimum independent lanes should include:
 
-- current RINSE canonical capability / repository identity;
-- exact SYSTEM-005 durable source record identity;
-- immutable source-trace preservation;
-- content-derived reflection identity;
-- `SUPPORTED_BY` / `CONTRADICTED_BY` and supersession/refinement semantics where applicable;
-- valid / recorded / reviewed time separation where applicable;
-- recorded provenance vs independently verified provenance distinction;
-- `REFLECTION_ONLY` and `execution_allowed=false` enforcement;
-- no source-history rewrite;
-- no parallel interpretation authority;
-- deterministic evidence / replay;
+- exact canonical SYSTEM-006 evidence identity;
+- durable source record reference preservation;
+- RINSE reflection ID/digest preservation;
+- `SUPPORTED_WITH_LIMITS` / `ACCEPT_WITH_LIMITS` / `REFLECTION_ONLY` preservation;
+- missing-evidence and uncertainty preservation;
+- append-only correction / supersession behavior;
+- publication-versus-truth negative controls;
+- journal-routing-versus-execution-authority negative controls;
+- no mutation of durable source history or RINSE reflection history;
+- deterministic journal/evidence serialization;
 - LTP path admissibility;
 - FCRP upward verification.
 
 Current architectural target:
 
 ```text
-LiminalDB durable evidence state
+RINSE REFLECTION_ONLY result
         ↓
-RINSE immutable source trace
+RESONANCE operational memory
         ↓
-canonical reflection graph
+append-only journal entry
         ↓
-REFLECTION_ONLY interpretation
+future-agent routing context
 ```
 
-Parent invariant:
+Critical rule:
 
-> **Meaning may change. Trace must not.**
-
-Production persistence authorization remains a separate frontier. SYSTEM-006 does not silently solve it.
+> **Publication may preserve an interpretation. Publication must not promote it to truth or authority.**
 
 ## Skill creation rule
 

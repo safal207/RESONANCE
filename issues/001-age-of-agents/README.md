@@ -58,6 +58,8 @@ Signal 014 — native consumer acceptance / persistence frontier
         ↓
 Signal 015 — durability frontier / commit ≠ ack ≠ retry permission
         ↓
+Signal 016 — meaning may change / trace must not
+        ↓
 canonical skill registry + native repository contract
         ↓
 smallest falsifiable test
@@ -84,12 +86,19 @@ Operational rules carried by this line:
 - semantic-tamper tests must mutate semantic content, not merely representation noise;
 - implementation evidence may be valid while the causal case describing it is invalid;
 - evidence dimensions do not become protocol enum values merely because an implementation exposes them;
-- evidence, readiness, memory, durable storage and publication do not grant execution authority;
+- durable source identity must remain distinct from reflection identity;
+- a new source type must not silently create a second interpretation authority;
+- matching bytes/digests do not replace semantic contract validation;
+- `valid_time`, durable `recorded_time`, and downstream `reviewed_time` remain distinct facts;
+- `review unavailable` does not mean `review passed`;
+- evidence, readiness, memory, durable storage, interpretation and publication do not grant execution authority;
 - rejected, not-reproduced, fixed and superseded findings remain in append-only history rather than silently disappearing;
 - repository advancement during an experiment requires reconciliation/revalidation rather than suppression of stale-base evidence;
 - a green run superseded by valid review corrections must be re-executed before promotion.
 
-Current verified local/test system boundary:
+## Current verified system boundary
+
+The local/test persistence segment is canonical:
 
 ```text
 ProofPath native verification
@@ -108,9 +117,31 @@ idempotent retry + semantic-conflict rejection
         ↓
 AfterSyncBeforeAck recovery
         ↓
+FCRP-SYSTEM-005 PASS
+```
+
+SYSTEM-006 has now made the downstream interpretation edge native as well:
+
+```text
+LiminalDB durable evidence state
+        ↓
+exact durable replay
+        ↓
+canonical RINSE read-only source adapter
+        ↓
+immutable source trace bound to durable record hash
+        ↓
+existing canonical reflection_graph v0.2
+        ↓
+SUPPORTED_WITH_LIMITS / ACCEPT_WITH_LIMITS
+        ↓
+REFLECTION_ONLY / execution_allowed=false
+        ↓
+semantic authority-escalation rejection
+        ↓
 LTP strict inspect + deterministic replay
         ↓
-FCRP-SYSTEM-005 PASS
+FCRP-SYSTEM-006 PASS
 ```
 
 Canonical implementation evidence:
@@ -122,30 +153,54 @@ LiminalDB durable consumer
 ContractGraph-QA independent SYSTEM-005 proof
 efe3efe637372815bef55ec3862c49cc69244b88
 
-final artifact
-9215228292
-sha256:01146320a1d04aaedb9bc12a76c71935b6b474620b372119a802207d841845e9
+RINSE durable-source consumer
+3be0d2ceb1440641b141cdb80c82ed118e4186dd
+
+ContractGraph-QA independent SYSTEM-006 proof
+b54173530c675083426137176cde0aed0b90853a
 ```
 
-The qualifier **local/test** is load-bearing. Issue 001 must not describe this result as production persistence authority.
-
-The next falsifiable system question is **FCRP-SYSTEM-006 — Durable State → RINSE Reinterpretation**:
+Independent artifacts:
 
 ```text
-LiminalDB durable evidence state
-        ↓
-RINSE immutable source trace
-        ↓
-canonical reflection graph
-        ↓
-REFLECTION_ONLY interpretation
+SYSTEM-005
+9215228292
+sha256:01146320a1d04aaedb9bc12a76c71935b6b474620b372119a802207d841845e9
+
+SYSTEM-006
+9215723726
+sha256:a5b53c56bbb64d367b1b56ca602a0710de60f58ecc4ba9b7734782caa003c26c
 ```
 
-The parent invariant is:
+The qualifier **local/test** remains load-bearing. Issue 001 must not describe these results as production persistence or execution authority.
+
+The interpretation parent invariant is:
 
 > **Meaning may change. Trace must not.**
 
-SYSTEM-006 must preserve the exact durable source trace, avoid creating a second semantic authority, and keep interpretation non-executable. Production persistence authorization remains a separate frontier.
+The durable record remains the source-trace identity. The RINSE reflection is a derived, deterministic, bounded interpretation — not a replacement source, not truth, and not permission to execute.
+
+## Current open system question
+
+**FCRP-SYSTEM-007 — RINSE Reflection → RESONANCE Operational Memory**
+
+```text
+RINSE REFLECTION_ONLY result
+        ↓
+RESONANCE operational memory
+        ↓
+append-only journal entry
+        ↓
+future-agent routing context
+```
+
+SYSTEM-007 must preserve the durable source reference, RINSE reflection ID/digest, `SUPPORTED_WITH_LIMITS` / `REFLECTION_ONLY` semantics, uncertainty and missing-evidence boundaries, and append-only correction/supersession history.
+
+The critical rule is:
+
+> **Publication may preserve an interpretation. Publication must not promote it to truth or authority.**
+
+Production persistence authorization remains a separate frontier. SYSTEM-007 does not silently solve it.
 
 The journal is the **operational memory / routing layer**. Skill specifications and native repository contracts remain the execution / verification layer. Authorization remains separate.
 
