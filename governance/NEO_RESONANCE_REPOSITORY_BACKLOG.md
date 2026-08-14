@@ -65,10 +65,13 @@ Already present and not to be recreated:
 
 #### P0-3. Publish one provider-neutral interoperability contract
 
-- Status: `PLANNED`
+- Status: `IN_PROGRESS`
 - Target: shared documentation/schema boundary across ProofPath, CML, LiminalDB, RINSE, and ContractGraph-QA.
 - Minimum spine: `logical_operation_id`, execution/attempt ID, parent cause, intent, resolved target, expected invariants, observed outcome, phase, valid/transaction time, recovery state, verification/evidence references.
 - Completion signal: the same fixture can be serialized, stored, reopened, reflected, and independently verified without semantic renaming.
+- Implemented boundary: `governance/provider-neutral-interoperability-contract.v0.1.schema.json`, canonical fixture, explicit native field maps, CaPU adjacent-plane declaration, and dependency-free validator/replay runner.
+- Local machine result: lifecycle `PASS`, stored/reopened byte match `true`, independent verification `PASS`, and six negative cases `REJECTED`; local result digest `sha256:3bd90b2e1e7551335c7ed36b8112b44585f63bf18125bc80b672aa3417261a72`.
+- Next transition: run `.github/workflows/neo-resonance-p0-3-interoperability.yml` on the exact PR subject and bind the uploaded artifact.
 
 #### P0-4. Add a cross-repository freshness and ancestry gate
 
