@@ -65,13 +65,15 @@ Already present and not to be recreated:
 
 #### P0-3. Publish one provider-neutral interoperability contract
 
-- Status: `IN_PROGRESS`
+- Status: `VERIFIED`
 - Target: shared documentation/schema boundary across ProofPath, CML, LiminalDB, RINSE, and ContractGraph-QA.
 - Minimum spine: `logical_operation_id`, execution/attempt ID, parent cause, intent, resolved target, expected invariants, observed outcome, phase, valid/transaction time, recovery state, verification/evidence references.
 - Completion signal: the same fixture can be serialized, stored, reopened, reflected, and independently verified without semantic renaming.
 - Implemented boundary: `governance/provider-neutral-interoperability-contract.v0.1.schema.json`, canonical fixture, explicit native field maps, CaPU adjacent-plane declaration, and dependency-free validator/replay runner.
-- Local machine result: lifecycle `PASS`, stored/reopened byte match `true`, independent verification `PASS`, and six negative cases `REJECTED`; local result digest `sha256:3bd90b2e1e7551335c7ed36b8112b44585f63bf18125bc80b672aa3417261a72`.
-- Next transition: run `.github/workflows/neo-resonance-p0-3-interoperability.yml` on the exact PR subject and bind the uploaded artifact.
+- Machine evidence: workflow run #1 (`31811379438`) passed at exact contract subject `4401f7c171311a41afc2d8cce57275118746a8c5`; artifact `resonance-p0-3-interoperability-31811379438-1` is retained with digest `sha256:dde9a921fea371a63a1b129ce27c0ff2855577b9c8111db5d3a039b9aa8e7639`.
+- Result: six route events, stored/reopened byte match `true`, independent verification `PASS`, reflection `REFLECTION_ONLY`, and six negative cases `REJECTED`; canonical fixture digest `sha256:3bd90b2e1e7551335c7ed36b8112b44585f63bf18125bc80b672aa3417261a72`.
+- Scope boundary: this verifies the provider-neutral contract and bounded replay lifecycle; it does not assert live runtime integration, production persistence, merge approval, deployment or security certification.
+- Next transition: P0-4 cross-repository freshness and ancestry gate.
 
 #### P0-4. Add a cross-repository freshness and ancestry gate
 

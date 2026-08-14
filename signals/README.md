@@ -92,6 +92,10 @@ immutable source trace / bounded reinterpretation
 - [`011 — Genesis / Historical Trust-Base Portability`](011-genesis-historical-trust-base-portability.md) — **VERIFIED 2026-08-14**
 - [`012 — Downstream Causal-State Portability`](012-downstream-causal-state-portability.md) — **VERIFIED 2026-08-14**
 
+Current route implementation: P0-3 provider-neutral proof cargo spine is
+machine-verified in the RESONANCE governance layer; the canonical fixture keeps
+native mappings explicit and keeps CaPU outside the primary proof route.
+
 ### Current portability lesson
 
 Two independently rooted histories may carry distinct genesis, manifest, registry and provider identities while independently validating to the same normalized terminal authorization semantics.

@@ -157,6 +157,31 @@ intent
 
 Later work may compare alternate routes, but route comparison must preserve the same semantic proof claim and the same hard constraints. A route that reaches a green label with less evidence is not more efficient; it is proving a different proposition.
 
+## P0-3 application — provider-neutral cargo spine
+
+The first reusable cargo contract is now recorded in
+`governance/provider-neutral-interoperability-contract.v0.1.schema.json` and
+exercised by a canonical fixture. Every stage repeats the same spine:
+
+~~~
+logical_operation_id + execution_id + attempt_id
+parent_cause + intent + resolved_target
+expected_invariants + observed_outcome + phase
+valid_time + transaction_time + recovery_state
+verification_refs + non-authority boundary
+~~~
+
+Native names remain visible through an explicit field map. ProofPath, CML,
+LiminalDB, RINSE and ContractGraph-QA can therefore keep their own schemas while
+the verifier receives a stable routing envelope. The P0-3 lifecycle checks
+serialization, local/test storage, reopen, reflection and independent route
+reconstruction; identity rename, broken parent, missing evidence, semantic rename
+and authority escalation are delivery failures, not alternate successes.
+
+The CaPU field map is deliberately outside the event list. This keeps execution
+admissibility adjacent to the proof route without making it a second semantic
+authority or a hidden seventh delivery hop.
+
 ## Logistics metrics
 
 The following metrics are proposed for later measurement, not yet benchmark results:

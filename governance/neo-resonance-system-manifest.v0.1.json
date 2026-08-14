@@ -160,6 +160,14 @@
       "claim_limit": "The exact bounded fixture passed at subject 1a3e4b45de9ea8d495fa96c1069704476295df5c with pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
     },
     {
+      "from": "contractgraph-qa",
+      "to": "resonance",
+      "contract": "NEO_RESONANCE_PROVIDER_NEUTRAL_INTEROPERABILITY_V0_1",
+      "evidence": "RESONANCE P0-3 workflow run 31811379438; contract subject 4401f7c171311a41afc2d8cce57275118746a8c5",
+      "status": "VERIFIED_IN_BOUNDED_FIXTURE",
+      "claim_limit": "The exact contract fixture, native mappings, replay lifecycle and negative cases passed; this does not assert live runtime integration, production persistence, merge approval or security certification."
+    },
+    {
       "from": "liminalosai",
       "to": "proofpath",
       "contract": "control-to-evidence boundary",
@@ -168,13 +176,56 @@
       "claim_limit": "LiminalOSAI remains explicitly experimental and is not a production authorization layer"
     }
   ],
+  "p0_3_verification": {
+    "schema": "neo.resonance.provider-neutral-interoperability-result.v0.1",
+    "status": "PASS",
+    "scope": "bounded provider-neutral contract fixture",
+    "contract_subject_sha": "4401f7c171311a41afc2d8cce57275118746a8c5",
+    "logical_operation_id": "neo-resonance-system-007-001",
+    "route": [
+      "intent",
+      "proofpath",
+      "cml",
+      "liminaldb",
+      "rinse",
+      "contractgraph_qa"
+    ],
+    "workflow": {
+      "name": "RESONANCE P0-3 — Provider-Neutral Interoperability",
+      "run_number": 1,
+      "run_id": 31811379438,
+      "conclusion": "success",
+      "job": "verify",
+      "job_conclusion": "success",
+      "artifact": "resonance-p0-3-interoperability-31811379438-1",
+      "artifact_digest": "sha256:dde9a921fea371a63a1b129ce27c0ff2855577b9c8111db5d3a039b9aa8e7639",
+      "url": "https://github.com/safal207/RESONANCE/actions/runs/31811379438"
+    },
+    "lifecycle": {
+      "event_count": 6,
+      "stored_byte_match": true,
+      "reopened_byte_match": true,
+      "reflection_authority": "REFLECTION_ONLY",
+      "independent_verification": "PASS",
+      "canonical_fixture_digest": "sha256:3bd90b2e1e7551335c7ed36b8112b44585f63bf18125bc80b672aa3417261a72"
+    },
+    "negative_cases": [
+      "logical_operation_renaming",
+      "causal_parent_break",
+      "unknown_phase",
+      "missing_evidence_ref",
+      "authority_escalation",
+      "semantic_rename"
+    ],
+    "authority": "advisory only; no merge, deployment, production, external effects or security authorization"
+  },
   "next_transition": {
-    "id": "P0-3",
-    "action_class": "PUBLISH_INTEROPERABILITY_CONTRACT",
-    "action": "inventory the native fields at each proof boundary and publish one provider-neutral contract with a canonical fixture",
+    "id": "P0-4",
+    "action_class": "ADD_ANCESTRY_GATE",
+    "action": "add a cross-repository freshness and ancestry gate that binds the current subject, expected ancestor, workflow identity and artifact subject",
     "owner": "repository maintainers",
-    "completion_signal": "the same fixture serializes, stores, reopens, reflects, and is independently verified without semantic renaming; all machine checks and evidence references are attributable",
-    "stop_condition": "any native field mapping is ambiguous, any semantic rename is hidden, or any required evidence/check is unavailable or not PASS"
+    "completion_signal": "initial and final exact-head checks, expected ancestry, workflow identity and artifact subject are reported as PASS, HOLD, NOT_RUN or INCOMPLETE; unknown never becomes green",
+    "stop_condition": "the subject changes during collection, ancestry is unproven, workflow identity is ambiguous, artifact subject differs, or any unknown state is treated as PASS"
   },
   "verification": {
     "system": "FCRP-SYSTEM-007",
