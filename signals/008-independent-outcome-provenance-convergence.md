@@ -1,6 +1,6 @@
 # Engineering Signal 008 — Independent Outcome-Provenance Convergence
 
-**Status:** externally observed architecture convergence + concrete schema gap  
+**Status:** externally observed architecture convergence; original observer-identity gap subsequently shipped; semantic-vantage boundary remains under test  
 **Observed:** 13 Aug 2026  
 **Scope:** comparison of a public RESONANCE/CrewAI causal-provenance proposal against an independently developed, shipped `verdict_outcome` mechanism  
 **External context:** [`crewAIInc/crewAI#4877`](https://github.com/crewAIInc/crewAI/issues/4877#issuecomment-5276112082)  
@@ -126,11 +126,9 @@ The value is not that two systems use identical names. The value is that indepen
 
 ## Engineering restraint is part of the signal
 
-The external implementer explicitly declined to perform a reactive fifth schema edit after four real bug-fix rounds. That is the correct boundary for interpreting this result.
+The external implementer explicitly declined to perform a reactive fifth schema edit after four real bug-fix rounds. That was the correct boundary at the time of the initial comparison.
 
-The gap is **logged**, not yet implemented or validated.
-
-The next useful step is therefore not to claim adoption. It is to make observer identity and observation vantage a separately testable provenance extension with mutation/conformance cases that can distinguish:
+The useful next step was therefore not to claim adoption, but to make observer identity and observation vantage separately testable with cases that distinguish:
 
 - same source class, different observer;
 - same observer, different vantage;
@@ -138,10 +136,47 @@ The next useful step is therefore not to claim adoption. It is to make observer 
 - missing/ambiguous vantage;
 - evidence whose mechanism does not support the claimed vantage.
 
+## Subsequent implementation update
+
+The originally identified identity gap did not remain hypothetical. A later public implementation update reported that `verdict_outcome` now carries:
+
+- `outcome_observer_id`, required for newly published entries and explicit `null` on migrated records rather than invented identity;
+- `outcome_vantage`, derived rather than caller-supplied.
+
+External update: [`crewAIInc/crewAI#4877` — shipped observer fields](https://github.com/crewAIInc/crewAI/issues/4877#issuecomment-5284839948).
+
+This closes the **missing observer identity** part of Signal 008 at the schema level.
+
+It also exposes a narrower semantic question. The reported `outcome_vantage` is derived from the outcome entry's `source_class` plus whatever can be recovered from the cited decision's `vantage_limitation`, with states including `none`, `unrecovered`, and `unrecognized`.
+
+Those states may be useful, but they appear to mix two different axes:
+
+```text
+observer_vantage
+  = where/how this observer actually observed the outcome
+
+decision_vantage_resolution
+  = what could be recovered about the cited decision's vantage metadata
+```
+
+A falsification test is therefore:
+
+> Can two outcome observers with the same `source_class`, citing the same decision, observe the same outcome from genuinely different surfaces or positions?
+
+If yes, and the current derivation necessarily gives them the same `outcome_vantage`, then that field is modeling a lineage/provenance-resolution relation to the cited decision rather than the observer's actual vantage.
+
+This does **not** establish an implementation defect. `outcome_evidence.mechanism` may already carry some or all of the actual observation surface. The point is to keep the ontology decomposable:
+
+```text
+observer identity != observer vantage != decision-vantage resolution state
+```
+
+A public follow-up raised exactly this falsification test without asserting the answer: [`crewAIInc/crewAI#4877`](https://github.com/crewAIInc/crewAI/issues/4877#issuecomment-5291435538).
+
 ## Research / market question
 
 When an agent system reports that an authorized action produced a particular outcome:
 
-> **Can an independent verifier determine not only how that outcome was graded, but who observed it, from what vantage, and against which evidence — without trusting the decision issuer or the outcome reporter?**
+> **Can an independent verifier determine not only how that outcome was graded, but who observed it, from what actual vantage, and against which evidence — without confusing observer context with metadata-resolution state and without trusting the decision issuer or outcome reporter?**
 
-If not, the system has outcome provenance by class, but not yet outcome provenance by attributable observation context.
+If not, the system may have attributable outcome provenance while still conflating the semantics of observation position and lineage recovery.
