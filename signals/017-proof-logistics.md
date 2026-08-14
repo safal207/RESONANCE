@@ -195,6 +195,23 @@ This is the logistics invariant that prevents a well-packed but stale package
 from being delivered as current evidence. It reduces retrieval ambiguity without
 collapsing authorization, observation, reflection or QA into one authority lane.
 
+## P1-1 application — rejection receipts and route efficiency
+
+The negative-path matrix treats rejection evidence as first-class cargo. Each
+case carries its expected decision, observed decision, reason, input digest,
+replayable evidence reference and decision digest. A verifier can therefore
+route directly to the smallest sufficient receipt instead of scanning the full
+chain, while still checking that the receipt belongs to the exact ContractGraph-QA
+subject and pinned ProofPath head.
+
+The matrix contains 16 deterministic policy evaluations: 15 `BLOCK` negative
+cases and one `ACCEPT` policy-eligible control. All 16 replay identically, all
+16 have complete evidence, and zero cases execute. This is a delivery property,
+not an authorization property: authority flags remain false, and no provider,
+executor, wallet, real secret or external effect is involved. `BLOCK` and
+`HOLD` are fail-closed cargo states, so a missing or ambiguous receipt cannot be
+mistaken for a successful delivery.
+
 ## Logistics metrics
 
 The following metrics are proposed for later measurement, not yet benchmark results:

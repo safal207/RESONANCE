@@ -131,33 +131,33 @@
       "from": "proofpath",
       "to": "liminaldb",
       "contract": "PROOFPATH_DURABLE_INGESTION_V0_1",
-      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31812128865",
+      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31815023084 at exact subject fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e",
       "status": "VERIFIED_IN_BOUNDED_FIXTURE",
-      "claim_limit": "The exact bounded fixture passed at subject 755618d57ace8c657ebd7d14dbfcead86c0fb593 with pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
+      "claim_limit": "The exact bounded fixture passed at subject fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e with pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
     },
     {
       "from": "liminaldb",
       "to": "rinse",
       "contract": "LIMINALDB_DURABLE_PROOF_SOURCE_V0_1",
-      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31812128865",
+      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31815023084 at exact subject fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e",
       "status": "VERIFIED_IN_BOUNDED_FIXTURE",
-      "claim_limit": "The exact bounded fixture passed at subject 755618d57ace8c657ebd7d14dbfcead86c0fb593 with pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
+      "claim_limit": "The exact bounded fixture passed at subject fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e with pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
     },
     {
       "from": "rinse",
       "to": "contractgraph-qa",
       "contract": "FCRP-SYSTEM-006",
-      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31812128865",
+      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31815023084 at exact subject fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e",
       "status": "VERIFIED_IN_BOUNDED_FIXTURE",
-      "claim_limit": "The exact bounded fixture passed at subject 755618d57ace8c657ebd7d14dbfcead86c0fb593 with pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
+      "claim_limit": "The exact bounded fixture passed at subject fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e with pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
     },
     {
       "from": "cml",
       "to": "proofpath",
       "contract": "causal-lineage-and-current-trust-gates",
-      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31812128865",
+      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31815023084 at exact subject fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e",
       "status": "VERIFIED_IN_BOUNDED_FIXTURE",
-      "claim_limit": "The exact bounded fixture passed at subject 755618d57ace8c657ebd7d14dbfcead86c0fb593 with pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
+      "claim_limit": "The exact bounded fixture passed at subject fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e with pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
     },
     {
       "from": "contractgraph-qa",
@@ -228,19 +228,19 @@
     "pull_request": {
       "number": 61,
       "base_sha": "b54173530c675083426137176cde0aed0b90853a",
-      "subject_sha": "755618d57ace8c657ebd7d14dbfcead86c0fb593"
+      "subject_sha": "fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e"
     },
     "workflow": {
       "name": "FCRP P0-4 — Exact Subject and Ancestry Gate",
-      "run_number": 1,
-      "run_id": 31812129009,
+      "run_number": 2,
+      "run_id": 31815023184,
       "conclusion": "success",
       "job": "verify",
       "job_conclusion": "success",
-      "artifact": "cgqa-p0-4-ancestry-31812129009-1",
-      "artifact_digest": "sha256:528ed18d2e4479279a215233009222e13c79a7019157cfb58ff5ec35836433b2",
-      "artifact_subject_sha": "755618d57ace8c657ebd7d14dbfcead86c0fb593",
-      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31812129009"
+      "artifact": "cgqa-p0-4-ancestry-31815023184-1",
+      "artifact_digest": "sha256:21c900e7198e57db673eb280496efe142ba695a1ec0941ad52d1759fe83ee6de",
+      "artifact_subject_sha": "fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e",
+      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31815023184"
     },
     "checks": {
       "initial_subject": "PASS",
@@ -251,23 +251,62 @@
       "unknown_state_policy": "unknown_never_becomes_pass"
     },
     "system_007_rerun": {
-      "run_number": 4,
-      "run_id": 31812128865,
+      "run_number": 5,
+      "run_id": 31815023084,
       "conclusion": "success",
       "artifact": "fcrp-system-007-61",
-      "artifact_digest": "sha256:048475b4cc6c05e55de4025fa46763387bc34165d363ff1c4292ae6e9d935c56",
-      "artifact_subject_sha": "755618d57ace8c657ebd7d14dbfcead86c0fb593",
-      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31812128865"
+      "artifact_digest": "sha256:db5c0a63560511e31f81843f0203c1c2538a2b4ff442b0dac954e79c2960fa66",
+      "artifact_subject_sha": "fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e",
+      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31815023084"
     },
     "authority": "advisory only; no merge, deployment, production, external effects or security authorization"
   },
+  "p1_1_verification": {
+    "schema": "cgqa.p1-1-negative-path-matrix-result.v0.1",
+    "status": "PASS",
+    "scope": "bounded deterministic policy evaluation and replay receipts",
+    "repository": "safal207/ContractGraph-QA",
+    "pull_request": {
+      "number": 61,
+      "base_sha": "b54173530c675083426137176cde0aed0b90853a",
+      "subject_sha": "fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e"
+    },
+    "workflow": {
+      "name": "FCRP P1-1 — Negative-Path Matrix",
+      "run_number": 1,
+      "run_id": 31815023228,
+      "conclusion": "success",
+      "job": "verify",
+      "job_conclusion": "success",
+      "artifact": "fcrp-p1-1-negative-path-matrix-31815023228-1",
+      "artifact_digest": "sha256:a8b801aa5251b7fe78bf7dc6286d58cd7eb3ac6fa73ec6b5f29813fb778bdb07",
+      "artifact_subject_sha": "fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e",
+      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31815023228"
+    },
+    "proofpath_head": "4a05ee31d7497979c2505dd55bfef08823302e24",
+    "coverage": {
+      "total_cases": 16,
+      "matched_decisions": 16,
+      "blocked_cases": 15,
+      "accept_control_cases": 1,
+      "executed_cases": 0,
+      "replay_stable_cases": 16,
+      "evidence_complete_cases": 16
+    },
+    "authority": {
+      "execution_authorized": false,
+      "external_effects_authorized": false,
+      "mutation_authorized": false,
+      "claim_limit": "Deterministic provider-neutral policy evaluation only; no live provider, executor, wallet, real secret, network effect, merge, deployment, production persistence or security authorization is claimed."
+    }
+  },
   "next_transition": {
-    "id": "P1-1",
-    "action_class": "STANDARDIZE_NEGATIVE_PATH_MATRIX",
-    "action": "standardize the negative-path matrix across ProofPath and ContractGraph-QA with expected decisions and side-effect assertions",
+    "id": "P1-2",
+    "action_class": "UNIFY_EVIDENCE_BUNDLE_AND_REPLAY_MANIFESTS",
+    "action": "unify evidence-bundle and replay manifests across LiminalDB, RINSE, ContractGraph-QA and LS",
     "owner": "repository maintainers",
-    "completion_signal": "each negative case has an expected decision, side_effect_executed=false where applicable, and a replayable evidence reference",
-    "stop_condition": "a negative case is unbound, produces an unexpected decision, executes an unauthorized side effect, or cannot be replayed from exact evidence"
+    "completion_signal": "every load-bearing artifact has path, byte size, SHA-256, source revision, role and collection timestamps; duplicate or unlisted artifacts fail verification",
+    "stop_condition": "an evidence bundle omits a required field, includes an unlisted or duplicate artifact, or replay cannot be reconstructed from exact manifest entries"
   },
   "verification": {
     "system": "FCRP-SYSTEM-007",
@@ -280,45 +319,45 @@
       "draft": true,
       "merged": false,
       "base_sha": "b54173530c675083426137176cde0aed0b90853a",
-      "subject_sha": "755618d57ace8c657ebd7d14dbfcead86c0fb593"
+      "subject_sha": "fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e"
     },
     "workflow": {
       "name": "FCRP SYSTEM-007 Full-Chain Conformance",
-      "run_number": 4,
-      "run_id": 31812128865,
+      "run_number": 5,
+      "run_id": 31815023084,
       "conclusion": "success",
       "job": "verify",
       "job_conclusion": "success",
-      "started_at": "2026-08-14T14:58:00Z",
-      "completed_at": "2026-08-14T14:59:02Z",
+      "started_at": "2026-08-14T15:32:49Z",
+      "completed_at": "2026-08-14T15:33:45Z",
       "artifact": "fcrp-system-007-61",
-      "artifact_digest": "sha256:048475b4cc6c05e55de4025fa46763387bc34165d363ff1c4292ae6e9d935c56",
-      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31812128865"
+      "artifact_digest": "sha256:db5c0a63560511e31f81843f0203c1c2538a2b4ff442b0dac954e79c2960fa66",
+      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31815023084"
     },
     "standard_gates": [
       {
         "name": "CI",
-        "run_id": 31812128790,
+        "run_id": 31815023043,
         "conclusion": "success"
       },
       {
         "name": "Product",
-        "run_id": 31812128834,
+        "run_id": 31815023185,
         "conclusion": "success"
       },
       {
         "name": "FCRP v0.2 Contract Gate",
-        "run_id": 31812128850,
+        "run_id": 31815023186,
         "conclusion": "success"
       },
       {
         "name": "Finding report",
-        "run_id": 31812128774,
+        "run_id": 31815023086,
         "conclusion": "success"
       },
       {
         "name": "Portability",
-        "run_id": 31812128816,
+        "run_id": 31815023230,
         "conclusion": "success"
       }
     ],
