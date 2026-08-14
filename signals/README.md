@@ -20,6 +20,7 @@ Before inventing a new method, read the current line in this order:
 6. [`Signal 014 — Persistence Frontier / Native Consumer Acceptance Is Not Durable State`](014-persistence-frontier-native-consumer-acceptance.md)
 7. [`Signal 015 — Durability Frontier / Commit ≠ Ack ≠ Retry Permission`](015-durability-frontier-commit-ack-retry.md)
 8. [`Signal 016 — Meaning May Change / Trace Must Not`](016-meaning-may-change-trace-must-not.md)
+9. [Signal 017 — Proof Logistics / Доказательная логистика](017-proof-logistics.md)
 
 Then inspect the **canonical skill registry and native repository contract** relevant to the target before execution.
 
@@ -160,6 +161,10 @@ Signal 016 adds:
 27. **Digest-Consistency / Semantic-Contract Conflation** — matching source bytes and digest are treated as sufficient despite incompatible authority semantics;
 28. **Recorded-Time / Review-Time Conflation** — durable recording time is silently reused as downstream review time;
 29. **Review-Unavailable / Review-Passed Conflation** — an unavailable or rate-limited reviewer is reported as approval.
+
+Signal 017 proposes:
+
+30. **Proof Logistics / Causal Handoff Drift** — evidence is transported, stored or routed as if delivery were complete even though identity, lineage, freshness, integrity, retrieval scope or authority boundaries were lost at a handoff.
 
 These names are a working engineering taxonomy, not an external standard. Apply them only when the exact causal shape is supported by evidence.
 
@@ -342,6 +347,31 @@ SYSTEM-006 proves that the durable record hash remains the source-trace identity
 Parent invariant:
 
 > **Meaning may change. Trace must not.**
+
+## Proof logistics track (proposed)
+
+The new working principle is to treat causal evidence as cargo with explicit source, packaging, route, handoff, storage, inspection, delivery and retrieval contracts.
+
+The first route under test is:
+
+~~~
+intent
+ → ProofPath
+ → CML
+ → LiminalDB
+ → RINSE
+ → ContractGraph-QA
+~~~
+
+The optimization target is a constrained shortest proof path:
+
+- minimize verification, serialization, transfer, storage, retrieval, latency, duplication and staleness cost;
+- preserve logical-operation identity, causal parent, argument digest, nonce and policy;
+- keep authorization, observation, reflection and QA as separate evidence roles;
+- require digest-bound, replayable, exact-head-aware handoffs;
+- fail closed on missing, stale, tampered, duplicated, misrouted or authority-escalating cargo.
+
+This is a proposed routing principle, not a claim that the current route is globally optimal. See signals/017-proof-logistics.md for the falsification questions and the P0-2 application.
 
 ## Finding lifecycle
 
