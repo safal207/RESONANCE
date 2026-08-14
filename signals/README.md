@@ -17,6 +17,7 @@ Before inventing a new method, read the current line in this order:
 3. [`Signal 011 — Genesis / Historical Trust-Base Portability`](011-genesis-historical-trust-base-portability.md)
 4. [`Signal 012 — Downstream Causal-State Portability`](012-downstream-causal-state-portability.md)
 5. [`Signal 013 — Recursive Verification Skill Mesh / Journal-Driven Agent Routing`](013-recursive-verification-skill-mesh.md)
+6. [`Signal 014 — Persistence Frontier / Native Consumer Acceptance Is Not Durable State`](014-persistence-frontier-native-consumer-acceptance.md)
 
 Then inspect the **canonical skill registry and native repository contract** relevant to the target before execution.
 
@@ -67,6 +68,8 @@ genesis / historical trust-base independence
 downstream causal-state portability
         ↓
 recursive verification / skill routing
+        ↓
+native evidence handoff / persistence frontier
 ```
 
 ## Verified portability milestones
@@ -125,6 +128,15 @@ Signal 013 extends the operational taxonomy with:
 10. **Dependency-Resolution Identity Gap** — source revision is pinned but the executed dependency graph is not;
 11. **Verification-Method Omission Drift** — a stronger canonical verification lane exists but the agent silently uses a weaker method.
 
+Signal 014 adds:
+
+12. **Persistence-Frontier Collapse** — consumer acceptance, write, durability and authority are compressed into one apparent transition;
+13. **Logical-Operation Renaming Drift** — a downstream continuation silently replaces the real upstream logical-operation identity;
+14. **Verifier-Invocation / Subject-Verdict Conflation** — a wrapper/tool invocation failure is reported as semantic rejection of the subject;
+15. **Integration-Base / Causal-Ancestor Conflation** — one repository SHA is asked to serve both as historical causal anchor and current integration base after `main` advances.
+
+These names are a working engineering taxonomy, not an external standard. Apply them only when the exact causal shape is supported by evidence.
+
 ## Current verification mesh
 
 The journal does not duplicate every skill specification. It routes agents to the current canonical skill registries.
@@ -147,7 +159,7 @@ LTP
 └ ltp-agent-trace-auditor
 ```
 
-Operational invariant:
+Operational invariants:
 
 ```text
 final output correct
@@ -155,7 +167,55 @@ final output correct
 agent path admissible
 ```
 
+```text
+verifier invocation failed
+        ≠
+verified subject rejected
+```
+
 A consequential agent run may require deterministic trace/replay verification even when its final object looks correct.
+
+## Persistence frontier
+
+Signal 014 establishes the strongest currently verified native `ProofPath → LiminalDB` statement:
+
+```text
+ProofPath native VALID
+        ↓
+LiminalDB-compatible AuditEvent artifact
+        ↓
+canonical LiminalDB dry-run PASS
+        ↓
+LTP strict inspect + replay PASS
+        ↓
+STOP BEFORE PERSISTENCE
+```
+
+Current rule:
+
+```text
+proof
+≠ truth
+≠ consumer compatibility
+≠ write
+≠ durability
+≠ persistence authority
+≠ execution authority
+```
+
+The canonical SYSTEM-004 merge is:
+
+`be860d7a6ca089a4514d12a8108d27873b04dfb9`
+
+Its evidence artifact is:
+
+`9211945351` — `sha256:ad4c484d53e6b519625d9030cba9e2a7635161b5e0fcf24f8205b5177cc79106`
+
+The real continued logical operation is:
+
+`crossmint-public-example-001`
+
+Do not rename a native upstream operation merely to fit a synthetic global heartbeat ID unless an explicit operation-mapping contract exists.
 
 ## Finding lifecycle
 
@@ -196,6 +256,8 @@ PRIOR_INTERPRETATION
 
 The losing hypothesis remains in the evidence ledger with the reason it lost. It must not continue to influence the current verdict silently.
 
+SYSTEM-004 adds a concrete example: the first red LTP lane did **not** establish an inadmissible path. The strict inspector had not parsed the trace because the package wrapper received a literal `--` before `trace`. The supported cause was an invocation-contract failure. After correcting only the wrapper invocation, strict inspection and replay passed.
+
 ## External research signals
 
 These entries record externally observable engineering feedback and architecture convergence. They are evidence of public technical interaction, **not** verification milestones, endorsements, partnerships or implementation certification.
@@ -211,20 +273,35 @@ Decision provenance and outcome provenance remain separately inspectable.
 
 ## Current open system gate
 
-**FCRP-SYSTEM-004 — Native ProofPath → LiminalDB / Independent-History Durable Semantic State**
+**FCRP-SYSTEM-005 — Durable Proof Ingestion v0.1**
 
 Falsifiable question:
 
-> Can native ProofPath evidence be persisted and deterministically replayed through LiminalDB while proving that provenance was independently verified rather than merely recorded, semantic compatibility remains separate from irrelevant historical repository identity, different valid histories may converge where the contract permits it, historical truth does not become current authority, persistence leaks no execution authority, and the agent trajectory itself remains admissible under deterministic trace replay?
+> Can an explicitly authorized local/test LiminalDB ingestion path take the currently accepted native ProofPath artifact across the persistence frontier and reproduce it after restart while preserving logical-operation identity, producer provenance, consumer contract identity, valid time, transaction time and idempotent append identity — while failing closed on duplicate, stale, incompatible, partially committed or rollback-required ingestion and leaking no execution authority?
 
 Minimum independent lanes should include:
 
-- provenance verification;
-- semantic compatibility;
-- bi-temporal replay;
-- independent-history convergence;
-- authority-negative controls;
-- agent-path / LTP trace admissibility.
+- exact source / capability / dependency identity;
+- explicit local/test persistence authorization;
+- namespace / tenant isolation;
+- idempotent append identity;
+- transaction atomicity and acknowledgement ordering;
+- valid-time / transaction-time preservation;
+- restart replay;
+- crash / partial-commit recovery;
+- stale / duplicate / incompatible negative controls;
+- LTP path admissibility;
+- evidence-to-execution authority-negative controls;
+- FCRP upward verification.
+
+Until this gate exists and passes, the system map must remain:
+
+```text
+ProofPath
+→ verified evidence
+→ LiminalDB-compatible artifact
+→ persistence frontier
+```
 
 ## Skill creation rule
 
