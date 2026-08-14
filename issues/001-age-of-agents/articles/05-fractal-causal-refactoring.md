@@ -591,3 +591,124 @@ Problem
 **FCRP chain:**
 
 **Scale → Idea → Past → Present → Future → Divergence → Refactor → Simulation → Change → System Verification → Evidence**
+
+---
+
+## Implementation Update — 2026-08-14
+
+После исходной публикации FCRP был реализован как минимальный machine-readable protocol в ContractGraph-QA и начал применяться к собственной инфраструктуре.
+
+Canonical implementation:
+
+- [ContractGraph-QA PR #49 — FCRP Core v0.1 + SELF-001](https://github.com/safal207/ContractGraph-QA/pull/49)
+- merge commit: `b87a8ada5eefef975e551262b112440ea7a0aec4`
+- [`contractgraph_qa/fcrp.py`](https://github.com/safal207/ContractGraph-QA/blob/main/contractgraph_qa/fcrp.py)
+- [FCRP v0.1 protocol documentation](https://github.com/safal207/ContractGraph-QA/blob/main/docs/FRACTAL_CAUSAL_REFACTORING_PROTOCOL_V0_1.md)
+
+Executable v0.1 сейчас machine-enforces:
+
+```text
+scope + idea
+→ past / present / future
+→ evidence refs
+→ causal path
+→ symptom point
+→ First Meaningful Divergence
+→ cause point
+→ selected Refactor Point
+→ UP / DOWN / SIDEWAYS / STOP
+→ local verification
+→ upward verification
+→ explicit stop conditions
+→ PASS / BLOCK
+```
+
+При этом исходная статья сознательно шире текущего executable core.
+
+Пока остаются концептуальными или частично реализованными:
+
+```text
+full IdeaContract
+├ purpose
+├ expected outcome
+├ invariants
+├ forbidden outcomes
+├ dependencies
+└ parent contract
+
+autonomous causal discovery
+Refactor Score
+impact simulation
+separate authorization integration
+cross-project causal propagation
+typed time semantics
+```
+
+### Важная разница между статьёй и v0.1
+
+В исходной модели остановка ZoomUp требует:
+
+```text
+parent invariants preserved
+AND
+no affected cross-boundary dependency
+AND
+causal propagation stopped
+AND
+explanation complete
+```
+
+Минимальный executable v0.1 пока проверяет отдельно:
+
+```text
+parentInvariantsPreserved
+crossBoundaryEffectsAbsent
+causalExplanationComplete
+```
+
+`causalPropagationStopped` ещё не является отдельным machine-enforced field. Это один из прямых кандидатов для FCRP v0.2.
+
+### Что уже произошло после публикации
+
+FCRP был применён к нескольким уровням собственной системы:
+
+```text
+SELF-001 — verification test proved the wrong boundary
+SELF-002 — local PASS, parent invariant FAIL → BLOCK
+SELF-003 — wall-clock oracle confused with protocol-time → BLOCK + reframe
+SELF-005 — ProofPath Canonical Reality Drift
+SELF-006 — CML historical verified ≠ current applicability
+SELF-007 — LiminalDB provenance identity ≠ semantic compatibility identity
+SELF-008 — RINSE domain interpretation ≠ shared semantic authority
+```
+
+Часть этих результатов уже promoted в canonical `main`, часть остаётся исследовательской и поэтому не представляется как завершённая внешняя валидация.
+
+Текущий статус исходных verification goals:
+
+- [x] Minimal executable FCRP core implemented
+- [x] Repeatable self-benchmark cases implemented
+- [x] Cross-repository self-validation started and produced canonical repository changes
+- [ ] Independent third-party replication completed
+- [ ] Controlled comparison against non-FCRP debugging completed
+- [ ] Autonomous root-cause discovery demonstrated
+
+Полный field report с evidence и новыми классами divergence опубликован отдельно:
+
+**[Article 06 — The System That Refactored Itself](06-the-system-that-refactored-itself.md)**
+
+Это сохраняет Article 05 как origin document и одновременно делает видимой эволюцию гипотезы:
+
+```text
+Article 05
+conceptual FCRP
+      ↓
+executable v0.1
+      ↓
+self-tests
+      ↓
+repository-wide causal governance
+      ↓
+Article 06
+field evidence + FCRP v0.2 directions
+```
