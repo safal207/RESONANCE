@@ -44,7 +44,11 @@ Already present and not to be recreated:
 - Target: RESONANCE governance layer.
 - Purpose: keep repository roles, exact observed heads, dependency edges, and evidence references in one inspectable place.
 - Completion signal: manifest validates as JSON; every load-bearing edge names a source revision and a non-claim; refresh detects head movement instead of silently accepting it.
-- Next transition: add a deterministic validator and stale-head report.
+- Implemented guardrail: `governance/validate_neo_resonance_manifest.py` now emits a machine-readable report and explicit `PASS`, `HOLD`, `NOT_RUN`, or `INCOMPLETE` states; `.github/workflows/neo-resonance-p0-1-freshness.yml` runs the required remote check on the exact workflow subject.
+- Remote observation at preparation time: all eight manifest heads matched through a read-only GitHub connector snapshot.
+- Local direct `api.github.com` execution: `INCOMPLETE` in the current sandbox because the network request timed out; this is not treated as a remote PASS.
+- Human review: `HOLD` until a non-bot reviewer records a decision against both exact PR heads in `governance/P0-1-HUMAN-REVIEW.md`.
+- Next transition: run the new workflow on this exact PR head, then perform the human review without changing either subject.
 
 #### P0-2. Build FCRP-SYSTEM-007 full-chain conformance
 
@@ -55,6 +59,7 @@ Already present and not to be recreated:
 - Negative cases: missing intent, replayed nonce, changed argument digest, stale dependency head, tampered durable record, and attempted reflection escalation.
 - Evidence: bounded fixture `PASS` at ContractGraph-QA PR #61 subject `1a3e4b45de9ea8d495fa96c1069704476295df5c`, based on exact main `b54173530c675083426137176cde0aed0b90853a`; workflow run #3 (`31806175647`) completed successfully.
 - Exact external subjects: ProofPath `4a05ee31d7497979c2505dd55bfef08823302e24`, CML `2a649903693fc61a560ee056834127ada3120206`, LiminalDB `61b02fc81e0cb5cf1f1ed4658ecff58f683cb728`, RINSE `3be0d2ceb1440641b141cdb80c82ed118e4186dd`.
+- Adjacent control-plane observation: CaPU `babd2945046d2564e1110a76741827560c57fcca` is recorded separately as execution-control-only; it is not a seventh proof stage or a source of CML semantics.
 - Scope boundary: this verifies the deterministic fixture, replay, durability/reopen/retry behavior, and reflection-only negative boundary; it does not authorize merge, deployment, production persistence, external effects, or a security claim.
 
 #### P0-3. Publish one provider-neutral interoperability contract

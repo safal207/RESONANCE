@@ -363,6 +363,12 @@ intent
  → ContractGraph-QA
 ~~~
 
+CaPU is an adjacent execution-control boundary at exact head
+`babd2945046d2564e1110a76741827560c57fcca`, not a seventh proof stage. CML
+retains causal/authorization semantics; CaPU retains commit-before-effect
+admissibility; LiminalDB retains bounded evidence persistence; RINSE remains
+reflection-only. SYSTEM-007 does not claim CaPU production execution.
+
 The optimization target is a constrained shortest proof path:
 
 - minimize verification, serialization, transfer, storage, retrieval, latency, duplication and staleness cost;

@@ -29,6 +29,31 @@ ContractGraph-QA
   ↓ independent route and invariant verification
 ~~~
 
+## Adjacent execution-control boundary: CaPU
+
+CaPU is tracked beside this route at the exact observed head
+`safal207/CaPU@babd2945046d2564e1110a76741827560c57fcca`.
+
+Its role is **execution control only**: the `Gate → Incubate → Commit → Execute`
+boundary rejects an effect before commit. It is not inserted as a hidden seventh
+proof-logistics stage, does not own the canonical causal-record meaning, and does
+not turn durable evidence persistence into execution permission.
+
+The ownership split is therefore explicit:
+
+~~~
+CML       → canonical causal and authorization-record semantics
+CaPU      → execution admissibility / commit-before-effect control
+LiminalDB → bounded evidence persistence and restart recovery
+RINSE     → read-only reflection
+CGQA      → independent verification
+~~~
+
+For SYSTEM-007 this is an adjacent negative/positive boundary check only. The
+fixture does not perform a CaPU production execution or an external effect. A
+future route may consume a CaPU decision, but that would require its own exact
+capability pin, authority contract and independent evidence.
+
 The analogy to physical logistics is structural rather than rhetorical:
 
 ~~~

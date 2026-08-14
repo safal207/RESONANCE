@@ -1,0 +1,117 @@
+name: RESONANCE P0-1 — Remote Freshness and Human Review Boundary
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'governance/NEO_RESONANCE_REPOSITORY_BACKLOG.md'
+      - 'governance/neo-resonance-system-manifest.v0.1.json'
+      - 'governance/validate_neo_resonance_manifest.py'
+      - 'governance/test_validate_neo_resonance_manifest.py'
+      - 'governance/P0-1-HUMAN-REVIEW.md'
+      - '.github/workflows/neo-resonance-p0-1-freshness.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'governance/NEO_RESONANCE_REPOSITORY_BACKLOG.md'
+      - 'governance/neo-resonance-system-manifest.v0.1.json'
+      - 'governance/validate_neo_resonance_manifest.py'
+      - 'governance/test_validate_neo_resonance_manifest.py'
+      - 'governance/P0-1-HUMAN-REVIEW.md'
+      - '.github/workflows/neo-resonance-p0-1-freshness.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  freshness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      EXPECTED_SUBJECT: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Checkout exact subject
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Verify exact workflow subject and run local tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SUBJECT"
+          python3 -m unittest discover -s governance -p 'test_*.py' -v
+          mkdir -p p0-1-evidence
+
+      - name: Run structural manifest validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 governance/validate_neo_resonance_manifest.py \
+            governance/neo-resonance-system-manifest.v0.1.json \
+            --json-output p0-1-evidence/manifest-validation-structure.json \
+            | tee p0-1-evidence/manifest-validation-structure.txt
+
+      - name: Run required remote freshness validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          python3 governance/validate_neo_resonance_manifest.py \
+            governance/neo-resonance-system-manifest.v0.1.json \
+            --check-remote \
+            --require-remote \
+            --json-output p0-1-evidence/manifest-validation-remote.json \
+            | tee p0-1-evidence/manifest-validation-remote.txt
+          status=${PIPESTATUS[0]}
+          set -e
+          test "$status" -eq 0
+
+      - name: Capture exact run context
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          payload = {
+              "schema": "neo.resonance.p0-1-run-context.v0.1",
+              "repository": os.environ["GITHUB_REPOSITORY"],
+              "event": os.environ["GITHUB_EVENT_NAME"],
+              "workflow": os.environ["GITHUB_WORKFLOW"],
+              "workflow_ref": os.environ["GITHUB_WORKFLOW_REF"],
+              "run_id": os.environ["GITHUB_RUN_ID"],
+              "run_attempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "reported_sha": os.environ["GITHUB_SHA"],
+              "expected_subject": os.environ["EXPECTED_SUBJECT"],
+              "checked_subject": subprocess.check_output(
+                  ["git", "rev-parse", "HEAD"], text=True
+              ).strip(),
+              "authority": "advisory only; no human approval or merge authorization",
+          }
+          Path("p0-1-evidence/run-context.json").write_text(
+              json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Upload P0-1 freshness evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-p0-1-freshness-${{ github.run_id }}-${{ github.run_attempt }}
+          path: p0-1-evidence/
+          if-no-files-found: error
+          retention-days: 90

@@ -101,6 +101,18 @@
       "observed_head": "fa7e3aba4ff9154856fa7d27c92f702137819ac1"
     }
   ],
+  "adjacent_control_planes": [
+    {
+      "repository": "safal207/CaPU",
+      "default_branch": "main",
+      "observed_head": "babd2945046d2564e1110a76741827560c57fcca",
+      "role": "execution_control_only",
+      "in_primary_proof_route": false,
+      "semantic_authority": "CML",
+      "current_system_007_execution": false,
+      "claim_limit": "CaPU is an adjacent reference boundary; this manifest does not claim production execution, hardware enforcement or external effects."
+    }
+  ],
   "edges": [
     {
       "from": "proofpath",
