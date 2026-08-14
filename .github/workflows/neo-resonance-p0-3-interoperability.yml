@@ -1,0 +1,109 @@
+name: RESONANCE P0-3 — Provider-Neutral Interoperability
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - governance/provider-neutral-interoperability-contract.v0.1.schema.json
+      - governance/provider-neutral-interoperability-fixture.v0.1.json
+      - governance/validate_provider_neutral_interoperability.py
+      - governance/test_validate_provider_neutral_interoperability.py
+      - governance/P0-3-PROVIDER-NEUTRAL-CONTRACT.md
+      - .github/workflows/neo-resonance-p0-3-interoperability.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: neo-resonance-p0-3-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      EXACT_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      PR_BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
+      EXPECTED_PR_BASE: 717b4cc284812d1483313301c4be8e3ba3a49931
+
+    steps:
+      - name: Checkout exact P0-3 subject
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ env.EXACT_HEAD }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Verify exact subject and local tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXACT_HEAD"
+          git merge-base --is-ancestor "$EXPECTED_PR_BASE" "$EXACT_HEAD"
+          if [ -n "$PR_BASE_SHA" ]; then test "$PR_BASE_SHA" = "$EXPECTED_PR_BASE"; fi
+          python3 -m py_compile \
+            governance/validate_provider_neutral_interoperability.py \
+            governance/test_validate_provider_neutral_interoperability.py
+          python3 -m unittest discover -s governance -p 'test_*.py' -v
+
+      - name: Run provider-neutral lifecycle and negative cases
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence/p0-3
+          python3 governance/validate_provider_neutral_interoperability.py \
+            --fixture governance/provider-neutral-interoperability-fixture.v0.1.json \
+            --output-dir evidence/p0-3 \
+            --checked-subject "$EXACT_HEAD"
+          cp governance/provider-neutral-interoperability-contract.v0.1.schema.json evidence/p0-3/
+          cp governance/provider-neutral-interoperability-fixture.v0.1.json evidence/p0-3/
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path("evidence/p0-3/result.json").read_text())
+          assert result["status"] == "PASS"
+          assert result["checked_subject"] == __import__("os").environ["EXACT_HEAD"]
+          assert result["stored_byte_match"] is True
+          assert result["reopened_byte_match"] is True
+          assert result["independent_verification"]["status"] == "PASS"
+          assert all(value == "REJECTED" for value in result["negative_cases"].values())
+          assert result["reflection"]["authority"]["classification"] == "REFLECTION_ONLY"
+          PY
+          find evidence/p0-3 -type f ! -name SHA256SUMS -print0 \
+            | sort -z \
+            | xargs -0 sha256sum > evidence/p0-3/SHA256SUMS
+
+      - name: Capture exact run context
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          Path("evidence/p0-3/run-context.json").write_text(json.dumps({
+              "schema": "neo.resonance.p0-3-run-context.v0.1",
+              "checked_subject": os.environ["EXACT_HEAD"],
+              "expected_subject": os.environ["EXACT_HEAD"],
+              "reported_sha": os.environ.get("GITHUB_SHA"),
+              "workflow": os.environ.get("GITHUB_WORKFLOW"),
+              "workflow_ref": os.environ.get("GITHUB_WORKFLOW_REF"),
+              "run_id": os.environ.get("GITHUB_RUN_ID"),
+              "authority": "advisory only; no approval or external authority",
+          }, indent=2, sort_keys=True) + "\n")
+          PY
+          sha256sum evidence/p0-3/run-context.json >> evidence/p0-3/SHA256SUMS
+
+      - name: Upload P0-3 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-p0-3-interoperability-${{ github.run_id }}-${{ github.run_attempt }}
+          path: evidence/p0-3
+          if-no-files-found: error
+          retention-days: 90

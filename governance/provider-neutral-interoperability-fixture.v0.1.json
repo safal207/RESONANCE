@@ -1,0 +1,282 @@
+{
+  "schema": "neo.resonance.provider-neutral-interoperability.v0.1",
+  "contract_version": "0.1",
+  "case_id": "FCRP-SYSTEM-007",
+  "logical_operation_id": "neo-resonance-system-007-001",
+  "execution_id": "exec-system-007-001",
+  "attempt_id": "attempt-system-007-001",
+  "intent": {
+    "intent_id": "intent:sha256:eff1fcd29a81e0c9e34f02b0f580ed47785028f357b843b27e989d81e44f9eea",
+    "kind": "cross_repository_conformance",
+    "purpose": "Verify one declared logical operation across the bounded Neo Resonance proof route.",
+    "argument_digest": "sha256:71db70a65b447db62ef8b8289edfedba66035df70d45a20a267c37082c3dbbd1",
+    "expected_outcome": "bounded_reflection_without_execution_authority"
+  },
+  "resolved_target": {
+    "route": ["intent", "proofpath", "cml", "liminaldb", "rinse", "contractgraph_qa"],
+    "scope": "bounded_exact_head_local_test_only"
+  },
+  "expected_invariants": [
+    {"id": "INV-IDENTITY-CONSERVED", "statement": "logical_operation_id remains identical at every handoff."},
+    {"id": "INV-PARENT-CHAIN-CONSERVED", "statement": "Every non-root event names the immediately preceding causal event."},
+    {"id": "INV-EVIDENCE-INTEGRITY", "statement": "Every verification reference resolves to a digest-bound evidence catalog entry."},
+    {"id": "INV-AUTHORITY-NONINCREASING", "statement": "Evidence, storage, reflection and verification do not grant execution or mutation authority."},
+    {"id": "INV-REOPEN-BYTE-MATCH", "statement": "Stored and reopened contract bytes remain canonically identical."},
+    {"id": "INV-REFLECTION-READ-ONLY", "statement": "Reflection is derived from source evidence without source mutation or write-back."}
+  ],
+  "evidence_catalog": [
+    {"ref": "evidence://system-007/intent", "role": "intent", "digest": "sha256:eff1fcd29a81e0c9e34f02b0f580ed47785028f357b843b27e989d81e44f9eea"},
+    {"ref": "evidence://system-007/proofpath-native-receipt", "role": "proofpath", "digest": "sha256:0e088934ba34f2f3ac3a73a779bd5122e1e358d86e4e715c798282ad07e0ec5a"},
+    {"ref": "evidence://system-007/cml-chain", "role": "cml", "digest": "sha256:0587263f2824c1b9a6551c7782265fa59abe12a453191148ac0b802249352635"},
+    {"ref": "evidence://system-007/liminaldb-recovered-summary", "role": "liminaldb", "digest": "sha256:ae101a4ae09606312bee0b93cd26dfa46ba8dd6f921d93ae7a725bee05be66cb"},
+    {"ref": "evidence://system-007/rinse-reflection", "role": "rinse", "digest": "sha256:00ee08ced7e150fd6e571cfdebfd0f7f5c1179d617e71dfb414770386c6d6ebf"},
+    {"ref": "evidence://system-007/conformance-artifact", "role": "independent_verification", "digest": "sha256:3dab063dd264823876412080f49a51d9c03849e0ceddb5d317905380f409aef0"}
+  ],
+  "component_bindings": [
+    {"component": "proofpath", "repository": "safal207/ProofPath", "revision": "4a05ee31d7497979c2505dd55bfef08823302e24", "role": "pre-execution-evidence"},
+    {"component": "cml", "repository": "safal207/Causal-Memory-Layer", "revision": "2a649903693fc61a560ee056834127ada3120206", "role": "causal-lineage"},
+    {"component": "liminaldb", "repository": "safal207/LiminalDB", "revision": "61b02fc81e0cb5cf1f1ed4658ecff58f683cb728", "role": "durable-evidence"},
+    {"component": "rinse", "repository": "safal207/rinse", "revision": "3be0d2ceb1440641b141cdb80c82ed118e4186dd", "role": "read-only-reflection"},
+    {"component": "contractgraph_qa", "repository": "safal207/ContractGraph-QA", "revision": "1a3e4b45de9ea8d495fa96c1069704476295df5c", "role": "independent-verification"},
+    {"component": "intent", "repository": "safal207/RESONANCE", "revision": "717b4cc284812d1483313301c4be8e3ba3a49931", "role": "declared-scope-envelope"}
+  ],
+  "adjacent_control_planes": [
+    {
+      "component": "capu",
+      "repository": "safal207/CaPU",
+      "revision": "babd2945046d2564e1110a76741827560c57fcca",
+      "role": "execution_control_only",
+      "in_primary_proof_route": false,
+      "semantic_authority": "cml"
+    }
+  ],
+  "authority_boundary": {
+    "execution_authorized": false,
+    "mutation_authorized": false,
+    "external_effects_authorized": false
+  },
+  "events": [
+    {
+      "event_id": "event:intent:001",
+      "phase": "intent",
+      "logical_operation_id": "neo-resonance-system-007-001",
+      "execution_id": "exec-system-007-001",
+      "attempt_id": "attempt-system-007-001",
+      "intent_id": "intent:sha256:eff1fcd29a81e0c9e34f02b0f580ed47785028f357b843b27e989d81e44f9eea",
+      "parent_cause": null,
+      "intent": {"kind": "cross_repository_conformance", "expected_outcome": "bounded_reflection_without_execution_authority"},
+      "resolved_target": {"component": "intent", "operation": "declare", "scope": "bounded_exact_head_local_test_only"},
+      "expected_invariants": ["INV-IDENTITY-CONSERVED", "INV-PARENT-CHAIN-CONSERVED", "INV-EVIDENCE-INTEGRITY", "INV-AUTHORITY-NONINCREASING"],
+      "observed_outcome": {"status": "declared", "decision": "DECLARE", "summary": "The bounded operation and its non-authority boundary were declared."},
+      "valid_time": {"from": "2026-08-14T08:00:00Z", "to": null},
+      "transaction_time": "2026-08-14T08:00:00Z",
+      "recovery_state": "not_started",
+      "verification_refs": ["evidence://system-007/intent"],
+      "authority_boundary": {"execution_authorized": false, "mutation_authorized": false, "external_effects_authorized": false},
+      "native_projection": {
+        "repository": "safal207/RESONANCE",
+        "native_schema": "cgqa.system-007-intent.v0.1",
+        "field_map": {
+          "logical_operation_id": {"native_path": "logical_operation_id", "binding_kind": "identity", "semantic_status": "preserved"},
+          "execution_id": {"native_path": "derived:execution_id", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "attempt_id": {"native_path": "nonce", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "parent_cause": {"native_path": "parents", "binding_kind": "identity", "semantic_status": "preserved"},
+          "intent": {"native_path": "intent", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "resolved_target": {"native_path": "arguments.source_case", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "expected_invariants": {"native_path": "arguments.negative_cases", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "observed_outcome": {"native_path": "intent.expected_outcome", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "phase": {"native_path": "schema", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "valid_time": {"native_path": "observed_at", "binding_kind": "identity", "semantic_status": "preserved"},
+          "transaction_time": {"native_path": "observed_at", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "recovery_state": {"native_path": "derived:not_started", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "verification_refs": {"native_path": "authority.evidence_ref", "binding_kind": "identity", "semantic_status": "preserved"}
+        }
+      }
+    },
+    {
+      "event_id": "event:proofpath:001",
+      "phase": "proofpath",
+      "logical_operation_id": "neo-resonance-system-007-001",
+      "execution_id": "exec-system-007-001",
+      "attempt_id": "attempt-system-007-001",
+      "intent_id": "intent:sha256:eff1fcd29a81e0c9e34f02b0f580ed47785028f357b843b27e989d81e44f9eea",
+      "parent_cause": "event:intent:001",
+      "intent": {"kind": "cross_repository_conformance", "expected_outcome": "bounded_reflection_without_execution_authority"},
+      "resolved_target": {"component": "proofpath", "operation": "verify_scig", "scope": "bounded_exact_head_local_test_only"},
+      "expected_invariants": ["INV-IDENTITY-CONSERVED", "INV-PARENT-CHAIN-CONSERVED", "INV-EVIDENCE-INTEGRITY", "INV-AUTHORITY-NONINCREASING"],
+      "observed_outcome": {"status": "verified", "decision": "STOP", "summary": "Native ProofPath verification accepted the bounded SCIG and stopped further effect."},
+      "valid_time": {"from": "2026-08-14T08:00:00Z", "to": null},
+      "transaction_time": "2026-08-14T08:00:01Z",
+      "recovery_state": "not_required",
+      "verification_refs": ["evidence://system-007/proofpath-native-receipt"],
+      "authority_boundary": {"execution_authorized": false, "mutation_authorized": false, "external_effects_authorized": false},
+      "native_projection": {
+        "repository": "safal207/ProofPath",
+        "native_schema": "proofpath.scig.v0.1",
+        "field_map": {
+          "logical_operation_id": {"native_path": "system_chain.logical_operation_id", "binding_kind": "identity", "semantic_status": "preserved"},
+          "execution_id": {"native_path": "action.id", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "attempt_id": {"native_path": "system_chain.intent_nonce", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "parent_cause": {"native_path": "cause[].target", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "intent": {"native_path": "control.expected_outcome", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "resolved_target": {"native_path": "action.type", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "expected_invariants": {"native_path": "invariants[].id", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "observed_outcome": {"native_path": "verification.observed", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "phase": {"native_path": "action.phase", "binding_kind": "identity", "semantic_status": "preserved"},
+          "valid_time": {"native_path": "transition.observed_at", "binding_kind": "identity", "semantic_status": "preserved"},
+          "transaction_time": {"native_path": "transition.observed_at", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "recovery_state": {"native_path": "recovery.action", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "verification_refs": {"native_path": "evidence[].id", "binding_kind": "structured_projection", "semantic_status": "preserved"}
+        }
+      }
+    },
+    {
+      "event_id": "event:cml:001",
+      "phase": "cml",
+      "logical_operation_id": "neo-resonance-system-007-001",
+      "execution_id": "exec-system-007-001",
+      "attempt_id": "attempt-system-007-001",
+      "intent_id": "intent:sha256:eff1fcd29a81e0c9e34f02b0f580ed47785028f357b843b27e989d81e44f9eea",
+      "parent_cause": "event:proofpath:001",
+      "intent": {"kind": "cross_repository_conformance", "expected_outcome": "bounded_reflection_without_execution_authority"},
+      "resolved_target": {"component": "cml", "operation": "append_causal_record", "scope": "bounded_exact_head_local_test_only"},
+      "expected_invariants": ["INV-IDENTITY-CONSERVED", "INV-PARENT-CHAIN-CONSERVED", "INV-EVIDENCE-INTEGRITY", "INV-AUTHORITY-NONINCREASING"],
+      "observed_outcome": {"status": "accepted", "decision": "LINKED", "summary": "CML reconstructed the root-first parent-cause chain without changing operation identity."},
+      "valid_time": {"from": "2026-08-14T08:00:00Z", "to": null},
+      "transaction_time": "2026-08-14T08:00:02Z",
+      "recovery_state": "not_required",
+      "verification_refs": ["evidence://system-007/cml-chain"],
+      "authority_boundary": {"execution_authorized": false, "mutation_authorized": false, "external_effects_authorized": false},
+      "native_projection": {
+        "repository": "safal207/Causal-Memory-Layer",
+        "native_schema": "vcml.causal-record.v0",
+        "field_map": {
+          "logical_operation_id": {"native_path": "object.logical_operation_id", "binding_kind": "identity", "semantic_status": "preserved"},
+          "execution_id": {"native_path": "object.execution_id", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "attempt_id": {"native_path": "object.attempt_id", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "parent_cause": {"native_path": "parent_cause", "binding_kind": "identity", "semantic_status": "preserved"},
+          "intent": {"native_path": "permitted_by", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "resolved_target": {"native_path": "object.stage", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "expected_invariants": {"native_path": "object.causal_claim", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "observed_outcome": {"native_path": "action", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "phase": {"native_path": "object.stage", "binding_kind": "identity", "semantic_status": "preserved"},
+          "valid_time": {"native_path": "timestamp", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "transaction_time": {"native_path": "timestamp", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "recovery_state": {"native_path": "derived:not_required", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "verification_refs": {"native_path": "integrity", "binding_kind": "structured_projection", "semantic_status": "preserved"}
+        }
+      }
+    },
+    {
+      "event_id": "event:liminaldb:001",
+      "phase": "liminaldb",
+      "logical_operation_id": "neo-resonance-system-007-001",
+      "execution_id": "exec-system-007-001",
+      "attempt_id": "attempt-system-007-001",
+      "intent_id": "intent:sha256:eff1fcd29a81e0c9e34f02b0f580ed47785028f357b843b27e989d81e44f9eea",
+      "parent_cause": "event:cml:001",
+      "intent": {"kind": "cross_repository_conformance", "expected_outcome": "bounded_reflection_without_execution_authority"},
+      "resolved_target": {"component": "liminaldb", "operation": "store_reopen_replay", "scope": "local_test_only"},
+      "expected_invariants": ["INV-IDENTITY-CONSERVED", "INV-PARENT-CHAIN-CONSERVED", "INV-EVIDENCE-INTEGRITY", "INV-AUTHORITY-NONINCREASING", "INV-REOPEN-BYTE-MATCH"],
+      "observed_outcome": {"status": "reopened", "decision": "BYTE_MATCH", "summary": "The bounded durable record reopened with matching event and admission bytes; retry remained idempotent."},
+      "valid_time": {"from": "2026-08-14T08:00:00Z", "to": null},
+      "transaction_time": "2026-08-14T08:00:03Z",
+      "recovery_state": "reopened",
+      "verification_refs": ["evidence://system-007/liminaldb-recovered-summary"],
+      "authority_boundary": {"execution_authorized": false, "mutation_authorized": false, "external_effects_authorized": false},
+      "native_projection": {
+        "repository": "safal207/LiminalDB",
+        "native_schema": "liminaldb-proofpath-audit-event-v0.1",
+        "field_map": {
+          "logical_operation_id": {"native_path": "correlationId", "binding_kind": "identity", "semantic_status": "preserved"},
+          "execution_id": {"native_path": "source.bridge_receipt_sha256", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "attempt_id": {"native_path": "ingestion_key", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "parent_cause": {"native_path": "source.incident_id", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "intent": {"native_path": "source.verification_class", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "resolved_target": {"native_path": "persistence.write_mode", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "expected_invariants": {"native_path": "adapter.event_contract", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "observed_outcome": {"native_path": "source.native_result", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "phase": {"native_path": "schema_version", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "valid_time": {"native_path": "valid_time_ms", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "transaction_time": {"native_path": "transaction_time_ms", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "recovery_state": {"native_path": "persistence.write_mode", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "verification_refs": {"native_path": "source.event_sha256", "binding_kind": "identity", "semantic_status": "preserved"}
+        }
+      }
+    },
+    {
+      "event_id": "event:rinse:001",
+      "phase": "rinse",
+      "logical_operation_id": "neo-resonance-system-007-001",
+      "execution_id": "exec-system-007-001",
+      "attempt_id": "attempt-system-007-001",
+      "intent_id": "intent:sha256:eff1fcd29a81e0c9e34f02b0f580ed47785028f357b843b27e989d81e44f9eea",
+      "parent_cause": "event:liminaldb:001",
+      "intent": {"kind": "cross_repository_conformance", "expected_outcome": "bounded_reflection_without_execution_authority"},
+      "resolved_target": {"component": "rinse", "operation": "reflect_read_only", "scope": "bounded_exact_head_local_test_only"},
+      "expected_invariants": ["INV-IDENTITY-CONSERVED", "INV-PARENT-CHAIN-CONSERVED", "INV-EVIDENCE-INTEGRITY", "INV-AUTHORITY-NONINCREASING", "INV-REFLECTION-READ-ONLY"],
+      "observed_outcome": {"status": "reflected", "decision": "ACCEPT_WITH_LIMITS", "summary": "RINSE produced a reflection-only interpretation supported by the durable source trace."},
+      "valid_time": {"from": "2026-08-14T08:00:00Z", "to": null},
+      "transaction_time": "2026-08-14T08:00:04Z",
+      "recovery_state": "reflection_only",
+      "verification_refs": ["evidence://system-007/rinse-reflection"],
+      "authority_boundary": {"execution_authorized": false, "mutation_authorized": false, "external_effects_authorized": false},
+      "native_projection": {
+        "repository": "safal207/rinse",
+        "native_schema": "rinse.liminaldb-proof-durable-reflection-loop.v0.1",
+        "field_map": {
+          "logical_operation_id": {"native_path": "source_trace.context.logical_operation_id", "binding_kind": "identity", "semantic_status": "preserved"},
+          "execution_id": {"native_path": "source_trace.id", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "attempt_id": {"native_path": "source_trace.context.ingestion_key", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "parent_cause": {"native_path": "source_trace.id", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "intent": {"native_path": "reflection.subject_id", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "resolved_target": {"native_path": "reflection.proposed_transition.target_state", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "expected_invariants": {"native_path": "graph.nodes[].effective_status", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "observed_outcome": {"native_path": "reflection.status", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "phase": {"native_path": "source_trace.kind", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "valid_time": {"native_path": "reflection.valid_time", "binding_kind": "identity", "semantic_status": "preserved"},
+          "transaction_time": {"native_path": "reflection.recorded_time", "binding_kind": "identity", "semantic_status": "preserved"},
+          "recovery_state": {"native_path": "reflection.proposed_transition.status", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "verification_refs": {"native_path": "reflection.evidence_relations[].ref", "binding_kind": "structured_projection", "semantic_status": "preserved"}
+        }
+      }
+    },
+    {
+      "event_id": "event:contractgraph_qa:001",
+      "phase": "contractgraph_qa",
+      "logical_operation_id": "neo-resonance-system-007-001",
+      "execution_id": "exec-system-007-001",
+      "attempt_id": "attempt-system-007-001",
+      "intent_id": "intent:sha256:eff1fcd29a81e0c9e34f02b0f580ed47785028f357b843b27e989d81e44f9eea",
+      "parent_cause": "event:rinse:001",
+      "intent": {"kind": "cross_repository_conformance", "expected_outcome": "bounded_reflection_without_execution_authority"},
+      "resolved_target": {"component": "contractgraph_qa", "operation": "independent_verify", "scope": "bounded_exact_head_local_test_only"},
+      "expected_invariants": ["INV-IDENTITY-CONSERVED", "INV-PARENT-CHAIN-CONSERVED", "INV-EVIDENCE-INTEGRITY", "INV-AUTHORITY-NONINCREASING", "INV-REOPEN-BYTE-MATCH", "INV-REFLECTION-READ-ONLY"],
+      "observed_outcome": {"status": "verified", "decision": "PASS", "summary": "Independent verification recomputed the route and retained all non-authority boundaries."},
+      "valid_time": {"from": "2026-08-14T08:00:00Z", "to": null},
+      "transaction_time": "2026-08-14T08:00:05Z",
+      "recovery_state": "verified",
+      "verification_refs": ["evidence://system-007/conformance-artifact"],
+      "authority_boundary": {"execution_authorized": false, "mutation_authorized": false, "external_effects_authorized": false},
+      "native_projection": {
+        "repository": "safal207/ContractGraph-QA",
+        "native_schema": "cgqa.system-007-result.v0.1",
+        "field_map": {
+          "logical_operation_id": {"native_path": "logical_operation_id", "binding_kind": "identity", "semantic_status": "preserved"},
+          "execution_id": {"native_path": "prepare-result.execution_id", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "attempt_id": {"native_path": "intent.nonce", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "parent_cause": {"native_path": "chain", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "intent": {"native_path": "case_id", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "resolved_target": {"native_path": "chain", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "expected_invariants": {"native_path": "fcrp_result.stopConditionsSatisfied", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "observed_outcome": {"native_path": "decision", "binding_kind": "identity", "semantic_status": "preserved"},
+          "phase": {"native_path": "fcrp_result.navigationDirection", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "valid_time": {"native_path": "component_heads", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "transaction_time": {"native_path": "component_heads", "binding_kind": "derived_reference", "semantic_status": "preserved"},
+          "recovery_state": {"native_path": "negative_cases", "binding_kind": "structured_projection", "semantic_status": "preserved"},
+          "verification_refs": {"native_path": "evidence_digests", "binding_kind": "identity", "semantic_status": "preserved"}
+        }
+      }
+    }
+  ]
+}

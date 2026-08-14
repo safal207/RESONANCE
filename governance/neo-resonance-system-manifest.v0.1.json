@@ -1,0 +1,426 @@
+{
+  "schema": "neo.resonance.system-manifest.v0.1",
+  "manifest_status": "OBSERVED_SNAPSHOT",
+  "observed_at": "2026-08-14T13:45:57Z",
+  "collection": {
+    "source": "GitHub repository metadata, exact-head PR checks, and completed workflow run observations",
+    "identity_state": "OBSERVED_ONLY",
+    "workflow_run_state": "COLLECTED",
+    "authority": "advisory; not merge, release, deployment, or production authorization",
+    "non_claims": [
+      "A mutable main branch is not an immutable approval boundary.",
+      "A workflow definition or commit message does not prove that the workflow passed.",
+      "A repository role in this map does not prove a runtime integration.",
+      "This snapshot does not certify production readiness, security, or business impact.",
+      "A bounded fixture PASS is not a production, security, or merge authorization."
+    ]
+  },
+  "repositories": [
+    {
+      "id": "resonance",
+      "full_name": "safal207/RESONANCE",
+      "role": [
+        "journal",
+        "system-map",
+        "market-dialogue"
+      ],
+      "default_branch": "main",
+      "observed_head": "717b4cc284812d1483313301c4be8e3ba3a49931"
+    },
+    {
+      "id": "liminalosai",
+      "full_name": "safal207/LiminalOSAI",
+      "role": [
+        "control",
+        "experimental-runtime"
+      ],
+      "default_branch": "main",
+      "observed_head": "f84888a943c71041f7c31b41d70d592ad60b2157"
+    },
+    {
+      "id": "proofpath",
+      "full_name": "safal207/ProofPath",
+      "role": [
+        "evidence",
+        "pre-execution-authorization"
+      ],
+      "default_branch": "main",
+      "observed_head": "4a05ee31d7497979c2505dd55bfef08823302e24"
+    },
+    {
+      "id": "cml",
+      "full_name": "safal207/Causal-Memory-Layer",
+      "role": [
+        "memory",
+        "causal-lineage",
+        "trust-gates"
+      ],
+      "default_branch": "main",
+      "observed_head": "2a649903693fc61a560ee056834127ada3120206"
+    },
+    {
+      "id": "liminaldb",
+      "full_name": "safal207/LiminalDB",
+      "role": [
+        "durability",
+        "append-only-evidence",
+        "reopen-recovery"
+      ],
+      "default_branch": "main",
+      "observed_head": "61b02fc81e0cb5cf1f1ed4658ecff58f683cb728"
+    },
+    {
+      "id": "rinse",
+      "full_name": "safal207/rinse",
+      "role": [
+        "reflection",
+        "interpretation-without-source-mutation"
+      ],
+      "default_branch": "main",
+      "observed_head": "3be0d2ceb1440641b141cdb80c82ed118e4186dd"
+    },
+    {
+      "id": "contractgraph-qa",
+      "full_name": "safal207/ContractGraph-QA",
+      "role": [
+        "application",
+        "independent-verification",
+        "smart-contract-qa"
+      ],
+      "default_branch": "main",
+      "observed_head": "b54173530c675083426137176cde0aed0b90853a"
+    },
+    {
+      "id": "ls",
+      "full_name": "safal207/LS",
+      "role": [
+        "governance",
+        "exact-head-risk-audit"
+      ],
+      "default_branch": "main",
+      "observed_head": "fa7e3aba4ff9154856fa7d27c92f702137819ac1"
+    }
+  ],
+  "adjacent_control_planes": [
+    {
+      "repository": "safal207/CaPU",
+      "default_branch": "main",
+      "observed_head": "babd2945046d2564e1110a76741827560c57fcca",
+      "role": "execution_control_only",
+      "in_primary_proof_route": false,
+      "semantic_authority": "CML",
+      "current_system_007_execution": false,
+      "claim_limit": "CaPU is an adjacent reference boundary; this manifest does not claim production execution, hardware enforcement or external effects."
+    }
+  ],
+  "review_policy": {
+    "human_review_gate": "NOT_REQUIRED_FOR_CURRENT_SCOPE",
+    "scope": "bounded_advisory_technical_progression",
+    "approval_claim": "NOT_MADE",
+    "retained_gates": [
+      "merge",
+      "deployment",
+      "production_persistence",
+      "external_effects",
+      "security_authorization"
+    ],
+    "machine_requirement": "exact-head, workflow, artifact, replay, and negative-path checks must remain attributable and PASS before a transition is advanced"
+  },
+  "edges": [
+    {
+      "from": "proofpath",
+      "to": "liminaldb",
+      "contract": "PROOFPATH_DURABLE_INGESTION_V0_1",
+      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31817575291 at exact subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a",
+      "status": "VERIFIED_IN_BOUNDED_FIXTURE",
+      "claim_limit": "The exact bounded fixture passed at subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a with pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
+    },
+    {
+      "from": "liminaldb",
+      "to": "rinse",
+      "contract": "LIMINALDB_DURABLE_PROOF_SOURCE_V0_1",
+      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31817575291 at exact subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a",
+      "status": "VERIFIED_IN_BOUNDED_FIXTURE",
+      "claim_limit": "The exact bounded fixture passed at subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a with pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
+    },
+    {
+      "from": "rinse",
+      "to": "contractgraph-qa",
+      "contract": "FCRP-SYSTEM-006",
+      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31817575291 at exact subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a",
+      "status": "VERIFIED_IN_BOUNDED_FIXTURE",
+      "claim_limit": "The exact bounded fixture passed at subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a with pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
+    },
+    {
+      "from": "cml",
+      "to": "proofpath",
+      "contract": "causal-lineage-and-current-trust-gates",
+      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31817575291 at exact subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a",
+      "status": "VERIFIED_IN_BOUNDED_FIXTURE",
+      "claim_limit": "The exact bounded fixture passed at subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a with pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
+    },
+    {
+      "from": "contractgraph-qa",
+      "to": "resonance",
+      "contract": "NEO_RESONANCE_PROVIDER_NEUTRAL_INTEROPERABILITY_V0_1",
+      "evidence": "RESONANCE P0-3 workflow run 31811652207 at subject c844f22a106a539d789677915e4ef3e88b5f6e46; contract subject 4401f7c171311a41afc2d8cce57275118746a8c5",
+      "status": "VERIFIED_IN_BOUNDED_FIXTURE",
+      "claim_limit": "The exact contract fixture, native mappings, replay lifecycle and negative cases passed; this does not assert live runtime integration, production persistence, merge approval or security certification."
+    },
+    {
+      "from": "liminalosai",
+      "to": "proofpath",
+      "contract": "control-to-evidence boundary",
+      "evidence": "architecture role only",
+      "status": "PLANNED_INTEGRATION",
+      "claim_limit": "LiminalOSAI remains explicitly experimental and is not a production authorization layer"
+    }
+  ],
+  "p0_3_verification": {
+    "schema": "neo.resonance.provider-neutral-interoperability-result.v0.1",
+    "status": "PASS",
+    "scope": "bounded provider-neutral contract fixture",
+    "contract_subject_sha": "4401f7c171311a41afc2d8cce57275118746a8c5",
+    "logical_operation_id": "neo-resonance-system-007-001",
+    "route": [
+      "intent",
+      "proofpath",
+      "cml",
+      "liminaldb",
+      "rinse",
+      "contractgraph_qa"
+    ],
+    "workflow": {
+      "name": "RESONANCE P0-3 — Provider-Neutral Interoperability",
+      "run_number": 2,
+      "run_id": 31811652207,
+      "conclusion": "success",
+      "job": "verify",
+      "job_conclusion": "success",
+      "artifact": "resonance-p0-3-interoperability-31811652207-1",
+      "artifact_digest": "sha256:d8a6c51ace8f3d5a2c6b99b6f6b7e134235af4b5ec61e52d6056e5149ef0469",
+      "workflow_subject_sha": "c844f22a106a539d789677915e4ef3e88b5f6e46",
+      "url": "https://github.com/safal207/RESONANCE/actions/runs/31811652207"
+    },
+    "lifecycle": {
+      "event_count": 6,
+      "stored_byte_match": true,
+      "reopened_byte_match": true,
+      "reflection_authority": "REFLECTION_ONLY",
+      "independent_verification": "PASS",
+      "canonical_fixture_digest": "sha256:3bd90b2e1e7551335c7ed36b8112b44585f63bf18125bc80b672aa3417261a72"
+    },
+    "negative_cases": [
+      "logical_operation_renaming",
+      "causal_parent_break",
+      "unknown_phase",
+      "missing_evidence_ref",
+      "authority_escalation",
+      "semantic_rename"
+    ],
+    "authority": "advisory only; no merge, deployment, production, external effects or security authorization"
+  },
+  "p0_4_verification": {
+    "schema": "cgqa.p0-4-ancestry-gate.v0.1",
+    "status": "PASS",
+    "scope": "bounded exact-subject and ancestry receipt",
+    "repository": "safal207/ContractGraph-QA",
+    "pull_request": {
+      "number": 61,
+      "base_sha": "b54173530c675083426137176cde0aed0b90853a",
+      "subject_sha": "6e51cbb176f6d891b758e3026744d1d4c4c5727a"
+    },
+    "workflow": {
+      "name": "FCRP P0-4 — Exact Subject and Ancestry Gate",
+      "run_number": 3,
+      "run_id": 31817575301,
+      "conclusion": "success",
+      "job": "verify",
+      "job_conclusion": "success",
+      "artifact": "cgqa-p0-4-ancestry-31817575301-1",
+      "artifact_digest": "sha256:74a13d7efbc5753e9f5b4bf780e739a4cda06b4cc8eb96b3a4179a4c3b6e9382",
+      "artifact_subject_sha": "6e51cbb176f6d891b758e3026744d1d4c4c5727a",
+      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31817575301"
+    },
+    "checks": {
+      "initial_subject": "PASS",
+      "final_subject": "PASS",
+      "ancestry": "PASS",
+      "workflow_identity": "PASS",
+      "artifact_subject": "PASS",
+      "unknown_state_policy": "unknown_never_becomes_pass"
+    },
+    "system_007_rerun": {
+      "run_number": 6,
+      "run_id": 31817575291,
+      "conclusion": "success",
+      "artifact": "fcrp-system-007-61",
+      "artifact_digest": "sha256:7bb9f2fd42944a191aedda86d035bb5f52d14d5e0e7f0fa0f9eac01f82c87720",
+      "artifact_subject_sha": "6e51cbb176f6d891b758e3026744d1d4c4c5727a",
+      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31817575291"
+    },
+    "authority": "advisory only; no merge, deployment, production, external effects or security authorization"
+  },
+  "p1_1_verification": {
+    "schema": "cgqa.p1-1-negative-path-matrix-result.v0.1",
+    "status": "PASS",
+    "scope": "bounded deterministic policy evaluation and replay receipts",
+    "repository": "safal207/ContractGraph-QA",
+    "pull_request": {
+      "number": 61,
+      "base_sha": "b54173530c675083426137176cde0aed0b90853a",
+      "subject_sha": "6e51cbb176f6d891b758e3026744d1d4c4c5727a"
+    },
+    "workflow": {
+      "name": "FCRP P1-1 — Negative-Path Matrix",
+      "run_number": 2,
+      "run_id": 31817575339,
+      "conclusion": "success",
+      "job": "verify",
+      "job_conclusion": "success",
+      "artifact": "fcrp-p1-1-negative-path-matrix-31817575339-1",
+      "artifact_digest": "sha256:69ab3c313ce647dc6248380a42b2dd0392d89610568106b432e0f9f200885926",
+      "artifact_subject_sha": "6e51cbb176f6d891b758e3026744d1d4c4c5727a",
+      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31817575339"
+    },
+    "proofpath_head": "4a05ee31d7497979c2505dd55bfef08823302e24",
+    "coverage": {
+      "total_cases": 16,
+      "matched_decisions": 16,
+      "blocked_cases": 15,
+      "accept_control_cases": 1,
+      "executed_cases": 0,
+      "replay_stable_cases": 16,
+      "evidence_complete_cases": 16
+    },
+    "authority": {
+      "execution_authorized": false,
+      "external_effects_authorized": false,
+      "mutation_authorized": false,
+      "claim_limit": "Deterministic provider-neutral policy evaluation only; no live provider, executor, wallet, real secret, network effect, merge, deployment, production persistence or security authorization is claimed."
+    }
+  },
+  "next_transition": {
+    "id": "P1-3",
+    "action_class": "SEPARATE_EVIDENCE_AUTHORITY_REFLECTION",
+    "action": "separate evidence, authority and reflection in every adapter and prove negative escalation boundaries",
+    "owner": "repository maintainers",
+    "completion_signal": "a reflection, schema pass, or valid evidence bundle cannot by itself authorize an action; a negative escalation test proves this",
+    "stop_condition": "an adapter or example conflates evidence with authority, lets reflection authorize execution, or lacks a replayable negative escalation result"
+  },
+  "p1_2_verification": {
+    "schema": "cgqa.p1-2-evidence-bundle-replay-result.v0.1",
+    "status": "PASS",
+    "scope": "bounded provider-neutral evidence-bundle membership and deterministic replay references",
+    "repository": "safal207/ContractGraph-QA",
+    "pull_request": {
+      "number": 61,
+      "base_sha": "b54173530c675083426137176cde0aed0b90853a",
+      "verifier_subject_sha": "6e51cbb176f6d891b758e3026744d1d4c4c5727a",
+      "bundle_contractgraph_qa_subject": "fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e"
+    },
+    "workflow": {
+      "name": "FCRP P1-2 — Evidence-Bundle and Replay Manifest",
+      "run_number": 1,
+      "run_id": 31817575465,
+      "conclusion": "success",
+      "job": "verify",
+      "job_conclusion": "success",
+      "artifact": "fcrp-p1-2-evidence-bundle-replay-31817575465-1",
+      "artifact_digest": "sha256:9652aa541269ebcae8ee949c521b81d9bc3f5ccd437f63d087c3f944a0d4c4e8",
+      "artifact_subject_sha": "6e51cbb176f6d891b758e3026744d1d4c4c5727a",
+      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31817575465"
+    },
+    "bundle": {
+      "subject_count": 4,
+      "artifact_count": 6,
+      "member_count": 6,
+      "total_bytes": 1410,
+      "replay_step_count": 6,
+      "expected_replay_result": "SAME_RESULT",
+      "replay_stable": true,
+      "side_effects_executed": false,
+      "manifest_sha256": "sha256:7d122d8cb2bfdb29ddc36cda55e1c319a4c1d0c2f56f2af7fa62e681f3d5c7bd"
+    },
+    "subjects": {
+      "liminaldb": "61b02fc81e0cb5cf1f1ed4658ecff58f683cb728",
+      "rinse": "3be0d2ceb1440641b141cdb80c82ed118e4186dd",
+      "contractgraph_qa": "fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e",
+      "ls": "fa7e3aba4ff9154856fa7d27c92f702137819ac1"
+    },
+    "authority": {
+      "execution_authorized": false,
+      "external_effects_authorized": false,
+      "mutation_authorized": false,
+      "claim_limit": "Byte integrity, closed membership, exact source pins and replay references only; no live runtime integration, production safety, merge, deployment or security certification."
+    }
+  },
+  "verification": {
+    "system": "FCRP-SYSTEM-007",
+    "status": "PASS",
+    "scope": "bounded exact-head fixture",
+    "repository": "safal207/ContractGraph-QA",
+    "pull_request": {
+      "number": 61,
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "base_sha": "b54173530c675083426137176cde0aed0b90853a",
+      "subject_sha": "6e51cbb176f6d891b758e3026744d1d4c4c5727a"
+    },
+    "workflow": {
+      "name": "FCRP SYSTEM-007 Full-Chain Conformance",
+      "run_number": 6,
+      "run_id": 31817575291,
+      "conclusion": "success",
+      "job": "verify",
+      "job_conclusion": "success",
+      "artifact": "fcrp-system-007-61",
+      "artifact_digest": "sha256:7bb9f2fd42944a191aedda86d035bb5f52d14d5e0e7f0fa0f9eac01f82c87720",
+      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31817575291"
+    },
+    "standard_gates": [
+      {
+        "name": "CI",
+        "run_id": 31817575307,
+        "conclusion": "success"
+      },
+      {
+        "name": "Product",
+        "run_id": 31817575272,
+        "conclusion": "success"
+      },
+      {
+        "name": "FCRP v0.2 Contract Gate",
+        "run_id": 31817575420,
+        "conclusion": "success"
+      },
+      {
+        "name": "Finding report",
+        "run_id": 31817575274,
+        "conclusion": "success"
+      },
+      {
+        "name": "Portability",
+        "run_id": 31817575278,
+        "conclusion": "success"
+      }
+    ],
+    "exact_dependency_heads": {
+      "ProofPath": "4a05ee31d7497979c2505dd55bfef08823302e24",
+      "Causal-Memory-Layer": "2a649903693fc61a560ee056834127ada3120206",
+      "LiminalDB": "61b02fc81e0cb5cf1f1ed4658ecff58f683cb728",
+      "RINSE": "3be0d2ceb1440641b141cdb80c82ed118e4186dd"
+    },
+    "negative_cases": [
+      "missing intent",
+      "replayed nonce",
+      "changed argument digest",
+      "stale dependency head",
+      "tampered durable record",
+      "reflection execution escalation"
+    ],
+    "artifact": "immutable SYSTEM-007 evidence manifest uploaded by the workflow",
+    "authority": "advisory only; no merge, deployment, production persistence, external effects, or security authorization"
+  }
+}
