@@ -20,6 +20,8 @@ To:
 
 Issue 001 maps this transition.
 
+**Web edition:** [Issue 001 — The Age of Agents](https://safal207.github.io/RESONANCE/issue-001.html)
+
 ## Published features
 
 1. [`The Agentic Turn`](articles/01-the-agentic-turn.md)
@@ -34,7 +36,7 @@ Issue 001 maps this transition.
 10. [`Consent Has a Causal Lifetime — почему approval AI-агента должно иметь доказуемую границу потребления`](articles/10-consent-has-a-causal-lifetime.md) — **published 2026-08-15**
 11. [`Evidence Has a Route — почему AI-агенту нужен не максимум проверки, а оптимальная логистика доказательств`](articles/11-evidence-has-a-route.md) — **published 2026-08-15**
 12. [`A Diagnostic Nobody Can See Is Not a Signal — почему ownership, reachability и causal awareness нельзя сжимать в один статус`](articles/12-a-diagnostic-nobody-can-see-is-not-a-signal.md) — **published 2026-08-15**
-13. [`Evidence Must Bind the Transition — почему AI-системе недостаточно доказательства, если оно не связано с конкретным переходом`](articles/13-evidence-must-bind-the-transition.md) — **published 2026-08-15**
+13. [`Evidence Must Bind the Transition — почему AI-системе недостаточно доказательства, если оно не связано с конкретным переходом`](articles/13-evidence-must-bind-the-transition.md) — **published 2026-08-15** · [web edition](https://safal207.github.io/RESONANCE/evidence-must-bind-the-transition.ru.html)
 
 The fourth feature extends the trust question beyond pre-action authorization: a consequential outcome needs its own observer identity, vantage and evidence so decision provenance and outcome provenance remain separately inspectable.
 
