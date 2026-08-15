@@ -65,6 +65,9 @@ Continuation proof:
 9. **Observed outcome is recorded separately from the pre-recovery verdict.**
 10. **Generation mismatch is explicit.** When both authority and projection generations are known and differ, the projection cannot be `HEALTHY`.
 11. **Projection-newer-than-authority fails closed.** A projection at generation `N+1` with apparent durable authority at `N` is `UNPROVABLE`; recovery must not rebuild from the apparently older source until the contradiction is reconciled.
+12. **Pre-commit crash must not invent a committed generation.** A transaction interrupted before durable authority commit remains at the prior generation.
+13. **Post-commit projection lag is stale, not missing history.** Once authority generation `N+1` commits while projection remains at `N`, the projection is rebuildable but execution remains independently gated.
+14. **Orphan temp state is evidence, not authority.** A fully fsynced temporary projection that was never renamed does not silently replace the last committed projection.
 
 ## Files
 
@@ -72,6 +75,8 @@ Continuation proof:
 - `validate.py` — semantic invariant validator with no third-party dependencies.
 - `generation_crash_simulator.py` — deterministic Generation-N crash-state classifier and verdict simulator.
 - `test_generation_crash_simulator.py` — regression tests for the generation matrix and fail-closed boundaries.
+- `fault_injection_harness.py` — real SQLite + atomic JSON process-crash harness using child-process termination at durability boundaries.
+- `test_fault_injection_harness.py` — regressions over the observed on-disk crash states.
 - `fixtures/codex-26990-sanitized.json` — first public sanitized fixture based only on public GitHub evidence.
 - `fixtures/unsafe-fork-must-fail.json` — negative continuation control.
 - `fixtures/generation-matrix.expected.txt` — pinned canonical simulator output.
@@ -127,11 +132,69 @@ HOLD
 
 The verifier does **not** assume the projection is wrong and overwrite it from the apparently older authority. That contradiction must be reconciled first.
 
-The regression suite also verifies that:
+## Real process-crash fault injection
 
-- forcing `ALLOW_REBUILD` across this split is rejected;
+`fault_injection_harness.py` advances a real SQLite authority row and an atomically written JSON projection from generation 1 to generation 2. The mutation runs in a child process and calls `os._exit(91)` at selected boundaries. A fresh parent verifier then inspects the actual files and SQLite state left on disk.
+
+The SQLite lane uses WAL plus `synchronous=FULL`. The projection lane uses:
+
+```text
+write projection.json.tmp
+        ↓
+flush + fsync(temp)
+        ↓
+os.replace(temp, projection.json)
+        ↓
+fsync(directory) where supported
+```
+
+Canonical observed matrix:
+
+```text
+crash point                         authority projection state    rebuild
+before authority commit             1         1          HEALTHY  NO_REBUILD
+after authority commit              2         1          STALE    ALLOW_REBUILD
+after projection temp fsync         2         1          STALE    ALLOW_REBUILD
+after full projection commit        2         2          HEALTHY  NO_REBUILD
+```
+
+The temp-fsync case additionally requires the orphan `projection.json.tmp` candidate to remain observable while the committed projection stays at generation 1.
+
+Run:
+
+```bash
+cd protocols/recovery-integrity-v0.1
+python fault_injection_harness.py matrix
+python -m unittest -v test_fault_injection_harness.py
+```
+
+Every observed state is converted into a `RecoveryIntegrityRecord` and passed through the same semantic validator. The harness performs classification only; it does not rebuild the projection or allow execution continuation.
+
+### Evidence boundary
+
+This is **process-crash fault injection**, not proof of arbitrary physical power-loss durability. `os._exit()` proves behavior across abrupt process termination with real SQLite/filesystem operations. It does not model drive write caches, controller reordering, filesystem-specific power-fail behavior, torn sectors, or all Windows directory-fsync semantics.
+
+Therefore:
+
+```text
+process-crash PASS
+≠
+power-loss durability proven
+```
+
+A stronger future lane needs VM/filesystem/storage fault injection or a product-native crash harness with explicit durability guarantees.
+
+## Regression boundaries
+
+The suites verify that:
+
+- forcing `ALLOW_REBUILD` across a projection-newer-than-authority split is rejected;
 - a valid projection rebuild does not grant `ALLOW_FORK`;
-- unknown side effects and unproven current authority keep execution fail-closed.
+- unknown side effects and unproven current authority keep execution fail-closed;
+- a pre-commit SQLite crash does not advance authority generation;
+- a post-commit/pre-projection crash becomes `STALE`, not `HEALTHY`;
+- an fsynced-but-unrenamed temp projection does not become the committed projection;
+- a fully committed projection restores generation alignment.
 
 ## CI proof lane
 
@@ -141,13 +204,15 @@ The regression suite also verifies that:
 sanitized public fixture must PASS
 unsafe fork fixture must FAIL
 Generation-N matrix must PASS
-regression suite must PASS
+generation regressions must PASS
+SQLite + atomic JSON process-crash matrix must PASS
+process-crash regressions must PASS
 ```
 
-This makes the negative control part of the acceptance contract rather than an optional manual check.
+This makes both negative controls and real crash-boundary observations part of the acceptance contract rather than optional manual checks.
 
 ## Non-goals
 
 This contract does not decide which store is authoritative for a product. That is a product-specific declaration backed by native evidence.
 
-It also does not mutate any recovery target. The validator and simulator are read-only.
+It does not claim full power-loss safety, distributed consensus, hardware fault tolerance, or vendor adoption. The semantic validator, generation simulator, and recovery verifier are read-only; the fault-injection child mutates only its isolated test fixture and never a product recovery target.
