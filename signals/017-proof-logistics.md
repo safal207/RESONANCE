@@ -261,6 +261,57 @@ external-effects and mutation flags are all `false`; reflection cannot authorize
 execution; and a valid manifest cannot authorize merge, deployment, production
 persistence or security decisions.
 
+## P1-3 application — separate lanes and efficient escalation routing
+
+P1-3 makes the proof-logistics lane split executable. The receiver no longer has
+to infer whether a delivered record is proof cargo, a reflection, or an authority
+instruction. Each lane is indexed and checked independently:
+
+| Lane | Cargo meaning | Can authorize? | Can mutate source? | Delivery status |
+|---|---|---:|---:|---|
+| evidence | recomputable proof material and integrity receipts | `false` | `false` | `PASS` cargo only |
+| reflection | bounded interpretation of durable bytes | `false` | `false` | `REFLECTION_ONLY` |
+| authority | explicit control record, separate from proof and reflection | only by a separate control | only by a separate control | fixture is `HOLD` |
+
+The current P1-3 fixture is bound to ContractGraph-QA PR #61 base
+`b54173530c675083426137176cde0aed0b90853a`, runtime verifier subject `e603ed20642b31b9e6f2bcc380781ff462d4e545`, and frozen source subjects:
+ProofPath `4a05ee31d7497979c2505dd55bfef08823302e24`, LiminalDB `61b02fc81e0cb5cf1f1ed4658ecff58f683cb728`, RINSE `3be0d2ceb1440641b141cdb80c82ed118e4186dd`, LS `fa7e3aba4ff9154856fa7d27c92f702137819ac1`, and the
+ContractGraph-QA fixture `6e51cbb176f6d891b758e3026744d1d4c4c5727a`. The runtime verifier subject is the
+checkout that performs the inspection; the frozen fixture subject is the source
+revision whose cargo is being inspected. They are separate logistics identities,
+not interchangeable labels.
+
+The delivery receipt contains three artifacts totaling 1,254 bytes and four
+replayable cases. The route is deliberately small enough for direct retrieval:
+
+~~~
+evidence PASS        → execution request → BLOCK / EVIDENCE_NOT_AUTHORITY
+reflection PASS       → execution request → BLOCK / REFLECTION_NOT_AUTHORITY
+inferred authority   → execution request → BLOCK / EXPLICIT_AUTHORITY_RECORD_REQUIRED
+authority HOLD       → execution request → HOLD / AUTHORITY_REVALIDATION_REQUIRED
+~~~
+
+All four cases replay to `SAME_RESULT`; three are `BLOCK`, one is `HOLD`, and zero
+cases execute. Every side-effect flag is `false`. A verifier can route directly
+to the lane, source subject, artifact digest and decision receipt it needs,
+without scanning unrelated repository history. The closed manifest still makes
+membership, byte size, SHA-256, source revision, causal reference and route
+status checkable.
+
+The first workflow attempt (#1, `31873466160`) returned `HOLD` because it exposed
+an identity-routing bug: the verifier subject was incorrectly compared to the
+frozen fixture source subject. That fail-closed result was retained, the rule was
+corrected, and the current exact-head workflow [run #2](https://github.com/safal207/ContractGraph-QA/actions/runs/31873550935)
+passes. This is a logistics lesson: a valid delivery receipt must identify both
+carrier/verifier and cargo/source; conflating them creates a false routing failure,
+while omitting either one makes the proof impossible to locate or audit.
+
+P1-3 therefore optimizes retrieval without collapsing authority boundaries. It
+reduces lookup cost by explicit lane and subject indexes, while preserving the
+hard constraint that evidence, reflection and QA cannot silently become execution
+authority. The route is bounded, replayable and side-effect-free; it does not
+claim live execution, merge, deployment, production persistence or security
+authorization.
 ## Logistics metrics
 
 The following metrics are proposed for later measurement, not yet benchmark results:
