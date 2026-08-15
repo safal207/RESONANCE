@@ -274,7 +274,7 @@ instruction. Each lane is indexed and checked independently:
 | authority | explicit control record, separate from proof and reflection | only by a separate control | only by a separate control | fixture is `HOLD` |
 
 The current P1-3 fixture is bound to ContractGraph-QA PR #61 base
-`b54173530c675083426137176cde0aed0b90853a`, runtime verifier subject `f153a12d209045f052700201c6ef179bf9550fb5`, and frozen source subjects:
+`b54173530c675083426137176cde0aed0b90853a`, runtime verifier subject `f0dbbf3d24c343984902610c24004961c98ca4f5`, and frozen source subjects:
 ProofPath `4a05ee31d7497979c2505dd55bfef08823302e24`, LiminalDB `61b02fc81e0cb5cf1f1ed4658ecff58f683cb728`, RINSE `3be0d2ceb1440641b141cdb80c82ed118e4186dd`, LS `fa7e3aba4ff9154856fa7d27c92f702137819ac1`, and the
 ContractGraph-QA fixture `6e51cbb176f6d891b758e3026744d1d4c4c5727a`. The runtime verifier subject is the
 checkout that performs the inspection; the frozen fixture subject is the source
@@ -301,7 +301,7 @@ status checkable.
 The first workflow attempt (#1, `31873466160`) returned `HOLD` because it exposed
 an identity-routing bug: the verifier subject was incorrectly compared to the
 frozen fixture source subject. That fail-closed result was retained, the rule was
-corrected, and the current exact-head workflow [run #6](https://github.com/safal207/ContractGraph-QA/actions/runs/31873868029)
+corrected, and the current exact-head workflow [run #11](https://github.com/safal207/ContractGraph-QA/actions/runs/31874361029)
 passes. This is a logistics lesson: a valid delivery receipt must identify both
 carrier/verifier and cargo/source; conflating them creates a false routing failure,
 while omitting either one makes the proof impossible to locate or audit.
@@ -322,6 +322,10 @@ hard constraint that evidence, reflection and QA cannot silently become executio
 authority. The route is bounded, replayable and side-effect-free; it does not
 claim live execution, merge, deployment, production persistence or security
 authorization.
+## Current occurrence-portability receipt
+
+The bounded P1-4/P1-5/P1-6 portability matrix is bound to verifier subject `f0dbbf3d24c343984902610c24004961c98ca4f5` and [workflow run #1](https://github.com/safal207/ContractGraph-QA/actions/runs/31874361042). Its artifact digest is `sha256:596b002647b96a9dbcb085db7d0376f5930aaac8259e2d3e91cbbeed5e7a7968`. The receipt keeps decision, concrete occurrence and consumption fact as separate routable identities; race, replay and request-ID rebound cases fail closed. This is bounded evidence cargo, not execution authority.
+
 ## Logistics metrics
 
 The following metrics are proposed for later measurement, not yet benchmark results:
