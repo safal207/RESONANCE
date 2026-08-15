@@ -1,0 +1,52 @@
+name: Recovery Integrity v0.1
+
+on:
+  pull_request:
+    paths:
+      - "protocols/recovery-integrity-v0.1/**"
+      - "signals/018-recovery-integrity-projection-authority-continuation.md"
+      - ".github/workflows/recovery-integrity-v0.1.yml"
+  push:
+    branches: [main]
+    paths:
+      - "protocols/recovery-integrity-v0.1/**"
+      - "signals/018-recovery-integrity-projection-authority-continuation.md"
+      - ".github/workflows/recovery-integrity-v0.1.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  recovery-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate sanitized public fixture
+        run: |
+          python protocols/recovery-integrity-v0.1/validate.py \
+            protocols/recovery-integrity-v0.1/fixtures/codex-26990-sanitized.json
+
+      - name: Verify unsafe fork fails closed
+        run: |
+          if python protocols/recovery-integrity-v0.1/validate.py \
+            protocols/recovery-integrity-v0.1/fixtures/unsafe-fork-must-fail.json; then
+            echo "unsafe fork fixture unexpectedly passed"
+            exit 1
+          else
+            echo "unsafe fork fixture rejected as expected"
+          fi
+
+      - name: Run Generation-N crash simulator
+        working-directory: protocols/recovery-integrity-v0.1
+        run: python generation_crash_simulator.py
+
+      - name: Run recovery regression suite
+        working-directory: protocols/recovery-integrity-v0.1
+        run: python -m unittest -v test_generation_crash_simulator.py
