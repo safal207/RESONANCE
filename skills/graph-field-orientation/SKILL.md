@@ -1,13 +1,13 @@
 ---
 name: graph-field-orientation
-description: Route and apply Graph–Field operators for orientation or recovery without granting execution authority.
+description: Route and apply Graph–Field operators for orientation, recovery, and outcome calibration without granting execution authority.
 ---
 
 # Graph–Field Orientation
 
-Use this skill when an agent knows a bounded system/work graph but must decide either **where to look/work next** or **where to re-enter after context loss**.
+Use this skill when an agent knows a bounded system/work graph but must decide either **where to look/work next**, **where to re-enter after context loss**, or **how to evaluate an operator after an observed outcome**.
 
-The skill is the entrypoint for the Graph–Field Operator Family defined in `protocols/GRAPH_FIELD_OPERATOR_FAMILY_V0_1.md`.
+The skill is the entrypoint for the Graph–Field Operator Family defined in `protocols/GRAPH_FIELD_OPERATOR_FAMILY_V0_1.md`, with outcome calibration defined in `protocols/GRAPH_FIELD_CALIBRATION_V0_2.md`.
 
 ## Choose the operator first
 
@@ -41,6 +41,25 @@ Normalize a serialized CML Focus–Field v0.2 decision through `operator_family.
 
 `reanchored_exploratory` is useful context, not a trusted continuation.
 
+### CalibrationLoop
+
+Use only after an operator selection has led to an independently observable outcome.
+
+The calibration question is:
+
+> Did this selected route create more evidence-backed utility than a declared simpler baseline, and does that justify a bounded weight proposal for later testing?
+
+Calibration requirements:
+
+- preserve the original pre-action field snapshot;
+- freeze the utility definition before interpreting the outcome;
+- require outcome evidence and baseline evidence;
+- never treat `field_score` as a probability of success;
+- produce a proposal only; never mutate canonical weights automatically;
+- evaluate any proposal on held-out observations before considering a configuration change.
+
+Executable reference: `calibrate_graph_field.py`.
+
 ## Shared workflow
 
 1. **State intent.** What system outcome are we trying to improve, recover or understand?
@@ -53,7 +72,9 @@ Normalize a serialized CML Focus–Field v0.2 decision through `operator_family.
 8. **Normalize if crossing repositories.** Use the common advisory envelope; do not duplicate CML verification logic in RESONANCE.
 9. **Causal zoom.** On an actionable candidate, identify the first meaningful divergence and smallest discriminating next test.
 10. **Hand off.** Execution, merge, deployment, external effects, payments and security actions go through native authority-aware workflows.
-11. **Observe and recompute.** Outcome changes evidence; it does not rewrite the pre-action field score.
+11. **Observe.** Record what happened separately from the pre-action field snapshot.
+12. **Calibrate only with evidence.** Compare observed utility with a frozen simpler baseline and emit a bounded proposal.
+13. **Recompute later.** A reviewed future configuration may change later fields; it never rewrites the historical field score.
 
 ## Orientation output
 
@@ -81,6 +102,20 @@ Preserve at minimum:
 
 A trusted recovery candidate is only ready for a **separate authority check**. It is not execution authority.
 
+## Calibration output
+
+Preserve at minimum:
+
+- observation count;
+- observed utility and baseline utility per observation;
+- advantage per observation;
+- current weights;
+- proposed weights and deltas;
+- coarse sample-size confidence;
+- explicit `apply_recommended=false`;
+- explicit authority boundary;
+- held-out evaluation as the required next check.
+
 Always preserve:
 
 > **Field proposes. Graph constrains. Authority permits. Evidence verifies.**
@@ -107,6 +142,10 @@ Do not:
 - erase a blocked hotspot from the report;
 - promote exploratory recovery into trusted continuation;
 - treat `HOLD`/`defocus` as errors that must be forced to acceptance;
+- infer calibration success from attention volume;
+- use `field_score` as a probability without a separate calibration model;
+- retroactively rewrite a pre-action score after seeing the outcome;
+- auto-apply calibration weights;
 - optimize Presence Space;
 - hide heuristic inputs behind false numerical precision;
 - keep tuning coefficients until a preferred node wins.
@@ -118,6 +157,14 @@ Orientation:
 ```bash
 python3 skills/graph-field-orientation/score_graph_field.py \
   skills/graph-field-orientation/examples/neo-resonance-2026-08-15.json \
+  --pretty
+```
+
+Calibration control:
+
+```bash
+python3 skills/graph-field-orientation/calibrate_graph_field.py \
+  skills/graph-field-orientation/examples/synthetic-calibration-v0.2.json \
   --pretty
 ```
 
