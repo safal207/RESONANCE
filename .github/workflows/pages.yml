@@ -5,7 +5,11 @@ on:
     branches: [main]
     paths:
       - 'site/**'
+      - 'issues/001-age-of-agents/README.md'
+      - 'issues/001-age-of-agents/articles/**'
       - 'analytics/**'
+      - 'scripts/build-publication.mjs'
+      - 'scripts/build-issue-web-articles.mjs'
       - 'scripts/build-seo-site.mjs'
       - 'scripts/enhance-search-indexing.mjs'
       - 'scripts/build-feeds.mjs'
@@ -47,8 +51,8 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Build SEO-ready publication
-        run: node scripts/build-seo-site.mjs
+      - name: Build complete publication
+        run: node scripts/build-publication.mjs
 
       - name: Enhance search indexing graph
         run: node scripts/enhance-search-indexing.mjs
