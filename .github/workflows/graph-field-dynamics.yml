@@ -8,7 +8,7 @@ on:
       - 'protocols/GRAPH_FIELD_OPERATOR_FAMILY_V0_1.md'
       - 'protocols/GRAPH_FIELD_CALIBRATION_V0_2.md'
       - 'protocols/GRAPH_FIELD_OUTCOME_INTAKE_V0_2.md'
-      - 'protocols/GRAPH_FIELD_PROSPECTIVE_ROUTING_AB_V0_1.md'
+      - 'protocols/GRAPH_FIELD_PROSPECTIVE_ROUTING_AB*.md'
       - 'skills/graph-field-orientation/**'
       - '.github/workflows/graph-field-dynamics.yml'
   workflow_dispatch:
@@ -187,6 +187,15 @@ jobs:
           assert result['confidence'] == 'INSUFFICIENT'
           assert result['mean_advantage'] == 0.05
           PY
+
+      - name: Verify published prospective result anchors
+        run: |
+          grep -F 'sha256:07b089e583e6b24c9d6e4544cc1e1537808b4a4e8b85da370f087970c2d5d7dc' \
+            protocols/GRAPH_FIELD_PROSPECTIVE_ROUTING_AB_RESULT_2026_08_15.md
+          grep -F 'U_GFD = 0.75' protocols/GRAPH_FIELD_PROSPECTIVE_ROUTING_AB_RESULT_2026_08_15.md
+          grep -F 'U_FIFO = 0.70' protocols/GRAPH_FIELD_PROSPECTIVE_ROUTING_AB_RESULT_2026_08_15.md
+          grep -F 'Adv = U_GFD - U_FIFO' protocols/GRAPH_FIELD_PROSPECTIVE_ROUTING_AB_RESULT_2026_08_15.md
+          grep -F 'apply_recommended = false' protocols/GRAPH_FIELD_PROSPECTIVE_ROUTING_AB_RESULT_2026_08_15.md
 
       - name: Run synthetic calibration control
         run: |
