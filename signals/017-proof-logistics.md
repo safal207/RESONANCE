@@ -324,7 +324,7 @@ claim live execution, merge, deployment, production persistence or security
 authorization.
 ## Current occurrence-portability receipt
 
-The bounded P1-4/P1-5/P1-6 portability matrix is bound to verifier subject `7fd3e744037832b74b2ee4c4c71cc8fce18fc329` and [workflow run #3](https://github.com/safal207/ContractGraph-QA/actions/runs/31879737013). Its artifact digest is `sha256:9cf005d73a07f4f356581337c27c378747b199ada278bd9122f8f3db71559200`. The receipt keeps decision, concrete occurrence and consumption fact as separate routable identities; race, replay and request-ID rebound cases fail closed. This is bounded evidence cargo, not execution authority.
+The bounded P1-4/P1-5/P1-6 portability matrix is bound to verifier subject `7fd3e744037832b74b2ee4c4c71cc8fce18fc329` and [workflow run #4](https://github.com/safal207/ContractGraph-QA/actions/runs/31879737013). Its artifact digest is `sha256:9cf005d73a07f4f356581337c27c378747b199ada278bd9122f8f3db71559200`. The receipt keeps decision, concrete occurrence and consumption fact as separate routable identities; race, replay and request-ID rebound cases fail closed. This is bounded evidence cargo, not execution authority.
 
 ## P1-7 independent replay cargo
 
