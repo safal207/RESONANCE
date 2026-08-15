@@ -529,5 +529,47 @@
       "mutation_authorized": false,
       "claim_limit": "Bounded occurrence-binding conformance only; no CrewAI adoption, production deployment, production ledger migration, merge, or security certification is claimed."
     }
+  },
+  "maintenance_mesh_design": {
+    "schema": "neo.resonance.maintenance-mesh-design.v0.1",
+    "status": "PLANNED",
+    "scope": "bounded repository-maintenance operating-layer design",
+    "signal": "signals/018-autonomous-repository-maintenance-mesh.md",
+    "current_evidence_anchor": {
+      "repository": "safal207/ContractGraph-QA",
+      "pull_request": 61,
+      "verifier_subject_sha": "f153a12d209045f052700201c6ef179bf9550fb5",
+      "p1_3_run_id": 31873868029,
+      "p1_3_conclusion": "success",
+      "p1_3_artifact_digest": "sha256:221ec253ca285bb259a36bced7ab3abc76c1aca1802c53bf73f7bb96d74eb984"
+    },
+    "proposed_routines": [
+      "crash_failure_hunter",
+      "duplication_hunter",
+      "dead_code_hunter",
+      "contract_drift_detector",
+      "invariant_guardian",
+      "dependency_freshness_agent",
+      "evidence_auditor",
+      "cross_repository_consistency_agent",
+      "refactoring_scout",
+      "routine_evaluator"
+    ],
+    "fcrp": {
+      "selected_level": "repository-maintenance-control-plane",
+      "first_meaningful_divergence": "missing shared routine-run contract joining observation, patch, independent verification, outcome and routine version",
+      "refactor_point": "provider-neutral routine-run and outcome manifest plus independent Routine Evaluator",
+      "confidence": "strongly_supported_as_design_gap",
+      "status": "design_hypothesis_not_production_finding"
+    },
+    "authority": {
+      "execution_authorized": false,
+      "merge_authorized": false,
+      "deployment_authorized": false,
+      "external_effects_authorized": false,
+      "claim_limit": "Planned design only; routine output is advisory cargo and cannot by itself authorize merge, deployment, production persistence, external effects or security decisions."
+    },
+    "completion_signal": "two bounded routines emit closed replayable run records, an independent evaluator reproduces routine-quality results, and no routine output authorizes merge or external effects by itself",
+    "stop_condition": "a routine lacks exact target identity, evidence closure, independent verification, outcome attribution or a fail-closed authority boundary"
   }
 }
