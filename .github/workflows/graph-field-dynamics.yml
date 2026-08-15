@@ -60,6 +60,38 @@ jobs:
           assert result['ranking'][-1]['tension'] == 0.71
           PY
 
+      - name: Record first real P2-1 outcome without post-hoc calibration
+        run: |
+          python3 skills/graph-field-orientation/record_graph_field_outcome.py \
+            skills/graph-field-orientation/examples/p2-1-real-outcome-unpaired-v0.2.json \
+            --pretty > /tmp/gfd-real-outcome.json
+          cat /tmp/gfd-real-outcome.json
+
+      - name: Verify real outcome remains unpaired and non-authorizing
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(Path('/tmp/gfd-real-outcome.json').read_text())
+          assert result['schema'] == 'resonance.graph-field-outcome.intake.v0.2'
+          assert result['decision'] == 'RECORDED_UNPAIRED'
+          assert result['mode'] == 'ADVISORY_ONLY'
+          assert result['authority_granted'] is False
+          assert result['weight_update_allowed'] is False
+          assert result['calibration_eligibility'] == 'BASELINE_REQUIRED'
+          assert result['selection_id'] == 'p2-1-trust-spine-cost-latency'
+          assert result['field_score'] == 0.800588
+          assert result['source_workflow_run_id'] == 31879737027
+          assert result['verification_workflow_run_id'] == 31883970399
+          assert result['dominant_measurement_group'] == 'liminaldb'
+          assert result['dominant_group_observed_seconds'] == 23
+          assert result['job_elapsed_seconds'] == 45
+          assert result['substantive_window_seconds'] == 35
+          assert result['source_evidence_artifact_bytes'] == 28222
+          assert result['monetary_cost_status'] == 'NOT_MEASURED'
+          PY
+
       - name: Run synthetic calibration control
         run: |
           python3 skills/graph-field-orientation/calibrate_graph_field.py \
