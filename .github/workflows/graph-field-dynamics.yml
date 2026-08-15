@@ -1,0 +1,59 @@
+name: Graph-Field Dynamics v0.1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'protocols/GRAPH_FIELD_DYNAMICS_V0_1.md'
+      - 'skills/graph-field-orientation/**'
+      - '.github/workflows/graph-field-dynamics.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout exact subject
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Run focused tests
+        run: |
+          python3 -m unittest discover \
+            -s skills/graph-field-orientation/tests \
+            -p 'test_*.py' \
+            -v
+
+      - name: Run canonical orientation snapshot
+        run: |
+          python3 skills/graph-field-orientation/score_graph_field.py \
+            skills/graph-field-orientation/examples/neo-resonance-2026-08-15.json \
+            --pretty > /tmp/gfd-result.json
+          cat /tmp/gfd-result.json
+
+      - name: Verify advisory authority boundary and top hotspot
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(Path('/tmp/gfd-result.json').read_text())
+          assert result['mode'] == 'ADVISORY_ONLY'
+          assert result['authority_granted'] is False
+          assert result['ranking'][0]['id'] == 'p2-1-trust-spine-cost-latency'
+          assert result['ranking'][0]['field_score'] == 0.800588
+          assert result['ranking'][-1]['id'] == 'proofpath-external-independence'
+          assert result['ranking'][-1]['tension'] == 0.71
+          PY
