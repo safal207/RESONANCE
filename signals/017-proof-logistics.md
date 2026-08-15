@@ -274,7 +274,7 @@ instruction. Each lane is indexed and checked independently:
 | authority | explicit control record, separate from proof and reflection | only by a separate control | only by a separate control | fixture is `HOLD` |
 
 The current P1-3 fixture is bound to ContractGraph-QA PR #61 base
-`b54173530c675083426137176cde0aed0b90853a`, runtime verifier subject `e603ed20642b31b9e6f2bcc380781ff462d4e545`, and frozen source subjects:
+`b54173530c675083426137176cde0aed0b90853a`, runtime verifier subject `f153a12d209045f052700201c6ef179bf9550fb5`, and frozen source subjects:
 ProofPath `4a05ee31d7497979c2505dd55bfef08823302e24`, LiminalDB `61b02fc81e0cb5cf1f1ed4658ecff58f683cb728`, RINSE `3be0d2ceb1440641b141cdb80c82ed118e4186dd`, LS `fa7e3aba4ff9154856fa7d27c92f702137819ac1`, and the
 ContractGraph-QA fixture `6e51cbb176f6d891b758e3026744d1d4c4c5727a`. The runtime verifier subject is the
 checkout that performs the inspection; the frozen fixture subject is the source
@@ -301,10 +301,20 @@ status checkable.
 The first workflow attempt (#1, `31873466160`) returned `HOLD` because it exposed
 an identity-routing bug: the verifier subject was incorrectly compared to the
 frozen fixture source subject. That fail-closed result was retained, the rule was
-corrected, and the current exact-head workflow [run #2](https://github.com/safal207/ContractGraph-QA/actions/runs/31873550935)
+corrected, and the current exact-head workflow [run #6](https://github.com/safal207/ContractGraph-QA/actions/runs/31873868029)
 passes. This is a logistics lesson: a valid delivery receipt must identify both
 carrier/verifier and cargo/source; conflating them creates a false routing failure,
 while omitting either one makes the proof impossible to locate or audit.
+
+Occurrence binding adds a second logistics constraint at source subject
+`558cf8126de88d5bc57de6b36de9f183bc46d27e`: semantic decision identity,
+authorization occurrence identity and consumption fact are separate cargo labels.
+A side-effecting execution may consume an authorization only when exactly one
+concrete occurrence is resolved. Ambiguous, missing, unauthorized or already
+consumed occurrences route to `OCCURRENCE_AMBIGUOUS`, `OCCURRENCE_NOT_FOUND`,
+`NOT_AUTHORIZED` or `ALREADY_CONSUMED` and fail closed. This keeps a valid
+decision from being delivered to the wrong occurrence, and does not claim
+CrewAI adoption, production deployment or ledger migration.
 
 P1-3 therefore optimizes retrieval without collapsing authority boundaries. It
 reduces lookup cost by explicit lane and subject indexes, while preserving the
