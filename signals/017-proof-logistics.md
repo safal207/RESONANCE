@@ -274,7 +274,7 @@ instruction. Each lane is indexed and checked independently:
 | authority | explicit control record, separate from proof and reflection | only by a separate control | only by a separate control | fixture is `HOLD` |
 
 The current P1-3 fixture is bound to ContractGraph-QA PR #61 base
-`b54173530c675083426137176cde0aed0b90853a`, runtime verifier subject `f0dbbf3d24c343984902610c24004961c98ca4f5`, and frozen source subjects:
+`b54173530c675083426137176cde0aed0b90853a`, runtime verifier subject `eac4dae1f9add44050def7579a9ea392bd8199cd`, and frozen source subjects:
 ProofPath `4a05ee31d7497979c2505dd55bfef08823302e24`, LiminalDB `61b02fc81e0cb5cf1f1ed4658ecff58f683cb728`, RINSE `3be0d2ceb1440641b141cdb80c82ed118e4186dd`, LS `fa7e3aba4ff9154856fa7d27c92f702137819ac1`, and the
 ContractGraph-QA fixture `6e51cbb176f6d891b758e3026744d1d4c4c5727a`. The runtime verifier subject is the
 checkout that performs the inspection; the frozen fixture subject is the source
@@ -301,7 +301,7 @@ status checkable.
 The first workflow attempt (#1, `31873466160`) returned `HOLD` because it exposed
 an identity-routing bug: the verifier subject was incorrectly compared to the
 frozen fixture source subject. That fail-closed result was retained, the rule was
-corrected, and the current exact-head workflow [run #11](https://github.com/safal207/ContractGraph-QA/actions/runs/31874361029)
+corrected, and the current exact-head workflow [run #12](https://github.com/safal207/ContractGraph-QA/actions/runs/31876267042)
 passes. This is a logistics lesson: a valid delivery receipt must identify both
 carrier/verifier and cargo/source; conflating them creates a false routing failure,
 while omitting either one makes the proof impossible to locate or audit.
@@ -324,7 +324,13 @@ claim live execution, merge, deployment, production persistence or security
 authorization.
 ## Current occurrence-portability receipt
 
-The bounded P1-4/P1-5/P1-6 portability matrix is bound to verifier subject `f0dbbf3d24c343984902610c24004961c98ca4f5` and [workflow run #1](https://github.com/safal207/ContractGraph-QA/actions/runs/31874361042). Its artifact digest is `sha256:596b002647b96a9dbcb085db7d0376f5930aaac8259e2d3e91cbbeed5e7a7968`. The receipt keeps decision, concrete occurrence and consumption fact as separate routable identities; race, replay and request-ID rebound cases fail closed. This is bounded evidence cargo, not execution authority.
+The bounded P1-4/P1-5/P1-6 portability matrix is bound to verifier subject `eac4dae1f9add44050def7579a9ea392bd8199cd` and [workflow run #1](https://github.com/safal207/ContractGraph-QA/actions/runs/31876267011). Its artifact digest is `sha256:7659839c5d29c5c91919b3bbca3b0ba22879f9bde8633f6beec613ad35c3c34c`. The receipt keeps decision, concrete occurrence and consumption fact as separate routable identities; race, replay and request-ID rebound cases fail closed. This is bounded evidence cargo, not execution authority.
+
+## P1-7 independent replay cargo
+
+P1-7 adds a second verifier vantage. [Workflow run #1](https://github.com/safal207/ContractGraph-QA/actions/runs/31876267085) passed at ContractGraph-QA subject `eac4dae1f9add44050def7579a9ea392bd8199cd` while freezing RESONANCE source subject `85c3baea0a551751263ef563a3dd1c75492f57ae`. The verifier reconstructed the exact occurrence `decision-A / evt-42`, route fingerprint `fee0b69553abc156b77ad446c3cda8c7f50bbf0efc2cd3aafa75a279016f7930`, and ConsumptionReceipt digest `690e4852db587c8aa97673ea3b93c5512ffb052ef15de7153604d3a2ff72d72a`. The cargo contained six subject records and artifact digest `sha256:95356f72678454b6f508c13d15657156b993c841a64fd3c6d99cbd738448c7a9`.
+
+The independent route rejected reorder, ambiguity, receipt tamper, pinned-revision tamper and raw-subject tamper. This is the logistics gain: the receiver can locate the minimum sufficient proof and independently recompute it, while stale later journal commits remain separate source identities.
 
 ## Logistics metrics
 
