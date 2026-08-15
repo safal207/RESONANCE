@@ -4,7 +4,7 @@
 
 **RESONANCE classification:** Proposed Engineering Signal — a maintenance mesh is a candidate operating layer for continuous, evidence-bound repository care.
 
-**Status:** `PLANNED_DESIGN`
+**Status:** `BOUNDED_P2_4_VERIFIED_DESIGN`
 
 This signal records an architectural direction, not an implemented autonomous service. The user-observed maintenance-loop pattern is an input hypothesis; no external experiment, merge ratio, production deployment, or model capability is independently claimed here.
 
@@ -62,7 +62,7 @@ This is the minimum containing system because a weak routine can fail in code, i
 
 **Past:** the trust spine was assembled as bounded contracts: exact-head governance, provider-neutral cargo, ancestry, negative-path matrix, evidence-bundle replay, and explicit evidence/authority/reflection separation.
 
-**Present:** ContractGraph-QA PR #61 current verifier subject `07affb7224e5cbeb2c0ff5ca5446c4d0e0ef05be` has successful exact-head runs for the full chain, P1-3, occurrence portability, independent cross-repository replay and compatibility/migration replay. P1-3 proves evidence-to-execution `BLOCK`, reflection-to-execution `BLOCK`, inferred authority `BLOCK`, and authority `HOLD` to execution `HOLD`; zero cases execute. Occurrence-binding evidence preserves semantic decision identity, authorization occurrence identity and consumption fact. P1-7 independently reconstructs those identities across frozen ProofPath, CML, LiminalDB, RINSE and RESONANCE subjects; P1-8 independently rejects unsupported schema revisions, route reorder and authority escalation while preserving source cargo by digest.
+**Present:** ContractGraph-QA PR #61 current verifier subject `7fd3e744037832b74b2ee4c4c71cc8fce18fc329` has successful exact-head runs for the full chain, P1-3, occurrence portability, independent cross-repository replay, compatibility/migration replay and P2-4 maintenance-routine evaluation. P1-3 proves evidence-to-execution `BLOCK`, reflection-to-execution `BLOCK`, inferred authority `BLOCK`, and authority `HOLD` to execution `HOLD`; zero cases execute. Occurrence-binding evidence preserves semantic decision identity, authorization occurrence identity and consumption fact. P1-7 independently reconstructs those identities across frozen ProofPath, CML, LiminalDB, RINSE and RESONANCE subjects; P1-8 independently rejects unsupported schema revisions, route reorder and authority escalation while preserving source cargo by digest. P2-4 independently evaluates `contract_drift_detector` and `evidence_auditor` with exact outcome attribution and no merge authority.
 
 **Future:** routine → exact target → minimal patch → independent verifier → PR outcome → routine-quality record → bounded routine refactor.
 
@@ -112,11 +112,11 @@ The last class is a future policy boundary, not current authorization. No human-
 
 ## First bounded build
 
-Add a `Maintenance Routine Contract v0.1` as a P2 design item with a machine-readable routine-run manifest, exact target/source identities, evidence and outcome references, routine version and rule digest, independent verification, negative cases, outcome attribution, no hidden authority escalation, and a replayable Routine Evaluator fixture.
+Implemented as a bounded P2-4 build: `Maintenance Routine Contract v0.1` with machine-readable routine-run manifests, exact target/source identities, evidence and outcome references, routine version and rule digest, independent verification, negative cases, outcome attribution, no hidden authority escalation, and a replayable Routine Evaluator fixture. ContractGraph-QA [workflow run #1](https://github.com/safal207/ContractGraph-QA/actions/runs/31879737058) passed at exact subject `7fd3e744037832b74b2ee4c4c71cc8fce18fc329` with receipt digest `sha256:50e4c0ebdf7428142e9951adbae983673ff76c76e8fce97f78cd8ee5087c254e` and witness digest `72df07094cce9975a9ffb631a65fe70561c30c3fa8b884b7f1a5afc07bf69b0c.
 
 Initial negative cases: stale target head; missing or unlisted evidence; changed contract subject; duplicate or contradictory finding; false-green verifier boundary; ambiguous occurrence binding; routine self-authorizes its own patch; outcome attributed to the wrong routine or patch subject.
 
-Completion signal: two bounded routines emit closed, replayable run records, an independent evaluator reproduces their quality result, and no routine output authorizes merge or external effects by itself.
+Completion signal met: two bounded routines emit closed replayable run records, an independent evaluator reproduces the routine-quality result, outcome attribution is exact, and no routine output authorizes merge or external effects by itself.
 
 ## Safety boundary and non-claims
 
@@ -128,4 +128,4 @@ The Maintenance Mesh is a proposed operating layer over the existing trust spine
 
 - RESONANCE Article 05, immutable FCRP v0.1 source: `389939d68350f5c0565fb814c6d599505ed8048b`.
 - RESONANCE Article 06, immutable Self-Refactoring profile: `5b0e406410f8f1e42d18a969581b6af29032d360`.
-- ContractGraph-QA P1-3 current verifier subject: `07affb7224e5cbeb2c0ff5ca5446c4d0e0ef05be`.
+- ContractGraph-QA current verifier subject: `7fd3e744037832b74b2ee4c4c71cc8fce18fc329` (P2-4 exact-head evaluator receipt `sha256:50e4c0ebdf7428142e9951adbae983673ff76c76e8fce97f78cd8ee5087c254e`).
