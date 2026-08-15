@@ -14,12 +14,15 @@ Before inventing a new method, read the current line in this order:
 
 1. [`Article 05 — Fractal Causal Refactoring`](../issues/001-age-of-agents/articles/05-fractal-causal-refactoring.md)
 2. [`Article 06 — The System That Refactored Itself`](../issues/001-age-of-agents/articles/06-the-system-that-refactored-itself.md)
-3. [`Signal 011 — Genesis / Historical Trust-Base Portability`](011-genesis-historical-trust-base-portability.md)
-4. [`Signal 012 — Downstream Causal-State Portability`](012-downstream-causal-state-portability.md)
-5. [`Signal 013 — Recursive Verification Skill Mesh / Journal-Driven Agent Routing`](013-recursive-verification-skill-mesh.md)
-6. [`Signal 014 — Persistence Frontier / Native Consumer Acceptance Is Not Durable State`](014-persistence-frontier-native-consumer-acceptance.md)
-7. [`Signal 015 — Durability Frontier / Commit ≠ Ack ≠ Retry Permission`](015-durability-frontier-commit-ack-retry.md)
-8. [`Signal 016 — Meaning May Change / Trace Must Not`](016-meaning-may-change-trace-must-not.md)
+3. [`Article 07 — Recover the Boundaries`](../issues/001-age-of-agents/articles/07-recover-the-boundaries.md)
+4. [`Article 08 — Authority Has a History`](../issues/001-age-of-agents/articles/08-authority-has-a-history.md)
+5. [`Signal 011 — Genesis / Historical Trust-Base Portability`](011-genesis-historical-trust-base-portability.md)
+6. [`Signal 012 — Downstream Causal-State Portability`](012-downstream-causal-state-portability.md)
+7. [`Signal 013 — Recursive Verification Skill Mesh / Journal-Driven Agent Routing`](013-recursive-verification-skill-mesh.md)
+8. [`Signal 014 — Persistence Frontier / Native Consumer Acceptance Is Not Durable State`](014-persistence-frontier-native-consumer-acceptance.md)
+9. [`Signal 015 — Durability Frontier / Commit ≠ Ack ≠ Retry Permission`](015-durability-frontier-commit-ack-retry.md)
+10. [`Signal 016 — Meaning May Change / Trace Must Not`](016-meaning-may-change-trace-must-not.md)
+11. [`Signal 017 — Authority Causality / Current Owner Gate`](017-authority-causality-current-owner-gate.md)
 
 Then inspect the **canonical skill registry and native repository contract** relevant to the target before execution.
 
@@ -161,6 +164,15 @@ Signal 016 adds:
 28. **Recorded-Time / Review-Time Conflation** — durable recording time is silently reused as downstream review time;
 29. **Review-Unavailable / Review-Passed Conflation** — an unavailable or rate-limited reviewer is reported as approval.
 
+Signal 017 adds:
+
+30. **State-Freshness / Authority-Freshness Conflation** — current data is treated as current write permission;
+31. **Checkpoint / Authority Resurrection** — stale recovered ownership silently regains mutation authority after restart or compaction;
+32. **Lane-Identity / Active-Owner Conflation** — responsibility-lane membership is treated as proof that a specific actor still owns the lane;
+33. **Timestamp / Authority-Predecessor Conflation** — last-write or latest timestamp is used to resolve an authority conflict without a causal handoff;
+34. **Split-Authority Acceptance** — two active owners exist for the same resource/epoch and the system continues instead of failing closed;
+35. **Authority-CAS / State-CAS Conflation** — one successful predecessor check is treated as sufficient when the action requires both.
+
 These names are a working engineering taxonomy, not an external standard. Apply them only when the exact causal shape is supported by evidence.
 
 ## Current verification mesh
@@ -215,6 +227,21 @@ reflection
 truth
         ≠
 authority
+```
+
+```text
+state current
+        ≠
+authority current
+```
+
+Where both predecessor proofs are required:
+
+```text
+CAS(state)
+AND
+CAS(authority)
+→ mutation admissible
 ```
 
 A consequential agent run may require deterministic trace/replay verification even when its final object looks correct.
