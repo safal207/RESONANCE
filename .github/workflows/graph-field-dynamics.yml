@@ -120,6 +120,74 @@ jobs:
           assert result['weight_update_allowed'] is False
           PY
 
+      - name: Evaluate first real prospective routing pair
+        run: |
+          python3 skills/graph-field-orientation/evaluate_prospective_routing_ab.py \
+            skills/graph-field-orientation/examples/prospective-routing-ab-2026-08-15.json \
+            skills/graph-field-orientation/examples/prospective-routing-ab-outcomes-2026-08-15.json \
+            --pretty > /tmp/gfd-routing-ab-result.json
+          cat /tmp/gfd-routing-ab-result.json
+
+      - name: Verify observed utility and prepare real calibration batch
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(Path('/tmp/gfd-routing-ab-result.json').read_text())
+          assert result['schema'] == 'resonance.graph-field-routing-ab.result.v0.1'
+          assert result['decision'] == 'PAIRED_OBSERVED'
+          assert result['mode'] == 'ADVISORY_ONLY'
+          assert result['authority_granted'] is False
+          assert result['treatment']['utility'] == 0.75
+          assert result['baseline']['utility'] == 0.70
+          assert result['advantage'] == 0.05
+          assert result['winner'] == 'TREATMENT'
+          assert result['paired_observation_count'] == 1
+          assert result['calibration_confidence'] == 'INSUFFICIENT'
+          assert result['weight_update_allowed'] is False
+
+          batch = {
+              'schema': 'resonance.graph-field-calibration.batch.v0.2',
+              'learning_rate': 0.05,
+              'current_weights': {
+                  'divergence': 0.25,
+                  'uncertainty': 0.20,
+                  'blast_radius': 0.20,
+                  'freshness_gap': 0.15,
+                  'open_pressure': 0.10,
+                  'opportunity': 0.10,
+              },
+              'observations': [result['calibration_observation']],
+          }
+          Path('/tmp/gfd-real-calibration-batch.json').write_text(
+              json.dumps(batch, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
+          PY
+
+      - name: Run first real paired calibration proposal
+        run: |
+          python3 skills/graph-field-orientation/calibrate_graph_field.py \
+            /tmp/gfd-real-calibration-batch.json \
+            --pretty > /tmp/gfd-real-calibration.json
+          cat /tmp/gfd-real-calibration.json
+
+      - name: Verify first real calibration remains insufficient and proposal-only
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(Path('/tmp/gfd-real-calibration.json').read_text())
+          assert result['schema'] == 'resonance.graph-field-calibration.proposal.v0.2'
+          assert result['mode'] == 'ADVISORY_ONLY'
+          assert result['authority_granted'] is False
+          assert result['apply_recommended'] is False
+          assert result['observation_count'] == 1
+          assert result['confidence'] == 'INSUFFICIENT'
+          assert result['mean_advantage'] == 0.05
+          PY
+
       - name: Run synthetic calibration control
         run: |
           python3 skills/graph-field-orientation/calibrate_graph_field.py \
