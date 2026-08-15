@@ -193,6 +193,18 @@ Sources are added only when they are actually used, inspected, and linked to a s
 - **Limitations:** Defines telemetry semantics, not policy or business invariants.
 - **Notes:** Spans include parent/context relationships, timestamps, events, links and status; useful precedent for explicit causal structure and time.
 
+## Article 13 — Evidence Must Bind the Transition
+
+Article 13 uses a dedicated evidence ledger because its primary material is a live public architecture discussion whose implementation reports, proposals, synthesis and non-claims must remain separately classified.
+
+- **Article:** [`articles/13-evidence-must-bind-the-transition.md`](articles/13-evidence-must-bind-the-transition.md)
+- **Dedicated evidence ledger:** [`articles/13-evidence-must-bind-the-transition.sources.md`](articles/13-evidence-must-bind-the-transition.sources.md)
+- **Web edition:** https://safal207.github.io/RESONANCE/evidence-must-bind-the-transition.ru.html
+- **Primary public threads:** `crewAIInc/crewAI#4877`, `langchain-ai/langgraph#5672`
+- **Core distinction:** public implementation reports and public design proposals are evidence inputs; `Evidence-Bound Transition`, `Terminality Binding`, and `EBT-I1..I7` are RESONANCE synthesis and are not claimed as vendor-native guarantees.
+
+The dedicated ledger preserves exact comment links, source classification, claim mapping, explicit non-claims and the proposed EBT falsification suite.
+
 ## Evidence rules
 
 - Prefer primary evidence where possible.
