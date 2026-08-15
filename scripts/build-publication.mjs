@@ -24,8 +24,9 @@ function routeFor(filename) {
 function canonicalArticleFiles() {
   if (!fs.existsSync(ISSUE_README)) return new Set();
   const readme = fs.readFileSync(ISSUE_README, 'utf8');
+  const section = readme.match(/## Published features([\s\S]*?)(?=\n##\s)/i)?.[1] || '';
   return new Set(
-    [...readme.matchAll(/\]\(articles\/([^)]*?\.md)\).*?published\s+\d{4}-\d{2}-\d{2}/gi)]
+    [...section.matchAll(/\]\(articles\/([^)]*?\.md)\)/gi)]
       .map((match) => match[1])
       .filter((name) => !name.endsWith('.sources.md')),
   );
