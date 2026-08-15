@@ -64,14 +64,18 @@ Continuation proof:
 8. **Current authority dominates recovered authority.** When mutation authority is dynamic, recovery must revalidate it rather than resurrect it from a checkpoint.
 9. **Observed outcome is recorded separately from the pre-recovery verdict.**
 10. **Generation mismatch is explicit.** When both authority and projection generations are known and differ, the projection cannot be `HEALTHY`.
+11. **Projection-newer-than-authority fails closed.** A projection at generation `N+1` with apparent durable authority at `N` is `UNPROVABLE`; recovery must not rebuild from the apparently older source until the contradiction is reconciled.
 
 ## Files
 
 - `schema/recovery-integrity-record.schema.json` — structural JSON Schema.
 - `validate.py` — semantic invariant validator with no third-party dependencies.
+- `generation_crash_simulator.py` — deterministic Generation-N crash-state classifier and verdict simulator.
+- `test_generation_crash_simulator.py` — regression tests for the generation matrix and fail-closed boundaries.
 - `fixtures/codex-26990-sanitized.json` — first public sanitized fixture based only on public GitHub evidence.
+- `fixtures/unsafe-fork-must-fail.json` — negative continuation control.
 
-## Validate
+## Validate the public fixture
 
 ```bash
 python protocols/recovery-integrity-v0.1/validate.py \
@@ -87,8 +91,49 @@ projection_decision=ALLOW_REBUILD
 execution_decision=HOLD
 ```
 
+## Generation-N crash simulator
+
+The simulator makes generation drift falsifiable without depending on a vendor implementation.
+
+Canonical matrix:
+
+```text
+case             projection    rebuild          execution
+healthy          HEALTHY       NO_REBUILD       HOLD
+stale            STALE         ALLOW_REBUILD    HOLD
+corrupt          CORRUPT       ALLOW_REBUILD    HOLD
+split-generation UNPROVABLE    HOLD             HOLD
+```
+
+Run:
+
+```bash
+cd protocols/recovery-integrity-v0.1
+python generation_crash_simulator.py
+python -m unittest -v test_generation_crash_simulator.py
+```
+
+The split-generation case is intentionally asymmetric:
+
+```text
+authority generation 41
+projection generation 42
+        ↓
+UNPROVABLE
+        ↓
+HOLD
+```
+
+The verifier does **not** assume the projection is wrong and overwrite it from the apparently older authority. That contradiction must be reconciled first.
+
+The regression suite also verifies that:
+
+- forcing `ALLOW_REBUILD` across this split is rejected;
+- a valid projection rebuild does not grant `ALLOW_FORK`;
+- unknown side effects and unproven current authority keep execution fail-closed.
+
 ## Non-goals
 
 This contract does not decide which store is authoritative for a product. That is a product-specific declaration backed by native evidence.
 
-It also does not mutate any recovery target. The validator is read-only.
+It also does not mutate any recovery target. The validator and simulator are read-only.
