@@ -4,11 +4,15 @@ on:
   pull_request:
     paths:
       - 'site/**'
+      - 'issues/001-age-of-agents/README.md'
+      - 'issues/001-age-of-agents/articles/**'
       - 'market/**'
       - 'analytics/**'
       - 'distribution/**'
       - 'protocols/**'
       - '.github/ISSUE_TEMPLATE/market-workflow.yml'
+      - 'scripts/build-publication.mjs'
+      - 'scripts/build-issue-web-articles.mjs'
       - 'scripts/build-seo-site.mjs'
       - 'scripts/enhance-search-indexing.mjs'
       - 'scripts/build-feeds.mjs'
@@ -30,11 +34,15 @@ on:
     branches: [main]
     paths:
       - 'site/**'
+      - 'issues/001-age-of-agents/README.md'
+      - 'issues/001-age-of-agents/articles/**'
       - 'market/**'
       - 'analytics/**'
       - 'distribution/**'
       - 'protocols/**'
       - '.github/ISSUE_TEMPLATE/market-workflow.yml'
+      - 'scripts/build-publication.mjs'
+      - 'scripts/build-issue-web-articles.mjs'
       - 'scripts/build-seo-site.mjs'
       - 'scripts/enhance-search-indexing.mjs'
       - 'scripts/build-feeds.mjs'
@@ -75,10 +83,10 @@ jobs:
       - name: Test Market OS scoring and evidence boundaries
         run: node --test market/tests/*.test.mjs
 
-      - name: Build SEO-ready publication
+      - name: Build complete publication
         env:
           RESONANCE_ANALYTICS_ENDPOINT: ''
-        run: node scripts/build-seo-site.mjs
+        run: node scripts/build-publication.mjs
 
       - name: Enhance search indexing graph
         run: node scripts/enhance-search-indexing.mjs
