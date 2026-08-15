@@ -74,6 +74,7 @@ Continuation proof:
 - `test_generation_crash_simulator.py` — regression tests for the generation matrix and fail-closed boundaries.
 - `fixtures/codex-26990-sanitized.json` — first public sanitized fixture based only on public GitHub evidence.
 - `fixtures/unsafe-fork-must-fail.json` — negative continuation control.
+- `fixtures/generation-matrix.expected.txt` — pinned canonical simulator output.
 
 ## Validate the public fixture
 
@@ -131,6 +132,19 @@ The regression suite also verifies that:
 - forcing `ALLOW_REBUILD` across this split is rejected;
 - a valid projection rebuild does not grant `ALLOW_FORK`;
 - unknown side effects and unproven current authority keep execution fail-closed.
+
+## CI proof lane
+
+`.github/workflows/recovery-integrity-v0.1.yml` runs the full boundary on relevant pull requests and `main` changes:
+
+```text
+sanitized public fixture must PASS
+unsafe fork fixture must FAIL
+Generation-N matrix must PASS
+regression suite must PASS
+```
+
+This makes the negative control part of the acceptance contract rather than an optional manual check.
 
 ## Non-goals
 
