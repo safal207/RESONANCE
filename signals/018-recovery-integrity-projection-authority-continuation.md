@@ -1,6 +1,6 @@
 # Engineering Signal 018 — Recovery Integrity / Projection ≠ Authority ≠ Continuation
 
-**Status:** PROPOSED / FIRST PUBLIC FIXTURE — 2026-08-15  
+**Status:** PROPOSED / EXECUTABLE GENERATION MATRIX — 2026-08-15  
 **Lineage:** Signal 014 Persistence Frontier → Signal 015 Durability Frontier → Signal 017 Authority Causality → `openai/codex#26990` recovery discussion  
 **Executable contract:** `protocols/recovery-integrity-v0.1/`  
 **Authority:** operational memory / routing guidance only; this signal grants no production mutation, deployment, credential, merge, financial, or external-action authority
@@ -120,6 +120,19 @@ commit or hold
 ```
 
 A minimal/default replacement must not silently become authoritative merely because it parses.
+
+The reverse mismatch is also load-bearing:
+
+```text
+authority generation N
+projection generation N+1
+        ↓
+UNPROVABLE
+        ↓
+HOLD
+```
+
+A verifier must not assume the projection is wrong and overwrite apparently newer evidence from an older durable source. The generation contradiction itself becomes evidence requiring reconciliation.
 
 ## Evidence-preservation invariant
 
@@ -246,6 +259,42 @@ execution continuation: HOLD
 
 This is the important separation.
 
+## Executable Generation-N matrix
+
+Recovery Integrity v0.1 now includes a deterministic crash-state simulator independent of the Codex fixture.
+
+Canonical cases:
+
+```text
+healthy          authority=42 projection=42 → HEALTHY    → NO_REBUILD    / HOLD
+stale            authority=42 projection=41 → STALE      → ALLOW_REBUILD / HOLD
+corrupt          authority=42 projection=42 + bad digest → CORRUPT → ALLOW_REBUILD / HOLD
+split-generation authority=41 projection=42 → UNPROVABLE → HOLD          / HOLD
+```
+
+The simulator feeds each generated `RecoveryIntegrityRecord` back through the same semantic validator. The regression suite additionally forces invalid decisions and verifies rejection.
+
+Load-bearing negative controls:
+
+```text
+projection generation > authority generation
++ ALLOW_REBUILD
+→ REJECT
+```
+
+and:
+
+```text
+STALE + ALLOW_REBUILD
++ ALLOW_FORK
++ continuation NOT_PROVEN
++ side effects UNKNOWN
++ current authority NOT_PROVEN
+→ REJECT ALLOW_FORK
+```
+
+This is executable evidence for the decision boundary, not evidence that a vendor implements generation markers today.
+
 ## Failure taxonomy additions
 
 Signal 018 adds these working engineering names:
@@ -301,7 +350,7 @@ Recovery Integrity v0.1 does not claim:
 - adoption or endorsement by OpenAI or Codex Rescue;
 - that the public fixture proves a vendor implementation defect beyond the issue's reported evidence.
 
-It defines a falsifiable recovery contract and tests one sanitized public case against that contract.
+It defines a falsifiable recovery contract, tests one sanitized public case against that contract, and provides an implementation-independent Generation-N simulation matrix.
 
 ## Core rule
 
