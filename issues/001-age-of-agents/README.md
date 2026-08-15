@@ -29,6 +29,7 @@ Issue 001 maps this transition.
 5. [`Fractal Causal Refactoring — как AI-агенту искать не ошибку, а точку расхождения системы с её идеей`](articles/05-fractal-causal-refactoring.md) — **published 2026-08-14**
 6. [`The System That Refactored Itself — что FCRP нашёл, когда мы применили его к собственной AI trust infrastructure`](articles/06-the-system-that-refactored-itself.md) — **published 2026-08-14**
 7. [`Recover the Boundaries — почему AI-агенту после compaction недостаточно просто «вспомнить задачу»`](articles/07-recover-the-boundaries.md) — **published 2026-08-15**
+8. [`Authority Has a History — почему право AI-агента действовать тоже имеет причинное состояние`](articles/08-authority-has-a-history.md) — **published 2026-08-15**
 
 The fourth feature extends the trust question beyond pre-action authorization: a consequential outcome needs its own observer identity, vantage and evidence so decision provenance and outcome provenance remain separately inspectable.
 
@@ -37,6 +38,8 @@ The fifth feature proposes a recursive causal-navigation protocol for autonomous
 The sixth feature reports what happened after that protocol became executable and was applied to its own trust-infrastructure repositories. The self-tests exposed verification-boundary drift, local-success/parent-invariant failure, clock-semantics drift, canonical-reality drift, temporal contract drift, provenance/compatibility conflation, and parallel semantic authority — turning FCRP from a conceptual debugging model into a broader repository and verification governance experiment.
 
 The seventh feature isolates a stricter continuation failure mode: an agent can reread durable state after compaction and still continue incorrectly if responsibility lanes, ownership, mutation scope, done conditions or latest rulings are reconstructed under the wrong topology. It introduces Responsibility-Lane Continuity and an executable fail-closed conformance gate for detecting lane conflation.
+
+The eighth feature makes authority itself causal: static ownership is the cheapest case, dynamic handoff requires a versioned authority predecessor, and genuine concurrent mutation may require both state CAS and authority CAS. Its core invariant is that correct knowledge does not imply current authority.
 
 ## Agent operating line
 
@@ -52,6 +55,8 @@ Article 05 — FCRP origin
 Article 06 — self-refactoring lessons
         ↓
 Article 07 — recover state + responsibility boundaries
+        ↓
+Article 08 — prove current causal authority
         ↓
 Signal 011 — independent historical trust-base portability
         ↓
@@ -81,6 +86,10 @@ Operational rules carried by this line:
 - a generated summary is information, not automatic execution authority;
 - a post-compaction material action must remain attributable to a valid responsibility lane;
 - cross-lane mutation and contradictory lane sources must fail closed;
+- correct state knowledge does not imply current mutation authority;
+- authority transfer/revocation must supersede stale checkpoints and cached ownership;
+- state predecessor and authority predecessor are independent proofs; where both are required, failure of either blocks mutation;
+- split active authority for the same resource/epoch must fail closed rather than be resolved by timestamp alone;
 - `verifier invocation failed` does not imply `verified subject rejected`;
 - `repository head` does not necessarily equal `capability identity`;
 - an immutable capability pin does not necessarily require the dependency's default branch head to remain frozen;
