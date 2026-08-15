@@ -7,6 +7,7 @@ on:
       - 'protocols/GRAPH_FIELD_DYNAMICS_V0_1.md'
       - 'protocols/GRAPH_FIELD_OPERATOR_FAMILY_V0_1.md'
       - 'protocols/GRAPH_FIELD_CALIBRATION_V0_2.md'
+      - 'protocols/GRAPH_FIELD_OUTCOME_INTAKE_V0_2.md'
       - 'skills/graph-field-orientation/**'
       - '.github/workflows/graph-field-dynamics.yml'
   workflow_dispatch:
