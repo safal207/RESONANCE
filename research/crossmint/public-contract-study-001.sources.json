@@ -1,66 +1,81 @@
 {
-  "schema": "resonance.public-contract-source-manifest.v0.1",
+  "schema": "resonance.public-contract-source-manifest.v0.2",
   "study": "crossmint-public-contract-001",
-  "generated_at": "2026-08-12",
-  "scope": "public-documentation-only",
+  "generated_at": "2026-08-15",
+  "scope": "public-documentation-plus-bounded-vendor-clarification",
   "testing_performed": false,
   "sources": [
     {
       "title": "How Agents Pay",
       "url": "https://docs.crossmint.com/agents/how-agents-pay",
-      "supports": [
-        "scoped wallet permissions",
-        "spend caps",
-        "allowed counterparties",
-        "time windows",
-        "revocation"
-      ]
+      "supports": ["scoped wallet permissions", "spend caps", "allowed counterparties", "time windows", "revocation"]
     },
     {
       "title": "Create Transaction",
       "url": "https://docs.crossmint.com/api-reference/wallets/create-transaction",
-      "supports": [
-        "x-idempotency-key",
-        "transaction id",
-        "awaiting-approval/pending/failed/success lifecycle"
-      ]
+      "supports": ["x-idempotency-key", "duplicate-creation prevention", "same-key replay discovery", "transaction lifecycle"]
     },
     {
       "title": "Get Transaction",
       "url": "https://docs.crossmint.com/api-reference/wallets/get-transaction",
-      "supports": [
-        "transaction status reconciliation by transaction id"
-      ]
+      "supports": ["canonical transaction status reconciliation", "terminal success/failed state", "onChain.txId and explorer material when available"]
     },
     {
       "title": "Get Wallet Transactions",
       "url": "https://docs.crossmint.com/api-reference/wallets/get-transactions",
-      "supports": [
-        "wallet transaction history reconciliation"
-      ]
+      "supports": ["wallet transaction history reconciliation"]
+    },
+    {
+      "title": "Webhook Best Practices",
+      "url": "https://docs.crossmint.com/introduction/platform/webhooks/best-practices",
+      "supports": ["at-least-once delivery", "webhook-id deduplication", "notification rather than canonical record"]
     },
     {
       "title": "Transfer Webhooks",
       "url": "https://docs.crossmint.com/wallets/guides/webhooks",
-      "supports": [
-        "outgoing transfer success/failure events",
-        "transferId linkage for API-originated transfers"
-      ]
+      "supports": ["outgoing transfer success/failure events", "transferId linkage"]
     },
     {
       "title": "x402",
       "url": "https://docs.crossmint.com/agents/payment-flows/x402",
+      "supports": ["402 negotiation", "payment-proof retry", "settlement receipt extraction"]
+    }
+  ],
+  "external_clarifications": [
+    {
+      "source": "Crossmint support correspondence",
+      "received_at": "2026-08-14",
+      "publicly_addressable": false,
       "supports": [
-        "402 negotiation",
-        "payment-proof retry",
-        "settlement receipt extraction"
+        "the documented primitives do not compose into a separately published normative timeout precedence rule",
+        "same-key replay can discover an already-created transaction after timeout",
+        "transaction lookup is the system-of-record state surface",
+        "webhooks are notification triggers rather than the canonical record",
+        "onChain.txId is absent until broadcast and is stronger for settlement confirmation than discovery"
+      ],
+      "boundary": [
+        "no internal workflows disclosed",
+        "no internal failure data disclosed",
+        "derived recovery sequence remains an inference rather than a separate provider guarantee"
       ]
     }
   ],
+  "derived_composition": {
+    "status": "supported-inference-not-normative-guarantee",
+    "sequence": [
+      "preserve logical operation identity",
+      "same-key replay for discovery",
+      "poll canonical transaction lookup until terminal",
+      "treat webhook as reconciliation trigger",
+      "use terminal onChain.txId material as settlement evidence when present",
+      "require a separate continuation rule before starting another operation"
+    ]
+  },
   "non_claims": [
     "No Crossmint vulnerability is claimed.",
     "No production or staging API testing was performed.",
     "No internal recovery architecture is inferred.",
+    "No private failure data is published.",
     "No endorsement or affiliation is implied."
   ]
 }
