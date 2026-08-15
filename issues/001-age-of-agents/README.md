@@ -30,6 +30,7 @@ Issue 001 maps this transition.
 6. [`The System That Refactored Itself — что FCRP нашёл, когда мы применили его к собственной AI trust infrastructure`](articles/06-the-system-that-refactored-itself.md) — **published 2026-08-14**
 7. [`Recover the Boundaries — почему AI-агенту после compaction недостаточно просто «вспомнить задачу»`](articles/07-recover-the-boundaries.md) — **published 2026-08-15**
 8. [`Authority Has a History — почему право AI-агента действовать тоже имеет причинное состояние`](articles/08-authority-has-a-history.md) — **published 2026-08-15**
+9. [`Cancellation Is a State Transition — почему остановка AI-агента должна оставлять доказуемую границу`](articles/09-cancellation-is-a-state-transition.md) — **published 2026-08-15**
 
 The fourth feature extends the trust question beyond pre-action authorization: a consequential outcome needs its own observer identity, vantage and evidence so decision provenance and outcome provenance remain separately inspectable.
 
@@ -40,6 +41,8 @@ The sixth feature reports what happened after that protocol became executable an
 The seventh feature isolates a stricter continuation failure mode: an agent can reread durable state after compaction and still continue incorrectly if responsibility lanes, ownership, mutation scope, done conditions or latest rulings are reconstructed under the wrong topology. It introduces Responsibility-Lane Continuity and an executable fail-closed conformance gate for detecting lane conflation.
 
 The eighth feature makes authority itself causal: static ownership is the cheapest case, dynamic handoff requires a versioned authority predecessor, and genuine concurrent mutation may require both state CAS and authority CAS. Its core invariant is that correct knowledge does not imply current authority.
+
+The ninth feature makes cancellation a first-class durability boundary: user-visible stream state, durable graph state and terminal lifecycle state are separate surfaces. It proposes a machine-checkable terminal receipt and a `wait=true` happens-before test so resume logic cannot silently transfer authority from a newer visible frontier back to an older checkpoint.
 
 ## Agent operating line
 
@@ -57,6 +60,8 @@ Article 06 — self-refactoring lessons
 Article 07 — recover state + responsibility boundaries
         ↓
 Article 08 — prove current causal authority
+        ↓
+Article 09 — prove cancellation durability / resume boundary
         ↓
 Signal 011 — independent historical trust-base portability
         ↓
@@ -90,6 +95,11 @@ Operational rules carried by this line:
 - authority transfer/revocation must supersede stale checkpoints and cached ownership;
 - state predecessor and authority predecessor are independent proofs; where both are required, failure of either blocks mutation;
 - split active authority for the same resource/epoch must fail closed rather than be resolved by timestamp alone;
+- user-visible stream state does not imply durable graph state;
+- durable graph state does not automatically imply current resume authority when newer user-visible state exists;
+- explicit cancellation and transport disconnect must remain semantically distinguishable;
+- a terminal lifecycle record must not silently promote partial output into a completed checkpoint;
+- when cancellation completion is used as a synchronization boundary, the persistence outcome should be knowable before recovery treats history as authoritative;
 - `verifier invocation failed` does not imply `verified subject rejected`;
 - `repository head` does not necessarily equal `capability identity`;
 - an immutable capability pin does not necessarily require the dependency's default branch head to remain frozen;
