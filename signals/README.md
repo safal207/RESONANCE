@@ -23,6 +23,7 @@ Before inventing a new method, read the current line in this order:
 9. [`Signal 015 — Durability Frontier / Commit ≠ Ack ≠ Retry Permission`](015-durability-frontier-commit-ack-retry.md)
 10. [`Signal 016 — Meaning May Change / Trace Must Not`](016-meaning-may-change-trace-must-not.md)
 11. [`Signal 017 — Authority Causality / Current Owner Gate`](017-authority-causality-current-owner-gate.md)
+12. [`Signal 018 — Recovery Integrity / Projection ≠ Authority ≠ Continuation`](018-recovery-integrity-projection-authority-continuation.md)
 
 Then inspect the **canonical skill registry and native repository contract** relevant to the target before execution.
 
@@ -79,6 +80,8 @@ native evidence handoff / persistence frontier
 durable local/test evidence / restart replay
         ↓
 immutable source trace / bounded reinterpretation
+        ↓
+recovery integrity / projection-authority-continuation separation
 ```
 
 ## Verified portability milestones
@@ -173,6 +176,17 @@ Signal 017 adds:
 34. **Split-Authority Acceptance** — two active owners exist for the same resource/epoch and the system continues instead of failing closed;
 35. **Authority-CAS / State-CAS Conflation** — one successful predecessor check is treated as sufficient when the action requires both.
 
+Signal 018 adds:
+
+36. **Projection / Authority Conflation** — a derived cache or UI projection becomes a second authority;
+37. **Readable / Current Conflation** — parseable state is treated as current state;
+38. **Missing / Stale / Corrupt Collapse** — distinct recovery states are all mapped to default initialization;
+39. **Recovery / Continuation Conflation** — successful state reconstruction is treated as permission to resume execution;
+40. **Evidence-Destructive Repair** — recovery destroys evidence required to diagnose or verify the failure;
+41. **Generation-Split Acceptance** — incompatible logical generations are accepted because each store is locally valid;
+42. **Recovered-Authority Resurrection** — a recovered session silently regains mutation authority without current-authority proof;
+43. **Committed-Effect / Retry Ambiguity** — uncertain pre-crash side effects are replayed without reconciliation.
+
 These names are a working engineering taxonomy, not an external standard. Apply them only when the exact causal shape is supported by evidence.
 
 ## Current verification mesh
@@ -233,6 +247,12 @@ authority
 state current
         ≠
 authority current
+```
+
+```text
+projection rebuildable
+        ≠
+execution continuation safe
 ```
 
 Where both predecessor proofs are required:
@@ -425,6 +445,7 @@ These entries record externally observable engineering feedback and architecture
 
 - [`007 — External Research Impact via Semantic Mutation`](007-external-research-impact-semantic-mutation.md)
 - [`008 — Independent Outcome-Provenance Convergence`](008-independent-outcome-provenance-convergence.md) — **OBSERVED 2026-08-13**
+- [`018 — Recovery Integrity / Projection ≠ Authority ≠ Continuation`](018-recovery-integrity-projection-authority-continuation.md) — **PUBLIC FIXTURE + EXECUTABLE GENERATION MATRIX 2026-08-15**
 
 Current external-research finding:
 
