@@ -157,6 +157,17 @@ Already present and not to be recreated:
 - Target: RESONANCE Market OS.
 - Completion signal: external workflow evidence, repeated problem clusters, pilot candidates, and paid requests remain separate from synthetic examples and internal demos.
 
+#### P2-4. Build the Maintenance Routine Contract and Routine Evaluator
+
+- Status: `PLANNED`
+- Target: RESONANCE operating layer over ContractGraph-QA and the cross-repository trust spine.
+- Purpose: make repository-maintenance routines durable, evidence-bound, outcome-aware and able to improve their own rules without becoming a second authority.
+- Design signal: `signals/018-autonomous-repository-maintenance-mesh.md`.
+- FCRP framing: selected level is the repository-maintenance control plane; the likely first meaningful divergence is the missing shared contract joining observation, diagnosis, patch, independent verification, PR outcome and routine version.
+- Completion signal: two bounded routines emit closed replayable run records; an independent evaluator reproduces routine-quality results; outcome attribution is exact; no routine output authorizes merge, deployment, production persistence or external effects.
+- Initial negative cases: stale target head, missing/unlisted evidence, changed contract subject, duplicate finding, false-green verifier boundary, ambiguous occurrence binding, routine self-authorization, and wrong outcome attribution.
+- Scope boundary: this is a planned design track. It does not claim that an autonomous maintenance service, auto-merge policy or production routine exists.
+
 ## Operating rule
 
 For every item:
