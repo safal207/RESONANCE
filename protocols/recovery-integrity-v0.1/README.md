@@ -80,6 +80,7 @@ Continuation proof:
 - `fixtures/codex-26990-sanitized.json` — first public sanitized fixture based only on public GitHub evidence.
 - `fixtures/unsafe-fork-must-fail.json` — negative continuation control.
 - `fixtures/generation-matrix.expected.txt` — pinned canonical simulator output.
+- `fixtures/process-crash-matrix.expected.txt` — pinned canonical on-disk process-crash matrix.
 
 ## Validate the public fixture
 
