@@ -1,0 +1,45 @@
+{
+  "protocol_version": "recovery-integrity-v0.1",
+  "recovery_id": "codex-26990-public-sanitized-001",
+  "source_case_ref": "https://github.com/openai/codex/issues/26990",
+  "authority": {
+    "source_ref": "public-report:state_5.sqlite+session-rollouts",
+    "generation": null,
+    "integrity": "VALID"
+  },
+  "projection": {
+    "source_ref": "public-report:.codex-global-state.json",
+    "generation": null,
+    "state": "STALE",
+    "preserved_broken_ref": "public-report:.codex-global-state.pre-repair-20260606-070944.json"
+  },
+  "rollout": {
+    "source_ref": "public-report:sessions/**/rollout-*.jsonl",
+    "integrity": "UNKNOWN",
+    "continuation_proof": "NOT_PROVEN"
+  },
+  "last_committed_action_ref": null,
+  "pending_action_ref": null,
+  "external_side_effect_state": "UNKNOWN",
+  "current_authority_proof": "NOT_PROVEN",
+  "decision": {
+    "rebuild_projection": "ALLOW_REBUILD",
+    "execution_continuation": "HOLD"
+  },
+  "evidence_refs": [
+    "openai/codex#26990: global-state collapsed while 791 SQLite threads remained",
+    "openai/codex#26990: rollout files generally remained recoverable",
+    "openai/codex#26990: year-7026 timestamp anomaly",
+    "openai/codex#26990: post-repair project/pin visibility restored"
+  ],
+  "verifier": {
+    "verifier_id": "resonance-recovery-integrity-v0.1",
+    "mode": "read-only"
+  },
+  "pre_recovery_snapshot_ref": "public-report:pre-repair-artifacts-preserved",
+  "post_recovery_snapshot_ref": "public-report:repaired-state-observed",
+  "observed_outcome": {
+    "status": "REBUILD_SUCCEEDED",
+    "outcome_ref": "public-report:post-repair state remained healthy"
+  }
+}
