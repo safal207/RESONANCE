@@ -47,6 +47,14 @@ jobs:
         working-directory: protocols/recovery-integrity-v0.1
         run: python generation_crash_simulator.py
 
-      - name: Run recovery regression suite
+      - name: Run generation regression suite
         working-directory: protocols/recovery-integrity-v0.1
         run: python -m unittest -v test_generation_crash_simulator.py
+
+      - name: Run SQLite + atomic projection process-crash matrix
+        working-directory: protocols/recovery-integrity-v0.1
+        run: python fault_injection_harness.py matrix
+
+      - name: Run process-crash regression suite
+        working-directory: protocols/recovery-integrity-v0.1
+        run: python -m unittest -v test_fault_injection_harness.py
