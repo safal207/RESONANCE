@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Article 13: почему корректного доказательства недостаточно, если оно не связано с конкретным consequential transition. Execution Binding, Terminality Binding и Evidence-Bound Transition." />
+  <meta name="theme-color" content="#f7f3ea" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Evidence Must Bind the Transition | RESONANCE" />
+  <meta property="og:description" content="Следующий trust primitive — не больше доказательств, а доказательство с причинным адресом." />
+  <meta property="og:url" content="https://safal207.github.io/RESONANCE/evidence-must-bind-the-transition.ru.html" />
+  <meta property="article:published_time" content="2026-08-15" />
+  <link rel="canonical" href="https://safal207.github.io/RESONANCE/evidence-must-bind-the-transition.ru.html" />
+  <title>Evidence Must Bind the Transition | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+  <link rel="stylesheet" href="market.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Evidence Must Bind the Transition",
+    "alternativeHeadline": "Почему AI-системе недостаточно доказательства, если оно не связано с конкретным переходом",
+    "datePublished": "2026-08-15",
+    "inLanguage": "ru",
+    "author": {"@type": "Organization", "name": "RESONANCE Editorial"},
+    "publisher": {"@type": "Organization", "name": "RESONANCE"},
+    "isPartOf": {"@type": "PublicationIssue", "issueNumber": "001", "name": "The Age of Agents"},
+    "mainEntityOfPage": "https://safal207.github.io/RESONANCE/evidence-must-bind-the-transition.ru.html"
+  }
+  </script>
+</head>
+<body data-share-text="Evidence must bind the transition. RESONANCE Article 13 on execution binding, terminality binding and causal evidence in agent systems.">
+  <a class="skip-link" href="#article">К статье</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.ru.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Журнал об интеллекте, технологиях и человеческом прогрессе</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Меню</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Навигация">
+      <a href="ai-agents.html">AI</a>
+      <a href="science.ru.html">Наука</a>
+      <a href="open-problems.html">Открытые проблемы</a>
+      <a href="verified-workflow.html">Verified Workflow</a>
+      <a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+
+  <main id="article">
+    <header class="article-hero wrap">
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row">
+        <p class="section-label">Article #013 · Agent Trust / Causal Evidence</p>
+        <p class="article-status">Published · 15 Aug 2026</p>
+      </div>
+      <h1 class="article-title">Evidence Must Bind the Transition</h1>
+      <p class="article-dek">Почему AI-системе недостаточно доказательства, если оно не связано с конкретным переходом.</p>
+      <div class="byline-row">
+        <p>By <strong>RESONANCE Editorial</strong></p>
+        <p>Issue 001 · The Age of Agents</p>
+      </div>
+    </header>
+
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Краткое содержание">
+        <div class="rail-card rail-dark">
+          <p class="section-label">Core invariant</p>
+          <strong>Evidence must bind the transition.</strong>
+          <span>Корректный факт не становится автоматически правом на изменение состояния.</span>
+        </div>
+        <div class="rail-card">
+          <p class="section-label">CrewAI</p>
+          <strong>ELR-I9 · Execution Binding</strong>
+          <span>Freshness должна быть связана с конкретным execution occurrence.</span>
+        </div>
+        <div class="rail-card">
+          <p class="section-label">LangGraph</p>
+          <strong>Terminality Binding</strong>
+          <span>Terminal state должен ссылаться на exact persistence receipt.</span>
+        </div>
+      </aside>
+
+      <article class="article-body">
+        <p class="dropcap">За один день в двух разных публичных обсуждениях agent infrastructure проявился один и тот же failure shape. В CrewAI вопрос был об authorization и use-time freshness. В LangGraph — о cancellation и persistence. На поверхности это разные темы. На уровне причинной структуры это одна проблема: доказательство существует, но переход не обязан быть связан именно с этим evidence occurrence.</p>
+
+        <div class="pull-quote"><strong>A consequential state transition must be causally bound to the exact evidence occurrence that authorizes, validates, or settles it.</strong></div>
+
+        <h2>Два разных треда — один архитектурный разрыв.</h2>
+
+        <div class="protocol-flow" aria-label="CrewAI evidence path">
+          <span>historical verification</span><i>→</i><span>use-time revalidation</span><i>→</i><span>execution</span>
+        </div>
+        <p>В CrewAI-side discussion use-time revalidation закрывает один gap: исторически корректный receipt больше не используется вслепую против изменившегося мира. Но сразу открывается следующий TOCTOU — между успешной revalidation и реальным side effect.</p>
+
+        <div class="protocol-flow" aria-label="LangGraph cancellation path">
+          <span>cancellation accepted</span><i>→</i><span>persistence outcome</span><i>→</i><span>terminal state</span>
+        </div>
+        <p>В LangGraph cancellation boundary проблема другая по семантике, но такая же по форме: terminal state нельзя делать доказуемым просто потому, что какой-то persistence outcome случился раньше.</p>
+
+        <div class="pull-quote"><strong>Correct evidence can still be operationally unsafe.</strong></div>
+
+        <h2>Valid evidence ≠ evidence bound to this transition.</h2>
+
+        <p>Обычная verification-модель часто заканчивается на <code>verify(x) == PASS</code>. Но agent runtime живёт во времени. Между PASS и ACT могут измениться state, authority, policy, arguments, resource version, cancellation status, ownership или сам execution attempt.</p>
+
+        <section class="claim-panel">
+          <p class="section-label">Не смешивать</p>
+          <div><b>1</b><p><strong>Historical validity</strong><br />Было ли доказательство корректно, когда его создали?</p></div>
+          <div><b>2</b><p><strong>Current admissibility</strong><br />Остаётся ли оно применимым сейчас?</p></div>
+          <div><b>3</b><p><strong>Transition binding</strong><br />Какой exact transition имеет право его потребить?</p></div>
+        </section>
+
+        <h2>ELR-I9 — Execution Binding.</h2>
+
+        <p>В CrewAI discussion следующий proposed invariant можно выразить так:</p>
+        <div class="market-kpi"><pre>historical validity
+        ↓
+current admissibility
+        ↓
+execution-bound authorization</pre></div>
+
+        <p>Успешная use-time revalidation не должна становиться свободно переносимым фактом. Она может авторизовать только тот execution occurrence и context/version, к которым была привязана.</p>
+
+        <div class="trajectory-box">
+          <span>read version N</span><i>→</i><span>validate against N</span><i>→</i><span>issue use_token</span><i>→</i><span>consume only if still N</span>
+        </div>
+
+        <p>Если authoritative context уже N+1, токен для N должен fail closed и отправлять систему на revalidation. По форме это optimistic concurrency / CAS, только CAS применяется не к строке в базе, а к праву использовать verification result.</p>
+
+        <div class="market-kpi"><pre>{
+  "use_token": "ut_01J...",
+  "execution_id": "exec_42",
+  "context_digest": "sha256:...",
+  "context_version": 17,
+  "receipt_ref": "receipt_9",
+  "scope": "single_execution"
+}</pre></div>
+
+        <h2>LangGraph: C &lt; P &lt; T — но ordering ещё не causality.</h2>
+
+        <p>Для <code>cancel(wait=true, action="interrupt")</code> в публичном треде был предложен тестируемый happens-before:</p>
+
+        <div class="market-kpi"><pre>C = cancellation accepted
+P = bounded persistence/drain outcome established
+T = terminal interrupted state published
+
+assert C &lt; P &lt; T</pre></div>
+
+        <p><code>P</code> не обязано означать «всё идеально сохранено». Оно может честно быть <code>durable | partial | abandoned</code>. Главное — другой клиент не должен увидеть terminal certainty, пока persistence consequence ещё unknowable.</p>
+
+        <p>Но temporal order всё ещё не отвечает на вопрос: <em>какой именно P делает именно этот T доказуемым?</em></p>
+
+        <h2>Terminality Binding.</h2>
+
+        <p>Следующий шаг — не просто требовать, чтобы P произошло раньше T, а чтобы T ссылался на exact persistence outcome:</p>
+
+        <div class="market-kpi"><pre>CancellationReceipt {
+  cancellation_id
+  cause: user_cancel | transport_interrupted
+  persistence_outcome: durable | partial | abandoned
+  last_visible_seq
+  last_durable_seq
+  persistence_receipt_id
+}
+
+TerminalTransition {
+  state: interrupted
+  cancellation_id
+  persistence_receipt_id
+}</pre></div>
+
+        <section class="claim-panel">
+          <p class="section-label">Crash semantics</p>
+          <div><b>C</b><p><strong>C без P</strong><br />Recovery / indeterminate. Никогда не terminal.</p></div>
+          <div><b>C+P</b><p><strong>C + P без T</strong><br />Recovery может идемпотентно достроить T.</p></div>
+          <div><b>T?</b><p><strong>T без referenced P</strong><br />Invalid terminal state.</p></div>
+          <div><b>NET</b><p><strong>Transport interruption</strong><br />Отдельная causal branch, не intentional cancel.</p></div>
+        </section>
+
+        <h2>Ordering is not causality.</h2>
+
+        <p>Пусть наблюдаем <code>E1 &lt; E2 &lt; E3</code>. Из этого не следует, что E3 был авторизован E2 или settled E2. Временной порядок отвечает «что было раньше». Causal binding отвечает «какой конкретный факт является основанием для этого конкретного перехода».</p>
+
+        <div class="pull-quote"><strong>Timestamp is not a permission. Adjacency is not a permission. The last known PASS is not a permission.</strong></div>
+
+        <div class="trajectory-box">
+          <span>evidence occurrence</span><i>→</i><span>explicit causal reference</span><i>→</i><span>consequential transition</span>
+        </div>
+
+        <h2>General model: Evidence-Bound Transition.</h2>
+
+        <p>Назовём consequential transition любое изменение, после которого система, пользователь или внешний мир получают новое значимое состояние: tool execution, payment, terminal publication, resume, commit, escrow release, authority transfer, retry или promotion evidence в accepted state.</p>
+
+        <div class="market-kpi"><pre>{
+  "transition_id": "tr_42",
+  "transition_kind": "execute_tool",
+  "logical_operation_id": "op_7",
+  "execution_id": "exec_12",
+  "predecessor_state_ref": "state_91",
+  "result_state_ref": "state_92",
+  "required_evidence": [
+    {"role": "authorization", "receipt_id": "a_17"},
+    {"role": "freshness", "receipt_id": "f_31"}
+  ],
+  "context_digest": "sha256:...",
+  "transition_status": "committed"
+}</pre></div>
+
+        <h2>Четыре evidence roles, которые нельзя сжимать в один verified=true.</h2>
+
+        <section class="claim-panel">
+          <p class="section-label">Evidence roles</p>
+          <div><b>A</b><p><strong>Authorization</strong><br />Было ли действие разрешено?</p></div>
+          <div><b>F</b><p><strong>Freshness / admissibility</strong><br />Остаётся ли разрешение применимым сейчас?</p></div>
+          <div><b>S</b><p><strong>Settlement / durability</strong><br />Что система может доказать о зафиксированном результате?</p></div>
+          <div><b>O</b><p><strong>Observation / outcome</strong><br />Кто и с какой vantage видел фактический outcome?</p></div>
+        </section>
+
+        <h2>Execution Binding и Terminality Binding — одна и та же форма.</h2>
+
+        <div class="market-kpi"><pre>CrewAI:
+F31 --authorizes-current-context--> X42
+
+LangGraph:
+P18 --settles-terminal-claim--> T9</pre></div>
+
+        <p>Семантика edges разная. Структура одна: meaningful evidence occurrence должно иметь explicit causal binding к exact consequential transition.</p>
+
+        <h2>Минимальный falsification suite.</h2>
+
+        <section class="claim-panel">
+          <p class="section-label">Conformance</p>
+          <div><b>01</b><p><strong>Stale context token</strong><br />Validate at N → mutate to N+1 → token for N must block.</p></div>
+          <div><b>02</b><p><strong>Wrong execution occurrence</strong><br />Evidence bound to X1 cannot silently authorize X2.</p></div>
+          <div><b>03</b><p><strong>Missing settlement</strong><br />Terminal T referencing absent P is invalid.</p></div>
+          <div><b>04</b><p><strong>Crash P→T</strong><br />C+P survives restart and allows idempotent T publication.</p></div>
+          <div><b>05</b><p><strong>Transport ≠ cancel</strong><br />Socket loss cannot become intentional lifecycle meaning by inference.</p></div>
+        </section>
+
+        <h2>Почему это важно для payments и side effects.</h2>
+
+        <p>На текстовом агенте этот gap выглядит как некрасивый recovery. На платежах, escrow, tool calls и external mutations тот же разрыв превращается в риск повторного side effect: approval был валиден, quote был свежим, balance был достаточным — но к моменту исполнения мир уже другой, а runtime всё ещё несёт вперёд старый PASS.</p>
+
+        <p>Evidence-Bound Transition не обещает магическую distributed atomicity. Он делает более скромную и полезную вещь: заставляет систему явно показать, где есть atomic boundary, а где остаётся compare-and-reject protocol boundary.</p>
+
+        <div class="pull-quote"><strong>The next trust primitive is not more evidence. It is evidence with a causal address.</strong></div>
+
+        <p class="closing-line"><strong>Доказательство становится операционным только тогда, когда система может показать, к какому именно переходу оно относится.</strong></p>
+
+        <section class="sources-block" id="sources">
+          <p class="section-label">Sources & evidence</p>
+          <ol>
+            <li><a href="https://github.com/crewAIInc/crewAI/issues/4877" target="_blank" rel="noreferrer">CrewAI Issue #4877 — GuardrailProvider authorization discussion</a></li>
+            <li><a href="https://github.com/crewAIInc/crewAI/issues/4877#issuecomment-5301964686" target="_blank" rel="noreferrer">babyblueviper1 — verified use-time revalidation and remaining TOCTOU</a></li>
+            <li><a href="https://github.com/crewAIInc/crewAI/issues/4877#issuecomment-5302214044" target="_blank" rel="noreferrer">safal207 — ELR-I9 Execution Binding</a></li>
+            <li><a href="https://github.com/langchain-ai/langgraph/issues/5672" target="_blank" rel="noreferrer">LangGraph Issue #5672 — cancellation / streamed state / persistence</a></li>
+            <li><a href="https://github.com/langchain-ai/langgraph/issues/5672#issuecomment-5301563787" target="_blank" rel="noreferrer">atomicdjt — C &lt; P &lt; T happens-before proposal</a></li>
+            <li><a href="https://github.com/langchain-ai/langgraph/issues/5672#issuecomment-5302243548" target="_blank" rel="noreferrer">safal207 — Terminality Binding</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/13-evidence-must-bind-the-transition.md" target="_blank" rel="noreferrer">Canonical Article 13 markdown</a></li>
+            <li><a href="https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/13-evidence-must-bind-the-transition.sources.md" target="_blank" rel="noreferrer">Article 13 evidence ledger</a></li>
+          </ol>
+          <p class="source-note">ELR-I9, Terminality Binding and Evidence-Bound Transition are RESONANCE synthesis / public architecture proposals. This article does not claim official adoption by CrewAI or LangGraph.</p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div><div class="brand footer-brand">RESONANCE</div><p>Найти сигнал. Проверить путь. Понять будущее.</p></div>
+      <div><p class="footer-title">Issue 001</p><p>The Age of Agents · Article 13</p></div>
+      <div><p class="footer-title">Open publication</p><a href="https://github.com/safal207/RESONANCE">GitHub repository ↗</a><p>© <span id="year">2026</span> RESONANCE</p></div>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
