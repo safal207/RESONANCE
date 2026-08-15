@@ -33,7 +33,8 @@ Issue 001 maps this transition.
 9. [`Cancellation Is a State Transition — почему остановка AI-агента должна оставлять доказуемую границу`](articles/09-cancellation-is-a-state-transition.md) — **published 2026-08-15**
 10. [`Consent Has a Causal Lifetime — почему approval AI-агента должно иметь доказуемую границу потребления`](articles/10-consent-has-a-causal-lifetime.md) — **published 2026-08-15**
 11. [`Evidence Has a Route — почему AI-агенту нужен не максимум проверки, а оптимальная логистика доказательств`](articles/11-evidence-has-a-route.md) — **published 2026-08-15**
-12. [`Evidence Must Bind the Transition — почему AI-системе недостаточно доказательства, если оно не связано с конкретным переходом`](articles/12-evidence-must-bind-the-transition.md) — **published 2026-08-15**
+12. [`A Diagnostic Nobody Can See Is Not a Signal — почему ownership, reachability и causal awareness нельзя сжимать в один статус`](articles/12-a-diagnostic-nobody-can-see-is-not-a-signal.md) — **published 2026-08-15**
+13. [`Evidence Must Bind the Transition — почему AI-системе недостаточно доказательства, если оно не связано с конкретным переходом`](articles/13-evidence-must-bind-the-transition.md) — **published 2026-08-15**
 
 The fourth feature extends the trust question beyond pre-action authorization: a consequential outcome needs its own observer identity, vantage and evidence so decision provenance and outcome provenance remain separately inspectable.
 
@@ -51,7 +52,9 @@ The tenth feature makes consent itself causal: a semantic allow decision, the ex
 
 The eleventh feature treats verification as an evidence-logistics problem: sync, async, cached, independent and human-mediated proof paths are candidate routes rather than universal defaults. Hard proof obligations define the admissible route set first; only then may the runtime optimize latency, compute, coordination and other costs. The selected route remains bound to current causal coordinates and does not itself grant execution authority.
 
-The twelfth feature generalizes a shared failure shape exposed independently in the CrewAI authorization/revalidation discussion and the LangGraph cancellation/durability discussion: correct evidence and correct temporal ordering are not enough when a consequential transition is not explicitly bound to the exact evidence occurrence that authorizes, validates or settles it. It introduces Evidence-Bound Transitions, Execution Binding and Terminality Binding as a compact causal contract between proof and change.
+The twelfth feature separates ownership, reachability, causal read basis and predecessor concurrency. A handoff can exist as durable state while remaining operationally undeliverable; a diagnostic can exist while being absent from the sender's decision path; and an unread predecessor is not the same failure as a true CAS race. HRC-001 turns those distinctions into a bounded executable conformance contract while preserving the reported non-reproduction of the hypothesized race in the motivating low-concurrency evidence.
+
+The thirteenth feature generalizes a shared failure shape exposed independently in the CrewAI authorization/revalidation discussion and the LangGraph cancellation/durability discussion: correct evidence and correct temporal ordering are not enough when a consequential transition is not explicitly bound to the exact evidence occurrence that authorizes, validates or settles it. It introduces Evidence-Bound Transitions, Execution Binding and Terminality Binding as a compact causal contract between proof and change.
 
 ## Agent operating line
 
@@ -76,7 +79,9 @@ Article 10 — bind consent occurrence to execution consumption
         ↓
 Article 11 — route sufficient/current/proportionate evidence to the action boundary
         ↓
-Article 12 — bind exact evidence occurrences to consequential transitions
+Article 12 — prove handoff causal visibility, reachability and read basis
+        ↓
+Article 13 — bind exact evidence occurrences to consequential transitions
         ↓
 Signal 011 — independent historical trust-base portability
         ↓
@@ -110,6 +115,9 @@ Operational rules carried by this line:
 - authority transfer/revocation must supersede stale checkpoints and cached ownership;
 - state predecessor and authority predecessor are independent proofs; where both are required, failure of either blocks mutation;
 - split active authority for the same resource/epoch must fail closed rather than be resolved by timestamp alone;
+- ownership does not imply reachability, and naming a new owner does not by itself prove a deliverable or acknowledged handoff;
+- unread-predecessor failure and true compare-and-swap conflict are separate failure classes and should remain separately observable;
+- a diagnostic that exists outside the decision path does not protect the decision merely because it is queryable somewhere in the system;
 - user-visible stream state does not imply durable graph state;
 - durable graph state does not automatically imply current resume authority when newer user-visible state exists;
 - explicit cancellation and transport disconnect must remain semantically distinguishable;
