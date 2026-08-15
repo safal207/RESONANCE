@@ -28,12 +28,15 @@ Issue 001 maps this transition.
 4. [`Who Saw the Outcome? — The Missing Provenance Layer After an AI Agent Acts`](articles/04-who-saw-the-outcome.md) — **published 2026-08-13**
 5. [`Fractal Causal Refactoring — как AI-агенту искать не ошибку, а точку расхождения системы с её идеей`](articles/05-fractal-causal-refactoring.md) — **published 2026-08-14**
 6. [`The System That Refactored Itself — что FCRP нашёл, когда мы применили его к собственной AI trust infrastructure`](articles/06-the-system-that-refactored-itself.md) — **published 2026-08-14**
+7. [`Recover the Boundaries — почему AI-агенту после compaction недостаточно просто «вспомнить задачу»`](articles/07-recover-the-boundaries.md) — **published 2026-08-15**
 
 The fourth feature extends the trust question beyond pre-action authorization: a consequential outcome needs its own observer identity, vantage and evidence so decision provenance and outcome provenance remain separately inspectable.
 
 The fifth feature proposes a recursive causal-navigation protocol for autonomous engineering agents: choose the right system scale, recover the level's idea across past/present/future, find the first meaningful divergence, select a high-leverage refactor point, simulate impact, and verify affected parent invariants after the change.
 
 The sixth feature reports what happened after that protocol became executable and was applied to its own trust-infrastructure repositories. The self-tests exposed verification-boundary drift, local-success/parent-invariant failure, clock-semantics drift, canonical-reality drift, temporal contract drift, provenance/compatibility conflation, and parallel semantic authority — turning FCRP from a conceptual debugging model into a broader repository and verification governance experiment.
+
+The seventh feature isolates a stricter continuation failure mode: an agent can reread durable state after compaction and still continue incorrectly if responsibility lanes, ownership, mutation scope, done conditions or latest rulings are reconstructed under the wrong topology. It introduces Responsibility-Lane Continuity and an executable fail-closed conformance gate for detecting lane conflation.
 
 ## Agent operating line
 
@@ -47,6 +50,8 @@ The intended reading / execution loop is:
 Article 05 — FCRP origin
         ↓
 Article 06 — self-refactoring lessons
+        ↓
+Article 07 — recover state + responsibility boundaries
         ↓
 Signal 011 — independent historical trust-base portability
         ↓
@@ -72,6 +77,10 @@ Operational rules carried by this line:
 - read the current journal state before inventing a new test method;
 - route to existing canonical skills before creating a new skill;
 - `output correct` does not imply `agent path admissible`;
+- recovered state does not imply recovered responsibility topology;
+- a generated summary is information, not automatic execution authority;
+- a post-compaction material action must remain attributable to a valid responsibility lane;
+- cross-lane mutation and contradictory lane sources must fail closed;
 - `verifier invocation failed` does not imply `verified subject rejected`;
 - `repository head` does not necessarily equal `capability identity`;
 - an immutable capability pin does not necessarily require the dependency's default branch head to remain frozen;
