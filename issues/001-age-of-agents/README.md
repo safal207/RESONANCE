@@ -31,6 +31,7 @@ Issue 001 maps this transition.
 7. [`Recover the Boundaries — почему AI-агенту после compaction недостаточно просто «вспомнить задачу»`](articles/07-recover-the-boundaries.md) — **published 2026-08-15**
 8. [`Authority Has a History — почему право AI-агента действовать тоже имеет причинное состояние`](articles/08-authority-has-a-history.md) — **published 2026-08-15**
 9. [`Cancellation Is a State Transition — почему остановка AI-агента должна оставлять доказуемую границу`](articles/09-cancellation-is-a-state-transition.md) — **published 2026-08-15**
+10. [`Consent Has a Causal Lifetime — почему approval AI-агента должно иметь доказуемую границу потребления`](articles/10-consent-has-a-causal-lifetime.md) — **published 2026-08-15**
 
 The fourth feature extends the trust question beyond pre-action authorization: a consequential outcome needs its own observer identity, vantage and evidence so decision provenance and outcome provenance remain separately inspectable.
 
@@ -43,6 +44,8 @@ The seventh feature isolates a stricter continuation failure mode: an agent can 
 The eighth feature makes authority itself causal: static ownership is the cheapest case, dynamic handoff requires a versioned authority predecessor, and genuine concurrent mutation may require both state CAS and authority CAS. Its core invariant is that correct knowledge does not imply current authority.
 
 The ninth feature makes cancellation a first-class durability boundary: user-visible stream state, durable graph state and terminal lifecycle state are separate surfaces. It proposes a machine-checkable terminal receipt and a `wait=true` happens-before test so resume logic cannot silently transfer authority from a newer visible frontier back to an older checkpoint.
+
+The tenth feature makes consent itself causal: a semantic allow decision, the exact signed authorization occurrence and the execution that consumes it are separate identities. It introduces an Authorization Consumption Boundary so stale, replayed, superseded or already-consumed approval cannot silently authorize a later side effect merely because the historical verdict still says `ALLOW`.
 
 ## Agent operating line
 
@@ -62,6 +65,8 @@ Article 07 — recover state + responsibility boundaries
 Article 08 — prove current causal authority
         ↓
 Article 09 — prove cancellation durability / resume boundary
+        ↓
+Article 10 — bind consent occurrence to execution consumption
         ↓
 Signal 011 — independent historical trust-base portability
         ↓
@@ -100,6 +105,12 @@ Operational rules carried by this line:
 - explicit cancellation and transport disconnect must remain semantically distinguishable;
 - a terminal lifecycle record must not silently promote partial output into a completed checkpoint;
 - when cancellation completion is used as a synchronization boundary, the persistence outcome should be knowable before recovery treats history as authoritative;
+- historically valid consent does not imply current execution authority;
+- semantic decision identity, authorization occurrence identity and execution occurrence identity must remain distinct where ambiguity affects safety;
+- an ambiguous semantic decision reference must not be silently resolved to the first matching authorization occurrence;
+- one-shot authorization must not be replayable after it has been consumed by an execution occurrence;
+- revalidation and execution are separate boundaries; a system must not assume that freshness checked earlier still authorizes a later materially changed side effect;
+- cancellation, revocation, supersession and authority transfer must defeat cached approval paths rather than allow stale consent resurrection;
 - `verifier invocation failed` does not imply `verified subject rejected`;
 - `repository head` does not necessarily equal `capability identity`;
 - an immutable capability pin does not necessarily require the dependency's default branch head to remain frozen;
