@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       RESONANCE_ANALYTICS_ENDPOINT: ${{ vars.RESONANCE_ANALYTICS_ENDPOINT }}
-      RESONANCE_GOOGLE_SITE_VERIFICATION: ${{ vars.RESONANCE_GOOGLE_SITE_VERIFICATION }}
+      RESONANCE_GOOGLE_SITE_VERIFICATION: ${{ vars.RESONANCE_GOOGLE_SITE_VERIFICATION || 'rboZQE3Vroz0oAkBvnxwRfGSQvNlSwUqaxP0w5YYdCw' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
