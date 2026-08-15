@@ -6,6 +6,7 @@
 **Status:** Published  
 **Last verified:** 2026-08-15  
 **Languages:** RU  
+**Web edition:** [safal207.github.io/RESONANCE/evidence-must-bind-the-transition.ru.html](https://safal207.github.io/RESONANCE/evidence-must-bind-the-transition.ru.html)  
 **Canonical identity:** Issue 001 · The Age of Agents · Evidence-Bound Transition / Execution Binding / Terminality Binding / Receipt Causality
 
 ---
