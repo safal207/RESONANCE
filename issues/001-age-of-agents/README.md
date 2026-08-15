@@ -33,6 +33,7 @@ Issue 001 maps this transition.
 9. [`Cancellation Is a State Transition — почему остановка AI-агента должна оставлять доказуемую границу`](articles/09-cancellation-is-a-state-transition.md) — **published 2026-08-15**
 10. [`Consent Has a Causal Lifetime — почему approval AI-агента должно иметь доказуемую границу потребления`](articles/10-consent-has-a-causal-lifetime.md) — **published 2026-08-15**
 11. [`Evidence Has a Route — почему AI-агенту нужен не максимум проверки, а оптимальная логистика доказательств`](articles/11-evidence-has-a-route.md) — **published 2026-08-15**
+12. [`When the Model Refuses to Scale — почему честный FAIL важнее красивой гипотезы`](articles/12-when-the-model-refuses-to-scale.md) — **published 2026-08-15**
 
 The fourth feature extends the trust question beyond pre-action authorization: a consequential outcome needs its own observer identity, vantage and evidence so decision provenance and outcome provenance remain separately inspectable.
 
@@ -49,6 +50,8 @@ The ninth feature makes cancellation a first-class durability boundary: user-vis
 The tenth feature makes consent itself causal: a semantic allow decision, the exact signed authorization occurrence and the execution that consumes it are separate identities. It introduces an Authorization Consumption Boundary so stale, replayed, superseded or already-consumed approval cannot silently authorize a later side effect merely because the historical verdict still says `ALLOW`.
 
 The eleventh feature treats verification as an evidence-logistics problem: sync, async, cached, independent and human-mediated proof paths are candidate routes rather than universal defaults. Hard proof obligations define the admissible route set first; only then may the runtime optimize latency, compute, coordination and other costs. The selected route remains bound to current causal coordinates and does not itself grant execution authority.
+
+The twelfth feature turns scientific falsification into an agent-system requirement. Using the COSMIC ORGANICS / MORPHOS experiment chain, it shows why a local Pareto success must be frozen before generalization tests, why negative evidence must remain first-class, and why a failure to transfer from 5×5 to 7×7 and 9×9 should move the refactor point upward from scalar tuning to scale-aware architecture rather than be tuned away.
 
 ## Agent operating line
 
@@ -72,6 +75,8 @@ Article 09 — prove cancellation durability / resume boundary
 Article 10 — bind consent occurrence to execution consumption
         ↓
 Article 11 — route sufficient/current/proportionate evidence to the action boundary
+        ↓
+Article 12 — freeze local success, test generalization, preserve negative evidence, raise the refactor scale when transfer fails
         ↓
 Signal 011 — independent historical trust-base portability
         ↓
@@ -121,6 +126,10 @@ Operational rules carried by this line:
 - hard proof obligations must filter the admissible route set before cost optimization begins;
 - a previously optimal evidence route does not imply a currently admissible route after material state, time, authority, policy or risk change;
 - route selection is routing context, not execution authority;
+- a local benchmark win does not imply a scale-general property;
+- once a candidate enters confirmation, retuning it against the confirmation corpus invalidates the claimed independence of that confirmation;
+- negative evidence is part of the causal record and must not disappear when a later variant repairs the failure;
+- generalization failure should move the refactor point to the smallest higher architectural level that explains the failure, rather than trigger endless scalar retuning;
 - `verifier invocation failed` does not imply `verified subject rejected`;
 - `repository head` does not necessarily equal `capability identity`;
 - an immutable capability pin does not necessarily require the dependency's default branch head to remain frozen;
