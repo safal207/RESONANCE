@@ -14,6 +14,7 @@ const existingWebRoutes = new Map([
   ['01-the-agentic-turn.md', 'the-agentic-turn.html'],
   ['02-the-missing-trust-layer.md', 'the-missing-trust-layer.html'],
   ['03-when-agents-fail.md', 'when-agents-fail.html'],
+  ['04-who-saw-the-outcome.md', 'who-saw-the-outcome.html'],
   ['13-evidence-must-bind-the-transition.md', 'evidence-must-bind-the-transition.ru.html'],
 ]);
 
@@ -49,7 +50,8 @@ const generated = [];
 
 for (const entry of allGenerated) {
   const generatedPath = path.join(SITE_DIR, entry.route);
-  if (!canonicalFiles.has(entry.filename)) {
+  const existingRoute = existingWebRoutes.get(entry.filename);
+  if (!canonicalFiles.has(entry.filename) || (existingRoute && fs.existsSync(path.join(SITE_DIR, existingRoute)))) {
     if (fs.existsSync(generatedPath)) fs.rmSync(generatedPath);
     continue;
   }
