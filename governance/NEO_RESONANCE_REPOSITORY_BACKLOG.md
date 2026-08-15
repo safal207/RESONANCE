@@ -48,7 +48,7 @@ Already present and not to be recreated:
 - Remote observation at preparation time: all eight manifest heads matched through a read-only GitHub connector snapshot.
 - Local direct `api.github.com` execution: `INCOMPLETE` in the current sandbox because the network request timed out; this is not treated as a remote PASS.
 - Machine evidence: RESONANCE P0-1 workflow run #4 (`31811652205`) completed successfully at exact subject `c844f22a106a539d789677915e4ef3e88b5f6e46`; the uploaded freshness artifact is retained with SHA-256 `sha256:f50f03a5c0c8c5b8b413cec848280d32397bfa160e0b54b0fe5c6af502255491`.
-- Scope decision: human review is `NOT_REQUIRED_FOR_CURRENT_SCOPE` for bounded advisory technical progression; this does not create a human approval claim.
+- Scope decision: no human-review gate is used for this bounded machine transition; this does not create a merge, deployment, production, or security approval claim.
 - Next transition: P0-3 provider-neutral interoperability contract.
 
 #### P0-2. Build FCRP-SYSTEM-007 full-chain conformance
@@ -58,7 +58,7 @@ Already present and not to be recreated:
 - Chain: proposal/intent → ProofPath decision → CML causal record → LiminalDB durable write/reopen → RINSE reflection → independent ContractGraph-QA verification.
 - Completion signal: one deterministic `logical_operation_id` travels through every stage; the final bundle is reproducible and proves reflection cannot authorize execution or mutate source truth.
 - Negative cases: missing intent, replayed nonce, changed argument digest, stale dependency head, tampered durable record, and attempted reflection escalation.
-- Evidence: bounded fixture `PASS` at frozen source subject `6e51cbb176f6d891b758e3026744d1d4c4c5727a`, verified by current PR #61 runtime subject `f153a12d209045f052700201c6ef179bf9550fb5`, based on exact main `b54173530c675083426137176cde0aed0b90853a`; workflow run #12 (`31873867982`) completed successfully, with artifact digest `sha256:9c030a8354857922e708c51f9681958abb7187eecf3f6bfbe9b53b383f092300`.
+- Evidence: bounded fixture `PASS` at frozen source subject `6e51cbb176f6d891b758e3026744d1d4c4c5727a`, verified by current PR #61 runtime subject `f0dbbf3d24c343984902610c24004961c98ca4f5`, based on exact main `b54173530c675083426137176cde0aed0b90853a`; workflow run #17 (`31874360999`) completed successfully, with artifact digest `sha256:046ab61a9f338e0f3de45c07d7f3d83cff0352411b6d704a64376a3680f28d39`.
 - Exact external subjects: ProofPath `4a05ee31d7497979c2505dd55bfef08823302e24`, CML `2a649903693fc61a560ee056834127ada3120206`, LiminalDB `61b02fc81e0cb5cf1f1ed4658ecff58f683cb728`, RINSE `3be0d2ceb1440641b141cdb80c82ed118e4186dd`.
 - Adjacent control-plane observation: CaPU `babd2945046d2564e1110a76741827560c57fcca` is recorded separately as execution-control-only; it is not a seventh proof stage or a source of CML semantics.
 - Scope boundary: this verifies the deterministic fixture, replay, durability/reopen/retry behavior, and reflection-only negative boundary; it does not authorize merge, deployment, production persistence, external effects, or a security claim.
@@ -82,8 +82,8 @@ Already present and not to be recreated:
 - Purpose: distinguish an exact current subject from a stale ancestor or a mutable `main` observation.
 - Completion signal: initial and final head checks, expected ancestry, workflow identity, and artifact subject are reported as `PASS`, `HOLD`, `NOT_RUN`, or `INCOMPLETE`; no unknown becomes green.
 - Implementation: `tools/ancestry_gate.py`, its unit tests, the `FCRP P0-4 — Exact Subject and Ancestry Gate` workflow, and the bounded design note in ContractGraph-QA.
-- Machine evidence: P0-4 workflow run #9 (`31873868043`) passed at current verifier subject `f153a12d209045f052700201c6ef179bf9550fb5`; all five checks (`initial_subject`, `final_subject`, `ancestry`, `workflow_identity`, `artifact_subject`) were `PASS`, with unknown policy `unknown_never_becomes_pass`. Artifact digest: `sha256:488014c74971b1c8a664ea2b4267217d0a6c8bac30f8c4137ab80c8c429fc608`.
-- Rebound SYSTEM-007 evidence: full-chain run #12 (`31873867982`) passed at current verifier subject `f153a12d209045f052700201c6ef179bf9550fb5` with 17/17 substantive steps and artifact digest `sha256:9c030a8354857922e708c51f9681958abb7187eecf3f6bfbe9b53b383f092300`.
+- Machine evidence: P0-4 workflow run #14 (`31874361028`) passed at current verifier subject `f0dbbf3d24c343984902610c24004961c98ca4f5`; all five checks (`initial_subject`, `final_subject`, `ancestry`, `workflow_identity`, `artifact_subject`) were `PASS`, with unknown policy `unknown_never_becomes_pass`. Artifact digest: `sha256:dec88816f004b6dc94d19b146254fd3b7c7dfe4da5bb14643f43a231425f23af`.
+- Rebound SYSTEM-007 evidence: full-chain run #17 (`31874360999`) passed at current verifier subject `f0dbbf3d24c343984902610c24004961c98ca4f5` with 17/17 substantive steps and artifact digest `sha256:046ab61a9f338e0f3de45c07d7f3d83cff0352411b6d704a64376a3680f28d39`.
 - Scope boundary: the gate establishes evidence identity and ancestry for bounded fixtures; it does not authorize merge, deployment, production persistence, external effects, or security decisions.
 - Next transition: P1-1 standard negative-path matrix.
 
@@ -96,7 +96,7 @@ Already present and not to be recreated:
 - Include: missing intent/parent/nonce, replay, expiry, scope violation, secret egress, changed arguments, fan-out exhaustion, tampered evidence, and untrusted memory/tool output.
 - Completion signal: each case has an expected decision, `side_effect_executed=false` where applicable, and a replayable evidence reference.
 - Implementation: ContractGraph-QA `tools/negative_path_matrix.py`, focused tests, the `FCRP P1-1 — Negative-Path Matrix` workflow, and the bounded design note `docs/NEO_REZONANS_P1_1_NEGATIVE_PATH_MATRIX_V0_1.md`.
-- Machine evidence: workflow run #8 (`31873868033`) passed at current verifier subject `f153a12d209045f052700201c6ef179bf9550fb5`; 16/16 cases were replay-stable and evidence-complete, with 15 `BLOCK` negative cases, one `ACCEPT` policy-eligible dry-run control, and zero executed cases. Artifact digest: `sha256:597941bd76a1c73d6acd8421e58229307cab711481da39ac9808d5f4fe198c99`.
+- Machine evidence: workflow run #13 (`31874361024`) passed at current verifier subject `f0dbbf3d24c343984902610c24004961c98ca4f5`; 16/16 cases were replay-stable and evidence-complete, with 15 `BLOCK` negative cases, one `ACCEPT` policy-eligible dry-run control, and zero executed cases. Artifact digest: `sha256:f466e00d828c3264fe047cc3659d152cb98df01673c99ea9689033fedcffd2b2`.
 - ProofPath pin: `4a05ee31d7497979c2505dd55bfef08823302e24`; the matrix is provider-neutral deterministic policy evaluation and does not claim live runtime integration.
 - Safety boundary: all authority flags are `false`; no executor, provider, wallet, real secret, network side effect, mutation, merge, deployment, production persistence, or security authorization is involved. `BLOCK` and `HOLD` remain fail-closed.
 - Next transition: P1-2 unify evidence-bundle and replay manifests.
@@ -107,7 +107,7 @@ Already present and not to be recreated:
 - Target: LiminalDB, RINSE, ContractGraph-QA, and LS.
 - Completion signal: every load-bearing artifact has path, byte size, SHA-256, source revision, role, and collection timestamps; duplicate or unlisted artifacts fail verification.
 - Implementation: ContractGraph-QA `schemas/evidence-bundle-replay-manifest.v0.1.schema.json`, `tools/evidence_bundle_replay_manifest.py`, the canonical four-subject fixture under `fixtures/p1-2/`, focused tests, the `FCRP P1-2 — Evidence-Bundle and Replay Manifest` workflow, and the bounded design note `docs/NEO_REZONANS_P1_2_EVIDENCE_BUNDLE_REPLAY_MANIFEST_V0_1.md`.
-- Machine evidence: workflow run #7 (`31873867996`) passed at runtime verifier subject `f153a12d209045f052700201c6ef179bf9550fb5`; the bundle contains four exact component subjects, six artifacts, six replay steps and 1,410 bytes. Replay is `SAME_RESULT`, membership and SHA-256 checks pass, and all authority flags remain `false`. Artifact digest: `sha256:3cd94e0c1510668ef947ff7cf346efeb5f97911444b8da39a4a2996f1088b481`.
+- Machine evidence: workflow run #12 (`31874361005`) passed at runtime verifier subject `f0dbbf3d24c343984902610c24004961c98ca4f5`; the bundle contains four exact component subjects, six artifacts, six replay steps and 1,410 bytes. Replay is `SAME_RESULT`, membership and SHA-256 checks pass, and all authority flags remain `false`. Artifact digest: `sha256:8c76d227e8fcee5114ac0b4d8055f28a74807fba846eb4a4680ac94dde156c09`.
 - Pinned bundle subjects: LiminalDB `61b02fc81e0cb5cf1f1ed4658ecff58f683cb728`, RINSE `3be0d2ceb1440641b141cdb80c82ed118e4186dd`, ContractGraph-QA fixture `fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e`, LS `fa7e3aba4ff9154856fa7d27c92f702137819ac1`.
 - Scope boundary: the verifier proves byte integrity, bundle membership, exact source pins and replay references for a bounded fixture; it does not assert live runtime integration, production safety, merge approval, deployment or security certification.
 
@@ -117,14 +117,26 @@ Already present and not to be recreated:
 - Target: ContractGraph-QA authority/reflection boundary fixture, with the route rule carried into every adapter and example.
 - Completion signal: a reflection, schema pass, or valid evidence bundle cannot by itself authorize an action; a negative escalation test proves this.
 - Implementation: ContractGraph-QA `schemas/authority-reflection-boundary.v0.1.schema.json`, `tools/authority_reflection_boundary.py`, the canonical three-lane fixture under `fixtures/p1-3/`, focused tests, the `FCRP P1-3 — Evidence, Authority and Reflection Boundary` workflow, and the bounded design note `docs/NEO_REZONANS_P1_3_AUTHORITY_REFLECTION_BOUNDARY_V0_1.md`.
-- Machine evidence: workflow run #6 (`31873868029`) passed at runtime verifier subject `f153a12d209045f052700201c6ef179bf9550fb5`, based on exact PR #61 base `b54173530c675083426137176cde0aed0b90853a`; five source subjects, three artifacts, 1,254 bytes, four cases, replay `SAME_RESULT`, three `BLOCK`, one `HOLD`, and zero executed cases. Artifact digest: `sha256:221ec253ca285bb259a36bced7ab3abc76c1aca1802c53bf73f7bb96d74eb984`.
+- Machine evidence: workflow run #11 (`31874361029`) passed at runtime verifier subject `f0dbbf3d24c343984902610c24004961c98ca4f5`, based on exact PR #61 base `b54173530c675083426137176cde0aed0b90853a`; five source subjects, three artifacts, 1,254 bytes, four cases, replay `SAME_RESULT`, three `BLOCK`, one `HOLD`, and zero executed cases. Artifact digest: `sha256:9e6b4a1c713da2347e6d2f56f7c19f747c71913b823425731cbab0c719e2144e`.
 - Boundary result: evidence has `may_authorize=false`; reflection is `REFLECTION_ONLY`, cannot authorize or mutate source; authority is a separate explicit control record and the fixture remains `HOLD`. All side-effect flags are `false`.
-- Identity rule: runtime verifier subject `f153a12d209045f052700201c6ef179bf9550fb5` and frozen ContractGraph-QA fixture source subject `6e51cbb176f6d891b758e3026744d1d4c4c5727a` are recorded separately; a source subject is cargo provenance, not the verifier checkout identity.
+- Identity rule: runtime verifier subject `f0dbbf3d24c343984902610c24004961c98ca4f5` and frozen ContractGraph-QA fixture source subject `6e51cbb176f6d891b758e3026744d1d4c4c5727a` are recorded separately; a source subject is cargo provenance, not the verifier checkout identity.
 - Historical fail-closed check: first workflow attempt #1 (`31873466160`) returned `HOLD` while the verifier/fixture identities were incorrectly conflated; the fix separates them and preserves both identities in evidence.
 - Scope boundary: this proves a bounded negative escalation boundary and replayable lane separation; it does not authorize merge, deployment, production persistence, external effects, or security decisions.
-- Next transition: P1-4 independent cross-repo replay..
+- Next transition: P1-7 independent cross-repo replay..
 
-#### P1-4. Add independent cross-repo replay
+#### P1-4/P1-5/P1-6. Preserve authorization occurrence across adapters
+
+- Status: `VERIFIED`
+- Target: ProofPath → CML → LiminalDB → RINSE → ContractGraph-QA.
+- Purpose: preserve one concrete authorization occurrence across every adapter, prevent duplicate or rebound consumption under race/replay, and emit a receipt bound to the exact consumer and action.
+- Completion signal: `decision_ref`, `cites_event_id`, action/authority fields, route fingerprint, request ID and consumption receipt remain exact and replayable; exactly one concurrent consumer can consume the occurrence.
+- Implementation: ContractGraph-QA `contractgraph_qa/occurrence_portability.py`, `tools/tests/test_occurrence_portability.py`, `tools/occurrence_portability_matrix.py`, and `docs/NEO_REZONANS_P1_4_P1_6_OCCURRENCE_PORTABILITY_V0_1.md`.
+- Machine evidence: occurrence portability [run #1](https://github.com/safal207/ContractGraph-QA/actions/runs/31874361042) passed at verifier subject `f0dbbf3d24c343984902610c24004961c98ca4f5`; artifact `fcrp-p1-4-6-occurrence-portability-31874361042-1`, digest `sha256:596b002647b96a9dbcb085db7d0376f5930aaac8259e2d3e91cbbeed5e7a7968`, artifact size 1,806 bytes.
+- Matrix boundary: expired, revoked, not-yet-valid, action mismatch, concurrent compare-and-set race, same-request replay, already-consumed, and request-ID rebound cases remain fail-closed; `side_effects_executed=false` and `production_ledger_mutated=false`.
+- Scope boundary: this is a provider-neutral conformance/reference layer; it does not claim a production ledger migration, CrewAI adoption, deployment, external effects, merge approval, or security authorization.
+- Next transition: P1-7 independent cross-repo replay.
+
+#### P1-7. Add independent cross-repo replay
 
 - Status: `PLANNED`
 - Target: ContractGraph-QA.
