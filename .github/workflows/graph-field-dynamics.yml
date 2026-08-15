@@ -1,10 +1,12 @@
-name: Graph-Field Dynamics v0.1
+name: Graph-Field Dynamics v0.2
 
 on:
   pull_request:
     branches: [main]
     paths:
       - 'protocols/GRAPH_FIELD_DYNAMICS_V0_1.md'
+      - 'protocols/GRAPH_FIELD_OPERATOR_FAMILY_V0_1.md'
+      - 'protocols/GRAPH_FIELD_CALIBRATION_V0_2.md'
       - 'skills/graph-field-orientation/**'
       - '.github/workflows/graph-field-dynamics.yml'
   workflow_dispatch:
@@ -56,4 +58,27 @@ jobs:
           assert result['ranking'][0]['field_score'] == 0.800588
           assert result['ranking'][-1]['id'] == 'proofpath-external-independence'
           assert result['ranking'][-1]['tension'] == 0.71
+          PY
+
+      - name: Run synthetic calibration control
+        run: |
+          python3 skills/graph-field-orientation/calibrate_graph_field.py \
+            skills/graph-field-orientation/examples/synthetic-calibration-v0.2.json \
+            --pretty > /tmp/gfd-calibration.json
+          cat /tmp/gfd-calibration.json
+
+      - name: Verify calibration remains proposal-only
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(Path('/tmp/gfd-calibration.json').read_text())
+          assert result['schema'] == 'resonance.graph-field-calibration.proposal.v0.2'
+          assert result['mode'] == 'ADVISORY_ONLY'
+          assert result['authority_granted'] is False
+          assert result['apply_recommended'] is False
+          assert result['confidence'] == 'INSUFFICIENT'
+          assert result['observation_count'] == 2
+          assert result['proposed_weights']['open_pressure'] < result['current_weights']['open_pressure']
           PY
