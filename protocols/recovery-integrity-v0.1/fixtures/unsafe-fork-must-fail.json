@@ -1,0 +1,42 @@
+{
+  "protocol_version": "recovery-integrity-v0.1",
+  "recovery_id": "negative-unsafe-fork-001",
+  "source_case_ref": "synthetic-negative-control",
+  "authority": {
+    "source_ref": "synthetic:durable-authority",
+    "generation": null,
+    "integrity": "VALID"
+  },
+  "projection": {
+    "source_ref": "synthetic:projection",
+    "generation": null,
+    "state": "STALE",
+    "preserved_broken_ref": "synthetic:preserved-broken-projection"
+  },
+  "rollout": {
+    "source_ref": "synthetic:rollout",
+    "integrity": "UNKNOWN",
+    "continuation_proof": "NOT_PROVEN"
+  },
+  "last_committed_action_ref": null,
+  "pending_action_ref": null,
+  "external_side_effect_state": "UNKNOWN",
+  "current_authority_proof": "NOT_PROVEN",
+  "decision": {
+    "rebuild_projection": "HOLD",
+    "execution_continuation": "ALLOW_FORK"
+  },
+  "evidence_refs": [
+    "synthetic negative control: continuation proof intentionally absent"
+  ],
+  "verifier": {
+    "verifier_id": "resonance-recovery-integrity-v0.1",
+    "mode": "read-only"
+  },
+  "pre_recovery_snapshot_ref": "synthetic:pre",
+  "post_recovery_snapshot_ref": null,
+  "observed_outcome": {
+    "status": "NOT_OBSERVED",
+    "outcome_ref": null
+  }
+}

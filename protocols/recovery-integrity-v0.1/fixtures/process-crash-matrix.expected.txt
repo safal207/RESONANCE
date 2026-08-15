@@ -1,0 +1,7 @@
+crash_point                         auth proj projection rebuild          temp validator
+---------------------------------------------------------------------------------------
+before_authority_commit             1    1    HEALTHY    NO_REBUILD       False PASS
+after_authority_commit              2    1    STALE      ALLOW_REBUILD    False PASS
+after_projection_temp_fsync         2    1    STALE      ALLOW_REBUILD    True  PASS
+after_projection_commit             2    2    HEALTHY    NO_REBUILD       False PASS
+PASS process-crash fault-injection matrix 4/4

@@ -1,0 +1,6 @@
+case             projection    rebuild          execution   validator
+-----------------------------------------------------------------------------
+healthy          HEALTHY       NO_REBUILD       HOLD        PASS
+stale            STALE         ALLOW_REBUILD    HOLD        PASS
+corrupt          CORRUPT       ALLOW_REBUILD    HOLD        PASS
+split-generation UNPROVABLE    HOLD             HOLD        PASS
