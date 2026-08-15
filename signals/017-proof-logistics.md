@@ -274,7 +274,7 @@ instruction. Each lane is indexed and checked independently:
 | authority | explicit control record, separate from proof and reflection | only by a separate control | only by a separate control | fixture is `HOLD` |
 
 The current P1-3 fixture is bound to ContractGraph-QA PR #61 base
-`b54173530c675083426137176cde0aed0b90853a`, runtime verifier subject `07affb7224e5cbeb2c0ff5ca5446c4d0e0ef05be`, and frozen source subjects:
+`b54173530c675083426137176cde0aed0b90853a`, runtime verifier subject `7fd3e744037832b74b2ee4c4c71cc8fce18fc329`, and frozen source subjects:
 ProofPath `4a05ee31d7497979c2505dd55bfef08823302e24`, LiminalDB `61b02fc81e0cb5cf1f1ed4658ecff58f683cb728`, RINSE `3be0d2ceb1440641b141cdb80c82ed118e4186dd`, LS `fa7e3aba4ff9154856fa7d27c92f702137819ac1`, and the
 ContractGraph-QA fixture `6e51cbb176f6d891b758e3026744d1d4c4c5727a`. The runtime verifier subject is the
 checkout that performs the inspection; the frozen fixture subject is the source
@@ -301,7 +301,7 @@ status checkable.
 The first workflow attempt (#1, `31873466160`) returned `HOLD` because it exposed
 an identity-routing bug: the verifier subject was incorrectly compared to the
 frozen fixture source subject. That fail-closed result was retained, the rule was
-corrected, and the current exact-head workflow [run #13](https://github.com/safal207/ContractGraph-QA/actions/runs/31879151716)
+corrected, and the current exact-head workflow [run #14](https://github.com/safal207/ContractGraph-QA/actions/runs/31879737024)
 passes. This is a logistics lesson: a valid delivery receipt must identify both
 carrier/verifier and cargo/source; conflating them creates a false routing failure,
 while omitting either one makes the proof impossible to locate or audit.
@@ -324,17 +324,17 @@ claim live execution, merge, deployment, production persistence or security
 authorization.
 ## Current occurrence-portability receipt
 
-The bounded P1-4/P1-5/P1-6 portability matrix is bound to verifier subject `07affb7224e5cbeb2c0ff5ca5446c4d0e0ef05be` and [workflow run #3](https://github.com/safal207/ContractGraph-QA/actions/runs/31879151712). Its artifact digest is `sha256:e55f2818f7a557983f1076af32f833d8b2d75e03f7b9659c2114cd0d6c6f2614`. The receipt keeps decision, concrete occurrence and consumption fact as separate routable identities; race, replay and request-ID rebound cases fail closed. This is bounded evidence cargo, not execution authority.
+The bounded P1-4/P1-5/P1-6 portability matrix is bound to verifier subject `7fd3e744037832b74b2ee4c4c71cc8fce18fc329` and [workflow run #3](https://github.com/safal207/ContractGraph-QA/actions/runs/31879737013). Its artifact digest is `sha256:9cf005d73a07f4f356581337c27c378747b199ada278bd9122f8f3db71559200`. The receipt keeps decision, concrete occurrence and consumption fact as separate routable identities; race, replay and request-ID rebound cases fail closed. This is bounded evidence cargo, not execution authority.
 
 ## P1-7 independent replay cargo
 
-P1-7 adds a second verifier vantage. [Workflow run #2](https://github.com/safal207/ContractGraph-QA/actions/runs/31879151771) passed at ContractGraph-QA subject `07affb7224e5cbeb2c0ff5ca5446c4d0e0ef05be` while freezing RESONANCE source subject `85c3baea0a551751263ef563a3dd1c75492f57ae`. The verifier reconstructed the exact occurrence `decision-A / evt-42`, route fingerprint `fee0b69553abc156b77ad446c3cda8c7f50bbf0efc2cd3aafa75a279016f7930`, and ConsumptionReceipt digest `690e4852db587c8aa97673ea3b93c5512ffb052ef15de7153604d3a2ff72d72a`. The cargo contained six subject records and artifact digest `sha256:64f7448ab2cdc9b6cde2f7ac9dd8797f2557a4c8fc8c60e5367111691e3937b4`.
+P1-7 adds a second verifier vantage. [Workflow run #2](https://github.com/safal207/ContractGraph-QA/actions/runs/31879737094) passed at ContractGraph-QA subject `7fd3e744037832b74b2ee4c4c71cc8fce18fc329` while freezing RESONANCE source subject `85c3baea0a551751263ef563a3dd1c75492f57ae`. The verifier reconstructed the exact occurrence `decision-A / evt-42`, route fingerprint `fee0b69553abc156b77ad446c3cda8c7f50bbf0efc2cd3aafa75a279016f7930`, and ConsumptionReceipt digest `690e4852db587c8aa97673ea3b93c5512ffb052ef15de7153604d3a2ff72d72a`. The cargo contained six subject records and artifact digest `sha256:cb4d3eec62eee29787dd6608faa9dde804270c6afe450aa4a2560d90bb665528`.
 
 The independent route rejected reorder, ambiguity, receipt tamper, pinned-revision tamper and raw-subject tamper. This is the logistics gain: the receiver can locate the minimum sufficient proof and independently recompute it, while stale later journal commits remain separate source identities.
 
 ## P1-8 compatibility and migration cargo
 
-P1-8 turns compatibility into a routable proof package. [Workflow run #1](https://github.com/safal207/ContractGraph-QA/actions/runs/31879151732) passed at verifier subject `07affb7224e5cbeb2c0ff5ca5446c4d0e0ef05be` with 11 completed steps and artifact `fcrp-p1-8-compatibility-migration-31879151732-1`, digest `sha256:e2f2779029abc39315f32df6b028cb06f5a36c2fd0456f33e350d84bc9ac3bd8`.
+P1-8 turns compatibility into a routable proof package. [Workflow run #1](https://github.com/safal207/ContractGraph-QA/actions/runs/31879737060) passed at verifier subject `7fd3e744037832b74b2ee4c4c71cc8fce18fc329` with 11 completed steps and artifact `fcrp-p1-8-compatibility-migration-31879737060-1`, digest `sha256:dc6ca4d597b0fee05528e20bf6f9a72d6d2e6a2e67931eab8c2c8d2d5ddaf28e`.
 
 The delivery policy is `EXACT_CURRENT_REVISION_ONLY`: the current ProofPath authorization schema, LiminalDB protocol and RINSE receipt are accepted only at their exact observed identities. Candidate ProofPath v0.2, LiminalDB 1.1.0 and RINSE receipt v0.2 are rejected with explicit unsupported-revision outcomes; route reorder and authority escalation are rejected as misrouted or unsafe cargo.
 
@@ -342,6 +342,13 @@ The recovery receipt preserves the original source payload digest `5abf15b7fb253
 
 This improves proof logistics by making incompatibility searchable as a typed delivery failure rather than a vague missing artifact: `UNSUPPORTED_SCHEMA_REVISION`, `ROUTE_ORDER_DRIFT`, `AUTHORITY_ESCALATION`, `EXACT_REVISION_TAMPER` or `RAW_SUBJECT_TAMPER`. The receiver can route to the exact source digest and recovery path without scanning unrelated history. The result is conformance cargo only; it does not claim automatic migration, merge, deployment, production persistence or security authorization.
 
+## P2-4 maintenance-routine cargo
+
+The Maintenance Routine Contract is now bounded and independently evaluated at ContractGraph-QA subject `7fd3e744037832b74b2ee4c4c71cc8fce18fc329`. [Workflow run #1](https://github.com/safal207/ContractGraph-QA/actions/runs/31879737058) produced artifact `fcrp-p2-4-maintenance-routine-31879737058-1`, 2397 bytes, digest `sha256:d63a58cca47d7fcc329963b8c1438af9316927d0b6f9bd56982799bbcec9c0b3`. The evaluator returned `PASS` under `QUALITY_ONLY_NO_MERGE_AUTHORITY`: two routine runs, 2/2 evidence-complete, 2/2 independently verified, 2/2 replay-stable and 2/2 outcome-attributed. Receipt digest `sha256:50e4c0ebdf7428142e9951adbae983673ff76c76e8fce97f78cd8ee5087c254e`; witness digest `72df07094cce9975a9ffb631a65fe70561c30c3fa8b884b7f1a5afc07bf69b0c`.
+
+The two cargo items are `contract_drift_detector` for ProofPath `4a05ee31d7497979c2505dd55bfef08823302e24` and `evidence_auditor` for frozen RESONANCE source `85c3baea0a551751263ef563a3dd1c75492f57ae`. Both outcomes remain `DRAFT_OPEN` / `NOT_MERGED`, and all authority flags, side-effect flags and production-ledger mutation flags are `false`. Negative boundaries for stale target, missing evidence, changed subject, contradictory finding, false-green verification, ambiguous occurrence, self-authorization and wrong outcome attribution fail closed.
+
+This is the next logistics layer: not only can a verifier find the proof cargo, it can identify which routine observed it, which patch it proposed, what independent verification passed and what downstream outcome was actually attributed. Routine quality is not repository health or merge authority.
 ## Logistics metrics
 
 The following metrics are proposed for later measurement, not yet benchmark results:
