@@ -62,7 +62,7 @@ This is the minimum containing system because a weak routine can fail in code, i
 
 **Past:** the trust spine was assembled as bounded contracts: exact-head governance, provider-neutral cargo, ancestry, negative-path matrix, evidence-bundle replay, and explicit evidence/authority/reflection separation.
 
-**Present:** ContractGraph-QA PR #61 current verifier subject `eac4dae1f9add44050def7579a9ea392bd8199cd` has successful exact-head runs for the full chain, P1-3, occurrence portability and independent cross-repository replay. P1-3 proves evidence-to-execution `BLOCK`, reflection-to-execution `BLOCK`, inferred authority `BLOCK`, and authority `HOLD` to execution `HOLD`; zero cases execute. Occurrence-binding evidence on the same PR separately preserves semantic decision identity, authorization occurrence identity and consumption fact. The P1-4/P1-5/P1-6 portability matrix additionally covers adapter identity preservation, concurrent consumption races, replay receipts and request-ID conflicts. P1-7 independently reconstructs those identities across frozen ProofPath, CML, LiminalDB, RINSE and RESONANCE subjects without importing the producer implementation.
+**Present:** ContractGraph-QA PR #61 current verifier subject `07affb7224e5cbeb2c0ff5ca5446c4d0e0ef05be` has successful exact-head runs for the full chain, P1-3, occurrence portability, independent cross-repository replay and compatibility/migration replay. P1-3 proves evidence-to-execution `BLOCK`, reflection-to-execution `BLOCK`, inferred authority `BLOCK`, and authority `HOLD` to execution `HOLD`; zero cases execute. Occurrence-binding evidence preserves semantic decision identity, authorization occurrence identity and consumption fact. P1-7 independently reconstructs those identities across frozen ProofPath, CML, LiminalDB, RINSE and RESONANCE subjects; P1-8 independently rejects unsupported schema revisions, route reorder and authority escalation while preserving source cargo by digest.
 
 **Future:** routine → exact target → minimal patch → independent verifier → PR outcome → routine-quality record → bounded routine refactor.
 
@@ -128,4 +128,4 @@ The Maintenance Mesh is a proposed operating layer over the existing trust spine
 
 - RESONANCE Article 05, immutable FCRP v0.1 source: `389939d68350f5c0565fb814c6d599505ed8048b`.
 - RESONANCE Article 06, immutable Self-Refactoring profile: `5b0e406410f8f1e42d18a969581b6af29032d360`.
-- ContractGraph-QA P1-3 current verifier subject: `eac4dae1f9add44050def7579a9ea392bd8199cd`.
+- ContractGraph-QA P1-3 current verifier subject: `07affb7224e5cbeb2c0ff5ca5446c4d0e0ef05be`.
