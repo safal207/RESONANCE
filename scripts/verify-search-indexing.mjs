@@ -39,6 +39,14 @@ function count(html, regex) {
   return [...html.matchAll(regex)].length;
 }
 
+function readLanguage(html, file) {
+  const declared = html.match(/<html[^>]*\slang=["']([^"']+)["']/i)?.[1]?.trim();
+  if (declared) return declared;
+  if (file === 'index.ru.html' || file.endsWith('.ru.html')) return 'ru';
+  if (file === 'index.zh.html' || file.endsWith('.zh.html')) return 'zh-CN';
+  return 'en';
+}
+
 function readPublishedDate(html) {
   return html.match(/<meta\s+property=["']article:published_time["']\s+content=["'](\d{4}-\d{2}-\d{2})/i)?.[1]
     || html.match(/"datePublished"\s*:\s*"(\d{4}-\d{2}-\d{2})/i)?.[1]
@@ -103,7 +111,8 @@ if (!/User-agent:\s*\*[\s\S]*Allow:\s*\//i.test(robots)) fail('robots.txt does n
 for (const file of pages) {
   const html = fs.readFileSync(path.join(DIST, file), 'utf8');
   const canonical = canonicalFor(file);
-  const expectedFeed = file === 'index.ru.html' || file.endsWith('.ru.html') ? 'feed.ru.xml' : file === 'index.zh.html' || file.endsWith('.zh.html') ? 'feed.zh.xml' : 'feed.xml';
+  const language = readLanguage(html, file);
+  const expectedFeed = language === 'ru' ? 'feed.ru.xml' : language === 'zh-CN' ? 'feed.zh.xml' : 'feed.xml';
 
   if (count(html, /<meta\s+name=["']robots["'][^>]*>/gi) !== 1) fail(`${file}: expected exactly one robots meta`);
   if (!/<meta\s+name=["']robots["'][^>]*content=["'][^"']*index[^"']*follow/i.test(html)) fail(`${file}: robots meta must allow index,follow`);
