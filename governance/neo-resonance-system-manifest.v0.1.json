@@ -1,7 +1,7 @@
 {
   "schema": "neo.resonance.system-manifest.v0.1",
   "manifest_status": "OBSERVED_SNAPSHOT",
-  "observed_at": "2026-08-14T13:45:57Z",
+  "observed_at": "2026-08-15T08:25:51Z",
   "collection": {
     "source": "GitHub repository metadata, exact-head PR checks, and completed workflow run observations",
     "identity_state": "OBSERVED_ONLY",
@@ -114,8 +114,8 @@
     }
   ],
   "review_policy": {
-    "human_review_gate": "NOT_REQUIRED_FOR_CURRENT_SCOPE",
-    "scope": "bounded_advisory_technical_progression",
+    "human_review_gate": "REMOVED_FROM_CURRENT_MACHINE_PLAN",
+    "scope": "bounded_machine_verified_technical_progression",
     "approval_claim": "NOT_MADE",
     "retained_gates": [
       "merge",
@@ -131,33 +131,33 @@
       "from": "proofpath",
       "to": "liminaldb",
       "contract": "PROOFPATH_DURABLE_INGESTION_V0_1",
-      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31873867982 at runtime verifier subject f153a12d209045f052700201c6ef179bf9550fb5; frozen fixture source subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a",
+      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31874360999 at runtime verifier subject f0dbbf3d24c343984902610c24004961c98ca4f5; frozen fixture source subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a",
       "status": "VERIFIED_IN_BOUNDED_FIXTURE",
-      "claim_limit": "The exact bounded fixture passed with runtime verifier subject f153a12d209045f052700201c6ef179bf9550fb5, frozen source subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a, and pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
+      "claim_limit": "The exact bounded fixture passed with runtime verifier subject f0dbbf3d24c343984902610c24004961c98ca4f5, frozen source subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a, and pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
     },
     {
       "from": "liminaldb",
       "to": "rinse",
       "contract": "LIMINALDB_DURABLE_PROOF_SOURCE_V0_1",
-      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31873867982 at runtime verifier subject f153a12d209045f052700201c6ef179bf9550fb5; frozen fixture source subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a",
+      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31874360999 at runtime verifier subject f0dbbf3d24c343984902610c24004961c98ca4f5; frozen fixture source subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a",
       "status": "VERIFIED_IN_BOUNDED_FIXTURE",
-      "claim_limit": "The exact bounded fixture passed with runtime verifier subject f153a12d209045f052700201c6ef179bf9550fb5, frozen source subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a, and pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
+      "claim_limit": "The exact bounded fixture passed with runtime verifier subject f0dbbf3d24c343984902610c24004961c98ca4f5, frozen source subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a, and pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
     },
     {
       "from": "rinse",
       "to": "contractgraph-qa",
       "contract": "FCRP-SYSTEM-006",
-      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31873867982 at runtime verifier subject f153a12d209045f052700201c6ef179bf9550fb5; frozen fixture source subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a",
+      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31874360999 at runtime verifier subject f0dbbf3d24c343984902610c24004961c98ca4f5; frozen fixture source subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a",
       "status": "VERIFIED_IN_BOUNDED_FIXTURE",
-      "claim_limit": "The exact bounded fixture passed with runtime verifier subject f153a12d209045f052700201c6ef179bf9550fb5, frozen source subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a, and pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
+      "claim_limit": "The exact bounded fixture passed with runtime verifier subject f0dbbf3d24c343984902610c24004961c98ca4f5, frozen source subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a, and pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
     },
     {
       "from": "cml",
       "to": "proofpath",
       "contract": "causal-lineage-and-current-trust-gates",
-      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31873867982 at runtime verifier subject f153a12d209045f052700201c6ef179bf9550fb5; frozen fixture source subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a",
+      "evidence": "ContractGraph-QA PR #61 FCRP-SYSTEM-007 workflow run 31874360999 at runtime verifier subject f0dbbf3d24c343984902610c24004961c98ca4f5; frozen fixture source subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a",
       "status": "VERIFIED_IN_BOUNDED_FIXTURE",
-      "claim_limit": "The exact bounded fixture passed with runtime verifier subject f153a12d209045f052700201c6ef179bf9550fb5, frozen source subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a, and pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
+      "claim_limit": "The exact bounded fixture passed with runtime verifier subject f0dbbf3d24c343984902610c24004961c98ca4f5, frozen source subject 6e51cbb176f6d891b758e3026744d1d4c4c5727a, and pinned dependencies; this does not assert production runtime integration, merge approval, or external authority."
     },
     {
       "from": "contractgraph-qa",
@@ -228,19 +228,19 @@
     "pull_request": {
       "number": 61,
       "base_sha": "b54173530c675083426137176cde0aed0b90853a",
-      "subject_sha": "f153a12d209045f052700201c6ef179bf9550fb5"
+      "subject_sha": "f0dbbf3d24c343984902610c24004961c98ca4f5"
     },
     "workflow": {
       "name": "FCRP P0-4 — Exact Subject and Ancestry Gate",
-      "run_number": 9,
-      "run_id": 31873868043,
+      "run_number": 14,
+      "run_id": 31874361028,
       "conclusion": "success",
       "job": "verify",
       "job_conclusion": "success",
-      "artifact": "cgqa-p0-4-ancestry-31873868043-1",
-      "artifact_digest": "sha256:488014c74971b1c8a664ea2b4267217d0a6c8bac30f8c4137ab80c8c429fc608",
-      "artifact_subject_sha": "f153a12d209045f052700201c6ef179bf9550fb5",
-      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31873868043"
+      "artifact": "cgqa-p0-4-ancestry-31874361028-1",
+      "artifact_digest": "sha256:dec88816f004b6dc94d19b146254fd3b7c7dfe4da5bb14643f43a231425f23af",
+      "artifact_subject_sha": "f0dbbf3d24c343984902610c24004961c98ca4f5",
+      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31874361028"
     },
     "checks": {
       "initial_subject": "PASS",
@@ -251,13 +251,13 @@
       "unknown_state_policy": "unknown_never_becomes_pass"
     },
     "system_007_rerun": {
-      "run_number": 12,
-      "run_id": 31873867982,
+      "run_number": 17,
+      "run_id": 31874360999,
       "conclusion": "success",
       "artifact": "fcrp-system-007-61",
-      "artifact_digest": "sha256:9c030a8354857922e708c51f9681958abb7187eecf3f6bfbe9b53b383f092300",
-      "artifact_subject_sha": "f153a12d209045f052700201c6ef179bf9550fb5",
-      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31873867982"
+      "artifact_digest": "sha256:046ab61a9f338e0f3de45c07d7f3d83cff0352411b6d704a64376a3680f28d39",
+      "artifact_subject_sha": "f0dbbf3d24c343984902610c24004961c98ca4f5",
+      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31874360999"
     },
     "authority": "advisory only; no merge, deployment, production, external effects or security authorization"
   },
@@ -269,19 +269,19 @@
     "pull_request": {
       "number": 61,
       "base_sha": "b54173530c675083426137176cde0aed0b90853a",
-      "subject_sha": "f153a12d209045f052700201c6ef179bf9550fb5"
+      "subject_sha": "f0dbbf3d24c343984902610c24004961c98ca4f5"
     },
     "workflow": {
       "name": "FCRP P1-1 — Negative-Path Matrix",
-      "run_number": 8,
-      "run_id": 31873868033,
+      "run_number": 13,
+      "run_id": 31874361024,
       "conclusion": "success",
       "job": "verify",
       "job_conclusion": "success",
-      "artifact": "fcrp-p1-1-negative-path-matrix-31873868033-1",
-      "artifact_digest": "sha256:597941bd76a1c73d6acd8421e58229307cab711481da39ac9808d5f4fe198c99",
-      "artifact_subject_sha": "f153a12d209045f052700201c6ef179bf9550fb5",
-      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31873868033"
+      "artifact": "fcrp-p1-1-negative-path-matrix-31874361024-1",
+      "artifact_digest": "sha256:f466e00d828c3264fe047cc3659d152cb98df01673c99ea9689033fedcffd2b2",
+      "artifact_subject_sha": "f0dbbf3d24c343984902610c24004961c98ca4f5",
+      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31874361024"
     },
     "proofpath_head": "4a05ee31d7497979c2505dd55bfef08823302e24",
     "coverage": {
@@ -301,12 +301,12 @@
     }
   },
   "next_transition": {
-    "id": "P1-4",
+    "id": "P1-7",
     "action_class": "ADD_INDEPENDENT_CROSS_REPO_REPLAY",
     "action": "add independent cross-repo replay that rebuilds the result from raw inputs and exact revisions",
     "owner": "repository maintainers",
     "completion_signal": "a second verifier reconstructs the final result without trusting the producer summary, with exact source identities, replay-stable output and no authority escalation",
-    "stop_condition": "the independent verifier imports the producer verdict, loses a source identity, diverges on replay, or cannot prove that evidence and reflection remain non-authorizing"
+    "stop_condition": "the independent verifier imports the producer verdict, loses a source identity, diverges on replay, or cannot prove that evidence, reflection and occurrence receipts remain non-authorizing"
   },
   "p1_2_verification": {
     "schema": "cgqa.p1-2-evidence-bundle-replay-result.v0.1",
@@ -316,20 +316,20 @@
     "pull_request": {
       "number": 61,
       "base_sha": "b54173530c675083426137176cde0aed0b90853a",
-      "verifier_subject_sha": "f153a12d209045f052700201c6ef179bf9550fb5",
+      "verifier_subject_sha": "f0dbbf3d24c343984902610c24004961c98ca4f5",
       "bundle_contractgraph_qa_subject": "fcd5e88655eedd3e4e4d3944bb133a8e2c8b0d8e"
     },
     "workflow": {
       "name": "FCRP P1-2 — Evidence-Bundle and Replay Manifest",
-      "run_number": 7,
-      "run_id": 31873867996,
+      "run_number": 12,
+      "run_id": 31874361005,
       "conclusion": "success",
       "job": "verify",
       "job_conclusion": "success",
-      "artifact": "fcrp-p1-2-evidence-bundle-replay-31873867996-1",
-      "artifact_digest": "sha256:3cd94e0c1510668ef947ff7cf346efeb5f97911444b8da39a4a2996f1088b481",
-      "artifact_subject_sha": "f153a12d209045f052700201c6ef179bf9550fb5",
-      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31873867996"
+      "artifact": "fcrp-p1-2-evidence-bundle-replay-31874361005-1",
+      "artifact_digest": "sha256:8c76d227e8fcee5114ac0b4d8055f28a74807fba846eb4a4680ac94dde156c09",
+      "artifact_subject_sha": "f0dbbf3d24c343984902610c24004961c98ca4f5",
+      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31874361005"
     },
     "bundle": {
       "subject_count": 4,
@@ -366,43 +366,43 @@
       "draft": true,
       "merged": false,
       "base_sha": "b54173530c675083426137176cde0aed0b90853a",
-      "subject_sha": "f153a12d209045f052700201c6ef179bf9550fb5"
+      "subject_sha": "f0dbbf3d24c343984902610c24004961c98ca4f5"
     },
     "workflow": {
       "name": "FCRP SYSTEM-007 Full-Chain Conformance",
-      "run_number": 12,
-      "run_id": 31873867982,
+      "run_number": 17,
+      "run_id": 31874360999,
       "conclusion": "success",
       "job": "verify",
       "job_conclusion": "success",
       "artifact": "fcrp-system-007-61",
-      "artifact_digest": "sha256:9c030a8354857922e708c51f9681958abb7187eecf3f6bfbe9b53b383f092300",
-      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31873867982"
+      "artifact_digest": "sha256:046ab61a9f338e0f3de45c07d7f3d83cff0352411b6d704a64376a3680f28d39",
+      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31874360999"
     },
     "standard_gates": [
       {
         "name": "CI",
-        "run_id": 31873867988,
+        "run_id": 31874361013,
         "conclusion": "success"
       },
       {
         "name": "Product",
-        "run_id": 31873868005,
+        "run_id": 31874361010,
         "conclusion": "success"
       },
       {
         "name": "FCRP v0.2 Contract Gate",
-        "run_id": 31873868014,
+        "run_id": 31874361040,
         "conclusion": "success"
       },
       {
         "name": "Finding report",
-        "run_id": 31873868046,
+        "run_id": 31874361019,
         "conclusion": "success"
       },
       {
         "name": "Portability",
-        "run_id": 31873867992,
+        "run_id": 31874361021,
         "conclusion": "success"
       }
     ],
@@ -431,20 +431,20 @@
     "pull_request": {
       "number": 61,
       "base_sha": "b54173530c675083426137176cde0aed0b90853a",
-      "verifier_subject_sha": "f153a12d209045f052700201c6ef179bf9550fb5",
+      "verifier_subject_sha": "f0dbbf3d24c343984902610c24004961c98ca4f5",
       "fixture_contractgraph_qa_subject": "6e51cbb176f6d891b758e3026744d1d4c4c5727a"
     },
     "workflow": {
       "name": "FCRP P1-3 — Evidence, Authority and Reflection Boundary",
-      "run_number": 6,
-      "run_id": 31873868029,
+      "run_number": 11,
+      "run_id": 31874361029,
       "conclusion": "success",
       "job": "verify",
       "job_conclusion": "success",
-      "artifact": "fcrp-p1-3-authority-reflection-boundary-31873868029-1",
-      "artifact_digest": "sha256:221ec253ca285bb259a36bced7ab3abc76c1aca1802c53bf73f7bb96d74eb984",
-      "artifact_subject_sha": "f153a12d209045f052700201c6ef179bf9550fb5",
-      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31873868029"
+      "artifact": "fcrp-p1-3-authority-reflection-boundary-31874361029-1",
+      "artifact_digest": "sha256:9e6b4a1c713da2347e6d2f56f7c19f747c71913b823425731cbab0c719e2144e",
+      "artifact_subject_sha": "f0dbbf3d24c343984902610c24004961c98ca4f5",
+      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31874361029"
     },
     "manifest_sha256": "sha256:315f5cc129399c03bed487809f1b30bf6a51d4c8547a49a830af35338ed3a5c3",
     "subjects": {
@@ -494,7 +494,7 @@
     "pull_request": {
       "number": 61,
       "base_sha": "b54173530c675083426137176cde0aed0b90853a",
-      "verifier_subject_sha": "f153a12d209045f052700201c6ef179bf9550fb5",
+      "verifier_subject_sha": "f0dbbf3d24c343984902610c24004961c98ca4f5",
       "source_subject_sha": "558cf8126de88d5bc57de6b36de9f183bc46d27e"
     },
     "contract": {
@@ -510,14 +510,14 @@
     },
     "workflow": {
       "name": "Product",
-      "run_number": 477,
-      "run_id": 31873868005,
+      "run_number": 482,
+      "run_id": 31874361010,
       "conclusion": "success",
-      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31873868005"
+      "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31874361010"
     },
     "evidence_record": {
       "path": "evidence/occurrence-binding/558cf8126de88d5bc57de6b36de9f183bc46d27e.json",
-      "product_workflow_run": 31873785489,
+      "product_workflow_run": 31874361010,
       "product_conclusion": "success",
       "exact_head_check_run_count_observed": 13,
       "queued_or_in_progress_observed_after_completion": false,
@@ -528,6 +528,35 @@
       "external_effects_authorized": false,
       "mutation_authorized": false,
       "claim_limit": "Bounded occurrence-binding conformance only; no CrewAI adoption, production deployment, production ledger migration, merge, or security certification is claimed."
+    },
+    "portability": {
+      "schema": "cgqa-occurrence-portability-receipt/v0.1",
+      "status": "PASS",
+      "scope": "bounded cross-adapter occurrence binding, race matrix and consumption receipts",
+      "verifier_subject_sha": "f0dbbf3d24c343984902610c24004961c98ca4f5",
+      "workflow": {
+        "name": "FCRP P1-4/P1-5/P1-6 — Occurrence Portability",
+        "run_number": 1,
+        "run_id": 31874361042,
+        "conclusion": "success",
+        "artifact": "fcrp-p1-4-6-occurrence-portability-31874361042-1",
+        "artifact_digest": "sha256:596b002647b96a9dbcb085db7d0376f5930aaac8259e2d3e91cbbeed5e7a7968",
+        "artifact_size_bytes": 1806,
+        "url": "https://github.com/safal207/ContractGraph-QA/actions/runs/31874361042"
+      },
+      "matrix": {
+        "required_cases": 8,
+        "side_effects_executed": false,
+        "production_ledger_mutated": false,
+        "replay_receipt": "REPLAY_SAME_RECEIPT",
+        "concurrent_consumption": "exactly_one_consumed"
+      },
+      "authority": {
+        "execution_authorized": false,
+        "external_effects_authorized": false,
+        "mutation_authorized": false,
+        "claim_limit": "Bounded occurrence-portability conformance only; no ledger migration, deployment, merge approval or security authorization is claimed."
+      }
     }
   },
   "maintenance_mesh_design": {
@@ -538,10 +567,12 @@
     "current_evidence_anchor": {
       "repository": "safal207/ContractGraph-QA",
       "pull_request": 61,
-      "verifier_subject_sha": "f153a12d209045f052700201c6ef179bf9550fb5",
-      "p1_3_run_id": 31873868029,
+      "verifier_subject_sha": "f0dbbf3d24c343984902610c24004961c98ca4f5",
+      "p1_3_run_id": 31874361029,
       "p1_3_conclusion": "success",
-      "p1_3_artifact_digest": "sha256:221ec253ca285bb259a36bced7ab3abc76c1aca1802c53bf73f7bb96d74eb984"
+      "p1_3_artifact_digest": "sha256:9e6b4a1c713da2347e6d2f56f7c19f747c71913b823425731cbab0c719e2144e",
+      "occurrence_portability_run_id": 31874361042,
+      "occurrence_portability_artifact_digest": "sha256:596b002647b96a9dbcb085db7d0376f5930aaac8259e2d3e91cbbeed5e7a7968"
     },
     "proposed_routines": [
       "crash_failure_hunter",
