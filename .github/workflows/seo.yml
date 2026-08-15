@@ -10,10 +10,12 @@ on:
       - 'protocols/**'
       - '.github/ISSUE_TEMPLATE/market-workflow.yml'
       - 'scripts/build-seo-site.mjs'
+      - 'scripts/enhance-search-indexing.mjs'
       - 'scripts/build-feeds.mjs'
       - 'scripts/verify-feed.mjs'
       - 'scripts/verify-analytics.mjs'
       - 'scripts/verify-seo.mjs'
+      - 'scripts/verify-search-indexing.mjs'
       - 'scripts/verify-links.mjs'
       - 'scripts/lighthouse-summary.mjs'
       - '.github/workflows/seo.yml'
@@ -34,10 +36,12 @@ on:
       - 'protocols/**'
       - '.github/ISSUE_TEMPLATE/market-workflow.yml'
       - 'scripts/build-seo-site.mjs'
+      - 'scripts/enhance-search-indexing.mjs'
       - 'scripts/build-feeds.mjs'
       - 'scripts/verify-feed.mjs'
       - 'scripts/verify-analytics.mjs'
       - 'scripts/verify-seo.mjs'
+      - 'scripts/verify-search-indexing.mjs'
       - 'scripts/verify-links.mjs'
       - 'scripts/lighthouse-summary.mjs'
       - '.github/workflows/seo.yml'
@@ -57,6 +61,8 @@ jobs:
   verify-publication:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      RESONANCE_GOOGLE_SITE_VERIFICATION: ${{ vars.RESONANCE_GOOGLE_SITE_VERIFICATION }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -74,11 +80,17 @@ jobs:
           RESONANCE_ANALYTICS_ENDPOINT: ''
         run: node scripts/build-seo-site.mjs
 
+      - name: Enhance search indexing graph
+        run: node scripts/enhance-search-indexing.mjs
+
       - name: Build deterministic multilingual feeds
         run: node scripts/build-feeds.mjs
 
       - name: Verify SEO contract
         run: node scripts/verify-seo.mjs
+
+      - name: Verify search indexing contract
+        run: node scripts/verify-search-indexing.mjs
 
       - name: Verify RSS / Subscribe contract
         run: node scripts/verify-feed.mjs --root dist --output feed-results --enforce
