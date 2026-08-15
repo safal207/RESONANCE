@@ -33,6 +33,7 @@ Issue 001 maps this transition.
 9. [`Cancellation Is a State Transition — почему остановка AI-агента должна оставлять доказуемую границу`](articles/09-cancellation-is-a-state-transition.md) — **published 2026-08-15**
 10. [`Consent Has a Causal Lifetime — почему approval AI-агента должно иметь доказуемую границу потребления`](articles/10-consent-has-a-causal-lifetime.md) — **published 2026-08-15**
 11. [`Evidence Has a Route — почему AI-агенту нужен не максимум проверки, а оптимальная логистика доказательств`](articles/11-evidence-has-a-route.md) — **published 2026-08-15**
+12. [`Evidence Must Bind the Transition — почему AI-системе недостаточно доказательства, если оно не связано с конкретным переходом`](articles/12-evidence-must-bind-the-transition.md) — **published 2026-08-15**
 
 The fourth feature extends the trust question beyond pre-action authorization: a consequential outcome needs its own observer identity, vantage and evidence so decision provenance and outcome provenance remain separately inspectable.
 
@@ -49,6 +50,8 @@ The ninth feature makes cancellation a first-class durability boundary: user-vis
 The tenth feature makes consent itself causal: a semantic allow decision, the exact signed authorization occurrence and the execution that consumes it are separate identities. It introduces an Authorization Consumption Boundary so stale, replayed, superseded or already-consumed approval cannot silently authorize a later side effect merely because the historical verdict still says `ALLOW`.
 
 The eleventh feature treats verification as an evidence-logistics problem: sync, async, cached, independent and human-mediated proof paths are candidate routes rather than universal defaults. Hard proof obligations define the admissible route set first; only then may the runtime optimize latency, compute, coordination and other costs. The selected route remains bound to current causal coordinates and does not itself grant execution authority.
+
+The twelfth feature generalizes a shared failure shape exposed independently in the CrewAI authorization/revalidation discussion and the LangGraph cancellation/durability discussion: correct evidence and correct temporal ordering are not enough when a consequential transition is not explicitly bound to the exact evidence occurrence that authorizes, validates or settles it. It introduces Evidence-Bound Transitions, Execution Binding and Terminality Binding as a compact causal contract between proof and change.
 
 ## Agent operating line
 
@@ -72,6 +75,8 @@ Article 09 — prove cancellation durability / resume boundary
 Article 10 — bind consent occurrence to execution consumption
         ↓
 Article 11 — route sufficient/current/proportionate evidence to the action boundary
+        ↓
+Article 12 — bind exact evidence occurrences to consequential transitions
         ↓
 Signal 011 — independent historical trust-base portability
         ↓
@@ -110,11 +115,14 @@ Operational rules carried by this line:
 - explicit cancellation and transport disconnect must remain semantically distinguishable;
 - a terminal lifecycle record must not silently promote partial output into a completed checkpoint;
 - when cancellation completion is used as a synchronization boundary, the persistence outcome should be knowable before recovery treats history as authoritative;
+- a terminal transition whose meaning depends on persistence/settlement must remain causally bound to the exact persistence/settlement occurrence that supports it;
 - historically valid consent does not imply current execution authority;
 - semantic decision identity, authorization occurrence identity and execution occurrence identity must remain distinct where ambiguity affects safety;
 - an ambiguous semantic decision reference must not be silently resolved to the first matching authorization occurrence;
 - one-shot authorization must not be replayable after it has been consumed by an execution occurrence;
 - revalidation and execution are separate boundaries; a system must not assume that freshness checked earlier still authorizes a later materially changed side effect;
+- successful use-time revalidation must not become a free-floating fact: where freshness matters, it must remain bound to the execution occurrence/context that consumes it;
+- temporal ordering alone does not prove that an evidence occurrence authorized or settled a specific consequential transition;
 - cancellation, revocation, supersession and authority transfer must defeat cached approval paths rather than allow stale consent resurrection;
 - the strongest proof path is not automatically the best proof path;
 - the cheapest proof path is not automatically admissible;
