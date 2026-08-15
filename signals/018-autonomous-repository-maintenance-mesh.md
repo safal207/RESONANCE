@@ -62,7 +62,7 @@ This is the minimum containing system because a weak routine can fail in code, i
 
 **Past:** the trust spine was assembled as bounded contracts: exact-head governance, provider-neutral cargo, ancestry, negative-path matrix, evidence-bundle replay, and explicit evidence/authority/reflection separation.
 
-**Present:** ContractGraph-QA PR #61 current verifier subject `f153a12d209045f052700201c6ef179bf9550fb5` has successful exact-head runs for the full chain and P1-3. P1-3 proves evidence-to-execution `BLOCK`, reflection-to-execution `BLOCK`, inferred authority `BLOCK`, and authority `HOLD` to execution `HOLD`; zero cases execute. Occurrence-binding evidence on the same PR separately preserves semantic decision identity, authorization occurrence identity and consumption fact.
+**Present:** ContractGraph-QA PR #61 current verifier subject `f0dbbf3d24c343984902610c24004961c98ca4f5` has successful exact-head runs for the full chain, P1-3 and occurrence portability. P1-3 proves evidence-to-execution `BLOCK`, reflection-to-execution `BLOCK`, inferred authority `BLOCK`, and authority `HOLD` to execution `HOLD`; zero cases execute. Occurrence-binding evidence on the same PR separately preserves semantic decision identity, authorization occurrence identity and consumption fact. The P1-4/P1-5/P1-6 portability matrix additionally covers adapter identity preservation, concurrent consumption races, replay receipts and request-ID conflicts.
 
 **Future:** routine → exact target → minimal patch → independent verifier → PR outcome → routine-quality record → bounded routine refactor.
 
@@ -108,7 +108,7 @@ Track routine precision, evidence completeness, independent-verification pass ra
 2. `HUMAN_SPOT_CHECK` — low-risk, reversible changes with independent evidence and stable outcomes.
 3. `AUTO_MERGE_AFTER_INDEPENDENT_VERIFICATION` — only for explicitly classified change classes with exact-head, contract, replay, negative-case and rollback evidence.
 
-The last class is a future policy boundary, not current authorization. Human review may be non-gating for bounded technical progression while merge, deployment, production persistence, external effects and security authorization remain separate gates.
+The last class is a future policy boundary, not current authorization. No human-review gate is part of the current bounded machine transition; merge, deployment, production persistence, external effects and security authorization remain separate gates.
 
 ## First bounded build
 
@@ -128,4 +128,4 @@ The Maintenance Mesh is a proposed operating layer over the existing trust spine
 
 - RESONANCE Article 05, immutable FCRP v0.1 source: `389939d68350f5c0565fb814c6d599505ed8048b`.
 - RESONANCE Article 06, immutable Self-Refactoring profile: `5b0e406410f8f1e42d18a969581b6af29032d360`.
-- ContractGraph-QA P1-3 current verifier subject: `f153a12d209045f052700201c6ef179bf9550fb5`.
+- ContractGraph-QA P1-3 current verifier subject: `f0dbbf3d24c343984902610c24004961c98ca4f5`.
