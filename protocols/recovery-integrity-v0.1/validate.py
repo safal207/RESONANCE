@@ -50,6 +50,15 @@ def validate(record: dict) -> list[str]:
     if agen is not None and pgen is not None and agen != pgen and pstate == "HEALTHY":
         fail(errors, "generation mismatch cannot have projection.state=HEALTHY")
 
+    # I2b: a projection that appears newer than durable authority is a split-generation
+    # contradiction. Rebuilding from the apparently older authority could destroy newer
+    # evidence, so the boundary must remain UNPROVABLE/HOLD until reconciled.
+    if agen is not None and pgen is not None and pgen > agen:
+        if rebuild == "ALLOW_REBUILD":
+            fail(errors, "ALLOW_REBUILD forbidden when projection generation is newer than authority generation")
+        if pstate != "UNPROVABLE":
+            fail(errors, "projection newer than authority must be classified UNPROVABLE")
+
     # I3: stale/corrupt evidence must be preservable before a rebuild is authorized.
     if rebuild == "ALLOW_REBUILD" and pstate in {"STALE", "CORRUPT"}:
         if not projection.get("preserved_broken_ref"):
