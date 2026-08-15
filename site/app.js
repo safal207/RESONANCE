@@ -69,3 +69,44 @@ if (article006EntryPoints.has(route)) {
     firstSection.after(discovery);
   }
 }
+
+const article013EntryPoints = new Set(['index.ru.html', 'issue-001.html']);
+
+if (article013EntryPoints.has(route)) {
+  const language = document.documentElement.lang || 'en';
+  const copy = {
+    en: {
+      label: 'Article #013 · RU · Causal Evidence',
+      title: 'Evidence Must Bind the Transition',
+      body: 'Execution Binding and Terminality Binding converge on one invariant: correct evidence and correct ordering are not enough unless the exact evidence occurrence is causally bound to the exact consequential transition.',
+      read: 'Read Article #013 (RU) →',
+    },
+    ru: {
+      label: 'Новая статья · Article #013 · Causal Evidence',
+      title: 'Evidence Must Bind the Transition',
+      body: 'Execution Binding и Terminality Binding сходятся в одном инварианте: корректного доказательства и правильного порядка событий недостаточно, если exact evidence occurrence не связано с exact consequential transition.',
+      read: 'Читать Article #013 →',
+    },
+  };
+  const localized = copy[language] || copy.en;
+  const main = document.querySelector('main');
+  const firstSection = main?.querySelector(':scope > section');
+
+  if (main && firstSection && !main.querySelector('[data-article-discovery="013"]')) {
+    const discovery = document.createElement('section');
+    discovery.className = 'section rule-top wrap';
+    discovery.dataset.articleDiscovery = '013';
+    discovery.innerHTML = `
+      <div class="editorial-grid">
+        <div>
+          <p class="section-label">${localized.label}</p>
+          <h2>${localized.title}</h2>
+        </div>
+        <div>
+          <p>${localized.body}</p>
+          <a class="button" href="evidence-must-bind-the-transition.ru.html">${localized.read}</a>
+        </div>
+      </div>`;
+    firstSection.after(discovery);
+  }
+}
