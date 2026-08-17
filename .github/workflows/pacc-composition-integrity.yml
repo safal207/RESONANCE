@@ -52,6 +52,17 @@ jobs:
             --required-score 1.0 \
             --output benchmark-results/pacc-composition-integrity/concurrency-mutation-campaign.json
 
+      - name: Run PACC crash recovery conformance
+        run: |
+          python benchmarks/portable-authorization-consumption-v0.7/run_crash_recovery_conformance.py \
+            --output benchmark-results/pacc-composition-integrity/crash-recovery-conformance.json
+
+      - name: Run PACC crash recovery mutation campaign
+        run: |
+          python benchmarks/portable-authorization-consumption-v0.7/run_crash_recovery_mutation_campaign.py \
+            --required-score 1.0 \
+            --output benchmark-results/pacc-composition-integrity/crash-recovery-mutation-campaign.json
+
       - name: Publish PACC summary
         if: always()
         run: |
@@ -65,6 +76,8 @@ jobs:
               ('Order mutation campaign', 'order-mutation-campaign.json'),
               ('Concurrent consumption conformance', 'concurrency-conformance.json'),
               ('Concurrency mutation campaign', 'concurrency-mutation-campaign.json'),
+              ('Crash recovery conformance', 'crash-recovery-conformance.json'),
+              ('Crash recovery mutation campaign', 'crash-recovery-mutation-campaign.json'),
           ]:
               path = root / name
               if not path.exists():
