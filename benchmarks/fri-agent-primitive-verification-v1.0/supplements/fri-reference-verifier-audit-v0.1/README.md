@@ -14,6 +14,8 @@ negative path
 positive contrast
 +
 missing/insufficient evidence path where relevant
++
+discriminating boundary cases where two semantics could otherwise agree accidentally
 ```
 
 The audit therefore checks more than the six canonical negative fixtures.
@@ -55,21 +57,62 @@ BLOCK_LANE_UNPROVEN
 
 The original FRI-1…FRI-6 canonical fixture verdicts are unchanged.
 
+## Manual semantic mutation matrix
+
+`run_mutation_control.py` keeps one mandatory, human-selected semantic mutant per FRI rule. These mutants model known-dangerous mistakes such as ignoring supersession, ignoring ownership epoch, allowing a completion receipt to override a non-complete dependency label, or treating missing versions as equal authorization evidence.
+
+The gate requires:
+
+```text
+FRI-1 … FRI-6 covered
+mutation_score = 1.0
+```
+
+This is a bounded semantic adequacy check, not a claim of complete mutation coverage.
+
+## Automatic boundary mutation campaign
+
+`run_boundary_mutation_campaign.py` discovers comparison and guard sites inside `evaluate()` and generates single-site mutants automatically.
+
+Generated families in v0.1:
+
+- comparison boundary flips: `== ↔ !=`, `< ↔ <=`, `> ↔ >=`, `is ↔ is not`, `in ↔ not in`;
+- guard bypass: replace a non-dispatch guard with `False`;
+- guard negation: negate a non-dispatch guard.
+
+Rule-dispatch comparisons such as `rule == "collector_liveness"` are deliberately excluded so trivial routing failures do not inflate the score.
+
+The automatic campaign is fail-closed in CI with `--required-score 1.0`. If any generated mutant survives, the FRI verifier-integrity job fails and the surviving site is emitted in machine-readable evidence.
+
+Order-inversion mutations are intentionally not part of this gate yet because adjacent guards can be semantically equivalent; they need an equivalence-aware policy before they can support a meaningful required score.
+
 ## Run
+
+Reference self-audit:
 
 ```bash
 python benchmarks/fri-agent-primitive-verification-v1.0/supplements/fri-reference-verifier-audit-v0.1/run_audit.py
 ```
 
-Write evidence:
+Manual semantic mutation matrix:
 
 ```bash
-python benchmarks/fri-agent-primitive-verification-v1.0/supplements/fri-reference-verifier-audit-v0.1/run_audit.py \
-  --output benchmarks/fri-agent-primitive-verification-v1.0/supplements/fri-reference-verifier-audit-v0.1/evidence/reference-run.json
+python benchmarks/fri-agent-primitive-verification-v1.0/supplements/fri-reference-verifier-audit-v0.1/run_mutation_control.py
 ```
 
-## Result
+Automatic boundary campaign:
 
-Reference audit: **20/20 PASS** after hardening.
+```bash
+python benchmarks/fri-agent-primitive-verification-v1.0/supplements/fri-reference-verifier-audit-v0.1/run_boundary_mutation_campaign.py \
+  --required-score 1.0
+```
 
-This means only that the deterministic reference evaluator now distinguishes the declared contrast and missing-evidence paths. It remains separate from any product-runtime certification.
+## Current established result
+
+Reference self-audit: **22/22 PASS**.
+
+Manual semantic mutation matrix: **6/6 KILLED**, with complete FRI-1…FRI-6 rule coverage.
+
+The automatic campaign result is produced by the FRI verifier-integrity CI artifact and must be read from the exact run that evaluated the current head; this README does not freeze a live-generated mutant count.
+
+These results concern the deterministic reference evaluator and its test harness. They remain separate from any product-runtime certification.
