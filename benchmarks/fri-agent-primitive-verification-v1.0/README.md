@@ -115,11 +115,38 @@ Invariant: **state continuity and responsibility continuity are independent clai
 - `run_fri_conformance.py` — deterministic reference evaluator.
 - `evidence/reference-run.json` — one committed reference execution.
 
+## Product adapters
+
+### Claude Code auto-memory public surface v1
+
+Path:
+
+`adapters/claude-code-auto-memory-public-surface-v1/`
+
+Initial mapping on 2026-08-17:
+
+```text
+FRI-1 — current applicability after supersession → NOT_OBSERVABLE
+FRI-5 — verification bound through point of use    → NOT_OBSERVABLE
+```
+
+This is **not** a product FAIL verdict. The adapter records that the current public contract documents persistence, a conditional `modified` timestamp and generic blocking hooks, but does not document the source/lineage/applicability/witness fields required to prove FRI-1 or FRI-5 from the native memory surface alone.
+
+The generic `PreToolUse` hook is recorded as an extension point: an external verifier could enforce stronger semantics if it also maintains the missing provenance and current-state bindings.
+
 ## Evidence boundary
 
-A green run proves only that the reference evaluator enforces the declared fixtures. It does **not** prove that a specific agent runtime exposes enough state to enforce these invariants, nor that its native primitives already satisfy them.
+A green reference run proves only that the reference evaluator enforces the declared fixtures. It does **not** prove that a specific agent runtime exposes enough state to enforce these invariants, nor that its native primitives already satisfy them.
 
-That is the next integration step:
+Product adapters therefore use three verdict classes:
+
+```text
+PASS            invariant observed and satisfied
+FAIL            invariant observed and violated
+NOT_OBSERVABLE  public/runtime surface is insufficient to decide
+```
+
+Integration path:
 
 ```text
 reference fixture
