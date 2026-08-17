@@ -1,0 +1,230 @@
+{
+  "benchmark": "PACC Compensation and Reversal",
+  "version": "0.7",
+  "fixtures": [
+    {
+      "id": "PACC-COMP-1",
+      "name": "Failed settlement triggers one bound compensation",
+      "input": {
+        "original_effect_ref": "effect-1",
+        "original_effect_stage": "EXECUTED",
+        "compensation_trigger": "SETTLEMENT_FAILED",
+        "compensation_authorized": true,
+        "compensation_target_effect_ref": "effect-1",
+        "compensation_idempotency_key": "comp-op-1",
+        "compensation_lookup_status": "NOT_FOUND",
+        "compensation_lookup_receipt": null,
+        "compensation_initial_response": "NOT_SENT",
+        "retry_result": "CREATED",
+        "retry_receipt": "comp-receipt-1",
+        "same_operation_replay": false
+      },
+      "expected": {
+        "status": "COMPENSATED",
+        "lookup_consulted": true,
+        "compensation_authorized_checked": true,
+        "new_compensation_effects": 1,
+        "retry_attempts": 1,
+        "used_compensation_key": "comp-op-1",
+        "compensation_receipt": "comp-receipt-1",
+        "bound_original_effect_ref": "effect-1"
+      }
+    },
+    {
+      "id": "PACC-COMP-2",
+      "name": "Stable final outcome does not auto-compensate",
+      "input": {
+        "original_effect_ref": "effect-1",
+        "original_effect_stage": "FINAL",
+        "compensation_trigger": "NONE",
+        "compensation_authorized": true,
+        "compensation_target_effect_ref": "effect-1",
+        "compensation_idempotency_key": "comp-op-1",
+        "compensation_lookup_status": "NOT_FOUND",
+        "compensation_lookup_receipt": null,
+        "compensation_initial_response": "NOT_SENT",
+        "retry_result": "CREATED",
+        "retry_receipt": "comp-receipt-1",
+        "same_operation_replay": false
+      },
+      "expected": {
+        "status": "NO_COMPENSATION_REQUIRED",
+        "lookup_consulted": false,
+        "compensation_authorized_checked": false,
+        "new_compensation_effects": 0,
+        "retry_attempts": 0,
+        "used_compensation_key": null,
+        "compensation_receipt": null,
+        "bound_original_effect_ref": "effect-1"
+      }
+    },
+    {
+      "id": "PACC-COMP-3",
+      "name": "Compensation requires current authorization",
+      "input": {
+        "original_effect_ref": "effect-1",
+        "original_effect_stage": "EXECUTED",
+        "compensation_trigger": "SETTLEMENT_FAILED",
+        "compensation_authorized": false,
+        "compensation_target_effect_ref": "effect-1",
+        "compensation_idempotency_key": "comp-op-1",
+        "compensation_lookup_status": "NOT_FOUND",
+        "compensation_lookup_receipt": null,
+        "compensation_initial_response": "NOT_SENT",
+        "retry_result": "CREATED",
+        "retry_receipt": "comp-receipt-1",
+        "same_operation_replay": false
+      },
+      "expected": {
+        "status": "BLOCK_COMPENSATION_NOT_AUTHORIZED",
+        "lookup_consulted": false,
+        "compensation_authorized_checked": true,
+        "new_compensation_effects": 0,
+        "retry_attempts": 0,
+        "used_compensation_key": null,
+        "compensation_receipt": null,
+        "bound_original_effect_ref": "effect-1"
+      }
+    },
+    {
+      "id": "PACC-COMP-4",
+      "name": "Compensation must bind the exact original effect",
+      "input": {
+        "original_effect_ref": "effect-1",
+        "original_effect_stage": "EXECUTED",
+        "compensation_trigger": "REVERSED",
+        "compensation_authorized": true,
+        "compensation_target_effect_ref": "effect-2",
+        "compensation_idempotency_key": "comp-op-1",
+        "compensation_lookup_status": "NOT_FOUND",
+        "compensation_lookup_receipt": null,
+        "compensation_initial_response": "NOT_SENT",
+        "retry_result": "CREATED",
+        "retry_receipt": "comp-receipt-1",
+        "same_operation_replay": false
+      },
+      "expected": {
+        "status": "BLOCK_COMPENSATION_BINDING",
+        "lookup_consulted": false,
+        "compensation_authorized_checked": true,
+        "new_compensation_effects": 0,
+        "retry_attempts": 0,
+        "used_compensation_key": null,
+        "compensation_receipt": null,
+        "bound_original_effect_ref": "effect-1"
+      }
+    },
+    {
+      "id": "PACC-COMP-5",
+      "name": "Lost acknowledgement is reconciled from durable compensation receipt",
+      "input": {
+        "original_effect_ref": "effect-1",
+        "original_effect_stage": "EXECUTED",
+        "compensation_trigger": "SETTLEMENT_FAILED",
+        "compensation_authorized": true,
+        "compensation_target_effect_ref": "effect-1",
+        "compensation_idempotency_key": "comp-op-1",
+        "compensation_lookup_status": "FOUND_SUCCESS",
+        "compensation_lookup_receipt": "comp-receipt-1",
+        "compensation_initial_response": "TIMEOUT",
+        "retry_result": "CREATED",
+        "retry_receipt": "comp-receipt-2",
+        "same_operation_replay": false
+      },
+      "expected": {
+        "status": "COMPENSATION_RECONCILED",
+        "lookup_consulted": true,
+        "compensation_authorized_checked": true,
+        "new_compensation_effects": 0,
+        "retry_attempts": 0,
+        "used_compensation_key": null,
+        "compensation_receipt": "comp-receipt-1",
+        "bound_original_effect_ref": "effect-1"
+      }
+    },
+    {
+      "id": "PACC-COMP-6",
+      "name": "Unknown compensation outcome blocks blind retry",
+      "input": {
+        "original_effect_ref": "effect-1",
+        "original_effect_stage": "EXECUTED",
+        "compensation_trigger": "SETTLEMENT_FAILED",
+        "compensation_authorized": true,
+        "compensation_target_effect_ref": "effect-1",
+        "compensation_idempotency_key": "comp-op-1",
+        "compensation_lookup_status": "UNKNOWN",
+        "compensation_lookup_receipt": null,
+        "compensation_initial_response": "TIMEOUT",
+        "retry_result": "CREATED",
+        "retry_receipt": "comp-receipt-2",
+        "same_operation_replay": false
+      },
+      "expected": {
+        "status": "RECONCILE_COMPENSATION_REQUIRED",
+        "lookup_consulted": true,
+        "compensation_authorized_checked": true,
+        "new_compensation_effects": 0,
+        "retry_attempts": 0,
+        "used_compensation_key": null,
+        "compensation_receipt": null,
+        "bound_original_effect_ref": "effect-1"
+      }
+    },
+    {
+      "id": "PACC-COMP-7",
+      "name": "Same-operation compensation replay is idempotent",
+      "input": {
+        "original_effect_ref": "effect-1",
+        "original_effect_stage": "EXECUTED",
+        "compensation_trigger": "SETTLEMENT_FAILED",
+        "compensation_authorized": true,
+        "compensation_target_effect_ref": "effect-1",
+        "compensation_idempotency_key": "comp-op-1",
+        "compensation_lookup_status": "FOUND_SUCCESS",
+        "compensation_lookup_receipt": "comp-receipt-1",
+        "compensation_initial_response": "SUCCESS",
+        "retry_result": "CREATED",
+        "retry_receipt": "comp-receipt-2",
+        "same_operation_replay": true
+      },
+      "expected": {
+        "status": "IDEMPOTENT_COMPENSATION_REPLAY",
+        "lookup_consulted": true,
+        "compensation_authorized_checked": true,
+        "new_compensation_effects": 0,
+        "retry_attempts": 0,
+        "used_compensation_key": null,
+        "compensation_receipt": "comp-receipt-1",
+        "bound_original_effect_ref": "effect-1"
+      }
+    },
+    {
+      "id": "PACC-COMP-8",
+      "name": "Missing compensation idempotency identity fails closed",
+      "input": {
+        "original_effect_ref": "effect-1",
+        "original_effect_stage": "EXECUTED",
+        "compensation_trigger": "SETTLEMENT_FAILED",
+        "compensation_authorized": true,
+        "compensation_target_effect_ref": "effect-1",
+        "compensation_idempotency_key": null,
+        "compensation_lookup_status": "NOT_FOUND",
+        "compensation_lookup_receipt": null,
+        "compensation_initial_response": "NOT_SENT",
+        "retry_result": "CREATED",
+        "retry_receipt": "comp-receipt-1",
+        "same_operation_replay": false
+      },
+      "expected": {
+        "status": "BLOCK_MISSING_COMPENSATION_IDEMPOTENCY_KEY",
+        "lookup_consulted": false,
+        "compensation_authorized_checked": true,
+        "new_compensation_effects": 0,
+        "retry_attempts": 0,
+        "used_compensation_key": null,
+        "compensation_receipt": null,
+        "bound_original_effect_ref": "effect-1"
+      }
+    }
+  ]
+}
