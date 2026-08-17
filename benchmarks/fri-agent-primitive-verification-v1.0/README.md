@@ -115,6 +115,34 @@ Invariant: **state continuity and responsibility continuity are independent clai
 - `run_fri_conformance.py` — deterministic reference evaluator.
 - `evidence/reference-run.json` — one committed reference execution.
 
+## Verifier integrity supplement
+
+Path:
+
+`supplements/harness-integrity-v0.1/`
+
+The core FRI fixtures ask whether a runtime crosses the next causal boundary safely. The supplement asks a different question: **can we trust the test that says it did?**
+
+It adds four deterministic negative controls without changing FRI-1…FRI-6:
+
+```text
+HGI-1 — assertions pass although the tested antecedent was never reached
+HGI-2 — antecedent is covered but fixtures never discriminate confusable meanings
+HGI-3 — a live-data impact measurement is reused after the population changes
+HGI-4 — a side effect committed, acknowledgement failed, and retry begins unreconciled
+```
+
+Key invariants:
+
+```text
+assertion passed != tested state was reached
+antecedent reached != evidence discriminates
+declared contract != current impact of that contract
+command failed != side effect did not happen
+```
+
+This is a verifier-of-the-verifier layer. A green supplement run proves only that the reference evaluator detects the declared malformed cases; it is not a blanket certification of every FRI fixture or product adapter.
+
 ## Product adapters
 
 ### Claude Code auto-memory public surface v1
