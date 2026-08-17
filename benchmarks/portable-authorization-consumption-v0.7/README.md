@@ -1,8 +1,8 @@
 # Portable Authorization Consumption Contract v0.7 (PACC)
 
-PACC verifies the causal composition between authorization proof, current authority, single-use consumption, dispatch, observed outcome, recovery across crash windows, external-effect reconciliation, settlement, and finality.
+PACC verifies the causal composition between authorization proof, current authority, single-use consumption, dispatch, observed outcome, recovery across crash windows, external-effect reconciliation, settlement/finality, and compensating reversal actions.
 
-It is intentionally separate from FRI. FRI asks whether a primitive is trustworthy at its own boundary. PACC asks whether independently trustworthy boundaries are composed in a safe order and remain safe under concurrency, recovery, external timeout ambiguity, and non-final settlement transitions.
+It is intentionally separate from FRI. FRI asks whether a primitive is trustworthy at its own boundary. PACC asks whether independently trustworthy boundaries are composed in a safe order and remain safe under concurrency, recovery, external timeout ambiguity, non-final settlement transitions, and compensation.
 
 ## Causal chain
 
@@ -17,6 +17,18 @@ proof authenticity
   -> settled
   -> final
   -> outcome binding
+```
+
+When execution/settlement produces a reversal condition before stable completion, compensation is a separate causal branch:
+
+```text
+executed effect
+  -> reversal / settlement-failure trigger
+  -> current compensation authority
+  -> exact original-effect binding
+  -> idempotent compensation dispatch
+  -> compensation reconciliation
+  -> compensation receipt
 ```
 
 Normative invariants:
@@ -49,8 +61,16 @@ Normative invariants:
 26. Finality evidence bound to the wrong settlement receipt must fail closed.
 27. Before finality, a later canonical observation may downgrade an earlier non-final observation; such a downgrade must remain observable rather than being hidden by monotonic-status assumptions.
 28. A canonical `FINAL` label without a finality reference is incomplete evidence, not a final outcome.
+29. Compensation requires an explicit reversal/failure trigger; absence of a trigger does not authorize an automatic undo.
+30. Compensation is a new consequential action and requires current compensation authority even if the original effect was previously authorized.
+31. A compensating action must bind the exact original effect it is reversing.
+32. Compensation retry must preserve a durable compensation idempotency key / logical-operation identity.
+33. A committed compensation with lost acknowledgement must be reconciled from durable evidence rather than emitted again.
+34. An unknown compensation outcome must block blind retry until reconciliation resolves whether the compensating effect already happened.
+35. Same-operation compensation replay must return the prior compensation receipt without creating another compensation side effect.
+36. Missing durable compensation identity must fail closed; recovery may not invent a fresh key and call it the same reversal.
 
-The executable model records side effects, retry attempts, lookup use, receipts, settlement stage, and finality verdicts. This makes order, concurrency, recovery, external-boundary, and finality mutations observable even when a coarse success status alone would otherwise look safe.
+The executable model records side effects, retry attempts, lookup use, receipts, settlement stage, finality verdicts, compensation authority, compensation bindings, and compensating side effects. This makes order, concurrency, recovery, external-boundary, finality, and compensation mutations observable even when a coarse success status alone would otherwise look safe.
 
 ## Required negative controls
 
@@ -78,7 +98,15 @@ The executable model records side effects, retry attempts, lookup use, receipts,
 - status timeout during settlement/finality must not create a second external effect;
 - settlement receipt mismatch must block finality;
 - a pre-finality downgrade must not be hidden by a stale higher status;
-- a final label without finality evidence must fail closed.
+- a final label without finality evidence must fail closed;
+- no reversal/failure trigger must mean no automatic compensation;
+- compensation without current authority must block;
+- compensation targeting the wrong original effect must block;
+- compensation retry must not change idempotency identity;
+- acknowledgement loss after committed compensation must not duplicate the reversal;
+- unknown compensation outcome must require reconciliation;
+- same-operation compensation replay must not emit a second reversal;
+- missing compensation idempotency identity must fail closed.
 
 ## Deterministic concurrency model
 
@@ -223,6 +251,68 @@ prior non-final success
 monotonic guarantee
 ```
 
+## Compensation and reversal model
+
+Compensation is not retroactive cancellation of the original causal history. The original effect remains an observed fact; compensation is a second consequential effect intended to counter or reverse it.
+
+```text
+original effect happened
+  -> reversal / settlement-failure trigger
+  -> current compensation authorization
+  -> bind original_effect_ref
+  -> canonical compensation lookup
+      FOUND_SUCCESS -> replay receipt; no new compensation
+      NOT_FOUND     -> emit once with SAME compensation key
+      UNKNOWN       -> RECONCILE_COMPENSATION_REQUIRED
+```
+
+This creates another important separation:
+
+```text
+original effect invalidated/reversed
+!=
+original effect never happened
+```
+
+and:
+
+```text
+need to compensate
+!=
+authority to compensate
+```
+
+The compensation mutation campaign injects eight known-bad semantics:
+
+1. compensate without a reversal/failure trigger;
+2. skip current compensation authority;
+3. ignore binding to the exact original effect;
+4. generate a new compensation idempotency key on retry;
+5. duplicate compensation after acknowledgement timeout;
+6. blindly compensate again while compensation outcome is unknown;
+7. emit a duplicate compensation on same-operation replay;
+8. invent a compensation identity when durable idempotency evidence is missing.
+
+Core distinctions:
+
+```text
+compensation requested
+!=
+compensation authorized
+```
+
+```text
+compensation transport failure
+!=
+compensation effect failure
+```
+
+```text
+reversal intent
+!=
+reversal receipt
+```
+
 ## Run
 
 ```bash
@@ -236,10 +326,12 @@ python benchmarks/portable-authorization-consumption-v0.7/run_external_effect_co
 python benchmarks/portable-authorization-consumption-v0.7/run_external_effect_mutation_campaign.py --required-score 1.0
 python benchmarks/portable-authorization-consumption-v0.7/run_settlement_finality_conformance.py
 python benchmarks/portable-authorization-consumption-v0.7/run_settlement_finality_mutation_campaign.py --required-score 1.0
+python benchmarks/portable-authorization-consumption-v0.7/run_compensation_conformance.py
+python benchmarks/portable-authorization-consumption-v0.7/run_compensation_mutation_campaign.py --required-score 1.0
 ```
 
 `run_order_mutation_campaign.py` classifies candidates as `KILLED`, `EQUIVALENT`, `SURVIVED`, or `INVALID`. Only explicitly justified equivalence is excluded from the mutation score; unproven no-difference is `SURVIVED` and fails the gate.
 
-The concurrency, crash-recovery, external-effect, and settlement/finality campaigns are narrower: each listed mutant is a concrete unsafe semantic variant, so any `SURVIVED` mutant fails the gate.
+The concurrency, crash-recovery, external-effect, settlement/finality, and compensation campaigns are narrower: each listed mutant is a concrete unsafe semantic variant, so any `SURVIVED` mutant fails the gate.
 
-This benchmark is a deterministic reference semantics pack. It is not a certification of any external product, API, wallet, ledger, chain, or adapter.
+This benchmark is a deterministic reference semantics pack. It is not a certification of any external product, API, wallet, ledger, chain, payment rail, or adapter.
