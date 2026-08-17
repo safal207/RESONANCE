@@ -1,0 +1,213 @@
+{
+  "version": "0.7",
+  "scope": "deterministic multi-resource causal snapshot and write-skew semantics; not an external-product certification",
+  "controls": [
+    {
+      "id": "PACC-SNAP-1",
+      "name": "Exact joint causal snapshot may authorize one bound write",
+      "input": {
+        "authority": "CURRENT",
+        "witness_present": true,
+        "snapshot_ref": "snap-A7-B4",
+        "resource_witnesses": {
+          "A": {"snapshot_ref": "snap-A7-B4", "version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"snapshot_ref": "snap-A7-B4", "version": 4, "lineage_ref": "lineage-B4", "effect_ref": "effect-B4"}
+        },
+        "current": {
+          "A": {"version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"version": 4, "lineage_ref": "lineage-B4", "effect_ref": "effect-B4"}
+        },
+        "vector_relation": "EXACT",
+        "prior_action_outcome": "NONE",
+        "logical_operation_id": "op-snap-1"
+      },
+      "expected": {"status": "JOINT_SNAPSHOT_VALID", "new_writes": 1, "blocked_write": false, "used_snapshot_ref": "snap-A7-B4"}
+    },
+    {
+      "id": "PACC-SNAP-2",
+      "name": "Version drift on one resource invalidates the whole joint snapshot",
+      "input": {
+        "authority": "CURRENT",
+        "witness_present": true,
+        "snapshot_ref": "snap-A7-B4",
+        "resource_witnesses": {
+          "A": {"snapshot_ref": "snap-A7-B4", "version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"snapshot_ref": "snap-A7-B4", "version": 4, "lineage_ref": "lineage-B4", "effect_ref": "effect-B4"}
+        },
+        "current": {
+          "A": {"version": 8, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"version": 4, "lineage_ref": "lineage-B4", "effect_ref": "effect-B4"}
+        },
+        "vector_relation": "DOMINATED_BY_CURRENT",
+        "prior_action_outcome": "NONE",
+        "logical_operation_id": "op-snap-2"
+      },
+      "expected": {"status": "REVALIDATE_JOINT_SNAPSHOT", "new_writes": 0, "blocked_write": true, "used_snapshot_ref": "snap-A7-B4"}
+    },
+    {
+      "id": "PACC-SNAP-3",
+      "name": "Matching version with changed lineage on B invalidates the whole snapshot",
+      "input": {
+        "authority": "CURRENT",
+        "witness_present": true,
+        "snapshot_ref": "snap-A7-B4",
+        "resource_witnesses": {
+          "A": {"snapshot_ref": "snap-A7-B4", "version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"snapshot_ref": "snap-A7-B4", "version": 4, "lineage_ref": "lineage-B4", "effect_ref": "effect-B4"}
+        },
+        "current": {
+          "A": {"version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"version": 4, "lineage_ref": "lineage-B4-new", "effect_ref": "effect-B4-new"}
+        },
+        "vector_relation": "EXACT",
+        "prior_action_outcome": "NONE",
+        "logical_operation_id": "op-snap-3"
+      },
+      "expected": {"status": "BLOCK_JOINT_LINEAGE_CHANGED", "new_writes": 0, "blocked_write": true, "used_snapshot_ref": "snap-A7-B4"}
+    },
+    {
+      "id": "PACC-SNAP-4",
+      "name": "Individually fresh resources from different snapshots do not form one causal snapshot",
+      "input": {
+        "authority": "CURRENT",
+        "witness_present": true,
+        "snapshot_ref": "snap-joint-required",
+        "resource_witnesses": {
+          "A": {"snapshot_ref": "snap-A-read", "version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"snapshot_ref": "snap-B-read", "version": 4, "lineage_ref": "lineage-B4", "effect_ref": "effect-B4"}
+        },
+        "current": {
+          "A": {"version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"version": 4, "lineage_ref": "lineage-B4", "effect_ref": "effect-B4"}
+        },
+        "vector_relation": "EXACT",
+        "prior_action_outcome": "NONE",
+        "logical_operation_id": "op-snap-4"
+      },
+      "expected": {"status": "BLOCK_NON_COHERENT_SNAPSHOT", "new_writes": 0, "blocked_write": true, "used_snapshot_ref": "snap-joint-required"}
+    },
+    {
+      "id": "PACC-SNAP-5",
+      "name": "Missing durable joint snapshot witness fails closed",
+      "input": {
+        "authority": "CURRENT",
+        "witness_present": false,
+        "snapshot_ref": null,
+        "resource_witnesses": {},
+        "current": {
+          "A": {"version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"version": 4, "lineage_ref": "lineage-B4", "effect_ref": "effect-B4"}
+        },
+        "vector_relation": "EXACT",
+        "prior_action_outcome": "NONE",
+        "logical_operation_id": "op-snap-5"
+      },
+      "expected": {"status": "BLOCK_MISSING_CAUSAL_SNAPSHOT", "new_writes": 0, "blocked_write": true, "used_snapshot_ref": null}
+    },
+    {
+      "id": "PACC-SNAP-6",
+      "name": "Causally incomparable resource frontier requires reconciliation",
+      "input": {
+        "authority": "CURRENT",
+        "witness_present": true,
+        "snapshot_ref": "snap-A7-B4",
+        "resource_witnesses": {
+          "A": {"snapshot_ref": "snap-A7-B4", "version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"snapshot_ref": "snap-A7-B4", "version": 4, "lineage_ref": "lineage-B4", "effect_ref": "effect-B4"}
+        },
+        "current": {
+          "A": {"version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"version": 4, "lineage_ref": "lineage-B4", "effect_ref": "effect-B4"}
+        },
+        "vector_relation": "INCOMPARABLE",
+        "prior_action_outcome": "NONE",
+        "logical_operation_id": "op-snap-6"
+      },
+      "expected": {"status": "BLOCK_CAUSALLY_INCOMPARABLE", "new_writes": 0, "blocked_write": true, "used_snapshot_ref": "snap-A7-B4"}
+    },
+    {
+      "id": "PACC-SNAP-7",
+      "name": "Write-skew pair assembled from two valid local reads is rejected",
+      "input": {
+        "authority": "CURRENT",
+        "witness_present": true,
+        "snapshot_ref": "snap-required-coherent",
+        "resource_witnesses": {
+          "A": {"snapshot_ref": "snap-before-B-change", "version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"snapshot_ref": "snap-after-A-change", "version": 5, "lineage_ref": "lineage-B5", "effect_ref": "effect-B5"}
+        },
+        "current": {
+          "A": {"version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"version": 5, "lineage_ref": "lineage-B5", "effect_ref": "effect-B5"}
+        },
+        "vector_relation": "EXACT",
+        "prior_action_outcome": "NONE",
+        "logical_operation_id": "op-snap-7"
+      },
+      "expected": {"status": "BLOCK_NON_COHERENT_SNAPSHOT", "new_writes": 0, "blocked_write": true, "used_snapshot_ref": "snap-required-coherent"}
+    },
+    {
+      "id": "PACC-SNAP-8",
+      "name": "Committed joint action replays without another multi-resource write",
+      "input": {
+        "authority": "CURRENT",
+        "witness_present": true,
+        "snapshot_ref": "snap-A7-B4",
+        "resource_witnesses": {
+          "A": {"snapshot_ref": "snap-A7-B4", "version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"snapshot_ref": "snap-A7-B4", "version": 4, "lineage_ref": "lineage-B4", "effect_ref": "effect-B4"}
+        },
+        "current": {
+          "A": {"version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"version": 4, "lineage_ref": "lineage-B4", "effect_ref": "effect-B4"}
+        },
+        "vector_relation": "EXACT",
+        "prior_action_outcome": "COMMITTED",
+        "logical_operation_id": "op-snap-8"
+      },
+      "expected": {"status": "IDEMPOTENT_JOINT_REPLAY", "new_writes": 0, "blocked_write": false, "used_snapshot_ref": "snap-A7-B4"}
+    },
+    {
+      "id": "PACC-SNAP-9",
+      "name": "Unknown prior multi-resource outcome reconciles before retry",
+      "input": {
+        "authority": "CURRENT",
+        "witness_present": true,
+        "snapshot_ref": "snap-A7-B4",
+        "resource_witnesses": {
+          "A": {"snapshot_ref": "snap-A7-B4", "version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"snapshot_ref": "snap-A7-B4", "version": 4, "lineage_ref": "lineage-B4", "effect_ref": "effect-B4"}
+        },
+        "current": {
+          "A": {"version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"version": 4, "lineage_ref": "lineage-B4", "effect_ref": "effect-B4"}
+        },
+        "vector_relation": "EXACT",
+        "prior_action_outcome": "UNKNOWN",
+        "logical_operation_id": "op-snap-9"
+      },
+      "expected": {"status": "RECONCILE_JOINT_ACTION_REQUIRED", "new_writes": 0, "blocked_write": true, "used_snapshot_ref": "snap-A7-B4"}
+    },
+    {
+      "id": "PACC-SNAP-10",
+      "name": "Joint snapshot validity does not replace current action authority",
+      "input": {
+        "authority": "REVOKED",
+        "witness_present": true,
+        "snapshot_ref": "snap-A7-B4",
+        "resource_witnesses": {
+          "A": {"snapshot_ref": "snap-A7-B4", "version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"snapshot_ref": "snap-A7-B4", "version": 4, "lineage_ref": "lineage-B4", "effect_ref": "effect-B4"}
+        },
+        "current": {
+          "A": {"version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"version": 4, "lineage_ref": "lineage-B4", "effect_ref": "effect-B4"}
+        },
+        "vector_relation": "EXACT",
+        "prior_action_outcome": "NONE",
+        "logical_operation_id": "op-snap-10"
+      },
+      "expected": {"status": "BLOCK_JOINT_ACTION_NOT_AUTHORIZED", "new_writes": 0, "blocked_write": true, "used_snapshot_ref": "snap-A7-B4"}
+    }
+  ]
+}
