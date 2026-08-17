@@ -1,0 +1,136 @@
+{
+  "benchmark": "PACC External Exactly-Once Boundary",
+  "version": "0.7",
+  "fixtures": [
+    {
+      "id": "PACC-EXT-1",
+      "name": "Timeout after external effect committed is reconciled by canonical lookup",
+      "input": {
+        "logical_operation_id": "op-1",
+        "idempotency_key": "idem-op-1",
+        "initial_response": "TIMEOUT",
+        "lookup_status": "FOUND_SUCCESS",
+        "lookup_receipt": "ext-1",
+        "webhook_status": "NONE",
+        "retry_result": "EXISTING"
+      },
+      "expected": {
+        "status": "RECONCILED_SUCCESS",
+        "lookup_consulted": true,
+        "retry_attempts": 0,
+        "new_external_effects": 0,
+        "used_retry_key": null,
+        "external_receipt": "ext-1"
+      }
+    },
+    {
+      "id": "PACC-EXT-2",
+      "name": "Canonical not-found may retry only with the same idempotency key",
+      "input": {
+        "logical_operation_id": "op-1",
+        "idempotency_key": "idem-op-1",
+        "initial_response": "TIMEOUT",
+        "lookup_status": "NOT_FOUND",
+        "lookup_receipt": null,
+        "webhook_status": "NONE",
+        "retry_result": "CREATED",
+        "retry_receipt": "ext-2"
+      },
+      "expected": {
+        "status": "RETRIED_SAME_KEY_SUCCESS",
+        "lookup_consulted": true,
+        "retry_attempts": 1,
+        "new_external_effects": 1,
+        "used_retry_key": "idem-op-1",
+        "external_receipt": "ext-2"
+      }
+    },
+    {
+      "id": "PACC-EXT-3",
+      "name": "Webhook notification cannot override canonical lookup",
+      "input": {
+        "logical_operation_id": "op-1",
+        "idempotency_key": "idem-op-1",
+        "initial_response": "TIMEOUT",
+        "lookup_status": "NOT_FOUND",
+        "lookup_receipt": null,
+        "webhook_status": "SUCCESS",
+        "webhook_receipt": "webhook-ext-ghost",
+        "retry_result": "CREATED",
+        "retry_receipt": "ext-3"
+      },
+      "expected": {
+        "status": "RETRIED_SAME_KEY_SUCCESS",
+        "lookup_consulted": true,
+        "retry_attempts": 1,
+        "new_external_effects": 1,
+        "used_retry_key": "idem-op-1",
+        "external_receipt": "ext-3"
+      }
+    },
+    {
+      "id": "PACC-EXT-4",
+      "name": "Unknown external outcome requires reconciliation before retry",
+      "input": {
+        "logical_operation_id": "op-1",
+        "idempotency_key": "idem-op-1",
+        "initial_response": "TIMEOUT",
+        "lookup_status": "UNKNOWN",
+        "lookup_receipt": null,
+        "webhook_status": "NONE",
+        "retry_result": "CREATED",
+        "retry_receipt": "ext-4"
+      },
+      "expected": {
+        "status": "RECONCILE_REQUIRED",
+        "lookup_consulted": true,
+        "retry_attempts": 0,
+        "new_external_effects": 0,
+        "used_retry_key": null,
+        "external_receipt": null
+      }
+    },
+    {
+      "id": "PACC-EXT-5",
+      "name": "Terminal external failure is not retried as a new logical effect",
+      "input": {
+        "logical_operation_id": "op-1",
+        "idempotency_key": "idem-op-1",
+        "initial_response": "TIMEOUT",
+        "lookup_status": "FOUND_FAILED",
+        "lookup_receipt": "ext-failed-1",
+        "webhook_status": "NONE",
+        "retry_result": "CREATED"
+      },
+      "expected": {
+        "status": "TERMINAL_FAILED",
+        "lookup_consulted": true,
+        "retry_attempts": 0,
+        "new_external_effects": 0,
+        "used_retry_key": null,
+        "external_receipt": "ext-failed-1"
+      }
+    },
+    {
+      "id": "PACC-EXT-6",
+      "name": "Recovery without durable idempotency identity fails closed",
+      "input": {
+        "logical_operation_id": "op-1",
+        "idempotency_key": null,
+        "initial_response": "TIMEOUT",
+        "lookup_status": "NOT_FOUND",
+        "lookup_receipt": null,
+        "webhook_status": "NONE",
+        "retry_result": "CREATED"
+      },
+      "expected": {
+        "status": "BLOCK_MISSING_IDEMPOTENCY_KEY",
+        "lookup_consulted": false,
+        "retry_attempts": 0,
+        "new_external_effects": 0,
+        "used_retry_key": null,
+        "external_receipt": null
+      }
+    }
+  ]
+}
