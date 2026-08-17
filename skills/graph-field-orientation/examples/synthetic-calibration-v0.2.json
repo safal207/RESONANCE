@@ -1,0 +1,76 @@
+{
+  "schema": "resonance.graph-field-calibration.batch.v0.2",
+  "learning_rate": 0.05,
+  "current_weights": {
+    "divergence": 0.25,
+    "uncertainty": 0.20,
+    "blast_radius": 0.20,
+    "freshness_gap": 0.15,
+    "open_pressure": 0.10,
+    "opportunity": 0.10
+  },
+  "observations": [
+    {
+      "synthetic": true,
+      "selection": {
+        "id": "synthetic-high-information-transition",
+        "components": {
+          "divergence": 0.80,
+          "uncertainty": 0.90,
+          "blast_radius": 0.55,
+          "freshness_gap": 0.40,
+          "open_pressure": 0.35,
+          "opportunity": 0.95
+        }
+      },
+      "outcome": {
+        "useful_finding": 0.90,
+        "information_gain": 0.95,
+        "blocked_work_avoidance": 0.80,
+        "stale_evidence_catch": 0.30,
+        "downstream_rework_avoidance": 0.85,
+        "evidence": [
+          "synthetic:calibration-positive:outcome"
+        ]
+      },
+      "baseline": {
+        "kind": "fifo",
+        "observed_utility": 0.45,
+        "evidence": [
+          "synthetic:calibration-positive:baseline"
+        ]
+      }
+    },
+    {
+      "synthetic": true,
+      "selection": {
+        "id": "synthetic-busy-but-low-value-transition",
+        "components": {
+          "divergence": 0.30,
+          "uncertainty": 0.25,
+          "blast_radius": 0.25,
+          "freshness_gap": 0.20,
+          "open_pressure": 0.95,
+          "opportunity": 0.20
+        }
+      },
+      "outcome": {
+        "useful_finding": 0.20,
+        "information_gain": 0.15,
+        "blocked_work_avoidance": 0.30,
+        "stale_evidence_catch": 0.10,
+        "downstream_rework_avoidance": 0.20,
+        "evidence": [
+          "synthetic:calibration-negative:outcome"
+        ]
+      },
+      "baseline": {
+        "kind": "fifo",
+        "observed_utility": 0.50,
+        "evidence": [
+          "synthetic:calibration-negative:baseline"
+        ]
+      }
+    }
+  ]
+}

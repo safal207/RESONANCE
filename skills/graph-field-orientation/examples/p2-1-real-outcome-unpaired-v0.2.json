@@ -1,0 +1,74 @@
+{
+  "schema": "resonance.graph-field-outcome.observation.v0.2",
+  "observation_id": "gfd-outcome-p2-1-2026-08-15-001",
+  "synthetic": false,
+  "pre_action": {
+    "field_snapshot_ref": "skills/graph-field-orientation/examples/neo-resonance-2026-08-15.json",
+    "selection_id": "p2-1-trust-spine-cost-latency",
+    "field_score": 0.800588,
+    "components": {
+      "divergence": 0.90,
+      "uncertainty": 0.65,
+      "blast_radius": 1.00,
+      "freshness_gap": 0.40,
+      "open_pressure": 0.70,
+      "opportunity": 1.00,
+      "blockedness": 0.05
+    },
+    "selection_evidence": [
+      "RESONANCE PR #61 Graph–Field Dynamics v0.2 exact-head snapshot selected P2-1 before the P2-1 measurement was inspected"
+    ]
+  },
+  "observed_outcome": {
+    "kind": "trust_spine_cost_latency_measurement",
+    "status": "MEASURED_AND_INDEPENDENTLY_VERIFIED",
+    "repository": "safal207/ContractGraph-QA",
+    "pull_request": 63,
+    "measured_subject": "7fd3e744037832b74b2ee4c4c71cc8fce18fc329",
+    "verifier_subject": "447098344c71dd1e9dd11a69ef7767ddbe106ca0",
+    "source_workflow_run_id": 31879737027,
+    "source_job_id": 95000538396,
+    "verification_workflow_run_id": 31883970399,
+    "verification_job_id": 95010414036,
+    "metrics": {
+      "job_elapsed_seconds": 45,
+      "substantive_window_seconds": 35,
+      "runner_overhead_seconds": 10,
+      "substantive_step_count": 13,
+      "source_evidence_artifact_bytes": 28222,
+      "dominant_measurement_group": "liminaldb",
+      "dominant_group_observed_seconds": 23,
+      "timestamp_resolution_seconds": 1,
+      "monetary_cost_status": "NOT_MEASURED",
+      "monetary_cost_usd": null
+    },
+    "evidence": [
+      "ContractGraph-QA PR #63",
+      "ContractGraph-QA workflow run 31883970399 SUCCESS",
+      "P2-1 verifier artifact 9246747695 sha256:8a923747b4efaaa578f59e535c49ffa7ee3fac272ccfa2390cea640a426243a3",
+      "SYSTEM-007 source artifact 9245706691 sha256:9eb7e5f6d5e60cf0e65eb92f1d90408bcb91960e2118bceee0e33181fe274474"
+    ],
+    "non_claims": [
+      "this one observation does not prove GFD outperformed a simpler routing baseline",
+      "observed GitHub Actions timing is not a production latency SLA",
+      "same-second steps are below source timestamp resolution, not proven zero compute",
+      "provider monetary cost was not measured"
+    ]
+  },
+  "calibration": {
+    "utility_annotation_status": "UNSCORED",
+    "baseline_status": "MISSING",
+    "eligibility": "BASELINE_REQUIRED",
+    "weight_update_allowed": false,
+    "reason": "The real outcome is evidence-backed, but calibration v0.2 requires normalized outcome utility and an observed simpler baseline under the same frozen utility definition. Neither may be invented after seeing this result."
+  },
+  "authority": {
+    "may_authorize": false,
+    "may_execute": false,
+    "may_mutate": false,
+    "merge_authorized": false,
+    "deployment_authorized": false,
+    "payment_authorized": false,
+    "external_effects_authorized": false
+  }
+}
