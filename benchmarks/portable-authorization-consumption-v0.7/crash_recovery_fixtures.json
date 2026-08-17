@@ -1,0 +1,114 @@
+{
+  "benchmark": "PACC Crash Recovery and Consequential Effect Reconciliation",
+  "version": "0.7",
+  "fixtures": [
+    {
+      "id": "PACC-REC-1",
+      "name": "Consumption committed and dispatch definitely not sent",
+      "input": {
+        "initial_consumption": {"operation_id": "op-1", "consumption_ref": "consume-op-1"},
+        "durable_dispatch": null,
+        "dispatch_state": "NOT_SENT",
+        "ack_received": false,
+        "retry": {"worker": "W2", "operation_id": "op-1"}
+      },
+      "expected": {
+        "status": "RECOVERED_DISPATCH",
+        "new_consumptions": 0,
+        "new_dispatches": 1,
+        "final_consumed_by_operation": "op-1",
+        "final_dispatch_ref": "dispatch-op-1-recovery-W2"
+      }
+    },
+    {
+      "id": "PACC-REC-2",
+      "name": "Dispatch committed but acknowledgement was lost",
+      "input": {
+        "initial_consumption": {"operation_id": "op-1", "consumption_ref": "consume-op-1"},
+        "durable_dispatch": {"operation_id": "op-1", "consumption_ref": "consume-op-1", "dispatch_ref": "dispatch-op-1"},
+        "dispatch_state": "COMMITTED",
+        "ack_received": false,
+        "retry": {"worker": "W2", "operation_id": "op-1"}
+      },
+      "expected": {
+        "status": "IDEMPOTENT_REPLAY",
+        "new_consumptions": 0,
+        "new_dispatches": 0,
+        "final_consumed_by_operation": "op-1",
+        "final_dispatch_ref": "dispatch-op-1"
+      }
+    },
+    {
+      "id": "PACC-REC-3",
+      "name": "Dispatch evidence exists but consumption receipt is missing",
+      "input": {
+        "initial_consumption": null,
+        "durable_dispatch": {"operation_id": "op-1", "consumption_ref": "consume-op-1", "dispatch_ref": "dispatch-op-1"},
+        "dispatch_state": "COMMITTED",
+        "ack_received": false,
+        "retry": {"worker": "W2", "operation_id": "op-1"}
+      },
+      "expected": {
+        "status": "BLOCK_RECOVERY_EVIDENCE_INCOMPLETE",
+        "new_consumptions": 0,
+        "new_dispatches": 0,
+        "final_consumed_by_operation": null,
+        "final_dispatch_ref": "dispatch-op-1"
+      }
+    },
+    {
+      "id": "PACC-REC-4",
+      "name": "Consumption committed but dispatch outcome is unknown",
+      "input": {
+        "initial_consumption": {"operation_id": "op-1", "consumption_ref": "consume-op-1"},
+        "durable_dispatch": null,
+        "dispatch_state": "UNKNOWN",
+        "ack_received": false,
+        "retry": {"worker": "W2", "operation_id": "op-1"}
+      },
+      "expected": {
+        "status": "RECONCILE_REQUIRED",
+        "new_consumptions": 0,
+        "new_dispatches": 0,
+        "final_consumed_by_operation": "op-1",
+        "final_dispatch_ref": null
+      }
+    },
+    {
+      "id": "PACC-REC-5",
+      "name": "Different logical operation cannot reuse crashed consumption",
+      "input": {
+        "initial_consumption": {"operation_id": "op-1", "consumption_ref": "consume-op-1"},
+        "durable_dispatch": null,
+        "dispatch_state": "NOT_SENT",
+        "ack_received": false,
+        "retry": {"worker": "W2", "operation_id": "op-2"}
+      },
+      "expected": {
+        "status": "ALREADY_CONSUMED",
+        "new_consumptions": 0,
+        "new_dispatches": 0,
+        "final_consumed_by_operation": "op-1",
+        "final_dispatch_ref": null
+      }
+    },
+    {
+      "id": "PACC-REC-6",
+      "name": "Recovered dispatch must bind the durable consumption receipt",
+      "input": {
+        "initial_consumption": {"operation_id": "op-1", "consumption_ref": "consume-op-1"},
+        "durable_dispatch": {"operation_id": "op-1", "consumption_ref": "consume-WRONG", "dispatch_ref": "dispatch-op-1"},
+        "dispatch_state": "COMMITTED",
+        "ack_received": true,
+        "retry": {"worker": "W2", "operation_id": "op-1"}
+      },
+      "expected": {
+        "status": "BLOCK_RECOVERY_BINDING_MISMATCH",
+        "new_consumptions": 0,
+        "new_dispatches": 0,
+        "final_consumed_by_operation": "op-1",
+        "final_dispatch_ref": "dispatch-op-1"
+      }
+    }
+  ]
+}
