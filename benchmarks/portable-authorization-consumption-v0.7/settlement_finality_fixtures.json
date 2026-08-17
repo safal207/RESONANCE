@@ -1,0 +1,182 @@
+{
+  "benchmark": "PACC Settlement and Finality",
+  "version": "0.7",
+  "fixtures": [
+    {
+      "id": "PACC-SET-1",
+      "name": "Accepted is not final",
+      "input": {
+        "status_lookup": "FOUND",
+        "canonical_status": "ACCEPTED",
+        "notification_status": "FINAL",
+        "canonical_settlement_receipt": null,
+        "expected_settlement_receipt": null,
+        "finality_ref": null,
+        "prior_observed_status": null
+      },
+      "expected": {
+        "status": "AWAIT_EXECUTION",
+        "canonical_stage": "ACCEPTED",
+        "lookup_consulted": true,
+        "final": false,
+        "new_external_effects": 0,
+        "settlement_receipt": null,
+        "finality_ref": null
+      }
+    },
+    {
+      "id": "PACC-SET-2",
+      "name": "Executed is not settled",
+      "input": {
+        "status_lookup": "FOUND",
+        "canonical_status": "EXECUTED",
+        "notification_status": null,
+        "canonical_settlement_receipt": null,
+        "expected_settlement_receipt": null,
+        "finality_ref": null,
+        "prior_observed_status": "ACCEPTED"
+      },
+      "expected": {
+        "status": "AWAIT_SETTLEMENT",
+        "canonical_stage": "EXECUTED",
+        "lookup_consulted": true,
+        "final": false,
+        "new_external_effects": 0,
+        "settlement_receipt": null,
+        "finality_ref": null
+      }
+    },
+    {
+      "id": "PACC-SET-3",
+      "name": "Settled is not final",
+      "input": {
+        "status_lookup": "FOUND",
+        "canonical_status": "SETTLED",
+        "notification_status": "FINAL",
+        "canonical_settlement_receipt": "settle-1",
+        "expected_settlement_receipt": "settle-1",
+        "finality_ref": null,
+        "prior_observed_status": "EXECUTED"
+      },
+      "expected": {
+        "status": "AWAIT_FINALITY",
+        "canonical_stage": "SETTLED",
+        "lookup_consulted": true,
+        "final": false,
+        "new_external_effects": 0,
+        "settlement_receipt": "settle-1",
+        "finality_ref": null
+      }
+    },
+    {
+      "id": "PACC-SET-4",
+      "name": "Final requires canonical finality evidence",
+      "input": {
+        "status_lookup": "FOUND",
+        "canonical_status": "FINAL",
+        "notification_status": "FINAL",
+        "canonical_settlement_receipt": "settle-1",
+        "expected_settlement_receipt": "settle-1",
+        "finality_ref": "finality-1",
+        "prior_observed_status": "SETTLED"
+      },
+      "expected": {
+        "status": "FINAL_CONFIRMED",
+        "canonical_stage": "FINAL",
+        "lookup_consulted": true,
+        "final": true,
+        "new_external_effects": 0,
+        "settlement_receipt": "settle-1",
+        "finality_ref": "finality-1"
+      }
+    },
+    {
+      "id": "PACC-SET-5",
+      "name": "Settlement timeout does not justify reissuing effect",
+      "input": {
+        "status_lookup": "UNKNOWN",
+        "canonical_status": null,
+        "notification_status": "FINAL",
+        "canonical_settlement_receipt": null,
+        "expected_settlement_receipt": "settle-1",
+        "finality_ref": null,
+        "prior_observed_status": "EXECUTED"
+      },
+      "expected": {
+        "status": "RECONCILE_REQUIRED",
+        "canonical_stage": "UNKNOWN",
+        "lookup_consulted": true,
+        "final": false,
+        "new_external_effects": 0,
+        "settlement_receipt": null,
+        "finality_ref": null
+      }
+    },
+    {
+      "id": "PACC-SET-6",
+      "name": "Wrong settlement receipt binding blocks finality",
+      "input": {
+        "status_lookup": "FOUND",
+        "canonical_status": "FINAL",
+        "notification_status": null,
+        "canonical_settlement_receipt": "settle-2",
+        "expected_settlement_receipt": "settle-1",
+        "finality_ref": "finality-2",
+        "prior_observed_status": "SETTLED"
+      },
+      "expected": {
+        "status": "BLOCK_SETTLEMENT_BINDING",
+        "canonical_stage": "FINAL",
+        "lookup_consulted": true,
+        "final": false,
+        "new_external_effects": 0,
+        "settlement_receipt": "settle-2",
+        "finality_ref": null
+      }
+    },
+    {
+      "id": "PACC-SET-7",
+      "name": "Non-final settlement may downgrade before finality",
+      "input": {
+        "status_lookup": "FOUND",
+        "canonical_status": "EXECUTED",
+        "notification_status": null,
+        "canonical_settlement_receipt": null,
+        "expected_settlement_receipt": "settle-1",
+        "finality_ref": null,
+        "prior_observed_status": "SETTLED"
+      },
+      "expected": {
+        "status": "NON_FINAL_DOWNGRADE_OBSERVED",
+        "canonical_stage": "EXECUTED",
+        "lookup_consulted": true,
+        "final": false,
+        "new_external_effects": 0,
+        "settlement_receipt": null,
+        "finality_ref": null
+      }
+    },
+    {
+      "id": "PACC-SET-8",
+      "name": "Final state without finality reference is incomplete",
+      "input": {
+        "status_lookup": "FOUND",
+        "canonical_status": "FINAL",
+        "notification_status": null,
+        "canonical_settlement_receipt": "settle-1",
+        "expected_settlement_receipt": "settle-1",
+        "finality_ref": null,
+        "prior_observed_status": "SETTLED"
+      },
+      "expected": {
+        "status": "BLOCK_MISSING_FINALITY_EVIDENCE",
+        "canonical_stage": "FINAL",
+        "lookup_consulted": true,
+        "final": false,
+        "new_external_effects": 0,
+        "settlement_receipt": "settle-1",
+        "finality_ref": null
+      }
+    }
+  ]
+}
