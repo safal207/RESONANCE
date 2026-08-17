@@ -1,8 +1,8 @@
 # Portable Authorization Consumption Contract v0.7 (PACC)
 
-PACC verifies the causal composition between authorization proof, current authority, single-use consumption, dispatch, observed outcome, and recovery across crash windows.
+PACC verifies the causal composition between authorization proof, current authority, single-use consumption, dispatch, observed outcome, recovery across crash windows, and external-effect reconciliation.
 
-It is intentionally separate from FRI. FRI asks whether a primitive is trustworthy at its own boundary. PACC asks whether independently trustworthy boundaries are composed in a safe order and remain safe under concurrency and recovery.
+It is intentionally separate from FRI. FRI asks whether a primitive is trustworthy at its own boundary. PACC asks whether independently trustworthy boundaries are composed in a safe order and remain safe under concurrency, recovery, and external timeout ambiguity.
 
 ## Causal chain
 
@@ -11,6 +11,7 @@ proof authenticity
   -> current authority
   -> atomic consumption
   -> dispatch binding
+  -> external effect / reconciliation
   -> outcome binding
 ```
 
@@ -32,8 +33,13 @@ Normative invariants:
 14. `dispatch_state=UNKNOWN` is not equivalent to `NOT_SENT`; recovery must reconcile before another consequential effect.
 15. Dispatch evidence without the consumption receipt it claims to consume is incomplete recovery evidence and must fail closed.
 16. Recovered dispatch evidence must bind the exact durable consumption receipt.
+17. A transport timeout is not evidence that the external side effect did not occur.
+18. Recovery retry must preserve the same durable idempotency key / logical-operation identity.
+19. Canonical external lookup is authoritative for reconciliation in this reference model; webhook delivery is only a notification signal.
+20. An unknown external outcome must block blind resend until reconciliation can distinguish existing effect from absent effect.
+21. A terminal external failure must not be reinterpreted as permission to create a new logical effect.
 
-The executable model records side effects as well as verdicts. This makes order, concurrency, and recovery mutations observable even when a final status alone would otherwise look safe.
+The executable model records side effects, retry attempts, lookup use, receipts, and verdicts. This makes order, concurrency, recovery, and external-boundary mutations observable even when a final status alone would otherwise look safe.
 
 ## Required negative controls
 
@@ -50,13 +56,15 @@ The executable model records side effects as well as verdicts. This makes order,
 - crash after durable consume must not produce a second consumption;
 - acknowledgement failure after committed dispatch must not be interpreted as "nothing happened";
 - missing consumption evidence must not be guessed from downstream dispatch evidence;
-- unknown dispatch outcome must block blind retry until reconciliation.
+- unknown dispatch outcome must block blind retry until reconciliation;
+- timeout must not trigger resend before canonical external lookup;
+- retry after canonical not-found must preserve the original idempotency key;
+- webhook success must not override contradictory canonical lookup state;
+- unknown external outcome must remain `RECONCILE_REQUIRED` rather than cause blind resend.
 
 ## Deterministic concurrency model
 
 The race fixtures intentionally avoid scheduler-dependent thread timing. Both workers can be given the same pre-read (`UNSPENT`), then the reference model deterministically interleaves their consume attempts against one authoritative state transition.
-
-This separates two claims:
 
 ```text
 both workers observed UNSPENT
@@ -64,14 +72,12 @@ both workers observed UNSPENT
 both workers may commit consumption
 ```
 
-The baseline requires an atomic transition. `run_concurrency_mutation_campaign.py` then injects four known-bad semantics:
+The baseline requires an atomic transition. `run_concurrency_mutation_campaign.py` injects four known-bad semantics:
 
 1. non-atomic check-then-set;
 2. duplicate dispatch on idempotent replay;
 3. idempotency-key / logical-operation identity omission;
 4. loser dispatch after `ALREADY_CONSUMED`.
-
-All scored mutants are required to be killed in CI.
 
 ## Crash recovery model
 
@@ -98,20 +104,47 @@ The recovery campaign injects four known-bad semantics:
 3. guess through a missing consumption receipt using downstream evidence;
 4. blind dispatch when prior dispatch outcome is unknown.
 
-The core recovery distinction is:
+## External exactly-once boundary
+
+Once a consequential request leaves the local system, local transaction state alone cannot prove whether the external effect occurred. The reference model therefore separates transport outcome from external effect outcome:
 
 ```text
-command/reporting failure
-!=
-side effect did not happen
+request sent
+  -> TIMEOUT
+  -> canonical lookup
+      FOUND_SUCCESS -> reuse external receipt; no resend
+      FOUND_FAILED  -> terminal failure; no new logical effect
+      NOT_FOUND     -> retry only with the SAME idempotency key
+      UNKNOWN       -> RECONCILE_REQUIRED; no blind resend
 ```
 
-and:
+Webhook/event delivery is intentionally modeled as notification rather than canonical authority. A webhook may trigger lookup, but it does not replace lookup in this reference semantics.
+
+The external-effect mutation campaign injects four known-bad semantics:
+
+1. generate a new idempotency key on retry;
+2. treat timeout as proof that no external effect happened;
+3. blindly resend while external outcome is unknown;
+4. treat webhook notification as canonical external state.
+
+Core distinctions:
 
 ```text
-unknown effect outcome
+transport failure
 !=
-effect definitely absent
+external effect failure
+```
+
+```text
+notification received
+!=
+canonical state established
+```
+
+```text
+retry request
+!=
+new logical operation
 ```
 
 ## Run
@@ -123,10 +156,12 @@ python benchmarks/portable-authorization-consumption-v0.7/run_concurrency_confor
 python benchmarks/portable-authorization-consumption-v0.7/run_concurrency_mutation_campaign.py --required-score 1.0
 python benchmarks/portable-authorization-consumption-v0.7/run_crash_recovery_conformance.py
 python benchmarks/portable-authorization-consumption-v0.7/run_crash_recovery_mutation_campaign.py --required-score 1.0
+python benchmarks/portable-authorization-consumption-v0.7/run_external_effect_conformance.py
+python benchmarks/portable-authorization-consumption-v0.7/run_external_effect_mutation_campaign.py --required-score 1.0
 ```
 
 `run_order_mutation_campaign.py` classifies candidates as `KILLED`, `EQUIVALENT`, `SURVIVED`, or `INVALID`. Only explicitly justified equivalence is excluded from the mutation score; unproven no-difference is `SURVIVED` and fails the gate.
 
-The concurrency and crash-recovery campaigns are narrower: each listed mutant is a concrete unsafe semantic variant, so any `SURVIVED` mutant fails the gate.
+The concurrency, crash-recovery, and external-effect campaigns are narrower: each listed mutant is a concrete unsafe semantic variant, so any `SURVIVED` mutant fails the gate.
 
-This benchmark is a deterministic reference semantics pack. It is not a certification of any external product or adapter.
+This benchmark is a deterministic reference semantics pack. It is not a certification of any external product, API, wallet, or adapter.
