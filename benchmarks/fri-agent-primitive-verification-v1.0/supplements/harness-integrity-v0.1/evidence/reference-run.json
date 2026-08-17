@@ -1,0 +1,32 @@
+{
+  "benchmark": "RESONANCE FRI Harness Integrity Supplement",
+  "version": "0.1",
+  "generated_at": "2026-08-17T10:09:19.758529+00:00",
+  "all_passed": true,
+  "results": [
+    {
+      "id": "HGI-1",
+      "expected": "REJECT_VACUOUS_PASS",
+      "actual": "REJECT_VACUOUS_PASS",
+      "pass": true
+    },
+    {
+      "id": "HGI-2",
+      "expected": "REJECT_NON_DISCRIMINATING_FIXTURE",
+      "actual": "REJECT_NON_DISCRIMINATING_FIXTURE",
+      "pass": true
+    },
+    {
+      "id": "HGI-3",
+      "expected": "REMEASURE_REQUIRED",
+      "actual": "REMEASURE_REQUIRED",
+      "pass": true
+    },
+    {
+      "id": "HGI-4",
+      "expected": "RECONCILE_BEFORE_RETRY",
+      "actual": "RECONCILE_BEFORE_RETRY",
+      "pass": true
+    }
+  ]
+}
