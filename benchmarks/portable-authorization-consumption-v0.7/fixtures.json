@@ -1,0 +1,48 @@
+{
+  "benchmark": "Portable Authorization Consumption Contract",
+  "version": "0.7",
+  "fixtures": [
+    {
+      "id": "PACC-1",
+      "name": "Happy path binds proof through outcome",
+      "input": {"proof_valid": true, "authority": "CURRENT", "spendability": "UNSPENT", "decision_ref": "D1", "action_digest": "A1", "dispatch_decision_ref": "D1", "dispatch_action_digest": "A1", "outcome_dispatch_ref": "dispatch-1", "outcome_decision_ref": "D1"},
+      "expected": "COMPLETE",
+      "expected_effects": ["CONSUMED", "DISPATCHED", "OUTCOME_BOUND"]
+    },
+    {
+      "id": "PACC-2",
+      "name": "Revoked authority must not consume",
+      "input": {"proof_valid": true, "authority": "REVOKED", "spendability": "UNSPENT", "decision_ref": "D1", "action_digest": "A1"},
+      "expected": "BLOCK_NOT_CURRENT",
+      "expected_effects": []
+    },
+    {
+      "id": "PACC-3",
+      "name": "Consumed decision must not dispatch",
+      "input": {"proof_valid": true, "authority": "CURRENT", "spendability": "CONSUMED", "decision_ref": "D1", "action_digest": "A1"},
+      "expected": "BLOCK_ALREADY_CONSUMED",
+      "expected_effects": []
+    },
+    {
+      "id": "PACC-4",
+      "name": "Dispatch binding mismatch blocks completion",
+      "input": {"proof_valid": true, "authority": "CURRENT", "spendability": "UNSPENT", "decision_ref": "D1", "action_digest": "A1", "dispatch_decision_ref": "D2", "dispatch_action_digest": "A1"},
+      "expected": "BLOCK_DISPATCH_BINDING",
+      "expected_effects": ["CONSUMED"]
+    },
+    {
+      "id": "PACC-5",
+      "name": "Outcome binding mismatch remains incomplete",
+      "input": {"proof_valid": true, "authority": "CURRENT", "spendability": "UNSPENT", "decision_ref": "D1", "action_digest": "A1", "dispatch_decision_ref": "D1", "dispatch_action_digest": "A1", "outcome_dispatch_ref": "wrong-dispatch", "outcome_decision_ref": "D1"},
+      "expected": "BLOCK_OUTCOME_BINDING",
+      "expected_effects": ["CONSUMED", "DISPATCHED"]
+    },
+    {
+      "id": "PACC-6",
+      "name": "Invalid proof authorizes nothing",
+      "input": {"proof_valid": false, "authority": "CURRENT", "spendability": "UNSPENT", "decision_ref": "D1", "action_digest": "A1"},
+      "expected": "BLOCK_INVALID_PROOF",
+      "expected_effects": []
+    }
+  ]
+}
