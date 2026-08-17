@@ -1,8 +1,8 @@
 # Portable Authorization Consumption Contract v0.7 (PACC)
 
-PACC verifies the causal composition between authorization proof, current authority, single-use consumption, dispatch, observed outcome, recovery across crash windows, and external-effect reconciliation.
+PACC verifies the causal composition between authorization proof, current authority, single-use consumption, dispatch, observed outcome, recovery across crash windows, external-effect reconciliation, settlement, and finality.
 
-It is intentionally separate from FRI. FRI asks whether a primitive is trustworthy at its own boundary. PACC asks whether independently trustworthy boundaries are composed in a safe order and remain safe under concurrency, recovery, and external timeout ambiguity.
+It is intentionally separate from FRI. FRI asks whether a primitive is trustworthy at its own boundary. PACC asks whether independently trustworthy boundaries are composed in a safe order and remain safe under concurrency, recovery, external timeout ambiguity, and non-final settlement transitions.
 
 ## Causal chain
 
@@ -12,6 +12,10 @@ proof authenticity
   -> atomic consumption
   -> dispatch binding
   -> external effect / reconciliation
+  -> accepted
+  -> executed
+  -> settled
+  -> final
   -> outcome binding
 ```
 
@@ -38,8 +42,15 @@ Normative invariants:
 19. Canonical external lookup is authoritative for reconciliation in this reference model; webhook delivery is only a notification signal.
 20. An unknown external outcome must block blind resend until reconciliation can distinguish existing effect from absent effect.
 21. A terminal external failure must not be reinterpreted as permission to create a new logical effect.
+22. `ACCEPTED`, `EXECUTED`, `SETTLED`, and `FINAL` are distinct causal stages; none may be silently collapsed into a later stage.
+23. `SETTLED` is not finality. A final verdict requires canonical finality evidence bound to the settlement receipt.
+24. A status-lookup timeout after execution/settlement must reconcile state, not reissue the consequential effect.
+25. Notification/webhook finality cannot override contradictory or incomplete canonical settlement state.
+26. Finality evidence bound to the wrong settlement receipt must fail closed.
+27. Before finality, a later canonical observation may downgrade an earlier non-final observation; such a downgrade must remain observable rather than being hidden by monotonic-status assumptions.
+28. A canonical `FINAL` label without a finality reference is incomplete evidence, not a final outcome.
 
-The executable model records side effects, retry attempts, lookup use, receipts, and verdicts. This makes order, concurrency, recovery, and external-boundary mutations observable even when a final status alone would otherwise look safe.
+The executable model records side effects, retry attempts, lookup use, receipts, settlement stage, and finality verdicts. This makes order, concurrency, recovery, external-boundary, and finality mutations observable even when a coarse success status alone would otherwise look safe.
 
 ## Required negative controls
 
@@ -60,7 +71,14 @@ The executable model records side effects, retry attempts, lookup use, receipts,
 - timeout must not trigger resend before canonical external lookup;
 - retry after canonical not-found must preserve the original idempotency key;
 - webhook success must not override contradictory canonical lookup state;
-- unknown external outcome must remain `RECONCILE_REQUIRED` rather than cause blind resend.
+- unknown external outcome must remain `RECONCILE_REQUIRED` rather than cause blind resend;
+- `ACCEPTED` must not be treated as `FINAL`;
+- `EXECUTED` must not be treated as `SETTLED`;
+- `SETTLED` must not be treated as `FINAL`;
+- status timeout during settlement/finality must not create a second external effect;
+- settlement receipt mismatch must block finality;
+- a pre-finality downgrade must not be hidden by a stale higher status;
+- a final label without finality evidence must fail closed.
 
 ## Deterministic concurrency model
 
@@ -147,6 +165,64 @@ retry request
 new logical operation
 ```
 
+## Settlement and finality model
+
+A successful external effect can still be non-final. The reference model therefore keeps four stages distinct:
+
+```text
+ACCEPTED
+  -> EXECUTED
+  -> SETTLED
+  -> FINAL
+```
+
+The important separation is:
+
+```text
+accepted != executed
+executed != settled
+settled != final
+```
+
+Before `FINAL`, a later canonical observation may move backward. A prior `SETTLED` observation followed by canonical `EXECUTED` is recorded as `NON_FINAL_DOWNGRADE_OBSERVED`; it is not silently ignored and it does not authorize a new effect.
+
+Canonical `FINAL` additionally requires:
+
+```text
+settlement_receipt == expected_settlement_receipt
+and
+finality_ref is present
+```
+
+The settlement/finality mutation campaign injects six known-bad semantics:
+
+1. treat `ACCEPTED` as `FINAL`;
+2. treat `EXECUTED` as `SETTLED`;
+3. trust notification/webhook finality instead of canonical state;
+4. reissue the external effect after a settlement-status timeout;
+5. ignore settlement-receipt binding;
+6. ignore a pre-finality downgrade and keep the stale higher state.
+
+Core distinctions:
+
+```text
+successful submission
+!=
+final outcome
+```
+
+```text
+settlement observation
+!=
+finality proof
+```
+
+```text
+prior non-final success
+!=
+monotonic guarantee
+```
+
 ## Run
 
 ```bash
@@ -158,10 +234,12 @@ python benchmarks/portable-authorization-consumption-v0.7/run_crash_recovery_con
 python benchmarks/portable-authorization-consumption-v0.7/run_crash_recovery_mutation_campaign.py --required-score 1.0
 python benchmarks/portable-authorization-consumption-v0.7/run_external_effect_conformance.py
 python benchmarks/portable-authorization-consumption-v0.7/run_external_effect_mutation_campaign.py --required-score 1.0
+python benchmarks/portable-authorization-consumption-v0.7/run_settlement_finality_conformance.py
+python benchmarks/portable-authorization-consumption-v0.7/run_settlement_finality_mutation_campaign.py --required-score 1.0
 ```
 
 `run_order_mutation_campaign.py` classifies candidates as `KILLED`, `EQUIVALENT`, `SURVIVED`, or `INVALID`. Only explicitly justified equivalence is excluded from the mutation score; unproven no-difference is `SURVIVED` and fails the gate.
 
-The concurrency, crash-recovery, and external-effect campaigns are narrower: each listed mutant is a concrete unsafe semantic variant, so any `SURVIVED` mutant fails the gate.
+The concurrency, crash-recovery, external-effect, and settlement/finality campaigns are narrower: each listed mutant is a concrete unsafe semantic variant, so any `SURVIVED` mutant fails the gate.
 
-This benchmark is a deterministic reference semantics pack. It is not a certification of any external product, API, wallet, or adapter.
+This benchmark is a deterministic reference semantics pack. It is not a certification of any external product, API, wallet, ledger, chain, or adapter.
