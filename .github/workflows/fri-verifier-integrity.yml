@@ -1,0 +1,86 @@
+name: RESONANCE — FRI Verifier Integrity Gate
+
+on:
+  push:
+    paths:
+      - 'benchmarks/fri-agent-primitive-verification-v1.0/**'
+      - '.github/workflows/fri-verifier-integrity.yml'
+  pull_request:
+    paths:
+      - 'benchmarks/fri-agent-primitive-verification-v1.0/**'
+      - '.github/workflows/fri-verifier-integrity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fri-verifier-integrity:
+    name: FRI verifier integrity
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout RESONANCE
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Run FRI reference conformance
+        run: |
+          mkdir -p benchmark-results/fri-verifier-integrity
+          python benchmarks/fri-agent-primitive-verification-v1.0/run_fri_conformance.py \
+            --output benchmark-results/fri-verifier-integrity/reference-conformance.json
+
+      - name: Run harness integrity controls
+        run: |
+          python benchmarks/fri-agent-primitive-verification-v1.0/supplements/harness-integrity-v0.1/run_harness_integrity.py \
+            --output benchmark-results/fri-verifier-integrity/harness-integrity.json
+
+      - name: Run FRI reference verifier self-audit
+        run: |
+          python benchmarks/fri-agent-primitive-verification-v1.0/supplements/fri-reference-verifier-audit-v0.1/run_audit.py \
+            --output benchmark-results/fri-verifier-integrity/verifier-self-audit.json
+
+      - name: Publish gate summary
+        if: always()
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+
+          root = Path('benchmark-results/fri-verifier-integrity')
+          checks = [
+              ('FRI reference conformance', root / 'reference-conformance.json'),
+              ('Harness integrity', root / 'harness-integrity.json'),
+              ('Verifier self-audit', root / 'verifier-self-audit.json'),
+          ]
+
+          print('## FRI Verifier Integrity Gate')
+          print()
+          print('| Check | Status | Passed | Total |')
+          print('|---|---:|---:|---:|')
+          for name, path in checks:
+              if not path.exists():
+                  print(f'| {name} | NOT_RUN | — | — |')
+                  continue
+              data = json.loads(path.read_text(encoding='utf-8'))
+              summary = data.get('summary') or {}
+              status = summary.get('status')
+              if status is None and 'all_passed' in data:
+                  status = 'PASS' if data['all_passed'] else 'FAIL'
+              passed = summary.get('passed', '—')
+              total = summary.get('total', '—')
+              print(f'| {name} | {status or "UNKNOWN"} | {passed} | {total} |')
+          PY
+
+      - name: Upload FRI verifier evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-fri-verifier-integrity
+          path: benchmark-results/fri-verifier-integrity/
+          if-no-files-found: warn
