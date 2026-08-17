@@ -37,6 +37,7 @@ Issue 001 maps this transition.
 11. [`Evidence Has a Route — почему AI-агенту нужен не максимум проверки, а оптимальная логистика доказательств`](articles/11-evidence-has-a-route.md) — **published 2026-08-15**
 12. [`A Diagnostic Nobody Can See Is Not a Signal — почему ownership, reachability и causal awareness нельзя сжимать в один статус`](articles/12-a-diagnostic-nobody-can-see-is-not-a-signal.md) — **published 2026-08-15**
 13. [`Evidence Must Bind the Transition — почему AI-системе недостаточно доказательства, если оно не связано с конкретным переходом`](articles/13-evidence-must-bind-the-transition.md) — **published 2026-08-15** · [web edition](https://safal207.github.io/RESONANCE/evidence-must-bind-the-transition.ru.html)
+14. [`When the Feature Request Becomes Infrastructure — что происходит, когда проблема исчезает, а исследовательская граница сдвигается дальше`](articles/14-when-the-feature-request-becomes-infrastructure.md) — **published 2026-08-17**
 
 The fourth feature extends the trust question beyond pre-action authorization: a consequential outcome needs its own observer identity, vantage and evidence so decision provenance and outcome provenance remain separately inspectable.
 
@@ -57,6 +58,8 @@ The eleventh feature treats verification as an evidence-logistics problem: sync,
 The twelfth feature separates ownership, reachability, causal read basis and predecessor concurrency. A handoff can exist as durable state while remaining operationally undeliverable; a diagnostic can exist while being absent from the sender's decision path; and an unread predecessor is not the same failure as a true CAS race. HRC-001 turns those distinctions into a bounded executable conformance contract while preserving the reported non-reproduction of the hypothesized race in the motivating low-concurrency evidence.
 
 The thirteenth feature generalizes a shared failure shape exposed independently in the CrewAI authorization/revalidation discussion and the LangGraph cancellation/durability discussion: correct evidence and correct temporal ordering are not enough when a consequential transition is not explicitly bound to the exact evidence occurrence that authorizes, validates or settles it. It introduces Evidence-Bound Transitions, Execution Binding and Terminality Binding as a compact causal contract between proof and change.
+
+The fourteenth feature records a product-level boundary shift in Claude Code: persistent memory, compact/session lifecycle seams and cross-session/team coordination are now represented by native primitives in three discussions closed as completed on 2026-08-17. It explicitly avoids claiming implementation causality from community discussion; instead it turns the former workaround layer into a source of falsification cases for the next frontier — memory applicability, collector liveness, authority-aware handoff and evidence-bound dependency admission.
 
 ## Agent operating line
 
@@ -84,6 +87,8 @@ Article 11 — route sufficient/current/proportionate evidence to the action bou
 Article 12 — prove handoff causal visibility, reachability and read basis
         ↓
 Article 13 — bind exact evidence occurrences to consequential transitions
+        ↓
+Article 14 — when native primitives ship, move verification to the next causal boundary
         ↓
 Signal 011 — independent historical trust-base portability
         ↓
@@ -159,6 +164,8 @@ Operational rules carried by this line:
 - `valid_time`, durable `recorded_time`, and downstream `reviewed_time` remain distinct facts;
 - `review unavailable` does not mean `review passed`;
 - evidence, readiness, memory, durable storage, interpretation and publication do not grant execution authority;
+- native primitive availability should retire redundant workaround implementation and promote its field failures into conformance tests for the next causal boundary;
+- message delivery, memory persistence, hook invocation and task status must not be silently upgraded into authority, applicability, collector liveness or completion proof;
 - rejected, not-reproduced, fixed and superseded findings remain in append-only history rather than silently disappearing;
 - repository advancement during an experiment requires reconciliation/revalidation rather than suppression of stale-base evidence;
 - a green run superseded by valid review corrections must be re-executed before promotion.
