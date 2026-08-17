@@ -134,6 +134,38 @@ This is **not** a product FAIL verdict. The adapter records that the current pub
 
 The generic `PreToolUse` hook is recorded as an extension point: an external verifier could enforce stronger semantics if it also maintains the missing provenance and current-state bindings.
 
+### Claude Code auto-memory live runtime probe v1
+
+Path:
+
+`live/claude-code-auto-memory-v1/`
+
+The live probe moves from documentation mapping to an isolated runtime experiment:
+
+```text
+baseline session proves D1 is present in auto memory
+                ↓
+authority.json changes D1 / blue / v1 → D2 / green / v2
+                ↓
+new Claude Code session receives only Read + Write tools
+                ↓
+observer hooks capture Read/Write lifecycle events
+                ↓
+FRI-1 + FRI-5 verdicts from actual action evidence
+```
+
+The FRI-5 PASS boundary is intentionally stronger than event start ordering. A read must have **completed** before consequential use begins:
+
+```text
+PostToolUse(Read authority.json)
+            ↓
+PreToolUse(Write action_receipt.json)
+```
+
+If Read starts before Write but completes after Write has already started, the probe classifies the run as `FAIL_UNBOUND_OR_PARALLEL_VERIFY_USE` rather than treating parallel scheduling as causal verification.
+
+The harness includes a no-model `--self-test` covering PASS, stale-memory FAIL, and parallel/unbound FAIL paths. Live model evidence is committed only after execution in an environment with an authenticated Claude Code CLI; no simulated result is substituted for a live run.
+
 ## Evidence boundary
 
 A green reference run proves only that the reference evaluator enforces the declared fixtures. It does **not** prove that a specific agent runtime exposes enough state to enforce these invariants, nor that its native primitives already satisfy them.
