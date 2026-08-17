@@ -74,6 +74,17 @@ jobs:
             --required-score 1.0 \
             --output benchmark-results/pacc-composition-integrity/external-effect-mutation-campaign.json
 
+      - name: Run PACC settlement finality conformance
+        run: |
+          python benchmarks/portable-authorization-consumption-v0.7/run_settlement_finality_conformance.py \
+            --output benchmark-results/pacc-composition-integrity/settlement-finality-conformance.json
+
+      - name: Run PACC settlement finality mutation campaign
+        run: |
+          python benchmarks/portable-authorization-consumption-v0.7/run_settlement_finality_mutation_campaign.py \
+            --required-score 1.0 \
+            --output benchmark-results/pacc-composition-integrity/settlement-finality-mutation-campaign.json
+
       - name: Publish PACC summary
         if: always()
         run: |
@@ -91,6 +102,8 @@ jobs:
               ('Crash recovery mutation campaign', 'crash-recovery-mutation-campaign.json'),
               ('External effect conformance', 'external-effect-conformance.json'),
               ('External effect mutation campaign', 'external-effect-mutation-campaign.json'),
+              ('Settlement finality conformance', 'settlement-finality-conformance.json'),
+              ('Settlement finality mutation campaign', 'settlement-finality-mutation-campaign.json'),
           ]:
               path = root / name
               if not path.exists():
