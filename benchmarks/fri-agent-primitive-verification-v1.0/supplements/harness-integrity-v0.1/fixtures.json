@@ -1,0 +1,67 @@
+{
+  "benchmark": "RESONANCE FRI Harness Integrity Supplement",
+  "version": "0.1",
+  "parent": "FRI Agent Primitive Verification Conformance Pack v1.0",
+  "fixtures": [
+    {
+      "id": "HGI-1",
+      "name": "Assertions pass over an empty/unreached store",
+      "rule": "antecedent_reachability",
+      "input": {
+        "write_attempts": 7,
+        "writes_accepted": 0,
+        "assertions_reported_pass": 7
+      },
+      "expected": "REJECT_VACUOUS_PASS"
+    },
+    {
+      "id": "HGI-2",
+      "name": "Covered antecedent but no discriminating fixture",
+      "rule": "discriminating_input",
+      "input": {
+        "observations": [
+          {
+            "colliding_groups": 1,
+            "keys_lost": 1
+          },
+          {
+            "colliding_groups": 1,
+            "keys_lost": 1
+          },
+          {
+            "colliding_groups": 1,
+            "keys_lost": 1
+          }
+        ]
+      },
+      "expected": "REJECT_NON_DISCRIMINATING_FIXTURE"
+    },
+    {
+      "id": "HGI-3",
+      "name": "Declared identifier contract with stale impact measurement",
+      "rule": "live_impact_remeasurement",
+      "input": {
+        "contract": {
+          "normalization": "NFC",
+          "prefix_length": 8,
+          "casefold": false
+        },
+        "measured_population_generation": 1400,
+        "current_population_generation": 1430
+      },
+      "expected": "REMEASURE_REQUIRED"
+    },
+    {
+      "id": "HGI-4",
+      "name": "Write committed but acknowledgement path failed",
+      "rule": "effect_ack_split",
+      "input": {
+        "side_effect_committed": true,
+        "process_exit_code": 1,
+        "retry_requested": true,
+        "reconciliation_evidence": false
+      },
+      "expected": "RECONCILE_BEFORE_RETRY"
+    }
+  ]
+}
