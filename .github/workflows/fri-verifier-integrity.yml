@@ -50,6 +50,12 @@ jobs:
           python benchmarks/fri-agent-primitive-verification-v1.0/supplements/fri-reference-verifier-audit-v0.1/run_mutation_control.py \
             --output benchmark-results/fri-verifier-integrity/mutation-kill-control.json
 
+      - name: Run automatic boundary mutation campaign
+        run: |
+          python benchmarks/fri-agent-primitive-verification-v1.0/supplements/fri-reference-verifier-audit-v0.1/run_boundary_mutation_campaign.py \
+            --required-score 1.0 \
+            --output benchmark-results/fri-verifier-integrity/boundary-mutation-campaign.json
+
       - name: Publish gate summary
         if: always()
         run: |
@@ -63,6 +69,7 @@ jobs:
               ('Harness integrity', root / 'harness-integrity.json'),
               ('Verifier self-audit', root / 'verifier-self-audit.json'),
               ('Mutation-kill control', root / 'mutation-kill-control.json'),
+              ('Automatic boundary mutation campaign', root / 'boundary-mutation-campaign.json'),
           ]
 
           print('## FRI Verifier Integrity Gate')
