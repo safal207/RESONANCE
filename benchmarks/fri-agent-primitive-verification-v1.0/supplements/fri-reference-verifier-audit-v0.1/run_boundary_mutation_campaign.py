@@ -288,7 +288,8 @@ def main() -> int:
         "version": "0.1",
         "scope": (
             "AST-generated comparison-boundary flips plus non-dispatch guard bypass/negation inside evaluate(); "
-            "rule-dispatch comparisons are excluded to avoid trivial score inflation; order-inversion mutants are not yet gated"
+            "rule-dispatch comparisons are excluded to avoid trivial score inflation; "
+            "order/precedence mutations are evaluated separately by the equivalence-aware order-inversion campaign"
         ),
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "summary": {
