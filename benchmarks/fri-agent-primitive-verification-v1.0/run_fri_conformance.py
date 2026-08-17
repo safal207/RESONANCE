@@ -14,19 +14,29 @@ def evaluate(rule: str, data: dict[str, Any]) -> tuple[str, str]:
     if rule == "memory_supersession":
         if data.get("persisted") and data.get("superseded_by"):
             return "BLOCK_CURRENT_AUTHORITY", "Persistence preserves history, not current authority."
-        return "ALLOW", "No supersession is declared."
+        if data.get("persisted"):
+            return "ALLOW", "Persisted memory has no declared supersession."
+        return "NO_PERSISTED_MEMORY", "No persisted memory record is available to authorize or block."
 
     if rule == "collector_liveness":
         reads = int(data.get("instrumented_reads", 0))
         observations = int(data.get("observation_records", 0))
-        if reads > 0 and observations == 0:
+        if reads <= 0:
+            return "NOT_OBSERVABLE", "No independent instrumented activity exists, so collector liveness cannot be inferred."
+        if observations == 0:
             return "LIVENESS_FAILURE", "Independent activity exists while the observation ledger is silent."
-        return "HEALTHY", "Observed activity is not inconsistent with collector output."
+        return "HEALTHY", "Independent activity and collector output are both observable."
 
     if rule == "ownership_epoch":
+        if not bool(data.get("delivered")):
+            return "BLOCK_NO_DELIVERY", "No delivery occurrence exists to bind to mutation authority."
+
+        required = ("recipient", "recipient_epoch", "current_owner", "current_epoch")
+        if any(data.get(key) is None for key in required):
+            return "BLOCK_AUTHORITY_UNPROVEN", "Current ownership evidence is incomplete."
+
         authorized = (
-            bool(data.get("delivered"))
-            and data.get("recipient") == data.get("current_owner")
+            data.get("recipient") == data.get("current_owner")
             and data.get("recipient_epoch") == data.get("current_epoch")
         )
         if authorized:
@@ -34,18 +44,27 @@ def evaluate(rule: str, data: dict[str, Any]) -> tuple[str, str]:
         return "BLOCK_STALE_OWNER", "Delivery is transport evidence, not authority-transfer evidence."
 
     if rule == "dependency_completion":
+        if data.get("label") != "done":
+            return "BLOCK_DEPENDENCY_NOT_COMPLETE", "The dependency is not declared complete."
         if data.get("completion_receipt_ref"):
             return "ALLOW_DEPENDENT_TASK", "Completion evidence is present."
         return "BLOCK_MISSING_COMPLETION_EVIDENCE", "A scheduling label is not consequential completion proof."
 
     if rule == "verify_to_use":
-        if data.get("verified_state_version") == data.get("current_state_version"):
+        verified = data.get("verified_state_version")
+        current = data.get("current_state_version")
+        if verified is None or current is None:
+            return "BLOCK_MISSING_VERIFICATION_EVIDENCE", "Verification/current-state binding is incomplete."
+        if verified == current:
             return "ALLOW", "The witness still binds to the current state version."
         return "REVALIDATE", "Verification is stale at the point of use."
 
     if rule == "responsibility_lane":
-        lane_ok = data.get("recovered_lane") == data.get("current_lane")
-        if data.get("memory_recovered") and lane_ok:
+        if not data.get("memory_recovered"):
+            return "BLOCK_NO_RECOVERED_STATE", "No recovered state exists to authorize continuity."
+        if data.get("recovered_lane") is None or data.get("current_lane") is None:
+            return "BLOCK_LANE_UNPROVEN", "Responsibility-lane evidence is incomplete."
+        if data.get("recovered_lane") == data.get("current_lane"):
             return "ALLOW_MATERIAL_ACTION", "State and responsibility continuity both hold."
         return "BLOCK_LANE_MISMATCH", "State continuity and responsibility continuity are independent claims."
 
