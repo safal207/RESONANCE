@@ -96,6 +96,17 @@ jobs:
             --required-score 1.0 \
             --output benchmark-results/pacc-composition-integrity/compensation-mutation-campaign.json
 
+      - name: Run PACC saga topology conformance
+        run: |
+          python benchmarks/portable-authorization-consumption-v0.7/run_saga_topology_conformance.py \
+            --output benchmark-results/pacc-composition-integrity/saga-topology-conformance.json
+
+      - name: Run PACC saga topology mutation campaign
+        run: |
+          python benchmarks/portable-authorization-consumption-v0.7/run_saga_topology_mutation_campaign.py \
+            --required-score 1.0 \
+            --output benchmark-results/pacc-composition-integrity/saga-topology-mutation-campaign.json
+
       - name: Publish PACC summary
         if: always()
         run: |
@@ -117,6 +128,8 @@ jobs:
               ('Settlement finality mutation campaign', 'settlement-finality-mutation-campaign.json'),
               ('Compensation conformance', 'compensation-conformance.json'),
               ('Compensation mutation campaign', 'compensation-mutation-campaign.json'),
+              ('Saga topology conformance', 'saga-topology-conformance.json'),
+              ('Saga topology mutation campaign', 'saga-topology-mutation-campaign.json'),
           ]:
               path = root / name
               if not path.exists():
