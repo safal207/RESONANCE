@@ -208,6 +208,27 @@
         "logical_operation_id": "op-snap-10"
       },
       "expected": {"status": "BLOCK_JOINT_ACTION_NOT_AUTHORIZED", "new_writes": 0, "blocked_write": true, "used_snapshot_ref": "snap-A7-B4"}
+    },
+    {
+      "id": "PACC-SNAP-11",
+      "name": "Aggregate vector exactness cannot override contradictory direct A version evidence",
+      "input": {
+        "authority": "CURRENT",
+        "witness_present": true,
+        "snapshot_ref": "snap-A7-B4",
+        "resource_witnesses": {
+          "A": {"snapshot_ref": "snap-A7-B4", "version": 7, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"snapshot_ref": "snap-A7-B4", "version": 4, "lineage_ref": "lineage-B4", "effect_ref": "effect-B4"}
+        },
+        "current": {
+          "A": {"version": 8, "lineage_ref": "lineage-A7", "effect_ref": "effect-A7"},
+          "B": {"version": 4, "lineage_ref": "lineage-B4", "effect_ref": "effect-B4"}
+        },
+        "vector_relation": "EXACT",
+        "prior_action_outcome": "NONE",
+        "logical_operation_id": "op-snap-11"
+      },
+      "expected": {"status": "REVALIDATE_JOINT_SNAPSHOT", "new_writes": 0, "blocked_write": true, "used_snapshot_ref": "snap-A7-B4"}
     }
   ]
 }
