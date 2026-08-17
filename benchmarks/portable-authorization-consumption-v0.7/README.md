@@ -22,8 +22,13 @@ Normative invariants:
 4. Dispatch must bind the exact decision and canonical action digest.
 5. Outcome evidence must bind the exact dispatch and decision.
 6. A later successful check cannot retroactively legitimize an earlier forbidden side effect.
+7. Two workers that both observed `UNSPENT` may not both consume the same authorization.
+8. Exactly one atomic consume may create the terminal consumption receipt for a single-use authorization.
+9. Only the winning consume may authorize a new dispatch.
+10. A retry with the same `logical_operation_id` must replay the committed result without creating another consume or dispatch.
+11. A different `logical_operation_id` after consumption must fail as already consumed/conflict.
 
-The executable model records side effects as well as verdicts. This makes order mutations observable even when the final verdict would otherwise look safe.
+The executable model records side effects as well as verdicts. This makes order and concurrency mutations observable even when a final status alone would otherwise look safe.
 
 ## Required negative controls
 
@@ -32,15 +37,44 @@ The executable model records side effects as well as verdicts. This makes order 
 - dispatch without a consumption receipt is invalid;
 - mismatched decision/action binding blocks dispatch completion;
 - outcome without dispatch/decision binding is incomplete;
-- valid proof must not be interpreted as present authority or spendability.
+- valid proof must not be interpreted as present authority or spendability;
+- stale `UNSPENT` reads must not turn check-then-set into two successful consumptions;
+- an idempotent replay must not emit a duplicate dispatch;
+- omitting logical-operation identity must be detected by replay controls;
+- a losing concurrent consume must never dispatch.
+
+## Deterministic concurrency model
+
+The race fixtures intentionally avoid scheduler-dependent thread timing. Both workers can be given the same pre-read (`UNSPENT`), then the reference model deterministically interleaves their consume attempts against one authoritative state transition.
+
+This separates two claims:
+
+```text
+both workers observed UNSPENT
+!=
+both workers may commit consumption
+```
+
+The baseline requires an atomic transition. `run_concurrency_mutation_campaign.py` then injects four known-bad semantics:
+
+1. non-atomic check-then-set;
+2. duplicate dispatch on idempotent replay;
+3. idempotency-key / logical-operation identity omission;
+4. loser dispatch after `ALREADY_CONSUMED`.
+
+All scored mutants are required to be killed in CI.
 
 ## Run
 
 ```bash
 python benchmarks/portable-authorization-consumption-v0.7/run_composition_conformance.py
 python benchmarks/portable-authorization-consumption-v0.7/run_order_mutation_campaign.py --required-score 1.0
+python benchmarks/portable-authorization-consumption-v0.7/run_concurrency_conformance.py
+python benchmarks/portable-authorization-consumption-v0.7/run_concurrency_mutation_campaign.py --required-score 1.0
 ```
 
 `run_order_mutation_campaign.py` classifies candidates as `KILLED`, `EQUIVALENT`, `SURVIVED`, or `INVALID`. Only explicitly justified equivalence is excluded from the mutation score; unproven no-difference is `SURVIVED` and fails the gate.
+
+The concurrency campaign is narrower: each listed mutant is a concrete unsafe semantic variant, so any `SURVIVED` mutant fails the gate.
 
 This benchmark is a deterministic reference semantics pack. It is not a certification of any external product or adapter.
