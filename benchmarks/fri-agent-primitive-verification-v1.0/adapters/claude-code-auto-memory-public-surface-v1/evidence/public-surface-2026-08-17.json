@@ -1,0 +1,50 @@
+{
+  "adapter": "claude-code-auto-memory-public-surface",
+  "adapter_version": "1.0",
+  "generated_at": "2026-08-17T07:24:16.710026+00:00",
+  "observed_at": "2026-08-17",
+  "scope": "publicly documented Claude Code auto-memory and hook surface; no local Claude Code runtime execution",
+  "results": [
+    {
+      "scenario_id": "FRI-1",
+      "name": "Memory persisted, source superseded",
+      "verdict": "NOT_OBSERVABLE",
+      "required_observables": [
+        "memory_persists_across_sessions",
+        "memory_source_locator",
+        "memory_supersedes_relation",
+        "memory_current_applicability_verdict"
+      ],
+      "missing_observables": [
+        "memory_source_locator",
+        "memory_supersedes_relation",
+        "memory_current_applicability_verdict"
+      ],
+      "extension_point_present": true,
+      "interpretation": "Public surface is insufficient to prove the invariant; this is not evidence that the runtime violates it."
+    },
+    {
+      "scenario_id": "FRI-5",
+      "name": "Valid verification, stale at use",
+      "verdict": "NOT_OBSERVABLE",
+      "required_observables": [
+        "memory_verification_witness",
+        "memory_verified_state_version_or_digest",
+        "memory_use_time_revalidation_result"
+      ],
+      "missing_observables": [
+        "memory_verification_witness",
+        "memory_verified_state_version_or_digest",
+        "memory_use_time_revalidation_result"
+      ],
+      "extension_point_present": true,
+      "interpretation": "Public surface is insufficient to prove the invariant; this is not evidence that the runtime violates it."
+    }
+  ],
+  "summary": {
+    "observable": 0,
+    "not_observable": 2,
+    "total": 2
+  },
+  "evidence_boundary": "This adapter evaluates public contract observability, not live runtime conformance. NOT_OBSERVABLE != FAIL."
+}
