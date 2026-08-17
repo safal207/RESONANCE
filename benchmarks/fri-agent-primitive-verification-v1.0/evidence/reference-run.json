@@ -1,0 +1,99 @@
+{
+  "article": "I001-RN-FRI / Article 14",
+  "benchmark": "RESONANCE FRI Agent Primitive Verification Conformance Pack",
+  "generated_at": "2026-08-17T07:14:28.049837+00:00",
+  "results": [
+    {
+      "actual": "BLOCK_CURRENT_AUTHORITY",
+      "evidence": {
+        "decision_id": "D1",
+        "persisted": true,
+        "superseded_by": "D2"
+      },
+      "expected": "BLOCK_CURRENT_AUTHORITY",
+      "name": "Memory persisted, source superseded",
+      "passed": true,
+      "reason": "Persistence preserves history, not current authority.",
+      "rule": "memory_supersession",
+      "scenario_id": "FRI-1"
+    },
+    {
+      "actual": "LIVENESS_FAILURE",
+      "evidence": {
+        "instrumented_reads": 4,
+        "observation_records": 0
+      },
+      "expected": "LIVENESS_FAILURE",
+      "name": "Hook configured, collector dead",
+      "passed": true,
+      "reason": "Independent activity exists while the observation ledger is silent.",
+      "rule": "collector_liveness",
+      "scenario_id": "FRI-2"
+    },
+    {
+      "actual": "BLOCK_STALE_OWNER",
+      "evidence": {
+        "current_epoch": 5,
+        "current_owner": "C",
+        "delivered": true,
+        "recipient": "B",
+        "recipient_epoch": 4
+      },
+      "expected": "BLOCK_STALE_OWNER",
+      "name": "Message delivered to stale owner",
+      "passed": true,
+      "reason": "Delivery is transport evidence, not authority-transfer evidence.",
+      "rule": "ownership_epoch",
+      "scenario_id": "FRI-3"
+    },
+    {
+      "actual": "BLOCK_MISSING_COMPLETION_EVIDENCE",
+      "evidence": {
+        "completion_receipt_ref": null,
+        "label": "done",
+        "task": "A"
+      },
+      "expected": "BLOCK_MISSING_COMPLETION_EVIDENCE",
+      "name": "Dependency label without completion evidence",
+      "passed": true,
+      "reason": "A scheduling label is not consequential completion proof.",
+      "rule": "dependency_completion",
+      "scenario_id": "FRI-4"
+    },
+    {
+      "actual": "REVALIDATE",
+      "evidence": {
+        "current_state_version": 18,
+        "scope": "single_use",
+        "verified_state_version": 17
+      },
+      "expected": "REVALIDATE",
+      "name": "Valid verification, stale at use",
+      "passed": true,
+      "reason": "Verification is stale at the point of use.",
+      "rule": "verify_to_use",
+      "scenario_id": "FRI-5"
+    },
+    {
+      "actual": "BLOCK_LANE_MISMATCH",
+      "evidence": {
+        "current_lane": "payments/settlement",
+        "memory_recovered": true,
+        "recovered_lane": "payments/refunds"
+      },
+      "expected": "BLOCK_LANE_MISMATCH",
+      "name": "Recovered state, wrong responsibility lane",
+      "passed": true,
+      "reason": "State continuity and responsibility continuity are independent claims.",
+      "rule": "responsibility_lane",
+      "scenario_id": "FRI-6"
+    }
+  ],
+  "scope": "deterministic reference semantics; not a Claude Code certification",
+  "summary": {
+    "passed": 6,
+    "status": "PASS",
+    "total": 6
+  },
+  "version": "1.0"
+}
