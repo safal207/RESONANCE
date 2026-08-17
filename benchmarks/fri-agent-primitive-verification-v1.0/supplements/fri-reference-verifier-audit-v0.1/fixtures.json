@@ -1,202 +1,138 @@
 {
   "benchmark": "FRI Reference Verifier Integrity Audit",
-  "version": "0.1",
-  "scope": "reference evaluator semantics only; verifies negative, positive, and missing-evidence paths",
+  "version": "0.2",
+  "scope": "reference evaluator semantics only; verifies negative, positive, missing-evidence, and discriminating paths",
   "controls": [
     {
       "id": "FRI-1A",
       "rule": "memory_supersession",
-      "input": {
-        "persisted": true,
-        "superseded_by": "D2"
-      },
+      "input": {"persisted": true, "superseded_by": "D2"},
       "expected": "BLOCK_CURRENT_AUTHORITY"
     },
     {
       "id": "FRI-1B",
       "rule": "memory_supersession",
-      "input": {
-        "persisted": true,
-        "superseded_by": null
-      },
+      "input": {"persisted": true, "superseded_by": null},
       "expected": "ALLOW"
     },
     {
       "id": "FRI-1C",
       "rule": "memory_supersession",
-      "input": {
-        "persisted": false,
-        "superseded_by": null
-      },
+      "input": {"persisted": false, "superseded_by": null},
       "expected": "NO_PERSISTED_MEMORY"
     },
     {
       "id": "FRI-2A",
       "rule": "collector_liveness",
-      "input": {
-        "instrumented_reads": 4,
-        "observation_records": 0
-      },
+      "input": {"instrumented_reads": 4, "observation_records": 0},
       "expected": "LIVENESS_FAILURE"
     },
     {
       "id": "FRI-2B",
       "rule": "collector_liveness",
-      "input": {
-        "instrumented_reads": 4,
-        "observation_records": 4
-      },
+      "input": {"instrumented_reads": 4, "observation_records": 4},
       "expected": "HEALTHY"
     },
     {
       "id": "FRI-2C",
       "rule": "collector_liveness",
-      "input": {
-        "instrumented_reads": 0,
-        "observation_records": 0
-      },
+      "input": {"instrumented_reads": 0, "observation_records": 0},
       "expected": "NOT_OBSERVABLE"
     },
     {
       "id": "FRI-3A",
       "rule": "ownership_epoch",
-      "input": {
-        "delivered": true,
-        "recipient": "B",
-        "recipient_epoch": 4,
-        "current_owner": "C",
-        "current_epoch": 5
-      },
+      "input": {"delivered": true, "recipient": "B", "recipient_epoch": 4, "current_owner": "C", "current_epoch": 5},
       "expected": "BLOCK_STALE_OWNER"
     },
     {
       "id": "FRI-3B",
       "rule": "ownership_epoch",
-      "input": {
-        "delivered": true,
-        "recipient": "C",
-        "recipient_epoch": 5,
-        "current_owner": "C",
-        "current_epoch": 5
-      },
+      "input": {"delivered": true, "recipient": "C", "recipient_epoch": 5, "current_owner": "C", "current_epoch": 5},
       "expected": "ALLOW_MUTATION"
     },
     {
       "id": "FRI-3C",
       "rule": "ownership_epoch",
-      "input": {
-        "delivered": false,
-        "recipient": "C",
-        "recipient_epoch": 5,
-        "current_owner": "C",
-        "current_epoch": 5
-      },
+      "input": {"delivered": false, "recipient": "C", "recipient_epoch": 5, "current_owner": "C", "current_epoch": 5},
       "expected": "BLOCK_NO_DELIVERY"
     },
     {
       "id": "FRI-3D",
       "rule": "ownership_epoch",
-      "input": {
-        "delivered": true,
-        "recipient": "C",
-        "recipient_epoch": null,
-        "current_owner": "C",
-        "current_epoch": 5
-      },
+      "input": {"delivered": true, "recipient": "C", "recipient_epoch": null, "current_owner": "C", "current_epoch": 5},
       "expected": "BLOCK_AUTHORITY_UNPROVEN"
+    },
+    {
+      "id": "FRI-3E",
+      "rule": "ownership_epoch",
+      "input": {"delivered": true, "recipient": "C", "recipient_epoch": 4, "current_owner": "C", "current_epoch": 5},
+      "expected": "BLOCK_STALE_OWNER"
     },
     {
       "id": "FRI-4A",
       "rule": "dependency_completion",
-      "input": {
-        "label": "done",
-        "completion_receipt_ref": null
-      },
+      "input": {"label": "done", "completion_receipt_ref": null},
       "expected": "BLOCK_MISSING_COMPLETION_EVIDENCE"
     },
     {
       "id": "FRI-4B",
       "rule": "dependency_completion",
-      "input": {
-        "label": "done",
-        "completion_receipt_ref": "r1"
-      },
+      "input": {"label": "done", "completion_receipt_ref": "r1"},
       "expected": "ALLOW_DEPENDENT_TASK"
     },
     {
       "id": "FRI-4C",
       "rule": "dependency_completion",
-      "input": {
-        "label": "running",
-        "completion_receipt_ref": null
-      },
+      "input": {"label": "running", "completion_receipt_ref": null},
+      "expected": "BLOCK_DEPENDENCY_NOT_COMPLETE"
+    },
+    {
+      "id": "FRI-4D",
+      "rule": "dependency_completion",
+      "input": {"label": "running", "completion_receipt_ref": "r1"},
       "expected": "BLOCK_DEPENDENCY_NOT_COMPLETE"
     },
     {
       "id": "FRI-5A",
       "rule": "verify_to_use",
-      "input": {
-        "verified_state_version": 17,
-        "current_state_version": 18
-      },
+      "input": {"verified_state_version": 17, "current_state_version": 18},
       "expected": "REVALIDATE"
     },
     {
       "id": "FRI-5B",
       "rule": "verify_to_use",
-      "input": {
-        "verified_state_version": 18,
-        "current_state_version": 18
-      },
+      "input": {"verified_state_version": 18, "current_state_version": 18},
       "expected": "ALLOW"
     },
     {
       "id": "FRI-5C",
       "rule": "verify_to_use",
-      "input": {
-        "verified_state_version": null,
-        "current_state_version": null
-      },
+      "input": {"verified_state_version": null, "current_state_version": null},
       "expected": "BLOCK_MISSING_VERIFICATION_EVIDENCE"
     },
     {
       "id": "FRI-6A",
       "rule": "responsibility_lane",
-      "input": {
-        "memory_recovered": true,
-        "recovered_lane": "payments/refunds",
-        "current_lane": "payments/settlement"
-      },
+      "input": {"memory_recovered": true, "recovered_lane": "payments/refunds", "current_lane": "payments/settlement"},
       "expected": "BLOCK_LANE_MISMATCH"
     },
     {
       "id": "FRI-6B",
       "rule": "responsibility_lane",
-      "input": {
-        "memory_recovered": true,
-        "recovered_lane": "payments/settlement",
-        "current_lane": "payments/settlement"
-      },
+      "input": {"memory_recovered": true, "recovered_lane": "payments/settlement", "current_lane": "payments/settlement"},
       "expected": "ALLOW_MATERIAL_ACTION"
     },
     {
       "id": "FRI-6C",
       "rule": "responsibility_lane",
-      "input": {
-        "memory_recovered": false,
-        "recovered_lane": "payments/settlement",
-        "current_lane": "payments/settlement"
-      },
+      "input": {"memory_recovered": false, "recovered_lane": "payments/settlement", "current_lane": "payments/settlement"},
       "expected": "BLOCK_NO_RECOVERED_STATE"
     },
     {
       "id": "FRI-6D",
       "rule": "responsibility_lane",
-      "input": {
-        "memory_recovered": true,
-        "recovered_lane": null,
-        "current_lane": "payments/settlement"
-      },
+      "input": {"memory_recovered": true, "recovered_lane": null, "current_lane": "payments/settlement"},
       "expected": "BLOCK_LANE_UNPROVEN"
     }
   ]
