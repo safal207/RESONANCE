@@ -118,6 +118,17 @@ jobs:
             --required-score 1.0 \
             --output benchmark-results/pacc-composition-integrity/cross-saga-interference-mutation-campaign.json
 
+      - name: Run PACC ABA lineage conformance
+        run: |
+          python benchmarks/portable-authorization-consumption-v0.7/run_aba_lineage_conformance.py \
+            --output benchmark-results/pacc-composition-integrity/aba-lineage-conformance.json
+
+      - name: Run PACC ABA lineage mutation campaign
+        run: |
+          python benchmarks/portable-authorization-consumption-v0.7/run_aba_lineage_mutation_campaign.py \
+            --required-score 1.0 \
+            --output benchmark-results/pacc-composition-integrity/aba-lineage-mutation-campaign.json
+
       - name: Publish PACC summary
         if: always()
         run: |
@@ -143,6 +154,8 @@ jobs:
               ('Saga topology mutation campaign', 'saga-topology-mutation-campaign.json'),
               ('Cross-saga interference conformance', 'cross-saga-interference-conformance.json'),
               ('Cross-saga interference mutation campaign', 'cross-saga-interference-mutation-campaign.json'),
+              ('ABA lineage conformance', 'aba-lineage-conformance.json'),
+              ('ABA lineage mutation campaign', 'aba-lineage-mutation-campaign.json'),
           ]:
               path = root / name
               if not path.exists():
