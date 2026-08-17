@@ -56,6 +56,12 @@ jobs:
             --required-score 1.0 \
             --output benchmark-results/fri-verifier-integrity/boundary-mutation-campaign.json
 
+      - name: Run order-inversion equivalence campaign
+        run: |
+          python benchmarks/fri-agent-primitive-verification-v1.0/supplements/fri-reference-verifier-audit-v0.1/run_order_inversion_campaign.py \
+            --required-score 1.0 \
+            --output benchmark-results/fri-verifier-integrity/order-inversion-campaign.json
+
       - name: Publish gate summary
         if: always()
         run: |
@@ -70,6 +76,7 @@ jobs:
               ('Verifier self-audit', root / 'verifier-self-audit.json'),
               ('Mutation-kill control', root / 'mutation-kill-control.json'),
               ('Automatic boundary mutation campaign', root / 'boundary-mutation-campaign.json'),
+              ('Order-inversion equivalence campaign', root / 'order-inversion-campaign.json'),
           ]
 
           print('## FRI Verifier Integrity Gate')
@@ -86,7 +93,7 @@ jobs:
               if status is None and 'all_passed' in data:
                   status = 'PASS' if data['all_passed'] else 'FAIL'
               passed = summary.get('passed', summary.get('killed', '—'))
-              total = summary.get('total', '—')
+              total = summary.get('total', summary.get('scored_total', summary.get('total_candidates', '—')))
               print(f'| {name} | {status or "UNKNOWN"} | {passed} | {total} |')
           PY
 
