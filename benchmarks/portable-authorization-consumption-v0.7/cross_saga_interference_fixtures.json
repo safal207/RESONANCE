@@ -1,0 +1,186 @@
+{
+  "version": "0.7",
+  "cases": [
+    {
+      "id": "PACC-XSG-1",
+      "name": "Compensation may apply when the resource is still at the exact effect version it owns",
+      "trigger": "REVERSAL_REQUIRED",
+      "saga_id": "saga-1",
+      "original_effect_ref": "effect-s1",
+      "expected_resource_version": 7,
+      "current_resource_version": 7,
+      "current_effect_ref": "effect-s1",
+      "state_witness_version": 7,
+      "compensation_authorized": true,
+      "compensation_key": "comp-s1",
+      "compensation_state": "NOT_SENT",
+      "expected": {
+        "status": "COMPENSATED",
+        "new_compensations": 1,
+        "used_resource_version": 7,
+        "blocked_overwrite": false
+      }
+    },
+    {
+      "id": "PACC-XSG-2",
+      "name": "Later legitimate write by another saga blocks stale rollback",
+      "trigger": "REVERSAL_REQUIRED",
+      "saga_id": "saga-1",
+      "original_effect_ref": "effect-s1",
+      "expected_resource_version": 7,
+      "current_resource_version": 8,
+      "current_effect_ref": "effect-s2",
+      "state_witness_version": 8,
+      "compensation_authorized": true,
+      "compensation_key": "comp-s1",
+      "compensation_state": "NOT_SENT",
+      "expected": {
+        "status": "BLOCK_STALE_COMPENSATION",
+        "new_compensations": 0,
+        "used_resource_version": 8,
+        "blocked_overwrite": true
+      }
+    },
+    {
+      "id": "PACC-XSG-3",
+      "name": "Stale verify-at-use witness must revalidate before rollback",
+      "trigger": "REVERSAL_REQUIRED",
+      "saga_id": "saga-1",
+      "original_effect_ref": "effect-s1",
+      "expected_resource_version": 8,
+      "current_resource_version": 8,
+      "current_effect_ref": "effect-s1",
+      "state_witness_version": 7,
+      "compensation_authorized": true,
+      "compensation_key": "comp-s1",
+      "compensation_state": "NOT_SENT",
+      "expected": {
+        "status": "REVALIDATE_CURRENT_STATE",
+        "new_compensations": 0,
+        "used_resource_version": 7,
+        "blocked_overwrite": true
+      }
+    },
+    {
+      "id": "PACC-XSG-4",
+      "name": "Matching version without matching current effect binding still blocks rollback",
+      "trigger": "REVERSAL_REQUIRED",
+      "saga_id": "saga-1",
+      "original_effect_ref": "effect-s1",
+      "expected_resource_version": 7,
+      "current_resource_version": 7,
+      "current_effect_ref": "effect-other",
+      "state_witness_version": 7,
+      "compensation_authorized": true,
+      "compensation_key": "comp-s1",
+      "compensation_state": "NOT_SENT",
+      "expected": {
+        "status": "BLOCK_CURRENT_EFFECT_BINDING",
+        "new_compensations": 0,
+        "used_resource_version": 7,
+        "blocked_overwrite": true
+      }
+    },
+    {
+      "id": "PACC-XSG-5",
+      "name": "Current state match does not replace compensation authority",
+      "trigger": "REVERSAL_REQUIRED",
+      "saga_id": "saga-1",
+      "original_effect_ref": "effect-s1",
+      "expected_resource_version": 7,
+      "current_resource_version": 7,
+      "current_effect_ref": "effect-s1",
+      "state_witness_version": 7,
+      "compensation_authorized": false,
+      "compensation_key": "comp-s1",
+      "compensation_state": "NOT_SENT",
+      "expected": {
+        "status": "BLOCK_COMPENSATION_NOT_AUTHORIZED",
+        "new_compensations": 0,
+        "used_resource_version": 7,
+        "blocked_overwrite": true
+      }
+    },
+    {
+      "id": "PACC-XSG-6",
+      "name": "Committed compensation replays without another overwrite",
+      "trigger": "REVERSAL_REQUIRED",
+      "saga_id": "saga-1",
+      "original_effect_ref": "effect-s1",
+      "expected_resource_version": 7,
+      "current_resource_version": 7,
+      "current_effect_ref": "effect-s1",
+      "state_witness_version": 7,
+      "compensation_authorized": true,
+      "compensation_key": "comp-s1",
+      "compensation_state": "COMMITTED",
+      "compensation_receipt": "comp-receipt-s1",
+      "expected": {
+        "status": "IDEMPOTENT_COMPENSATION_REPLAY",
+        "new_compensations": 0,
+        "used_resource_version": 7,
+        "blocked_overwrite": false
+      }
+    },
+    {
+      "id": "PACC-XSG-7",
+      "name": "Unknown compensation outcome blocks another cross-saga write",
+      "trigger": "REVERSAL_REQUIRED",
+      "saga_id": "saga-1",
+      "original_effect_ref": "effect-s1",
+      "expected_resource_version": 7,
+      "current_resource_version": 7,
+      "current_effect_ref": "effect-s1",
+      "state_witness_version": 7,
+      "compensation_authorized": true,
+      "compensation_key": "comp-s1",
+      "compensation_state": "UNKNOWN",
+      "expected": {
+        "status": "RECONCILE_COMPENSATION_REQUIRED",
+        "new_compensations": 0,
+        "used_resource_version": 7,
+        "blocked_overwrite": true
+      }
+    },
+    {
+      "id": "PACC-XSG-8",
+      "name": "Missing current-state witness fails closed",
+      "trigger": "REVERSAL_REQUIRED",
+      "saga_id": "saga-1",
+      "original_effect_ref": "effect-s1",
+      "expected_resource_version": 7,
+      "current_resource_version": 7,
+      "current_effect_ref": "effect-s1",
+      "state_witness_version": null,
+      "compensation_authorized": true,
+      "compensation_key": "comp-s1",
+      "compensation_state": "NOT_SENT",
+      "expected": {
+        "status": "BLOCK_MISSING_CURRENT_STATE_WITNESS",
+        "new_compensations": 0,
+        "used_resource_version": null,
+        "blocked_overwrite": true
+      }
+    },
+    {
+      "id": "PACC-XSG-9",
+      "name": "Missing durable compensation identity fails closed even on current state",
+      "trigger": "REVERSAL_REQUIRED",
+      "saga_id": "saga-1",
+      "original_effect_ref": "effect-s1",
+      "expected_resource_version": 7,
+      "current_resource_version": 7,
+      "current_effect_ref": "effect-s1",
+      "state_witness_version": 7,
+      "compensation_authorized": true,
+      "compensation_key": null,
+      "compensation_state": "NOT_SENT",
+      "expected": {
+        "status": "BLOCK_MISSING_COMPENSATION_IDEMPOTENCY_KEY",
+        "new_compensations": 0,
+        "used_resource_version": 7,
+        "blocked_overwrite": true
+      }
+    }
+  ]
+}
