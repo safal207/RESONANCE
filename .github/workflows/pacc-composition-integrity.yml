@@ -129,6 +129,17 @@ jobs:
             --required-score 1.0 \
             --output benchmark-results/pacc-composition-integrity/aba-lineage-mutation-campaign.json
 
+      - name: Run PACC multi-resource causal snapshot conformance
+        run: |
+          python benchmarks/portable-authorization-consumption-v0.7/run_multi_resource_snapshot_conformance.py \
+            --output benchmark-results/pacc-composition-integrity/multi-resource-snapshot-conformance.json
+
+      - name: Run PACC multi-resource causal snapshot mutation campaign
+        run: |
+          python benchmarks/portable-authorization-consumption-v0.7/run_multi_resource_snapshot_mutation_campaign.py \
+            --required-score 1.0 \
+            --output benchmark-results/pacc-composition-integrity/multi-resource-snapshot-mutation-campaign.json
+
       - name: Publish PACC summary
         if: always()
         run: |
@@ -156,6 +167,8 @@ jobs:
               ('Cross-saga interference mutation campaign', 'cross-saga-interference-mutation-campaign.json'),
               ('ABA lineage conformance', 'aba-lineage-conformance.json'),
               ('ABA lineage mutation campaign', 'aba-lineage-mutation-campaign.json'),
+              ('Multi-resource causal snapshot conformance', 'multi-resource-snapshot-conformance.json'),
+              ('Multi-resource causal snapshot mutation campaign', 'multi-resource-snapshot-mutation-campaign.json'),
           ]:
               path = root / name
               if not path.exists():
