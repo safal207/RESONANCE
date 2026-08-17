@@ -1,0 +1,70 @@
+name: RESONANCE — PACC Composition Integrity
+
+on:
+  push:
+    paths:
+      - 'benchmarks/portable-authorization-consumption-v0.7/**'
+      - '.github/workflows/pacc-composition-integrity.yml'
+  pull_request:
+    paths:
+      - 'benchmarks/portable-authorization-consumption-v0.7/**'
+      - '.github/workflows/pacc-composition-integrity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pacc-composition-integrity:
+    name: PACC composition integrity
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout RESONANCE
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Run PACC composition conformance
+        run: |
+          mkdir -p benchmark-results/pacc-composition-integrity
+          python benchmarks/portable-authorization-consumption-v0.7/run_composition_conformance.py \
+            --output benchmark-results/pacc-composition-integrity/composition-conformance.json
+
+      - name: Run PACC order mutation campaign
+        run: |
+          python benchmarks/portable-authorization-consumption-v0.7/run_order_mutation_campaign.py \
+            --required-score 1.0 \
+            --output benchmark-results/pacc-composition-integrity/order-mutation-campaign.json
+
+      - name: Publish PACC summary
+        if: always()
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+          root = Path('benchmark-results/pacc-composition-integrity')
+          print('## PACC Composition Integrity')
+          for label, name in [
+              ('Composition conformance', 'composition-conformance.json'),
+              ('Order mutation campaign', 'order-mutation-campaign.json'),
+          ]:
+              path = root / name
+              if not path.exists():
+                  print(f'- {label}: NOT_RUN')
+                  continue
+              s = json.loads(path.read_text(encoding='utf-8')).get('summary', {})
+              print(f'- {label}: {s.get("status", "UNKNOWN")} — {s}')
+          PY
+
+      - name: Upload PACC evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-pacc-composition-integrity
+          path: benchmark-results/pacc-composition-integrity/
+          if-no-files-found: warn
