@@ -1,0 +1,74 @@
+{
+  "benchmark": "RESONANCE FRI Agent Primitive Verification Conformance Pack",
+  "version": "1.0",
+  "article": "I001-RN-FRI / Article 14",
+  "fixtures": [
+    {
+      "id": "FRI-1",
+      "name": "Memory persisted, source superseded",
+      "rule": "memory_supersession",
+      "input": {
+        "decision_id": "D1",
+        "persisted": true,
+        "superseded_by": "D2"
+      },
+      "expected": "BLOCK_CURRENT_AUTHORITY"
+    },
+    {
+      "id": "FRI-2",
+      "name": "Hook configured, collector dead",
+      "rule": "collector_liveness",
+      "input": {
+        "instrumented_reads": 4,
+        "observation_records": 0
+      },
+      "expected": "LIVENESS_FAILURE"
+    },
+    {
+      "id": "FRI-3",
+      "name": "Message delivered to stale owner",
+      "rule": "ownership_epoch",
+      "input": {
+        "delivered": true,
+        "recipient": "B",
+        "recipient_epoch": 4,
+        "current_owner": "C",
+        "current_epoch": 5
+      },
+      "expected": "BLOCK_STALE_OWNER"
+    },
+    {
+      "id": "FRI-4",
+      "name": "Dependency label without completion evidence",
+      "rule": "dependency_completion",
+      "input": {
+        "task": "A",
+        "label": "done",
+        "completion_receipt_ref": null
+      },
+      "expected": "BLOCK_MISSING_COMPLETION_EVIDENCE"
+    },
+    {
+      "id": "FRI-5",
+      "name": "Valid verification, stale at use",
+      "rule": "verify_to_use",
+      "input": {
+        "verified_state_version": 17,
+        "current_state_version": 18,
+        "scope": "single_use"
+      },
+      "expected": "REVALIDATE"
+    },
+    {
+      "id": "FRI-6",
+      "name": "Recovered state, wrong responsibility lane",
+      "rule": "responsibility_lane",
+      "input": {
+        "memory_recovered": true,
+        "recovered_lane": "payments/refunds",
+        "current_lane": "payments/settlement"
+      },
+      "expected": "BLOCK_LANE_MISMATCH"
+    }
+  ]
+}
