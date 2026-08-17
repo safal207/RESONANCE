@@ -1,0 +1,45 @@
+{
+  "adapter": "claude-code-auto-memory-public-surface",
+  "version": "1.0",
+  "observed_at": "2026-08-17",
+  "scope": "publicly documented Claude Code auto-memory and hook surface; no local Claude Code runtime execution",
+  "sources": [
+    {
+      "kind": "official_docs",
+      "url": "https://code.claude.com/docs/en/memory#auto-memory",
+      "claim": "Auto memory persists per-project notes across sessions; MEMORY.md is loaded at session start; topic files load on demand; files with YAML frontmatter receive a modified timestamp when Claude writes them."
+    },
+    {
+      "kind": "official_docs",
+      "url": "https://code.claude.com/docs/en/hooks",
+      "claim": "PreToolUse hooks can block tool calls; lifecycle hooks expose session and compaction seams."
+    },
+    {
+      "kind": "maintainer_comment",
+      "url": "https://github.com/anthropics/claude-code/issues/34556#issuecomment-5311260238",
+      "claim": "The persistence-layer issue was closed as completed, with specific gaps invited as separate issues."
+    }
+  ],
+  "observables": {
+    "memory_persists_across_sessions": true,
+    "per_project_memory_directory": true,
+    "memory_index_loaded_at_session_start": true,
+    "topic_files_loaded_on_demand": true,
+    "memory_modified_timestamp_if_frontmatter": true,
+    "memory_source_locator": false,
+    "memory_source_digest": false,
+    "memory_supersedes_relation": false,
+    "memory_current_applicability_verdict": false,
+    "memory_authority_state": false,
+    "memory_verification_witness": false,
+    "memory_verified_state_version_or_digest": false,
+    "memory_use_time_revalidation_result": false,
+    "memory_specific_pre_use_decision_event": false,
+    "generic_pretooluse_hook_can_block": true
+  },
+  "notes": [
+    "A modified timestamp is a freshness hint, not a source identity, lineage edge, applicability verdict, or action authority token.",
+    "Generic PreToolUse hooks provide an extension point for an external verifier, but the documented auto-memory surface does not itself expose the provenance/state-binding fields required by FRI-1 or FRI-5.",
+    "Missing documentation is classified as NOT_OBSERVABLE, not FAIL."
+  ]
+}
