@@ -1,0 +1,84 @@
+{
+  "benchmark": "PACC Concurrent Consumption and Idempotency",
+  "version": "0.7",
+  "fixtures": [
+    {
+      "id": "PACC-RACE-1",
+      "name": "Two different operations race after both observe UNSPENT",
+      "input": {
+        "concurrent_snapshot": true,
+        "attempts": [
+          {"worker": "W1", "operation_id": "op-1", "pre_read": "UNSPENT"},
+          {"worker": "W2", "operation_id": "op-2", "pre_read": "UNSPENT"}
+        ]
+      },
+      "expected": {
+        "attempt_statuses": ["CONSUMED", "ALREADY_CONSUMED"],
+        "new_consumptions": 1,
+        "new_dispatches": 1,
+        "dispatch_workers": ["W1"],
+        "final_consumed_by_operation": "op-1"
+      }
+    },
+    {
+      "id": "PACC-RACE-2",
+      "name": "Same logical operation races from two workers",
+      "input": {
+        "concurrent_snapshot": true,
+        "attempts": [
+          {"worker": "W1", "operation_id": "op-1", "pre_read": "UNSPENT"},
+          {"worker": "W2", "operation_id": "op-1", "pre_read": "UNSPENT"}
+        ]
+      },
+      "expected": {
+        "attempt_statuses": ["CONSUMED", "IDEMPOTENT_REPLAY"],
+        "new_consumptions": 1,
+        "new_dispatches": 1,
+        "dispatch_workers": ["W1"],
+        "final_consumed_by_operation": "op-1"
+      }
+    },
+    {
+      "id": "PACC-RACE-3",
+      "name": "Replay of already completed logical operation is idempotent",
+      "input": {
+        "initial_consumption": {
+          "operation_id": "op-1",
+          "consumption_ref": "consume-op-1",
+          "dispatch_ref": "dispatch-op-1"
+        },
+        "attempts": [
+          {"worker": "W2", "operation_id": "op-1"}
+        ]
+      },
+      "expected": {
+        "attempt_statuses": ["IDEMPOTENT_REPLAY"],
+        "new_consumptions": 0,
+        "new_dispatches": 0,
+        "dispatch_workers": [],
+        "final_consumed_by_operation": "op-1"
+      }
+    },
+    {
+      "id": "PACC-RACE-4",
+      "name": "Different logical operation after consumption is blocked",
+      "input": {
+        "initial_consumption": {
+          "operation_id": "op-1",
+          "consumption_ref": "consume-op-1",
+          "dispatch_ref": "dispatch-op-1"
+        },
+        "attempts": [
+          {"worker": "W2", "operation_id": "op-2"}
+        ]
+      },
+      "expected": {
+        "attempt_statuses": ["ALREADY_CONSUMED"],
+        "new_consumptions": 0,
+        "new_dispatches": 0,
+        "dispatch_workers": [],
+        "final_consumed_by_operation": "op-1"
+      }
+    }
+  ]
+}
