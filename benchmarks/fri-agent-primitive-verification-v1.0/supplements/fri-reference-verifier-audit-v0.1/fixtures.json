@@ -1,7 +1,7 @@
 {
   "benchmark": "FRI Reference Verifier Integrity Audit",
-  "version": "0.2",
-  "scope": "reference evaluator semantics only; verifies negative, positive, missing-evidence, and discriminating paths",
+  "version": "0.3",
+  "scope": "reference evaluator semantics only; verifies negative, positive, missing-evidence, discriminating, and guard-precedence paths",
   "controls": [
     {
       "id": "FRI-1A",
@@ -70,6 +70,12 @@
       "expected": "BLOCK_STALE_OWNER"
     },
     {
+      "id": "FRI-3F",
+      "rule": "ownership_epoch",
+      "input": {"delivered": false, "recipient": "C", "recipient_epoch": null, "current_owner": "C", "current_epoch": 5},
+      "expected": "BLOCK_NO_DELIVERY"
+    },
+    {
       "id": "FRI-4A",
       "rule": "dependency_completion",
       "input": {"label": "done", "completion_receipt_ref": null},
@@ -134,6 +140,12 @@
       "rule": "responsibility_lane",
       "input": {"memory_recovered": true, "recovered_lane": null, "current_lane": "payments/settlement"},
       "expected": "BLOCK_LANE_UNPROVEN"
+    },
+    {
+      "id": "FRI-6E",
+      "rule": "responsibility_lane",
+      "input": {"memory_recovered": false, "recovered_lane": null, "current_lane": "payments/settlement"},
+      "expected": "BLOCK_NO_RECOVERED_STATE"
     }
   ]
 }
