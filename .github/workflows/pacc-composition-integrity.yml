@@ -41,6 +41,17 @@ jobs:
             --required-score 1.0 \
             --output benchmark-results/pacc-composition-integrity/order-mutation-campaign.json
 
+      - name: Run PACC concurrent consumption conformance
+        run: |
+          python benchmarks/portable-authorization-consumption-v0.7/run_concurrency_conformance.py \
+            --output benchmark-results/pacc-composition-integrity/concurrency-conformance.json
+
+      - name: Run PACC concurrency mutation campaign
+        run: |
+          python benchmarks/portable-authorization-consumption-v0.7/run_concurrency_mutation_campaign.py \
+            --required-score 1.0 \
+            --output benchmark-results/pacc-composition-integrity/concurrency-mutation-campaign.json
+
       - name: Publish PACC summary
         if: always()
         run: |
@@ -52,6 +63,8 @@ jobs:
           for label, name in [
               ('Composition conformance', 'composition-conformance.json'),
               ('Order mutation campaign', 'order-mutation-campaign.json'),
+              ('Concurrent consumption conformance', 'concurrency-conformance.json'),
+              ('Concurrency mutation campaign', 'concurrency-mutation-campaign.json'),
           ]:
               path = root / name
               if not path.exists():
