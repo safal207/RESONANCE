@@ -78,6 +78,6 @@ The campaign attempts to survive by:
 - automatically compensating an irreversible participant;
 - duplicating a participant write on recovery replay.
 
-CI requires mutation score `1.0` with zero survivors.
+CI requires mutation score `1.0` with zero survivors. The partial-commit pack has its own fail-closed workflow, while benchmark-path changes also trigger the existing PACC composition workflow; exact-head evidence should require both to stay green.
 
 Scope remains deterministic reference semantics. Passing this pack does not certify an external database, transaction coordinator, consensus protocol, payment rail, or product as providing atomic distributed commits.
