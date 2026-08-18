@@ -1,0 +1,76 @@
+name: RESONANCE — PACC Partial Distributed Commit Integrity
+
+on:
+  push:
+    paths:
+      - 'benchmarks/portable-authorization-consumption-v0.7/partial_distributed_commit_fixtures.json'
+      - 'benchmarks/portable-authorization-consumption-v0.7/run_partial_distributed_commit_conformance.py'
+      - 'benchmarks/portable-authorization-consumption-v0.7/run_partial_distributed_commit_mutation_campaign.py'
+      - 'benchmarks/portable-authorization-consumption-v0.7/PARTIAL_DISTRIBUTED_COMMIT.md'
+      - '.github/workflows/pacc-partial-distributed-commit-integrity.yml'
+  pull_request:
+    paths:
+      - 'benchmarks/portable-authorization-consumption-v0.7/partial_distributed_commit_fixtures.json'
+      - 'benchmarks/portable-authorization-consumption-v0.7/run_partial_distributed_commit_conformance.py'
+      - 'benchmarks/portable-authorization-consumption-v0.7/run_partial_distributed_commit_mutation_campaign.py'
+      - 'benchmarks/portable-authorization-consumption-v0.7/PARTIAL_DISTRIBUTED_COMMIT.md'
+      - '.github/workflows/pacc-partial-distributed-commit-integrity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  partial-distributed-commit-integrity:
+    name: PACC partial distributed commit integrity
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout RESONANCE
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Run PACC partial distributed commit conformance
+        run: |
+          mkdir -p benchmark-results/pacc-partial-distributed-commit-integrity
+          python benchmarks/portable-authorization-consumption-v0.7/run_partial_distributed_commit_conformance.py \
+            --output benchmark-results/pacc-partial-distributed-commit-integrity/conformance.json
+
+      - name: Run PACC partial distributed commit mutation campaign
+        run: |
+          python benchmarks/portable-authorization-consumption-v0.7/run_partial_distributed_commit_mutation_campaign.py \
+            --required-score 1.0 \
+            --output benchmark-results/pacc-partial-distributed-commit-integrity/mutation-campaign.json
+
+      - name: Publish PACC partial distributed commit summary
+        if: always()
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from pathlib import Path
+          root = Path('benchmark-results/pacc-partial-distributed-commit-integrity')
+          print('## PACC Partial Distributed Commit Integrity')
+          for label, name in [
+              ('Partial distributed commit conformance', 'conformance.json'),
+              ('Partial distributed commit mutation campaign', 'mutation-campaign.json'),
+          ]:
+              path = root / name
+              if not path.exists():
+                  print(f'- {label}: NOT_RUN')
+                  continue
+              summary = json.loads(path.read_text(encoding='utf-8')).get('summary', {})
+              print(f'- {label}: {summary.get("status", "UNKNOWN")} — {summary}')
+          PY
+
+      - name: Upload PACC partial distributed commit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resonance-pacc-partial-distributed-commit-integrity
+          path: benchmark-results/pacc-partial-distributed-commit-integrity/
+          if-no-files-found: warn
