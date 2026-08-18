@@ -1,0 +1,175 @@
+{
+  "version": "0.7",
+  "benchmark": "PACC Coordinator Failover and Split-Brain Fencing",
+  "scope": "deterministic coordinator failover, recovery epoch, fencing token, verify-at-use, participant-state, authority, replay, and late-ack semantics; not an external consensus or lease-system certification",
+  "controls": [
+    {
+      "id": "PACC-SBF-1",
+      "name": "Current coordinator with current epoch and token may write one missing participant",
+      "input": {
+        "operation_id": "op-sbf-1", "commit_set_ref": "cs-1", "coordinator_id": "coord-B",
+        "presented_epoch": 8, "presented_fencing_token": "fence-8-B",
+        "current_coordinator_id": "coord-B", "current_epoch": 8, "current_fencing_token": "fence-8-B",
+        "fencing_evidence_present": true,
+        "fencing_binding": {"operation_id": "op-sbf-1", "commit_set_ref": "cs-1", "coordinator_id": "coord-B", "epoch": 8},
+        "recovery_authority": "CURRENT", "participant_state": "NOT_COMMITTED", "joint_world": "CURRENT",
+        "prior_recovery_outcome": "NONE", "requested_action": "COMPLETE_FORWARD"
+      },
+      "expected": {"status": "ALLOW_FENCED_PARTICIPANT_WRITE", "new_writes": 1, "coordinator_updates": 1, "used_epoch": 8, "used_fencing_token": "fence-8-B"}
+    },
+    {
+      "id": "PACC-SBF-2",
+      "name": "Old coordinator epoch is fenced after takeover",
+      "input": {
+        "operation_id": "op-sbf-2", "commit_set_ref": "cs-2", "coordinator_id": "coord-A",
+        "presented_epoch": 7, "presented_fencing_token": "fence-7-A",
+        "current_coordinator_id": "coord-B", "current_epoch": 8, "current_fencing_token": "fence-8-B",
+        "fencing_evidence_present": true,
+        "fencing_binding": {"operation_id": "op-sbf-2", "commit_set_ref": "cs-2", "coordinator_id": "coord-A", "epoch": 7},
+        "recovery_authority": "CURRENT", "participant_state": "NOT_COMMITTED", "joint_world": "CURRENT",
+        "prior_recovery_outcome": "NONE", "requested_action": "COMPLETE_FORWARD"
+      },
+      "expected": {"status": "BLOCK_STALE_RECOVERY_EPOCH", "new_writes": 0, "coordinator_updates": 0, "used_epoch": 7, "used_fencing_token": "fence-7-A"}
+    },
+    {
+      "id": "PACC-SBF-3",
+      "name": "Correct epoch with wrong fencing token is rejected",
+      "input": {
+        "operation_id": "op-sbf-3", "commit_set_ref": "cs-3", "coordinator_id": "coord-B",
+        "presented_epoch": 8, "presented_fencing_token": "wrong-token",
+        "current_coordinator_id": "coord-B", "current_epoch": 8, "current_fencing_token": "fence-8-B",
+        "fencing_evidence_present": true,
+        "fencing_binding": {"operation_id": "op-sbf-3", "commit_set_ref": "cs-3", "coordinator_id": "coord-B", "epoch": 8},
+        "recovery_authority": "CURRENT", "participant_state": "NOT_COMMITTED", "joint_world": "CURRENT",
+        "prior_recovery_outcome": "NONE", "requested_action": "COMPLETE_FORWARD"
+      },
+      "expected": {"status": "BLOCK_FENCING_TOKEN_MISMATCH", "new_writes": 0, "coordinator_updates": 0, "used_epoch": 8, "used_fencing_token": "wrong-token"}
+    },
+    {
+      "id": "PACC-SBF-4",
+      "name": "Different coordinator identity cannot act with another coordinator current fence",
+      "input": {
+        "operation_id": "op-sbf-4", "commit_set_ref": "cs-4", "coordinator_id": "coord-A",
+        "presented_epoch": 8, "presented_fencing_token": "fence-8-B",
+        "current_coordinator_id": "coord-B", "current_epoch": 8, "current_fencing_token": "fence-8-B",
+        "fencing_evidence_present": true,
+        "fencing_binding": {"operation_id": "op-sbf-4", "commit_set_ref": "cs-4", "coordinator_id": "coord-A", "epoch": 8},
+        "recovery_authority": "CURRENT", "participant_state": "NOT_COMMITTED", "joint_world": "CURRENT",
+        "prior_recovery_outcome": "NONE", "requested_action": "COMPLETE_FORWARD"
+      },
+      "expected": {"status": "BLOCK_STALE_COORDINATOR", "new_writes": 0, "coordinator_updates": 0, "used_epoch": 8, "used_fencing_token": "fence-8-B"}
+    },
+    {
+      "id": "PACC-SBF-5",
+      "name": "Same coordinator identity from an older recovery session is still fenced by epoch",
+      "input": {
+        "operation_id": "op-sbf-5", "commit_set_ref": "cs-5", "coordinator_id": "coord-A",
+        "presented_epoch": 7, "presented_fencing_token": "fence-7-A-old",
+        "current_coordinator_id": "coord-A", "current_epoch": 8, "current_fencing_token": "fence-8-A-new",
+        "fencing_evidence_present": true,
+        "fencing_binding": {"operation_id": "op-sbf-5", "commit_set_ref": "cs-5", "coordinator_id": "coord-A", "epoch": 7},
+        "recovery_authority": "CURRENT", "participant_state": "NOT_COMMITTED", "joint_world": "CURRENT",
+        "prior_recovery_outcome": "NONE", "requested_action": "COMPLETE_FORWARD"
+      },
+      "expected": {"status": "BLOCK_STALE_RECOVERY_EPOCH", "new_writes": 0, "coordinator_updates": 0, "used_epoch": 7, "used_fencing_token": "fence-7-A-old"}
+    },
+    {
+      "id": "PACC-SBF-6",
+      "name": "Missing durable fencing evidence fails closed",
+      "input": {
+        "operation_id": "op-sbf-6", "commit_set_ref": "cs-6", "coordinator_id": "coord-B",
+        "presented_epoch": 8, "presented_fencing_token": null,
+        "current_coordinator_id": "coord-B", "current_epoch": 8, "current_fencing_token": "fence-8-B",
+        "fencing_evidence_present": false, "fencing_binding": null,
+        "recovery_authority": "CURRENT", "participant_state": "NOT_COMMITTED", "joint_world": "CURRENT",
+        "prior_recovery_outcome": "NONE", "requested_action": "COMPLETE_FORWARD"
+      },
+      "expected": {"status": "BLOCK_FENCING_EVIDENCE_MISSING", "new_writes": 0, "coordinator_updates": 0, "used_epoch": 8, "used_fencing_token": null}
+    },
+    {
+      "id": "PACC-SBF-7",
+      "name": "Fence must bind exact distributed operation, commit set, coordinator and epoch",
+      "input": {
+        "operation_id": "op-sbf-7", "commit_set_ref": "cs-7", "coordinator_id": "coord-B",
+        "presented_epoch": 8, "presented_fencing_token": "fence-8-B",
+        "current_coordinator_id": "coord-B", "current_epoch": 8, "current_fencing_token": "fence-8-B",
+        "fencing_evidence_present": true,
+        "fencing_binding": {"operation_id": "other-op", "commit_set_ref": "cs-7", "coordinator_id": "coord-B", "epoch": 8},
+        "recovery_authority": "CURRENT", "participant_state": "NOT_COMMITTED", "joint_world": "CURRENT",
+        "prior_recovery_outcome": "NONE", "requested_action": "COMPLETE_FORWARD"
+      },
+      "expected": {"status": "BLOCK_FENCING_BINDING", "new_writes": 0, "coordinator_updates": 0, "used_epoch": 8, "used_fencing_token": "fence-8-B"}
+    },
+    {
+      "id": "PACC-SBF-8",
+      "name": "Current fence does not replace current recovery authority",
+      "input": {
+        "operation_id": "op-sbf-8", "commit_set_ref": "cs-8", "coordinator_id": "coord-B",
+        "presented_epoch": 8, "presented_fencing_token": "fence-8-B",
+        "current_coordinator_id": "coord-B", "current_epoch": 8, "current_fencing_token": "fence-8-B",
+        "fencing_evidence_present": true,
+        "fencing_binding": {"operation_id": "op-sbf-8", "commit_set_ref": "cs-8", "coordinator_id": "coord-B", "epoch": 8},
+        "recovery_authority": "REVOKED", "participant_state": "NOT_COMMITTED", "joint_world": "CURRENT",
+        "prior_recovery_outcome": "NONE", "requested_action": "COMPLETE_FORWARD"
+      },
+      "expected": {"status": "BLOCK_RECOVERY_NOT_AUTHORIZED", "new_writes": 0, "coordinator_updates": 0, "used_epoch": 8, "used_fencing_token": "fence-8-B"}
+    },
+    {
+      "id": "PACC-SBF-9",
+      "name": "Current coordinator still reconciles UNKNOWN participant outcome before writing",
+      "input": {
+        "operation_id": "op-sbf-9", "commit_set_ref": "cs-9", "coordinator_id": "coord-B",
+        "presented_epoch": 8, "presented_fencing_token": "fence-8-B",
+        "current_coordinator_id": "coord-B", "current_epoch": 8, "current_fencing_token": "fence-8-B",
+        "fencing_evidence_present": true,
+        "fencing_binding": {"operation_id": "op-sbf-9", "commit_set_ref": "cs-9", "coordinator_id": "coord-B", "epoch": 8},
+        "recovery_authority": "CURRENT", "participant_state": "UNKNOWN", "joint_world": "CURRENT",
+        "prior_recovery_outcome": "NONE", "requested_action": "COMPLETE_FORWARD"
+      },
+      "expected": {"status": "RECONCILE_PARTICIPANT_REQUIRED", "new_writes": 0, "coordinator_updates": 0, "used_epoch": 8, "used_fencing_token": "fence-8-B"}
+    },
+    {
+      "id": "PACC-SBF-10",
+      "name": "Already committed recovery outcome replays without another participant write",
+      "input": {
+        "operation_id": "op-sbf-10", "commit_set_ref": "cs-10", "coordinator_id": "coord-B",
+        "presented_epoch": 8, "presented_fencing_token": "fence-8-B",
+        "current_coordinator_id": "coord-B", "current_epoch": 8, "current_fencing_token": "fence-8-B",
+        "fencing_evidence_present": true,
+        "fencing_binding": {"operation_id": "op-sbf-10", "commit_set_ref": "cs-10", "coordinator_id": "coord-B", "epoch": 8},
+        "recovery_authority": "CURRENT", "participant_state": "COMMITTED", "joint_world": "CURRENT",
+        "prior_recovery_outcome": "COMMITTED", "requested_action": "COMPLETE_FORWARD"
+      },
+      "expected": {"status": "IDEMPOTENT_FENCED_RECOVERY_REPLAY", "new_writes": 0, "coordinator_updates": 0, "used_epoch": 8, "used_fencing_token": "fence-8-B"}
+    },
+    {
+      "id": "PACC-SBF-11",
+      "name": "Late acknowledgement from fenced coordinator cannot regress current coordinator state",
+      "input": {
+        "operation_id": "op-sbf-11", "commit_set_ref": "cs-11", "coordinator_id": "coord-B",
+        "presented_epoch": 8, "presented_fencing_token": "fence-8-B",
+        "current_coordinator_id": "coord-B", "current_epoch": 8, "current_fencing_token": "fence-8-B",
+        "fencing_evidence_present": true,
+        "fencing_binding": {"operation_id": "op-sbf-11", "commit_set_ref": "cs-11", "coordinator_id": "coord-B", "epoch": 8},
+        "recovery_authority": "CURRENT", "participant_state": "COMMITTED", "joint_world": "CURRENT",
+        "prior_recovery_outcome": "NONE", "requested_action": "APPLY_LATE_ACK",
+        "late_ack": {"coordinator_id": "coord-A", "epoch": 7, "fencing_token": "fence-7-A", "status": "COMMITTED"}
+      },
+      "expected": {"status": "IGNORE_STALE_COORDINATOR_ACK", "new_writes": 0, "coordinator_updates": 0, "used_epoch": 8, "used_fencing_token": "fence-8-B"}
+    },
+    {
+      "id": "PACC-SBF-12",
+      "name": "Current fence does not authorize a write against a stale joint world",
+      "input": {
+        "operation_id": "op-sbf-12", "commit_set_ref": "cs-12", "coordinator_id": "coord-B",
+        "presented_epoch": 8, "presented_fencing_token": "fence-8-B",
+        "current_coordinator_id": "coord-B", "current_epoch": 8, "current_fencing_token": "fence-8-B",
+        "fencing_evidence_present": true,
+        "fencing_binding": {"operation_id": "op-sbf-12", "commit_set_ref": "cs-12", "coordinator_id": "coord-B", "epoch": 8},
+        "recovery_authority": "CURRENT", "participant_state": "NOT_COMMITTED", "joint_world": "STALE",
+        "prior_recovery_outcome": "NONE", "requested_action": "COMPLETE_FORWARD"
+      },
+      "expected": {"status": "REVALIDATE_DISTRIBUTED_TRANSITION", "new_writes": 0, "coordinator_updates": 0, "used_epoch": 8, "used_fencing_token": "fence-8-B"}
+    }
+  ]
+}
