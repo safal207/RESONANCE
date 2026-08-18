@@ -1,0 +1,248 @@
+{
+  "version": "0.7",
+  "scope": "deterministic partial distributed commit and coordinator recovery semantics; not an external transaction-manager certification",
+  "controls": [
+    {
+      "id": "PACC-PDC-1",
+      "name": "Both participants committed before coordinator crash; recover complete from bound receipts",
+      "input": {
+        "operation_id": "op-joint-1",
+        "idempotency_key": "idem-joint-1",
+        "commit_set_ref": "commitset-1",
+        "coordinator_phase": "COMMITTING",
+        "recovery_policy": "COMPLETE_FORWARD",
+        "current_snapshot_valid": true,
+        "completion_authority": "CURRENT",
+        "compensation_authority": "CURRENT",
+        "irreversible_participants": [],
+        "prior_recovery_outcome": "NONE",
+        "expected_effects": {"A": "effect-A-1", "B": "effect-B-1"},
+        "participants": {
+          "A": {"state": "COMMITTED", "receipt_ref": "receipt-A-1", "operation_id": "op-joint-1", "commit_set_ref": "commitset-1", "effect_ref": "effect-A-1"},
+          "B": {"state": "COMMITTED", "receipt_ref": "receipt-B-1", "operation_id": "op-joint-1", "commit_set_ref": "commitset-1", "effect_ref": "effect-B-1"}
+        }
+      },
+      "expected": {"status": "RECOVERED_COMPLETE", "new_writes": 0, "new_compensations": 0, "coordinator_updates": 1, "touched_participants": [], "used_operation_id": "op-joint-1"}
+    },
+    {
+      "id": "PACC-PDC-2",
+      "name": "A committed and B proven not committed; complete forward writes only B",
+      "input": {
+        "operation_id": "op-joint-2",
+        "idempotency_key": "idem-joint-2",
+        "commit_set_ref": "commitset-2",
+        "coordinator_phase": "COMMITTING",
+        "recovery_policy": "COMPLETE_FORWARD",
+        "current_snapshot_valid": true,
+        "completion_authority": "CURRENT",
+        "compensation_authority": "CURRENT",
+        "irreversible_participants": [],
+        "prior_recovery_outcome": "NONE",
+        "expected_effects": {"A": "effect-A-2", "B": "effect-B-2"},
+        "participants": {
+          "A": {"state": "COMMITTED", "receipt_ref": "receipt-A-2", "operation_id": "op-joint-2", "commit_set_ref": "commitset-2", "effect_ref": "effect-A-2"},
+          "B": {"state": "NOT_COMMITTED", "receipt_ref": null, "operation_id": "op-joint-2", "commit_set_ref": "commitset-2", "effect_ref": "effect-B-2"}
+        }
+      },
+      "expected": {"status": "COMPLETED_FORWARD", "new_writes": 1, "new_compensations": 0, "coordinator_updates": 1, "touched_participants": ["B"], "used_operation_id": "op-joint-2"}
+    },
+    {
+      "id": "PACC-PDC-3",
+      "name": "Unknown B commit outcome reconciles before any completion or compensation",
+      "input": {
+        "operation_id": "op-joint-3",
+        "idempotency_key": "idem-joint-3",
+        "commit_set_ref": "commitset-3",
+        "coordinator_phase": "COMMITTING",
+        "recovery_policy": "COMPLETE_FORWARD",
+        "current_snapshot_valid": true,
+        "completion_authority": "CURRENT",
+        "compensation_authority": "CURRENT",
+        "irreversible_participants": [],
+        "prior_recovery_outcome": "NONE",
+        "expected_effects": {"A": "effect-A-3", "B": "effect-B-3"},
+        "participants": {
+          "A": {"state": "COMMITTED", "receipt_ref": "receipt-A-3", "operation_id": "op-joint-3", "commit_set_ref": "commitset-3", "effect_ref": "effect-A-3"},
+          "B": {"state": "UNKNOWN", "receipt_ref": null, "operation_id": "op-joint-3", "commit_set_ref": "commitset-3", "effect_ref": "effect-B-3"}
+        }
+      },
+      "expected": {"status": "RECONCILE_PARTICIPANT_REQUIRED", "new_writes": 0, "new_compensations": 0, "coordinator_updates": 0, "touched_participants": [], "used_operation_id": "op-joint-3"}
+    },
+    {
+      "id": "PACC-PDC-4",
+      "name": "Partial commit may compensate only the participant that actually committed",
+      "input": {
+        "operation_id": "op-joint-4",
+        "idempotency_key": "idem-joint-4",
+        "commit_set_ref": "commitset-4",
+        "coordinator_phase": "COMMITTING",
+        "recovery_policy": "COMPENSATE_PARTIAL",
+        "current_snapshot_valid": true,
+        "completion_authority": "CURRENT",
+        "compensation_authority": "CURRENT",
+        "irreversible_participants": [],
+        "prior_recovery_outcome": "NONE",
+        "expected_effects": {"A": "effect-A-4", "B": "effect-B-4"},
+        "participants": {
+          "A": {"state": "COMMITTED", "receipt_ref": "receipt-A-4", "operation_id": "op-joint-4", "commit_set_ref": "commitset-4", "effect_ref": "effect-A-4"},
+          "B": {"state": "NOT_COMMITTED", "receipt_ref": null, "operation_id": "op-joint-4", "commit_set_ref": "commitset-4", "effect_ref": "effect-B-4"}
+        }
+      },
+      "expected": {"status": "COMPENSATED_PARTIAL", "new_writes": 0, "new_compensations": 1, "coordinator_updates": 1, "touched_participants": ["A"], "used_operation_id": "op-joint-4"}
+    },
+    {
+      "id": "PACC-PDC-5",
+      "name": "Complete-forward recovery revalidates the joint world before writing missing B",
+      "input": {
+        "operation_id": "op-joint-5",
+        "idempotency_key": "idem-joint-5",
+        "commit_set_ref": "commitset-5",
+        "coordinator_phase": "COMMITTING",
+        "recovery_policy": "COMPLETE_FORWARD",
+        "current_snapshot_valid": false,
+        "completion_authority": "CURRENT",
+        "compensation_authority": "CURRENT",
+        "irreversible_participants": [],
+        "prior_recovery_outcome": "NONE",
+        "expected_effects": {"A": "effect-A-5", "B": "effect-B-5"},
+        "participants": {
+          "A": {"state": "COMMITTED", "receipt_ref": "receipt-A-5", "operation_id": "op-joint-5", "commit_set_ref": "commitset-5", "effect_ref": "effect-A-5"},
+          "B": {"state": "NOT_COMMITTED", "receipt_ref": null, "operation_id": "op-joint-5", "commit_set_ref": "commitset-5", "effect_ref": "effect-B-5"}
+        }
+      },
+      "expected": {"status": "REVALIDATE_DISTRIBUTED_TRANSITION", "new_writes": 0, "new_compensations": 0, "coordinator_updates": 0, "touched_participants": [], "used_operation_id": "op-joint-5"}
+    },
+    {
+      "id": "PACC-PDC-6",
+      "name": "Coordinator COMMITTED marker cannot override direct evidence that B did not commit",
+      "input": {
+        "operation_id": "op-joint-6",
+        "idempotency_key": "idem-joint-6",
+        "commit_set_ref": "commitset-6",
+        "coordinator_phase": "COMMITTED",
+        "recovery_policy": "COMPLETE_FORWARD",
+        "current_snapshot_valid": true,
+        "completion_authority": "CURRENT",
+        "compensation_authority": "CURRENT",
+        "irreversible_participants": [],
+        "prior_recovery_outcome": "NONE",
+        "expected_effects": {"A": "effect-A-6", "B": "effect-B-6"},
+        "participants": {
+          "A": {"state": "COMMITTED", "receipt_ref": "receipt-A-6", "operation_id": "op-joint-6", "commit_set_ref": "commitset-6", "effect_ref": "effect-A-6"},
+          "B": {"state": "NOT_COMMITTED", "receipt_ref": null, "operation_id": "op-joint-6", "commit_set_ref": "commitset-6", "effect_ref": "effect-B-6"}
+        }
+      },
+      "expected": {"status": "BLOCK_COORDINATOR_EVIDENCE_CONFLICT", "new_writes": 0, "new_compensations": 0, "coordinator_updates": 0, "touched_participants": [], "used_operation_id": "op-joint-6"}
+    },
+    {
+      "id": "PACC-PDC-7",
+      "name": "Committed participant receipt must bind exact operation, commit set, and effect",
+      "input": {
+        "operation_id": "op-joint-7",
+        "idempotency_key": "idem-joint-7",
+        "commit_set_ref": "commitset-7",
+        "coordinator_phase": "COMMITTING",
+        "recovery_policy": "COMPLETE_FORWARD",
+        "current_snapshot_valid": true,
+        "completion_authority": "CURRENT",
+        "compensation_authority": "CURRENT",
+        "irreversible_participants": [],
+        "prior_recovery_outcome": "NONE",
+        "expected_effects": {"A": "effect-A-7", "B": "effect-B-7"},
+        "participants": {
+          "A": {"state": "COMMITTED", "receipt_ref": "receipt-A-7", "operation_id": "op-joint-7", "commit_set_ref": "commitset-7", "effect_ref": "effect-A-7"},
+          "B": {"state": "COMMITTED", "receipt_ref": "receipt-B-other", "operation_id": "op-other", "commit_set_ref": "commitset-other", "effect_ref": "effect-B-other"}
+        }
+      },
+      "expected": {"status": "BLOCK_PARTICIPANT_BINDING", "new_writes": 0, "new_compensations": 0, "coordinator_updates": 0, "touched_participants": [], "used_operation_id": "op-joint-7"}
+    },
+    {
+      "id": "PACC-PDC-8",
+      "name": "Already recovered distributed operation replays without participant writes",
+      "input": {
+        "operation_id": "op-joint-8",
+        "idempotency_key": "idem-joint-8",
+        "commit_set_ref": "commitset-8",
+        "coordinator_phase": "COMMITTED",
+        "recovery_policy": "COMPLETE_FORWARD",
+        "current_snapshot_valid": true,
+        "completion_authority": "CURRENT",
+        "compensation_authority": "CURRENT",
+        "irreversible_participants": [],
+        "prior_recovery_outcome": "COMMITTED",
+        "expected_effects": {"A": "effect-A-8", "B": "effect-B-8"},
+        "participants": {
+          "A": {"state": "COMMITTED", "receipt_ref": "receipt-A-8", "operation_id": "op-joint-8", "commit_set_ref": "commitset-8", "effect_ref": "effect-A-8"},
+          "B": {"state": "COMMITTED", "receipt_ref": "receipt-B-8", "operation_id": "op-joint-8", "commit_set_ref": "commitset-8", "effect_ref": "effect-B-8"}
+        }
+      },
+      "expected": {"status": "IDEMPOTENT_DISTRIBUTED_REPLAY", "new_writes": 0, "new_compensations": 0, "coordinator_updates": 0, "touched_participants": [], "used_operation_id": "op-joint-8"}
+    },
+    {
+      "id": "PACC-PDC-9",
+      "name": "Missing durable distributed-operation identity fails closed",
+      "input": {
+        "operation_id": null,
+        "idempotency_key": null,
+        "commit_set_ref": "commitset-9",
+        "coordinator_phase": "COMMITTING",
+        "recovery_policy": "COMPLETE_FORWARD",
+        "current_snapshot_valid": true,
+        "completion_authority": "CURRENT",
+        "compensation_authority": "CURRENT",
+        "irreversible_participants": [],
+        "prior_recovery_outcome": "NONE",
+        "expected_effects": {"A": "effect-A-9", "B": "effect-B-9"},
+        "participants": {
+          "A": {"state": "COMMITTED", "receipt_ref": "receipt-A-9", "operation_id": null, "commit_set_ref": "commitset-9", "effect_ref": "effect-A-9"},
+          "B": {"state": "NOT_COMMITTED", "receipt_ref": null, "operation_id": null, "commit_set_ref": "commitset-9", "effect_ref": "effect-B-9"}
+        }
+      },
+      "expected": {"status": "BLOCK_MISSING_DISTRIBUTED_IDENTITY", "new_writes": 0, "new_compensations": 0, "coordinator_updates": 0, "touched_participants": [], "used_operation_id": null}
+    },
+    {
+      "id": "PACC-PDC-10",
+      "name": "Partial compensation requires current compensation authority",
+      "input": {
+        "operation_id": "op-joint-10",
+        "idempotency_key": "idem-joint-10",
+        "commit_set_ref": "commitset-10",
+        "coordinator_phase": "COMMITTING",
+        "recovery_policy": "COMPENSATE_PARTIAL",
+        "current_snapshot_valid": true,
+        "completion_authority": "CURRENT",
+        "compensation_authority": "REVOKED",
+        "irreversible_participants": [],
+        "prior_recovery_outcome": "NONE",
+        "expected_effects": {"A": "effect-A-10", "B": "effect-B-10"},
+        "participants": {
+          "A": {"state": "COMMITTED", "receipt_ref": "receipt-A-10", "operation_id": "op-joint-10", "commit_set_ref": "commitset-10", "effect_ref": "effect-A-10"},
+          "B": {"state": "NOT_COMMITTED", "receipt_ref": null, "operation_id": "op-joint-10", "commit_set_ref": "commitset-10", "effect_ref": "effect-B-10"}
+        }
+      },
+      "expected": {"status": "BLOCK_COMPENSATION_NOT_AUTHORIZED", "new_writes": 0, "new_compensations": 0, "coordinator_updates": 0, "touched_participants": [], "used_operation_id": "op-joint-10"}
+    },
+    {
+      "id": "PACC-PDC-11",
+      "name": "Irreversible committed participant creates manual recovery barrier",
+      "input": {
+        "operation_id": "op-joint-11",
+        "idempotency_key": "idem-joint-11",
+        "commit_set_ref": "commitset-11",
+        "coordinator_phase": "COMMITTING",
+        "recovery_policy": "COMPENSATE_PARTIAL",
+        "current_snapshot_valid": true,
+        "completion_authority": "CURRENT",
+        "compensation_authority": "CURRENT",
+        "irreversible_participants": ["A"],
+        "prior_recovery_outcome": "NONE",
+        "expected_effects": {"A": "effect-A-11", "B": "effect-B-11"},
+        "participants": {
+          "A": {"state": "COMMITTED", "receipt_ref": "receipt-A-11", "operation_id": "op-joint-11", "commit_set_ref": "commitset-11", "effect_ref": "effect-A-11"},
+          "B": {"state": "NOT_COMMITTED", "receipt_ref": null, "operation_id": "op-joint-11", "commit_set_ref": "commitset-11", "effect_ref": "effect-B-11"}
+        }
+      },
+      "expected": {"status": "MANUAL_RECOVERY_REQUIRED", "new_writes": 0, "new_compensations": 0, "coordinator_updates": 0, "touched_participants": ["A"], "used_operation_id": "op-joint-11"}
+    }
+  ]
+}
