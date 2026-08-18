@@ -80,4 +80,6 @@ The campaign attempts to survive by:
 
 CI requires mutation score `1.0` with zero survivors. The partial-commit pack has its own fail-closed workflow, while benchmark-path changes also trigger the existing PACC composition workflow; exact-head evidence should require both to stay green.
 
+The doc-only verification probe exists solely to produce PR-triggered exact-head Actions evidence for both the legacy PACC composition gate and the partial-distributed-commit gate before the tested SHA is fast-forwarded onto `main`.
+
 Scope remains deterministic reference semantics. Passing this pack does not certify an external database, transaction coordinator, consensus protocol, payment rail, or product as providing atomic distributed commits.
