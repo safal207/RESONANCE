@@ -1,37 +1,38 @@
-# Open-data evidence for a rare adult hypothalamic chromatin state at the rs1421085 ortholog
+# Open-data evidence for a rare adult hypothalamic state at the rs1421085 ortholog
 
 **RESONANCE — Issue 002**  
 **Article type:** computational discovery / open-data reanalysis  
-**Status:** Level-1 discovery candidate; causal mechanism unresolved
+**Status:** **narrow Level-1 discovery candidate**; molecular mechanism unresolved  
+**Updated:** 19 August 2026
 
 ## Abstract
 
-The obesity-associated non-coding variant `rs1421085` lies within the first intron of `FTO` and has been linked experimentally to long-range regulation of `IRX3` and `IRX5`. In adipocyte progenitors, the risk allele disrupts an ARID5B repressor motif and alters thermogenic programming. More recently, the exact homologous T>C substitution was introduced into mice and shown to increase `Irx3` expression in the adult male posterior hypothalamus; increased IRX3 in posterior-hypothalamic neurons was sufficient to alter feeding and body weight. The molecular regulatory state connecting the exact substitution to adult hypothalamic `Irx3`, however, remains unresolved.
+The obesity-associated non-coding variant `rs1421085` has experimentally established regulatory effects in several contexts, yet the molecular state connecting the exact homologous T>C substitution to increased `Irx3` in the adult male posterior hypothalamus remains unresolved. We reanalysed two independent public adult-mouse hypothalamus datasets at the exact mouse ortholog rather than at a broad FTO-region proxy.
 
-We used an evidence-first open-data workflow to interrogate the exact mouse ortholog (`mm10 chr8:91,374,372`, T>C) in two independent adult-mouse hypothalamus datasets. In the 2.3-million-nucleus GSE246791 single-nucleus ATAC atlas, the 500-bp interval containing the ortholog was absent from the thresholded union candidate-enhancer catalogue yet showed rare raw accessibility in hypothalamic dissections. Exact barcode-to-subclass joins against the authors' official metadata mapped 133 target-tile-positive nuclei across seven provenance-complete samples. The signal was not uniform across cell classes: several hypothalamic neuronal subclasses were enriched relative to the overall target-tile rate, while abundant astrocyte and oligodendrocyte subclasses were depleted. The most reproducible enriched signal among the current seven samples was `LHA-AHN-PVH Otp Trh Glut` (9/1,800 nuclei; approximately 2.74-fold pooled enrichment; target signal in 5/7 samples).
+A sequence-based coordinate gate resolves the ortholog at `mm10 chr8:91,374,372` (1-based; T>C). Independent UCSC liftOver maps the same base to `GRCm39 chr8:92,101,000` (1-based), inside `Fto`. This site is **not** the recently characterized `Fto-Irx::hibE1` enhancer: the exact ortholog lies 13,859 bp upstream of the GRCm39 hibE1 interval. This distinction matters because 2025 work in *Science* already established adult hypothalamic chromatin accessibility, H3K27ac-associated long-range contacts and causal knockout effects for several cis-elements in the Fto-Irx TAD. The present novelty claim is therefore deliberately narrower.
 
-We then queried an independent paired hypothalamus Multiome dataset, GSE226277. In 2/4 biological pairs, an ATAC fragment overlapping the same 500-bp interval occurred in a filtered nucleus with detectable `Irx3` RNA. Only two such nuclei were observed, making the result sparse, but the paired measurement provides orthogonal evidence that accessibility at the target interval and `Irx3` transcription can coexist in the same adult hypothalamic nucleus.
+In GSE246791, an adult mouse-brain single-nucleus ATAC atlas, the 500-bp tile containing the exact ortholog showed rare raw accessibility across all eight intended male hypothalamus samples. The complete barcode evidence pack contains **83,321 nuclei and 154 target-tile-positive nuclei**. Exact joins to the authors' official cell metadata reveal non-uniform subclass structure. The most reproducible prioritized neuronal subclass, `LHA-AHN-PVH Otp Trh Glut`, contains **11/1,842 target-positive nuclei**, with signal in **6/8 biological samples** and a pooled enrichment of approximately **3.23×**. A sample-stratified Mantel-Haenszel analysis gives a common odds ratio of approximately **3.64** (95% CI **1.95–6.79**); the signal remains significant after Benjamini-Hochberg correction across the represented official subclasses (`q≈0.00137`). The effect is heterogeneous across samples (Breslow-Day `p≈0.032`), so it should not be interpreted as a uniform cell-class effect. `DMH-LHA Vgll2 Glut` shows a larger pooled enrichment (~5.67×) but occurs in only 3/8 samples and is therefore less reproducible.
 
-These observations do not establish allele-specific accessibility, enhancer activity, TF occupancy, enhancer-to-`Irx3` contact or causal mediation. They instead identify a previously unresolved adult hypothalamic cell-state surface on which the `rs1421085 -> Irx3` mechanism can be tested directly.
+In the independent paired hypothalamus Multiome dataset GSE226277, 2/4 biological pairs contain a filtered nucleus with both an ATAC fragment overlapping the same target interval and detectable `Irx3` RNA. Only two such nuclei were observed, making this sparse orthogonal support rather than evidence of regulation.
+
+Together, these results identify a narrow, testable adult hypothalamic state at the exact rs1421085 ortholog. They do **not** show allele-specific accessibility, direct TF occupancy, target-interval-to-`Irx3` contact, enhancer activity or causal mediation. `GAP-001` therefore remains open.
 
 ---
 
-## 1. The missing adult regulatory edge
+## 1. The unresolved edge
 
-The FTO obesity-risk locus is unusual because several pieces of its causal story are already experimentally strong while one central edge remains open.
+The strongest known causal chain around rs1421085 is context-dependent.
 
-Long-range interaction studies established that obesity-associated sequences in the first intron of `FTO` belong to a regulatory landscape that can contact `IRX3`. Claussnitzer and colleagues subsequently identified a concrete mechanism in human adipocyte progenitors: `rs1421085 T>C` disrupts an ARID5B repressor motif, increases enhancer activity, derepresses `IRX3/IRX5`, suppresses thermogenesis and promotes lipid storage. That branch includes endogenous editing and rescue and therefore provides a valuable positive-control mechanism.
+In human adipocyte progenitors, the T>C risk allele disrupts an ARID5B repressor motif, increases enhancer activity, derepresses `IRX3/IRX5`, alters thermogenic programming and can be rescued experimentally. This is a useful positive-control mechanism, but it cannot be imported automatically into adult hypothalamic neurons.
 
-But tissue context is part of a causal claim. A mechanism established in adipocyte progenitors cannot simply be copied into adult posterior-hypothalamic neurons.
+The adult CNS question became sharper after an exact homologous T>C mouse model showed increased brain `Irx3`, including an allele-dose increase in the male posterior hypothalamus. Manipulating IRX3-positive posterior-hypothalamic neurons connected IRX3 abundance to neuronal activity, feeding and body weight. Yet the regulatory mediator between the exact DNA substitution and adult hypothalamic `Irx3` remained unresolved.
 
-This became especially important after the 2025 exact-edit mouse study. Mice carrying the homologous T>C substitution recapitulated obesity-related phenotypes under obesogenic conditions. `Irx3` increased in the brain, with a notable allele-dose effect in male posterior hypothalamus. Raising IRX3 in posterior-hypothalamic IRX3-positive neurons increased feeding and body weight, while the neuronal physiology experiments linked IRX3 abundance to reduced excitability and activity.
-
-Those results sharpen the unresolved edge to:
+The open edge is therefore:
 
 ```text
 rs1421085 T>C
       ↓
- adult posterior-hypothalamic regulatory state ?
+ adult posterior-hypothalamic molecular state M ?
       ↓
     Irx3 ↑
       ↓
@@ -40,45 +41,86 @@ IRX3+ neuronal activity ↓
 food intake / body weight ↑
 ```
 
-The present analysis asks a deliberately narrower question: **what can existing adult single-cell chromatin data tell us about the state of the exact locus before we claim a mediator?**
+This study asks only what existing public chromatin and paired RNA/ATAC data can establish about the exact locus before a mediator is claimed.
 
 ---
 
-## 2. A provenance-first coordinate gate
+## 2. Coordinate identity is a causal prerequisite
 
-A common failure mode in non-coding-variant analysis is to move from a human SNP to an approximate mouse region and then treat any nearby signal as evidence at the variant.
+Approximate locus matching is especially dangerous for non-coding variants: a biologically active neighboring enhancer can be mistaken for the exact SNP element.
 
-We therefore made coordinate identity an explicit gate.
+CAUSAL-DNA therefore resolves the mouse ortholog from the published edit sequence against the chromosome reference. The published wild-type guide has a unique match in the mm10 chromosome 8 sequence, giving:
 
-Using the exact sequence context of the published mouse edit, the homologous position was resolved as:
+- `GRCm38/mm10 chr8:91,374,371–91,374,372` (0-based half-open);
+- `chr8:91,374,372` (1-based);
+- assembly-strand allele `T>C`.
 
-- genome: `mm10`
-- chromosome: `chr8`
-- 1-based coordinate: `91,374,372`
-- reference/alternate: `T>C`
-- zero-based coordinate: `91,374,371`
+A second, independent assembly cross-check uses the UCSC `mm10ToMm39` chain. It maps the exact base to:
 
-The single-nucleus ATAC atlas stores a 500-bp tile matrix. The tile containing the exact ortholog is:
+- `GRCm39 chr8:92,100,999–92,101,000` (0-based half-open);
+- `chr8:92,101,000` (1-based).
+
+The associated 500-bp atlas tile maps from:
 
 ```text
-chr8:91,374,000–91,374,500
+mm10  chr8:91,374,000–91,374,500
 ```
 
-This distinction matters. An early independent cross-check using a broader published FTO-region fosmid mapped more than 13 kb away. Rather than silently accepting the broad interval, the workflow rejected it as an exact-coordinate source and used the published edit sequence as authority.
+to:
+
+```text
+mm39  chr8:92,100,628–92,101,128
+```
+
+The lifted exact site lies within the current GRCm39 `Fto` interval.
+
+### 2.1 The exact site is not hibE1
+
+The 2025 *Science* study of hibernation-associated Fto-Irx cis-elements is essential prior art. MGI annotates `Fto-Irx::hibE1` (`Rr695574`) at:
+
+```text
+GRCm39 chr8:92,114,859–92,119,641
+```
+
+The exact rs1421085 ortholog does not overlap hibE1. The interval-to-interval distance is:
+
+- exact base to hibE1: **13,859 bp**;
+- 500-bp target tile to hibE1: **13,731 bp**.
+
+Thus hibE1 supplies strong evidence that the neighboring adult hypothalamic Fto-Irx regulatory landscape is functional and can contact `Irx3/Irx5`; it does not establish the regulatory behavior of the exact rs1421085 site.
 
 ---
 
-## 3. The locus is neither simply closed nor a strong constitutive peak
+## 3. Prior art changes the novelty boundary
 
-GSE246791 is a comprehensive adult-mouse brain single-nucleus ATAC atlas containing approximately 2.3 million nuclei from 117 anatomical dissections and 1,482 cell populations.
+A broad claim such as “adult hypothalamic Fto-Irx chromatin regulation has not been shown” would be wrong.
 
-At first glance, the target interval appears unremarkable: it is absent from the atlas-wide thresholded union candidate-enhancer/cCRE catalogue. If analysis stopped at the peak catalogue, the natural interpretation would be that the region is inaccessible in the adult brain.
+Steinwand and colleagues reported adult hypothalamic single-nucleus chromatin profiles, H3K27ac-associated PLAC-seq contacts and knockout experiments for five `Fto-Irx::hibE` cis-elements. These elements form long-range regulatory contacts in the Fto-Irx TAD, and individual deletions alter `Fto`, `Irx3` and/or `Irx5` expression and metabolic phenotypes in context-dependent ways. A companion *Science* study mapped hypothalamic gene-expression and chromatin programs across fed, fasted and refed states.
 
-Raw matrices gave a different answer.
+Accordingly, the present work makes a narrower, falsifiable novelty claim:
 
-The processed H5AD files retain both a 500-bp binary/count matrix and raw insertion information. Querying the exact target tile showed low-frequency accessibility in adult hypothalamic dissections. In an initial 6H sample, for example, the target tile was non-zero in 17 of 10,615 nuclei, and raw Tn5 insertions occurred within ±250 bp of the ortholog, including positions within tens of bases of the exact SNP.
+> **Public adult hypothalamic data support rare accessibility specifically at the 500-bp interval containing the exact rs1421085 mouse ortholog, with reproducible official neuronal-subclass structure, while an independent paired Multiome dataset contains sparse same-nucleus target-interval ATAC / `Irx3` RNA co-detection.**
 
-This created a third state between the two naive alternatives:
+This is not a claim of a new Fto-Irx TAD, a new generic adult hypothalamic enhancer landscape, or a solved rs1421085 mechanism.
+
+---
+
+## 4. Eight-sample exact-locus accessibility
+
+GSE246791 is a large adult mouse-brain snATAC atlas. The processed H5ADs preserve a 500-bp tile matrix, raw insertion information and nucleus barcodes.
+
+The target tile is not a strong constitutive catalogue element. It is absent from the thresholded atlas-wide union candidate-enhancer catalogue. However, querying the raw matrix at the exact ortholog-containing tile finds low-frequency signal across the intended adult male hypothalamic samples.
+
+A provenance-safe recovery of the eighth sample, `GSM7876882 / CEMBA200520_9L`, resolved its exact processed H5AD filename directly from the official GEO SOFT record rather than from a guessed filename. That sample contained 10,314 filtered nuclei, including 21 target-tile-positive nuclei and 19 nuclei with an insertion within ±250 bp of the ortholog.
+
+The frozen all-eight evidence pack now contains:
+
+- biological samples: **8**;
+- filtered nuclei: **83,321**;
+- target-tile-positive nuclei: **154**;
+- overall target-positive rate: **~0.1848%**.
+
+The result is therefore neither “the locus is strongly open” nor “the adult locus is inaccessible.” A better description is:
 
 ```text
 not a strong catalogue cCRE
@@ -88,193 +130,151 @@ not uniformly inaccessible
 rare / subthreshold adult accessibility
 ```
 
-That state is biologically interesting precisely because it can be lost by peak-thresholding.
+---
+
+## 5. Official annotations reveal replicate-aware neuronal structure
+
+Every target barcode was joined to the authors' official Supplementary Table 2 rather than re-annotated from sparse marker expression.
+
+All **154/154** target-tile barcodes matched official sample/subclass metadata.
+
+### 5.1 The most reproducible priority subclass
+
+`LHA-AHN-PVH Otp Trh Glut` contains:
+
+- target-positive nuclei: **11**;
+- total nuclei: **1,842**;
+- samples with target signal: **6/8**;
+- pooled enrichment over the all-nucleus target rate: **~3.23×**.
+
+Treating the biological sample as the replication stratum gives:
+
+- Mantel-Haenszel common OR: **~3.64**;
+- 95% CI: **~1.95–6.79**;
+- null-test `p≈1.18×10⁻⁵`;
+- BH-adjusted `q≈0.00137` after testing the represented official subclasses.
+
+The Breslow-Day equal-odds test gives `p≈0.032`, indicating detectable between-sample heterogeneity. That heterogeneity is scientifically important: the signal is enriched but not uniform across dissections/replicates.
+
+### 5.2 A stronger but less replicated enrichment
+
+`DMH-LHA Vgll2 Glut` contains 4/382 target-positive nuclei, approximately **5.67×** pooled enrichment, and appears in **3/8** samples. Its sample-stratified common OR is ~5.70, but the smaller count and lower replicate coverage make it a secondary priority rather than the primary cell-state claim.
+
+### 5.3 Glial abundance does not explain the target signal
+
+Large glial subclasses remain depleted relative to the pooled target rate:
+
+- `Astro-NT`: 12/13,546, ~0.48×;
+- `Oligo`: 8/12,699, ~0.34×.
+
+The observed target counts therefore do not simply track the most abundant populations.
+
+### Statistical boundary
+
+The subclass analysis is a prioritization layer, not proof of a causal cell of action. Rare counts, anatomical sampling and between-sample heterogeneity remain material limitations. Extreme enrichments seen in only one sample are not promoted merely because a p-value is small; replication coverage is part of the priority rule.
 
 ---
 
-## 4. Official cell annotations reveal neuronal structure
+## 6. Independent same-nucleus Multiome support
 
-A rare accessibility signal is not useful unless we know which cells carry it.
+GSE226277 was generated for a recurrent-hypoglycaemia study rather than obesity genetics, but it provides paired hypothalamic RNA and ATAC measurements.
 
-Rather than re-annotating sparse nuclei from markers, we joined the exact target-tile barcodes to the authors' official Supplementary Table 2, which contains `Sample`, `Barcode`, hierarchical cluster labels and `Subclass` for the 2.3 million snATAC nuclei.
+Across four verified male wild-type hypothalamus RNA/ATAC pairs:
 
-Seven hypothalamic samples currently have complete target-barcode provenance in the analysis:
+- 2/4 pairs contain a filtered nucleus with an ATAC fragment overlapping the rs1421085 target tile and detectable `Irx3` RNA;
+- the total number of such nuclei is **two**.
 
-- two 6H samples;
-- two 7J samples;
-- two 8K samples;
-- one 9L sample.
+Both rare `locus+ / Irx3+` nuclei also have detectable transcripts for `Arid5b`, `Cux1`, `Tet1` and `Kdm2b`; one has detectable `Mecp2`.
 
-The second 9L replicate is a technical recovery item: the GEO accession is known, but an earlier workflow guessed the processed filename and failed. A repair workflow now resolves the filename directly from the official GEO sample record. The results below therefore remain explicitly seven-sample results until that recovery is incorporated.
-
-Across the seven samples:
-
-- 73,007 nuclei were present in the official metadata;
-- 133 nuclei were positive in the exact 500-bp target tile;
-- all 133/133 target barcodes matched an official subclass annotation;
-- the overall target-tile-positive rate was about 0.182%.
-
-### 4.1 Pooled subclass enrichment
-
-For descriptive prioritization, we calculated:
-
-
-a subclass target rate divided by the overall seven-sample target rate.
-
-Several neuronal subclasses had higher rates than the pooled background. Examples include:
-
-| Subclass | Target / total | Pooled enrichment | Samples with target signal |
-|---|---:|---:|---:|
-| DMH-LHA Vgll2 Glut | 4 / 322 | 6.82x | 3/7 |
-| BST-MPN Six3 Nrgn Gaba | 8 / 1,192 | 3.68x | 3/7 |
-| **LHA-AHN-PVH Otp Trh Glut** | **9 / 1,800** | **2.74x** | **5/7** |
-| TU-ARH Otp Six6 Gaba | 7 / 1,603 | 2.40x | 4/7 |
-| AHN-RCH-LHA Otp Fezf1 Glut | 6 / 1,515 | 2.17x | 4/7 |
-| PVpo-VMPO-MPN Hmx2 Gaba | 8 / 2,831 | 1.55x | 6/7 |
-
-The largest enrichment estimate belongs to `DMH-LHA Vgll2 Glut`, but it is based on only four target nuclei and is therefore fragile. We regard `LHA-AHN-PVH Otp Trh Glut` as the more defensible current prioritization signal because target accessibility occurs in five of seven available samples and the pooled estimate remains above background.
-
-By contrast, the large glial subclasses were depleted relative to the overall target rate:
-
-- `Astro-NT`: 9/11,640, ~0.42x;
-- `Oligo`: 7/11,060, ~0.35x.
-
-Thus the raw target counts cannot be explained simply by abundant glial populations. The locus-containing tile has a measurable hypothalamic neuronal structure.
-
-These enrichments are descriptive, not a substitute for replicate-aware inferential statistics. The individual biological samples remain the unit of replication.
+This does **not** rank those factors as mediators. RNA presence is availability, not occupancy. The useful result is orthogonal and narrower: the target interval can be accessible in the same adult hypothalamic nucleus in which `Irx3` is transcribed.
 
 ---
 
-## 5. An independent Multiome dataset supplies orthogonal support
+## 7. What the data change
 
-A second dataset was used to ask a different question.
+The open mechanism space initially included several coarse alternatives:
 
-GSE226277 contains paired RNA/ATAC Multiome measurements from male WT mouse hypothalamus collected in a recurrent-hypoglycaemia study. It is not an obesity-variant experiment and contains no `rs1421085` genotype contrast. Its value here is orthogonal: RNA and ATAC are measured from paired nuclei.
+1. the exact site is effectively closed in adulthood and the effect is entirely developmentally imprinted;
+2. the site is broadly active and simply reuses the adipocyte ARID5B mechanism;
+3. the exact site is available only in a rare adult cell state with context-specific molecular grammar;
+4. the variant acts through a state-dependent long-range contact or chromatin configuration.
 
-Official GEO metadata identified four hypothalamus RNA/ATAC pairs: two acute-hypoglycaemia and two recurrent-hypoglycaemia replicates.
+The present data weaken the simplest versions of models 1 and 2. Raw accessibility exists in adulthood, but it is rare and structured rather than ubiquitous.
 
-The ATAC fragment files are approximately 1–2 GB each and do not provide `.tbi` indexes. To avoid converting a targeted question into a multi-gigabyte download, the analysis streams each chromosome-sorted fragment file only until it passes the exact chr8 interval, preserving all overlapping barcodes. Those barcodes are then intersected with the paired filtered RNA matrix.
-
-### 5.1 Same-nucleus result
-
-Two of four biological pairs contained a filtered nucleus with both:
-
-1. an ATAC fragment overlapping `chr8:91,374,000–91,374,500`; and
-2. detectable `Irx3` RNA.
-
-The total number of such nuclei was only **two**.
-
-That sparsity prevents a strong quantitative claim. But it provides something the first atlas cannot: direct paired evidence that an accessible fragment at the target interval and `Irx3` transcription can coexist in the same adult hypothalamic nucleus.
-
-The two `locus+ / Irx3+` nuclei both also contained transcripts for `Arid5b`, `Cux1`, `Tet1` and `Kdm2b`; one contained `Mecp2`; neither contained detected `Dnmt1` or `Cxxc1`. With n=2, these observations must not be used as a mediator ranking.
-
----
-
-## 6. Why this changes the search for the mediator
-
-Before this analysis, several broad adult-PH models remained compatible with the published literature:
-
-1. the site is effectively closed in adult hypothalamus and the T>C phenotype is developmentally imprinted;
-2. the site is broadly active and reuses the adipocyte ARID5B mechanism;
-3. a rare adult cell state exposes the locus to a different regulatory grammar;
-4. an allele-dependent chromatin state or long-range contact exists only in a specific neuronal context.
-
-The new data weaken the simplest version of model 1: raw accessibility is detectable in adult hypothalamus and has reproducible neuronal structure. They also weaken the simplest version of model 2: the site is not a strong ubiquitous adult-brain cCRE.
-
-The surviving high-information model is therefore closer to:
+The surviving high-information search space is closer to:
 
 ```text
-exact sequence
-    ×
-rare adult hypothalamic cell state
-    ×
-chromatin / methylation state
-    ×
-TF availability or occupancy
-    ↓
+exact rs1421085 sequence
+        ×
+adult hypothalamic neuronal state
+        ×
+metabolic / sex / developmental context
+        ×
+local chromatin and TF occupancy
+        ×
+3D Fto-Irx contact state
+        ↓
 Irx3 regulatory output
 ```
 
-This does not identify the missing mediator `M`; it shrinks the space in which `M` must operate.
+This still does not identify `M`. It makes `M` more local and testable.
 
 ---
 
-## 7. Candidate TFs remain hypotheses, not conclusions
+## 8. The next decisive computational boundary
 
-A separate scan using the 2026 human transcription-factor motif codebook evaluated allele-sensitive motif grammar at the exact T>C position and then tested strict portability to the mouse sequence context.
+The strongest newly discovered prior art points directly to the next analysis: adult hypothalamic H3K27ac-associated PLAC-seq already demonstrates functional 3D architecture around neighboring Fto-Irx cis-elements.
 
-Several candidates remain compatible with both sequence and adult `Irx3+` transcript availability, including the established ARID5B positive-control hypothesis and alternatives involving CUX1 and epigenetic regulators. However, motif scores report sequence compatibility, not occupancy, and transcript presence reports availability, not binding.
+The next question is therefore **exact-site**, not TAD-wide:
 
-The present article therefore deliberately does not name a causal TF.
+> Does the exact rs1421085 ortholog-containing interval itself participate in a detectable adult hypothalamic contact with the `Irx3` promoter, and is that contact cell-state or metabolic-state specific?
 
-The decisive next measurements are:
+A positive wild-type contact would strengthen the 3D-contact hypothesis but would still not demonstrate allele dependence. A negative result would also be informative, subject to PLAC-seq resolution and power.
 
-- exact-allele accessibility in the prioritized adult hypothalamic neuronal subclasses;
-- ARID5B/CUX1/epigenetic-factor occupancy at the exact site;
-- methylation or histone state at the locus;
-- cell-state-specific contact between the FTO interval and `Irx3`;
-- mediator perturbation/rescue in the relevant adult PH context.
+In parallel, exact-site ARID5B/CUX1 occupancy and allele-dependent accessibility remain load-bearing discriminators.
 
 ---
 
-## 8. Novelty boundary
+## 9. Claims explicitly not made
 
-The relevant primary literature already establishes several adjacent facts:
+This article does **not** claim that:
 
-- FTO obesity-associated sequences can interact with and regulate `IRX3`;
-- `rs1421085 T>C` has a causal adipocyte-progenitor mechanism through ARID5B;
-- the broader FTO interval has developmental and tissue-dependent effects on `IRX3/IRX5`;
-- an exact T>C mouse model shows increased adult male posterior-hypothalamic `Irx3` and an IRX3-positive neuronal circuit affecting feeding/body weight;
-- adult mouse-brain single-cell chromatin atlases exist.
+- T>C causes the observed wild-type accessibility state;
+- the 500-bp tile is itself a proven enhancer;
+- hibE1 is the rs1421085 element;
+- accessibility at the target tile causes `Irx3` expression;
+- ARID5B, CUX1 or another candidate occupies the exact adult hypothalamic site;
+- the two Multiome co-detections establish enhancer-to-`Irx3` regulation;
+- a specific subclass is the causal cell of action;
+- the male-specific genotype effect has been explained;
+- `GAP-001` is solved.
 
-A targeted search of the indexed primary literature did not identify a paper reporting the specific combination reconstructed here: **adult exact-ortholog raw accessibility resolved to hypothalamic subclasses together with independent same-nucleus target-interval ATAC / `Irx3` RNA co-detection.**
+Machine status remains:
 
-This is a bounded novelty statement. It should be rechecked during formal manuscript preparation and peer review.
-
----
-
-## 9. Limitations
-
-The most important limitation is also the central scientific boundary: both public datasets used here are wild-type with respect to the engineered T>C comparison.
-
-Therefore this study cannot infer that the risk allele creates or increases the accessibility state.
-
-Additional limitations include:
-
-- the primary snATAC signal is a 500-bp tile containing the exact ortholog, not single-base accessibility;
-- target-positive nuclei are rare;
-- one of the eight intended GSE246791 hypothalamus samples is awaiting provenance-safe processed-file recovery;
-- pooled subclass enrichment is descriptive and should be supplemented by replicate-aware inference;
-- the independent Multiome support consists of only two `locus+ / Irx3+` nuclei across four pairs;
-- GSE226277 was generated for a hypoglycaemia study, not obesity genetics;
-- same-nucleus co-detection does not imply a regulatory edge between the locus and `Irx3`;
-- motif compatibility, transcript expression and chromatin accessibility do not establish TF occupancy.
-
-These limitations set the ceiling of the present claim at a **computational discovery candidate**, not a molecular mechanism.
+```text
+GAP-001 = OPEN
+cause_found = false
+```
 
 ---
 
 ## 10. Conclusion
 
-The adult posterior-hypothalamic mechanism of `rs1421085` remains open, but the missing state is now less abstract.
+The broad adult hypothalamic Fto-Irx regulatory landscape is no longer an open question: 2025 work established functional cis-elements, long-range contacts and metabolic-state-dependent regulation in this TAD.
 
-Public single-cell chromatin data show that the exact ortholog-containing interval is not simply closed in the adult hypothalamus. Its accessibility is rare, subthreshold to standard catalogue calling, and structured across hypothalamic neuronal subclasses. An independent paired Multiome dataset provides sparse but direct same-nucleus evidence that accessibility at the same interval can coexist with `Irx3` transcription.
+The exact rs1421085 site remains different.
 
-The result points away from a binary “enhancer open versus enhancer closed” model and toward a context-dependent adult regulatory state.
+A sequence-anchored, assembly-cross-checked reanalysis places the ortholog inside `Fto` but 13.859 kb away from hibE1. Across eight adult male hypothalamus snATAC samples, the exact-site-containing tile shows rare accessibility with reproducible neuronal subclass structure. The `LHA-AHN-PVH Otp Trh Glut` signal persists across six samples and survives a replicate-stratified, multiple-testing-corrected analysis. Independent Multiome data add sparse same-nucleus evidence that target-interval accessibility can coexist with `Irx3` transcription.
 
-The next discovery target is no longer merely:
+That is sufficient for a **narrow Level-1 computational discovery candidate**, not for a molecular mechanism.
 
-```text
-What binds rs1421085?
-```
-
-It is:
+The next load-bearing question is now sharply defined:
 
 ```text
-In which adult posterior-hypothalamic neuronal state
-is the rs1421085 ortholog accessible,
-what molecular grammar occupies it,
-and does T>C change that state in a way that raises Irx3?
+At the exact rs1421085 site,
+what adult hypothalamic molecular state
+links sequence to Irx3 —
+and does T>C change it?
 ```
 
-That is the load-bearing experiment separating the present computational discovery from a causal molecular mechanism.
+Until that edge is measured, the causal graph remains open by design.
