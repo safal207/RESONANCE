@@ -55,6 +55,23 @@ const metadata = {
     description: 'A RESONANCE research hub for AI agent reliability, security, failure taxonomy, containment, recovery, evidence and verification.',
     kind: 'collection',
   },
+  'conformance-is-a-vector-not-a-verdict.ru.html': {
+    title: 'AI Agent Runtime Conformance: вектор, а не вердикт | RESONANCE',
+    description: 'RESONANCE Signal 018 сравнивает CrewAI, LangGraph, AutoGen, Microsoft Agent Framework и OpenAI Agents SDK по conformance, replay, persistence, append-only evidence и mutation boundaries.',
+    kind: 'article',
+    keywords: ['AI agent runtime conformance', 'agent framework benchmark', 'CrewAI', 'LangGraph', 'AutoGen', 'Microsoft Agent Framework', 'OpenAI Agents SDK', 'ContractGraph-QA', 'append-only evidence'],
+  },
+  'when-the-feature-request-becomes-infrastructure.ru.html': {
+    title: 'When the Feature Request Becomes Infrastructure | RESONANCE',
+    description: 'RESONANCE Article 14: persistent memory, lifecycle hooks и cross-session coordination стали native primitives; verification frontier смещается к applicability, authority и evidence use.',
+    kind: 'article',
+    keywords: ['AI agents', 'persistent memory', 'lifecycle hooks', 'cross-session coordination', 'agent verification'],
+  },
+  'rare-adult-hypothalamic-state-rs1421085.html': {
+    title: 'rs1421085 and Adult Hypothalamic Cell State | RESONANCE',
+    kind: 'article',
+    keywords: ['rs1421085', 'hypothalamus', 'obesity genetics', 'single-cell genomics'],
+  },
   'open-problems.html': {
     title: 'AI Agent Open Problems & Demand Graph | RESONANCE',
     description: 'RESONANCE Open Problems tracks recurring evidence-backed AI-agent failures and missing capabilities discovered through real market dialogue, excluding synthetic examples from demand metrics.',
