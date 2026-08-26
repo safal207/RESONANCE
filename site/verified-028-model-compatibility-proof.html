@@ -1,4 +1,37 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #028: model-version mismatch need not force recomputation when scoped semantic compatibility is explicitly proved."><title>Verified #028 — Model Compatibility Proof | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #028</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #028</p><h1>The model changed. The result did not have to.</h1><p class="dek">Exact model identity is safe but conservative. This executable benchmark shows when an older artifact can be reused under a newer causal model — and why a blanket backward-compatible flag is not enough.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><h2>Two models, one scoped equivalence</h2><pre><code>model-v1:
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #028: model-version mismatch need not force recomputation when scoped semantic compatibility is explicitly proved."><title>Verified #028 — Model Compatibility Proof | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css">  <meta name="author" content="Aleksei Safonov" />
+  <link rel="canonical" href="https://safal207.github.io/RESONANCE/verified-028-model-compatibility-proof.html" />
+  <meta property="og:url" content="https://safal207.github.io/RESONANCE/verified-028-model-compatibility-proof.html" />
+  <meta property="og:site_name" content="RESONANCE" />
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <meta property="og:image:alt" content="Aleksei Safonov — RESONANCE" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Verified #028 — Model Compatibility Proof | RESONANCE" />
+  <meta name="twitter:description" content="RESONANCE Verified Report #028: model-version mismatch need not force recomputation when scoped semantic compatibility is explicitly proved." />
+  <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <script id="seo-structured-data" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Verified #028 — Model Compatibility Proof | RESONANCE",
+  "description": "RESONANCE Verified Report #028: model-version mismatch need not force recomputation when scoped semantic compatibility is explicitly proved.",
+  "url": "https://safal207.github.io/RESONANCE/verified-028-model-compatibility-proof.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "RESONANCE",
+    "url": "https://safal207.github.io/RESONANCE/"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Aleksei Safonov",
+    "url": "https://safal207.github.io/RESONANCE/aleksei-safonov.html",
+    "sameAs": [
+      "https://github.com/safal207",
+      "https://github.com/safal207/safal207"
+    ]
+  }
+}
+  </script>
+</head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #028</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #028</p><h1>The model changed. The result did not have to.</h1><p class="dek">Exact model identity is safe but conservative. This executable benchmark shows when an older artifact can be reused under a newer causal model — and why a blanket backward-compatible flag is not enough.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><h2>Two models, one scoped equivalence</h2><pre><code>model-v1:
 y = min(limit, 2 × price)
 
 model-v2:

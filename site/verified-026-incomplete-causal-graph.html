@@ -1,4 +1,37 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #026: a correct fingerprint over an incomplete dependency set is still unsafe."><title>Verified #026 — Incomplete Causal Graph | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #026</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #026</p><h1>The fingerprint was correct. The causal model was not.</h1><p class="dek">Dependency-aware applicability only works if the dependency model is complete enough for the decision. This executable benchmark omits a real causal input and shows a perfectly stable fingerprint authorizing the wrong consequence.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><h2>Ground truth</h2><pre><code>output = min(limit, 2 × price + tax_rate)
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #026: a correct fingerprint over an incomplete dependency set is still unsafe."><title>Verified #026 — Incomplete Causal Graph | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css">  <meta name="author" content="Aleksei Safonov" />
+  <link rel="canonical" href="https://safal207.github.io/RESONANCE/verified-026-incomplete-causal-graph.html" />
+  <meta property="og:url" content="https://safal207.github.io/RESONANCE/verified-026-incomplete-causal-graph.html" />
+  <meta property="og:site_name" content="RESONANCE" />
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <meta property="og:image:alt" content="Aleksei Safonov — RESONANCE" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Verified #026 — Incomplete Causal Graph | RESONANCE" />
+  <meta name="twitter:description" content="RESONANCE Verified Report #026: a correct fingerprint over an incomplete dependency set is still unsafe." />
+  <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <script id="seo-structured-data" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Verified #026 — Incomplete Causal Graph | RESONANCE",
+  "description": "RESONANCE Verified Report #026: a correct fingerprint over an incomplete dependency set is still unsafe.",
+  "url": "https://safal207.github.io/RESONANCE/verified-026-incomplete-causal-graph.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "RESONANCE",
+    "url": "https://safal207.github.io/RESONANCE/"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Aleksei Safonov",
+    "url": "https://safal207.github.io/RESONANCE/aleksei-safonov.html",
+    "sameAs": [
+      "https://github.com/safal207",
+      "https://github.com/safal207/safal207"
+    ]
+  }
+}
+  </script>
+</head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #026</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #026</p><h1>The fingerprint was correct. The causal model was not.</h1><p class="dek">Dependency-aware applicability only works if the dependency model is complete enough for the decision. This executable benchmark omits a real causal input and shows a perfectly stable fingerprint authorizing the wrong consequence.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><h2>Ground truth</h2><pre><code>output = min(limit, 2 × price + tax_rate)
 
 authoritative dependencies:
 price + limit + tax_rate

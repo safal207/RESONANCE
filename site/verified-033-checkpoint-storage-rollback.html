@@ -1,4 +1,37 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #033: a durable verifier checkpoint can still be rolled back by restored storage unless recovery reconciles against independent authenticated history."><title>Verified #033 — Checkpoint Storage Rollback | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #033</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #033</p><h1>The checkpoint survived. Then recovery moved it backward.</h1><p class="dek">Verified #032 made authority-head history monotonic. #033 attacks that memory itself: after the verifier reached generation 9, restoring an older checkpoint snapshot to generation 7 made an untouched authentic H7 look current again to a local-only verifier.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><blockquote><p><strong>DURABLE CHECKPOINT ≠ ROLLBACK-RESISTANT CHECKPOINT.</strong></p></blockquote><h2>The restore</h2><pre><code>baseline:
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #033: a durable verifier checkpoint can still be rolled back by restored storage unless recovery reconciles against independent authenticated history."><title>Verified #033 — Checkpoint Storage Rollback | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css">  <meta name="author" content="Aleksei Safonov" />
+  <link rel="canonical" href="https://safal207.github.io/RESONANCE/verified-033-checkpoint-storage-rollback.html" />
+  <meta property="og:url" content="https://safal207.github.io/RESONANCE/verified-033-checkpoint-storage-rollback.html" />
+  <meta property="og:site_name" content="RESONANCE" />
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <meta property="og:image:alt" content="Aleksei Safonov — RESONANCE" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Verified #033 — Checkpoint Storage Rollback | RESONANCE" />
+  <meta name="twitter:description" content="RESONANCE Verified Report #033: a durable verifier checkpoint can still be rolled back by restored storage unless recovery reconciles against independent authenticated history." />
+  <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <script id="seo-structured-data" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Verified #033 — Checkpoint Storage Rollback | RESONANCE",
+  "description": "RESONANCE Verified Report #033: a durable verifier checkpoint can still be rolled back by restored storage unless recovery reconciles against independent authenticated history.",
+  "url": "https://safal207.github.io/RESONANCE/verified-033-checkpoint-storage-rollback.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "RESONANCE",
+    "url": "https://safal207.github.io/RESONANCE/"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Aleksei Safonov",
+    "url": "https://safal207.github.io/RESONANCE/aleksei-safonov.html",
+    "sameAs": [
+      "https://github.com/safal207",
+      "https://github.com/safal207/safal207"
+    ]
+  }
+}
+  </script>
+</head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #033</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #033</p><h1>The checkpoint survived. Then recovery moved it backward.</h1><p class="dek">Verified #032 made authority-head history monotonic. #033 attacks that memory itself: after the verifier reached generation 9, restoring an older checkpoint snapshot to generation 7 made an untouched authentic H7 look current again to a local-only verifier.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><blockquote><p><strong>DURABLE CHECKPOINT ≠ ROLLBACK-RESISTANT CHECKPOINT.</strong></p></blockquote><h2>The restore</h2><pre><code>baseline:
 local checkpoint = 7
 capture snapshot S7
 

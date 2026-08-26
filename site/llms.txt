@@ -1,0 +1,25 @@
+# RESONANCE
+
+RESONANCE is an evidence-first journal and executable research lab by Aleksei Safonov covering agentic AI safety, agentic payments, verification, reliability, trust infrastructure, science, technology, and human progress.
+
+## Canonical entry points
+
+- Publication: https://safal207.github.io/RESONANCE/
+- Author: https://safal207.github.io/RESONANCE/aleksei-safonov.html
+- GitHub source: https://github.com/safal207/RESONANCE
+- Smart-contract QA: https://github.com/safal207/ContractGraph-QA
+- AI-agent action receipts: https://github.com/safal207/T-Trace
+- Pre-execution agent authorization: https://github.com/safal207/ProofPath
+- Causal agent audit: https://github.com/safal207/Causal-Memory-Layer
+
+## Editorial method
+
+Signal → Cause → Evidence → Causality → Uncertainty → Verification → Implications → Action.
+
+Claims should distinguish observed facts, verified results, inference, uncertainty, and explicit non-claims. GitHub repositories, executable fixtures, and CI evidence are the canonical technical sources when linked from an article.
+
+## Contact
+
+- Email: safal0645@gmail.com
+- GitHub: https://github.com/safal207
+- Telegram: https://t.me/Alexfox14

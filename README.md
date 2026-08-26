@@ -1,12 +1,16 @@
-# RESONANCE
+<!-- seo-publication-intro:start -->
+# RESONANCE — Agentic AI Safety, Payments & Verification
 
-**Journal of Intelligence, Technology & Human Progress**
+**An evidence-first journal and executable research lab by [Aleksei Safonov](https://safal207.github.io/RESONANCE/aleksei-safonov.html).**
 
-> Intelligence is changing the world. RESONANCE exists to understand what is changing, why it matters, what the evidence says, and what people should do next.
+RESONANCE covers agentic AI safety, AI-agent failure modes, agentic payments, payment reconciliation, idempotency, action verification, trust infrastructure, science, technology, entrepreneurship, and human progress.
 
-RESONANCE is an independent, evidence-first global journal covering AI, science, technology, entrepreneurship, trust, and human progress.
+> Find the signal. Verify the path. Understand the future.
 
-We are not building a news feed. We are building a **verification-aware publication** for readers who want signal, causality, evidence, uncertainty, implications, action — and a reproducible path from claim to proof.
+Unlike a conventional technology publication, RESONANCE links readable analysis to open-source protocols, deterministic benchmarks, verified reports, primary evidence, and reproducible tests.
+
+[Read the publication](https://safal207.github.io/RESONANCE/) · [Meet the author](https://safal207.github.io/RESONANCE/aleksei-safonov.html) · [Explore open problems](https://safal207.github.io/RESONANCE/open-problems.html)
+<!-- seo-publication-intro:end -->
 
 ## Editorial model
 

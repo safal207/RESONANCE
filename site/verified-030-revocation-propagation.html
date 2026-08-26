@@ -1,4 +1,37 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #030: stale regional proof-authority replicas can split verifier decisions after revocation."><title>Verified #030 — Revocation Propagation | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #030</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #030</p><h1>The revocation was real. One verifier had not heard yet.</h1><p class="dek">A regional proof-authority replica can remain internally consistent while being stale relative to the authoritative origin. After revocation, the same proof can therefore receive contradictory verdicts from different verifiers.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><h2>Authority split-brain</h2><pre><code>authoritative origin:
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #030: stale regional proof-authority replicas can split verifier decisions after revocation."><title>Verified #030 — Revocation Propagation | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css">  <meta name="author" content="Aleksei Safonov" />
+  <link rel="canonical" href="https://safal207.github.io/RESONANCE/verified-030-revocation-propagation.html" />
+  <meta property="og:url" content="https://safal207.github.io/RESONANCE/verified-030-revocation-propagation.html" />
+  <meta property="og:site_name" content="RESONANCE" />
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <meta property="og:image:alt" content="Aleksei Safonov — RESONANCE" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Verified #030 — Revocation Propagation | RESONANCE" />
+  <meta name="twitter:description" content="RESONANCE Verified Report #030: stale regional proof-authority replicas can split verifier decisions after revocation." />
+  <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <script id="seo-structured-data" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Verified #030 — Revocation Propagation | RESONANCE",
+  "description": "RESONANCE Verified Report #030: stale regional proof-authority replicas can split verifier decisions after revocation.",
+  "url": "https://safal207.github.io/RESONANCE/verified-030-revocation-propagation.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "RESONANCE",
+    "url": "https://safal207.github.io/RESONANCE/"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Aleksei Safonov",
+    "url": "https://safal207.github.io/RESONANCE/aleksei-safonov.html",
+    "sameAs": [
+      "https://github.com/safal207",
+      "https://github.com/safal207/safal207"
+    ]
+  }
+}
+  </script>
+</head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #030</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #030</p><h1>The revocation was real. One verifier had not heard yet.</h1><p class="dek">A regional proof-authority replica can remain internally consistent while being stale relative to the authoritative origin. After revocation, the same proof can therefore receive contradictory verdicts from different verifiers.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><h2>Authority split-brain</h2><pre><code>authoritative origin:
 R1 / generation 8 / REVOKED
 
 region-A:

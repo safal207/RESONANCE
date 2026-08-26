@@ -1,4 +1,37 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="TTP quorum consistency rule: local threshold satisfaction must be cross-checked against conflicting quorum certificates and signer intersection before consequence."><title>TTP — Quorum Consistency | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol v1.0</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · DISTRIBUTED AUTHORITY</p><h1>Quorum Consistency Rule</h1><p class="dek">A locally valid threshold certificate is not enough. Before a quorum can authorize consequence, the verifier must bind it to a specific witness-set decision and detect whether another incompatible valid quorum certificate exists for that same decision.</p><blockquote><p><strong>LOCAL QUORUM ≠ GLOBALLY CONSISTENT QUORUM.</strong></p></blockquote><h2>Decision rule</h2><pre><code>RECEIVE QUORUM CERTIFICATE QC
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="TTP quorum consistency rule: local threshold satisfaction must be cross-checked against conflicting quorum certificates and signer intersection before consequence."><title>TTP — Quorum Consistency | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css">  <meta name="author" content="Aleksei Safonov" />
+  <link rel="canonical" href="https://safal207.github.io/RESONANCE/ttp-quorum-consistency.html" />
+  <meta property="og:url" content="https://safal207.github.io/RESONANCE/ttp-quorum-consistency.html" />
+  <meta property="og:site_name" content="RESONANCE" />
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <meta property="og:image:alt" content="Aleksei Safonov — RESONANCE" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="TTP — Quorum Consistency | RESONANCE" />
+  <meta name="twitter:description" content="TTP quorum consistency rule: local threshold satisfaction must be cross-checked against conflicting quorum certificates and signer intersection before consequence." />
+  <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <script id="seo-structured-data" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "TTP — Quorum Consistency | RESONANCE",
+  "description": "TTP quorum consistency rule: local threshold satisfaction must be cross-checked against conflicting quorum certificates and signer intersection before consequence.",
+  "url": "https://safal207.github.io/RESONANCE/ttp-quorum-consistency.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "RESONANCE",
+    "url": "https://safal207.github.io/RESONANCE/"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Aleksei Safonov",
+    "url": "https://safal207.github.io/RESONANCE/aleksei-safonov.html",
+    "sameAs": [
+      "https://github.com/safal207",
+      "https://github.com/safal207/safal207"
+    ]
+  }
+}
+  </script>
+</head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol v1.0</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · DISTRIBUTED AUTHORITY</p><h1>Quorum Consistency Rule</h1><p class="dek">A locally valid threshold certificate is not enough. Before a quorum can authorize consequence, the verifier must bind it to a specific witness-set decision and detect whether another incompatible valid quorum certificate exists for that same decision.</p><blockquote><p><strong>LOCAL QUORUM ≠ GLOBALLY CONSISTENT QUORUM.</strong></p></blockquote><h2>Decision rule</h2><pre><code>RECEIVE QUORUM CERTIFICATE QC
         ↓
 AUTHENTICATE DISTINCT MEMBER STATEMENTS
         ↓

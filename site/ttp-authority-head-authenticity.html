@@ -1,4 +1,37 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Transactional Trust Protocol extension: authenticate authority-head evidence before using a generation watermark to fence consequential actions."><title>TTP Authority Head Authenticity | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · AUTHORITY HEAD AUTHENTICITY</p><h1>Freshness claim ≠ authentic freshness evidence.</h1><p class="dek">A generation watermark cannot safely prove authority-view currentness until the exact head statement that carries it has been authenticated.</p><h2>Canonical rule</h2><pre><code>RECEIVE AUTHORITY HEAD H
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Transactional Trust Protocol extension: authenticate authority-head evidence before using a generation watermark to fence consequential actions."><title>TTP Authority Head Authenticity | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css">  <meta name="author" content="Aleksei Safonov" />
+  <link rel="canonical" href="https://safal207.github.io/RESONANCE/ttp-authority-head-authenticity.html" />
+  <meta property="og:url" content="https://safal207.github.io/RESONANCE/ttp-authority-head-authenticity.html" />
+  <meta property="og:site_name" content="RESONANCE" />
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <meta property="og:image:alt" content="Aleksei Safonov — RESONANCE" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="TTP Authority Head Authenticity | RESONANCE" />
+  <meta name="twitter:description" content="Transactional Trust Protocol extension: authenticate authority-head evidence before using a generation watermark to fence consequential actions." />
+  <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <script id="seo-structured-data" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "TTP Authority Head Authenticity | RESONANCE",
+  "description": "Transactional Trust Protocol extension: authenticate authority-head evidence before using a generation watermark to fence consequential actions.",
+  "url": "https://safal207.github.io/RESONANCE/ttp-authority-head-authenticity.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "RESONANCE",
+    "url": "https://safal207.github.io/RESONANCE/"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Aleksei Safonov",
+    "url": "https://safal207.github.io/RESONANCE/aleksei-safonov.html",
+    "sameAs": [
+      "https://github.com/safal207",
+      "https://github.com/safal207/safal207"
+    ]
+  }
+}
+  </script>
+</head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · AUTHORITY HEAD AUTHENTICITY</p><h1>Freshness claim ≠ authentic freshness evidence.</h1><p class="dek">A generation watermark cannot safely prove authority-view currentness until the exact head statement that carries it has been authenticated.</p><h2>Canonical rule</h2><pre><code>RECEIVE AUTHORITY HEAD H
 ↓
 AUTHENTICATE
 - trusted signer / key

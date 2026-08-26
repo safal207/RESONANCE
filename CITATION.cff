@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use a RESONANCE benchmark, protocol, or verified report, cite the specific artifact and this repository."
+title: "RESONANCE: Evidence-First Research on Agentic AI Safety and Reliability"
+type: software
+authors:
+  - family-names: "Safonov"
+    given-names: "Aleksei"
+repository-code: "https://github.com/safal207/RESONANCE"
+url: "https://safal207.github.io/RESONANCE/"
+license: "Apache-2.0"
+keywords:
+  - agentic AI safety
+  - agentic payments
+  - AI agent verification
+  - reliability
+  - reproducible research

@@ -1,4 +1,37 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="description" content="TTP artifact applicability rule — integrity and provenance do not imply a result is still valid for current authoritative state."/><title>TTP Artifact Applicability Rule | RESONANCE</title><link rel="stylesheet" href="styles.css"/><link rel="stylesheet" href="article.css"/></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol v1.0 · Experimental Extension</p></div></header><main><header class="article-hero wrap"><a class="back-link" href="transactional-trust-protocol-v1.html">← Transactional Trust Protocol</a><p class="section-label">TTP Extension · Verified #024</p><h1 class="article-title">Artifact Applicability / Stale-but-Valid Result</h1><p class="article-dek">A result can be intact, provenance-valid and adopted by current authority while still being wrong for the current state. Applicability must be established separately.</p></header><div class="article-layout wrap"><aside class="article-rail"><div class="rail-card rail-dark"><p class="section-label">Rule</p><code>artifact integrity + provenance + input-state identity + current applicability → consequence</code></div></aside><article class="article-body"><h2>The boundary</h2><div class="trajectory-box"><span>capture state V</span><i>→</i><span>compute D</span><i>→</i><span>state advances</span><i>→</i><span>compare applicability</span></div><section class="claim-panel"><div><b>I55</b><p><strong>Integrity + provenance does not imply current applicability.</strong></p></div><div><b>I56</b><p><strong>Adoption binds the input state that justified computation.</strong></p></div><div><b>I57</b><p><strong>State advance after input capture is an applicability transition.</strong></p></div><div><b>I58</b><p><strong>Stale-but-valid artifact requires revalidation, recomputation or explicit domain proof before consequence.</strong></p></div></section><h2>Canonical path</h2><pre><code>CAPTURE INPUT STATE / VERSION / SNAPSHOT
+<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="description" content="TTP artifact applicability rule — integrity and provenance do not imply a result is still valid for current authoritative state."/><title>TTP Artifact Applicability Rule | RESONANCE</title><link rel="stylesheet" href="styles.css"/><link rel="stylesheet" href="article.css"/>  <meta name="author" content="Aleksei Safonov" />
+  <link rel="canonical" href="https://safal207.github.io/RESONANCE/ttp-artifact-applicability.html" />
+  <meta property="og:url" content="https://safal207.github.io/RESONANCE/ttp-artifact-applicability.html" />
+  <meta property="og:site_name" content="RESONANCE" />
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <meta property="og:image:alt" content="Aleksei Safonov — RESONANCE" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="TTP Artifact Applicability Rule | RESONANCE" />
+  <meta name="twitter:description" content="TTP artifact applicability rule — integrity and provenance do not imply a result is still valid for current authoritative state." />
+  <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <script id="seo-structured-data" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "TTP Artifact Applicability Rule | RESONANCE",
+  "description": "TTP artifact applicability rule — integrity and provenance do not imply a result is still valid for current authoritative state.",
+  "url": "https://safal207.github.io/RESONANCE/ttp-artifact-applicability.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "RESONANCE",
+    "url": "https://safal207.github.io/RESONANCE/"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Aleksei Safonov",
+    "url": "https://safal207.github.io/RESONANCE/aleksei-safonov.html",
+    "sameAs": [
+      "https://github.com/safal207",
+      "https://github.com/safal207/safal207"
+    ]
+  }
+}
+  </script>
+</head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol v1.0 · Experimental Extension</p></div></header><main><header class="article-hero wrap"><a class="back-link" href="transactional-trust-protocol-v1.html">← Transactional Trust Protocol</a><p class="section-label">TTP Extension · Verified #024</p><h1 class="article-title">Artifact Applicability / Stale-but-Valid Result</h1><p class="article-dek">A result can be intact, provenance-valid and adopted by current authority while still being wrong for the current state. Applicability must be established separately.</p></header><div class="article-layout wrap"><aside class="article-rail"><div class="rail-card rail-dark"><p class="section-label">Rule</p><code>artifact integrity + provenance + input-state identity + current applicability → consequence</code></div></aside><article class="article-body"><h2>The boundary</h2><div class="trajectory-box"><span>capture state V</span><i>→</i><span>compute D</span><i>→</i><span>state advances</span><i>→</i><span>compare applicability</span></div><section class="claim-panel"><div><b>I55</b><p><strong>Integrity + provenance does not imply current applicability.</strong></p></div><div><b>I56</b><p><strong>Adoption binds the input state that justified computation.</strong></p></div><div><b>I57</b><p><strong>State advance after input capture is an applicability transition.</strong></p></div><div><b>I58</b><p><strong>Stale-but-valid artifact requires revalidation, recomputation or explicit domain proof before consequence.</strong></p></div></section><h2>Canonical path</h2><pre><code>CAPTURE INPUT STATE / VERSION / SNAPSHOT
 ↓
 COMPUTE ARTIFACT
 ↓

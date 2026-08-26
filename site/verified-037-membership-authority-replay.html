@@ -1,4 +1,37 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #037: an authentic old membership record can replay retired quorum authority unless membership history is monotonic."><title>Verified #037 — Membership Authority Replay | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #037</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #037</p><h1>The membership record was authentic. It was no longer current.</h1><p class="dek">Verified #036 showed that an old quorum must not regain live authority after witness-set rotation. #037 attacks the next assumption: an attacker replays the old, perfectly authentic membership record itself. If the verifier treats the presented record as current, the retired quorum becomes live again.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><blockquote><p><strong>AUTHENTIC MEMBERSHIP RECORD ≠ CURRENT MEMBERSHIP AUTHORITY.</strong></p></blockquote><h2>The membership history</h2><pre><code>M1:
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #037: an authentic old membership record can replay retired quorum authority unless membership history is monotonic."><title>Verified #037 — Membership Authority Replay | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css">  <meta name="author" content="Aleksei Safonov" />
+  <link rel="canonical" href="https://safal207.github.io/RESONANCE/verified-037-membership-authority-replay.html" />
+  <meta property="og:url" content="https://safal207.github.io/RESONANCE/verified-037-membership-authority-replay.html" />
+  <meta property="og:site_name" content="RESONANCE" />
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <meta property="og:image:alt" content="Aleksei Safonov — RESONANCE" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Verified #037 — Membership Authority Replay | RESONANCE" />
+  <meta name="twitter:description" content="RESONANCE Verified Report #037: an authentic old membership record can replay retired quorum authority unless membership history is monotonic." />
+  <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <script id="seo-structured-data" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Verified #037 — Membership Authority Replay | RESONANCE",
+  "description": "RESONANCE Verified Report #037: an authentic old membership record can replay retired quorum authority unless membership history is monotonic.",
+  "url": "https://safal207.github.io/RESONANCE/verified-037-membership-authority-replay.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "RESONANCE",
+    "url": "https://safal207.github.io/RESONANCE/"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Aleksei Safonov",
+    "url": "https://safal207.github.io/RESONANCE/aleksei-safonov.html",
+    "sameAs": [
+      "https://github.com/safal207",
+      "https://github.com/safal207/safal207"
+    ]
+  }
+}
+  </script>
+</head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #037</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #037</p><h1>The membership record was authentic. It was no longer current.</h1><p class="dek">Verified #036 showed that an old quorum must not regain live authority after witness-set rotation. #037 attacks the next assumption: an attacker replays the old, perfectly authentic membership record itself. If the verifier treats the presented record as current, the retired quorum becomes live again.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><blockquote><p><strong>AUTHENTIC MEMBERSHIP RECORD ≠ CURRENT MEMBERSHIP AUTHORITY.</strong></p></blockquote><h2>The membership history</h2><pre><code>M1:
 set-A / epoch 1
 W1 W2 W3
 threshold = 2

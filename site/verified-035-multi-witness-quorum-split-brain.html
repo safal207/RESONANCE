@@ -1,4 +1,37 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #035: two locally valid 2-of-3 witness quorums can authorize incompatible histories unless cross-view quorum consistency is checked."><title>Verified #035 — Multi-Witness Quorum Split-Brain | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #035</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #035</p><h1>Both majorities were valid. They disagreed about reality.</h1><p class="dek">Verified #034 showed that one witness can fork its history. #035 raises the bar: two different verifiers each obtain a locally valid 2-of-3 quorum certificate for incompatible authority heads at the same witness-set epoch and logical round.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><blockquote><p><strong>LOCAL QUORUM ≠ GLOBALLY CONSISTENT QUORUM.</strong></p></blockquote><h2>The split brain</h2><pre><code>witness set = {W1, W2, W3}
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #035: two locally valid 2-of-3 witness quorums can authorize incompatible histories unless cross-view quorum consistency is checked."><title>Verified #035 — Multi-Witness Quorum Split-Brain | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css">  <meta name="author" content="Aleksei Safonov" />
+  <link rel="canonical" href="https://safal207.github.io/RESONANCE/verified-035-multi-witness-quorum-split-brain.html" />
+  <meta property="og:url" content="https://safal207.github.io/RESONANCE/verified-035-multi-witness-quorum-split-brain.html" />
+  <meta property="og:site_name" content="RESONANCE" />
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <meta property="og:image:alt" content="Aleksei Safonov — RESONANCE" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Verified #035 — Multi-Witness Quorum Split-Brain | RESONANCE" />
+  <meta name="twitter:description" content="RESONANCE Verified Report #035: two locally valid 2-of-3 witness quorums can authorize incompatible histories unless cross-view quorum consistency is checked." />
+  <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <script id="seo-structured-data" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Verified #035 — Multi-Witness Quorum Split-Brain | RESONANCE",
+  "description": "RESONANCE Verified Report #035: two locally valid 2-of-3 witness quorums can authorize incompatible histories unless cross-view quorum consistency is checked.",
+  "url": "https://safal207.github.io/RESONANCE/verified-035-multi-witness-quorum-split-brain.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "RESONANCE",
+    "url": "https://safal207.github.io/RESONANCE/"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Aleksei Safonov",
+    "url": "https://safal207.github.io/RESONANCE/aleksei-safonov.html",
+    "sameAs": [
+      "https://github.com/safal207",
+      "https://github.com/safal207/safal207"
+    ]
+  }
+}
+  </script>
+</head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #035</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #035</p><h1>Both majorities were valid. They disagreed about reality.</h1><p class="dek">Verified #034 showed that one witness can fork its history. #035 raises the bar: two different verifiers each obtain a locally valid 2-of-3 quorum certificate for incompatible authority heads at the same witness-set epoch and logical round.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><blockquote><p><strong>LOCAL QUORUM ≠ GLOBALLY CONSISTENT QUORUM.</strong></p></blockquote><h2>The split brain</h2><pre><code>witness set = {W1, W2, W3}
 threshold = 2-of-3
 set epoch = 1
 round = 50

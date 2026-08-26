@@ -1,4 +1,37 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="TTP rule: authenticate recovery records, compare peer recovery views, detect same-epoch resolution forks, and fail closed before consequence."><title>TTP — Recovery Authority Equivocation | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · RECOVERY CONSISTENCY</p><h1>Recovery authority equivocation</h1><blockquote><p><strong>AUTHENTIC RECOVERY RECORD ≠ UNIQUE RECOVERY HISTORY.</strong></p></blockquote><p>A recovery signature proves that one resolution record came from the named recovery authority. It does not prove that the authority issued only one resolution for the same recovery epoch and inherited dispute.</p><h2>Decision rule</h2><pre><code>RECEIVE RECOVERY RECORD R
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="TTP rule: authenticate recovery records, compare peer recovery views, detect same-epoch resolution forks, and fail closed before consequence."><title>TTP — Recovery Authority Equivocation | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css">  <meta name="author" content="Aleksei Safonov" />
+  <link rel="canonical" href="https://safal207.github.io/RESONANCE/ttp-recovery-authority-equivocation.html" />
+  <meta property="og:url" content="https://safal207.github.io/RESONANCE/ttp-recovery-authority-equivocation.html" />
+  <meta property="og:site_name" content="RESONANCE" />
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <meta property="og:image:alt" content="Aleksei Safonov — RESONANCE" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="TTP — Recovery Authority Equivocation | RESONANCE" />
+  <meta name="twitter:description" content="TTP rule: authenticate recovery records, compare peer recovery views, detect same-epoch resolution forks, and fail closed before consequence." />
+  <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <script id="seo-structured-data" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "TTP — Recovery Authority Equivocation | RESONANCE",
+  "description": "TTP rule: authenticate recovery records, compare peer recovery views, detect same-epoch resolution forks, and fail closed before consequence.",
+  "url": "https://safal207.github.io/RESONANCE/ttp-recovery-authority-equivocation.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "RESONANCE",
+    "url": "https://safal207.github.io/RESONANCE/"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Aleksei Safonov",
+    "url": "https://safal207.github.io/RESONANCE/aleksei-safonov.html",
+    "sameAs": [
+      "https://github.com/safal207",
+      "https://github.com/safal207/safal207"
+    ]
+  }
+}
+  </script>
+</head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · RECOVERY CONSISTENCY</p><h1>Recovery authority equivocation</h1><blockquote><p><strong>AUTHENTIC RECOVERY RECORD ≠ UNIQUE RECOVERY HISTORY.</strong></p></blockquote><p>A recovery signature proves that one resolution record came from the named recovery authority. It does not prove that the authority issued only one resolution for the same recovery epoch and inherited dispute.</p><h2>Decision rule</h2><pre><code>RECEIVE RECOVERY RECORD R
         ↓
 AUTHENTICATE R
         ↓

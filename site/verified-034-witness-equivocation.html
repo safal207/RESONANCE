@@ -1,4 +1,37 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #034: an independent witness can still equivocate by signing incompatible histories unless verifiers cross-check witness consistency."><title>Verified #034 — Witness Rollback / Equivocation | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #034</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #034</p><h1>The witness was independent. Its history was not unique.</h1><p class="dek">Verified #033 used an external witness to recover trust history after checkpoint storage rollback. #034 attacks that assumption: the same witness signs two different authenticated children at one witness sequence and parent, giving isolated verifiers two locally valid realities.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><blockquote><p><strong>INDEPENDENT WITNESS ≠ CONSISTENT WITNESS.</strong></p></blockquote><h2>The fork</h2><pre><code>WA42:
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #034: an independent witness can still equivocate by signing incompatible histories unless verifiers cross-check witness consistency."><title>Verified #034 — Witness Rollback / Equivocation | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css">  <meta name="author" content="Aleksei Safonov" />
+  <link rel="canonical" href="https://safal207.github.io/RESONANCE/verified-034-witness-equivocation.html" />
+  <meta property="og:url" content="https://safal207.github.io/RESONANCE/verified-034-witness-equivocation.html" />
+  <meta property="og:site_name" content="RESONANCE" />
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <meta property="og:image:alt" content="Aleksei Safonov — RESONANCE" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Verified #034 — Witness Rollback / Equivocation | RESONANCE" />
+  <meta name="twitter:description" content="RESONANCE Verified Report #034: an independent witness can still equivocate by signing incompatible histories unless verifiers cross-check witness consistency." />
+  <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <script id="seo-structured-data" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Verified #034 — Witness Rollback / Equivocation | RESONANCE",
+  "description": "RESONANCE Verified Report #034: an independent witness can still equivocate by signing incompatible histories unless verifiers cross-check witness consistency.",
+  "url": "https://safal207.github.io/RESONANCE/verified-034-witness-equivocation.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "RESONANCE",
+    "url": "https://safal207.github.io/RESONANCE/"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Aleksei Safonov",
+    "url": "https://safal207.github.io/RESONANCE/aleksei-safonov.html",
+    "sameAs": [
+      "https://github.com/safal207",
+      "https://github.com/safal207/safal207"
+    ]
+  }
+}
+  </script>
+</head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #034</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #034</p><h1>The witness was independent. Its history was not unique.</h1><p class="dek">Verified #033 used an external witness to recover trust history after checkpoint storage rollback. #034 attacks that assumption: the same witness signs two different authenticated children at one witness sequence and parent, giving isolated verifiers two locally valid realities.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>Dockerized HTTP boundary</span></div><blockquote><p><strong>INDEPENDENT WITNESS ≠ CONSISTENT WITNESS.</strong></p></blockquote><h2>The fork</h2><pre><code>WA42:
 witness-A / seq 42 / generation 7
 
 WA43-good:

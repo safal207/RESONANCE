@@ -1,4 +1,37 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #031: a forged authority-head watermark can make a stale proof-authority replica look current unless the head itself is authenticated."><title>Verified #031 — Authority Head Authenticity | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #031</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #031</p><h1>The head looked fresh. It was forged.</h1><p class="dek">A monotonic generation watermark only protects a verifier if the watermark itself is authentic. A forged lower head can make a stale regional authority replica appear current unless authenticity is checked before freshness.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>HMAC-SHA256 test fixture</span></div><h2>The setup</h2><pre><code>real authority:
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Verified Report #031: a forged authority-head watermark can make a stale proof-authority replica look current unless the head itself is authenticated."><title>Verified #031 — Authority Head Authenticity | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css">  <meta name="author" content="Aleksei Safonov" />
+  <link rel="canonical" href="https://safal207.github.io/RESONANCE/verified-031-authority-head-authenticity.html" />
+  <meta property="og:url" content="https://safal207.github.io/RESONANCE/verified-031-authority-head-authenticity.html" />
+  <meta property="og:site_name" content="RESONANCE" />
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <meta property="og:image:alt" content="Aleksei Safonov — RESONANCE" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Verified #031 — Authority Head Authenticity | RESONANCE" />
+  <meta name="twitter:description" content="RESONANCE Verified Report #031: a forged authority-head watermark can make a stale proof-authority replica look current unless the head itself is authenticated." />
+  <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <script id="seo-structured-data" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Verified #031 — Authority Head Authenticity | RESONANCE",
+  "description": "RESONANCE Verified Report #031: a forged authority-head watermark can make a stale proof-authority replica look current unless the head itself is authenticated.",
+  "url": "https://safal207.github.io/RESONANCE/verified-031-authority-head-authenticity.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "RESONANCE",
+    "url": "https://safal207.github.io/RESONANCE/"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Aleksei Safonov",
+    "url": "https://safal207.github.io/RESONANCE/aleksei-safonov.html",
+    "sameAs": [
+      "https://github.com/safal207",
+      "https://github.com/safal207/safal207"
+    ]
+  }
+}
+  </script>
+</head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Verified Report #031</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TRANSACTIONAL TRUST · VERIFIED #031</p><h1>The head looked fresh. It was forged.</h1><p class="dek">A monotonic generation watermark only protects a verifier if the watermark itself is authentic. A forged lower head can make a stale regional authority replica appear current unless authenticity is checked before freshness.</p><div class="article-meta"><span>Score: <strong>10/10</strong></span><span>PostgreSQL 17.6</span><span>HMAC-SHA256 test fixture</span></div><h2>The setup</h2><pre><code>real authority:
 generation 8
 R1 = REVOKED
 

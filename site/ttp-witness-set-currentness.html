@@ -1,4 +1,37 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Transactional Trust Protocol extension: quorum authorization must bind current witness-set membership, not only historically valid signatures."><title>TTP — Witness-Set Currentness | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol v1.0</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · WITNESS-SET CURRENTNESS</p><h1>A quorum is only as current as the membership authority behind it.</h1><p class="dek">A historical quorum certificate can remain completely authentic after membership rotation. Consequential authorization therefore requires a second proof: the certificate must still bind the currently authorized witness set.</p><blockquote><p><strong>VALID QUORUM FOR AN OLD MEMBERSHIP ≠ CURRENT QUORUM AUTHORITY.</strong></p></blockquote><h2>Required binding</h2><pre><code>QUORUM CERTIFICATE
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="RESONANCE Transactional Trust Protocol extension: quorum authorization must bind current witness-set membership, not only historically valid signatures."><title>TTP — Witness-Set Currentness | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css">  <meta name="author" content="Aleksei Safonov" />
+  <link rel="canonical" href="https://safal207.github.io/RESONANCE/ttp-witness-set-currentness.html" />
+  <meta property="og:url" content="https://safal207.github.io/RESONANCE/ttp-witness-set-currentness.html" />
+  <meta property="og:site_name" content="RESONANCE" />
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <meta property="og:image:alt" content="Aleksei Safonov — RESONANCE" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="TTP — Witness-Set Currentness | RESONANCE" />
+  <meta name="twitter:description" content="RESONANCE Transactional Trust Protocol extension: quorum authorization must bind current witness-set membership, not only historically valid signatures." />
+  <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <script id="seo-structured-data" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "TTP — Witness-Set Currentness | RESONANCE",
+  "description": "RESONANCE Transactional Trust Protocol extension: quorum authorization must bind current witness-set membership, not only historically valid signatures.",
+  "url": "https://safal207.github.io/RESONANCE/ttp-witness-set-currentness.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "RESONANCE",
+    "url": "https://safal207.github.io/RESONANCE/"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Aleksei Safonov",
+    "url": "https://safal207.github.io/RESONANCE/aleksei-safonov.html",
+    "sameAs": [
+      "https://github.com/safal207",
+      "https://github.com/safal207/safal207"
+    ]
+  }
+}
+  </script>
+</head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol v1.0</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · WITNESS-SET CURRENTNESS</p><h1>A quorum is only as current as the membership authority behind it.</h1><p class="dek">A historical quorum certificate can remain completely authentic after membership rotation. Consequential authorization therefore requires a second proof: the certificate must still bind the currently authorized witness set.</p><blockquote><p><strong>VALID QUORUM FOR AN OLD MEMBERSHIP ≠ CURRENT QUORUM AUTHORITY.</strong></p></blockquote><h2>Required binding</h2><pre><code>QUORUM CERTIFICATE
   ↓
 witness-set id
 set epoch

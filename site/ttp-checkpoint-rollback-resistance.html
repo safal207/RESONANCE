@@ -1,4 +1,37 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="TTP checkpoint rollback-resistance rule: recovered verifier trust state must be reconciled against authenticated independent history before consequential verification resumes."><title>TTP — Checkpoint Rollback Resistance | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css"></head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol v1.0</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · RECOVERY CURRENTNESS</p><h1>Checkpoint Rollback Resistance Rule</h1><p class="dek">A checkpoint can be durable and still come from the past. After verifier recovery, local trust history must be reconciled against an authenticated monotonic reference outside the restored state domain before it can authorize consequence.</p><blockquote><p><strong>DURABLE CHECKPOINT ≠ ROLLBACK-RESISTANT CHECKPOINT.</strong></p></blockquote><h2>Decision rule</h2><pre><code>RECOVER / START VERIFIER
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="TTP checkpoint rollback-resistance rule: recovered verifier trust state must be reconciled against authenticated independent history before consequential verification resumes."><title>TTP — Checkpoint Rollback Resistance | RESONANCE</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="article.css">  <meta name="author" content="Aleksei Safonov" />
+  <link rel="canonical" href="https://safal207.github.io/RESONANCE/ttp-checkpoint-rollback-resistance.html" />
+  <meta property="og:url" content="https://safal207.github.io/RESONANCE/ttp-checkpoint-rollback-resistance.html" />
+  <meta property="og:site_name" content="RESONANCE" />
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <meta property="og:image:alt" content="Aleksei Safonov — RESONANCE" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="TTP — Checkpoint Rollback Resistance | RESONANCE" />
+  <meta name="twitter:description" content="TTP checkpoint rollback-resistance rule: recovered verifier trust state must be reconciled against authenticated independent history before consequential verification resumes." />
+  <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/55020240?v=4" />
+  <script id="seo-structured-data" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "TTP — Checkpoint Rollback Resistance | RESONANCE",
+  "description": "TTP checkpoint rollback-resistance rule: recovered verifier trust state must be reconciled against authenticated independent history before consequential verification resumes.",
+  "url": "https://safal207.github.io/RESONANCE/ttp-checkpoint-rollback-resistance.html",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "RESONANCE",
+    "url": "https://safal207.github.io/RESONANCE/"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Aleksei Safonov",
+    "url": "https://safal207.github.io/RESONANCE/aleksei-safonov.html",
+    "sameAs": [
+      "https://github.com/safal207",
+      "https://github.com/safal207/safal207"
+    ]
+  }
+}
+  </script>
+</head><body><header class="site-header"><div class="masthead wrap"><a class="brand" href="index.html">RESONANCE</a><p class="masthead-line">Transactional Trust Protocol v1.0</p></div></header><main class="article-shell wrap"><article class="article"><p class="eyebrow">TTP EXTENSION · RECOVERY CURRENTNESS</p><h1>Checkpoint Rollback Resistance Rule</h1><p class="dek">A checkpoint can be durable and still come from the past. After verifier recovery, local trust history must be reconciled against an authenticated monotonic reference outside the restored state domain before it can authorize consequence.</p><blockquote><p><strong>DURABLE CHECKPOINT ≠ ROLLBACK-RESISTANT CHECKPOINT.</strong></p></blockquote><h2>Decision rule</h2><pre><code>RECOVER / START VERIFIER
         ↓
 READ LOCAL CHECKPOINT G_local
         ↓
