@@ -1,0 +1,74 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "039-astra-capu-r0-effect-authority",
+  "title": "ASTRA–CaPU R0 — Effect Authority Across Ambiguous Accelerator Completion",
+  "status": "PASS",
+  "scope": "software-reference deterministic and fault-injected effect-authority witness with exact committed authority, DISPATCHED_UNKNOWN recovery, stale foreign-incarnation evidence quarantine, exact outcome reconciliation, proof receipt generation and gated trusted-memory update",
+  "project": "safal207/CaPU",
+  "pull_request": 96,
+  "verified_content_head": "b8c658ef2cdbbf6bb59cb59113ade6281cee6368",
+  "architecture_base_head": "c5cf812d731d582f0acc66c25c7ddf62f3699412",
+  "hardware_semantics_ancestor_head": "f9d3832d84dc2415617a782cb226af83943b5ecd",
+  "merge_ref": "fc597ae4de067309d629f7ebd0b71772e5122a49",
+  "workflow": {
+    "name": "ASTRA-CaPU R0 Effect Authority",
+    "run_id": 33181326366,
+    "job_id": 98882955334,
+    "status": "success",
+    "rust_tests_passed": 81,
+    "rust_tests_failed": 0,
+    "cmc_rust_run_id": 33181326345,
+    "cmc_rust_job_id": 98882955125,
+    "cmc_rust_status": "success",
+    "validate_examples_run_id": 33181326340,
+    "validate_examples_job_id": 98882955182,
+    "validate_examples_status": "success"
+  },
+  "result": {
+    "schema": "capu.astra.r0.result.v1",
+    "baseline_dispatch_count": 2,
+    "baseline_external_effect_count": 2,
+    "baseline_duplicate_effect": true,
+    "capu_dispatch_count": 1,
+    "capu_external_effect_count": 1,
+    "blind_replay_blocked": true,
+    "success_claim_blocked": true,
+    "memory_update_blocked": true,
+    "stale_evidence_quarantined": 1,
+    "trusted_memory_updated": true,
+    "proof_receipt_digest": "201f12f4a796a757fb3981f7d98a0d4dbdbaf9d3da6871448d6e61441bce5b24"
+  },
+  "artifact": {
+    "name": "astra-capu-r0-effect-authority-evidence",
+    "id": 9689798660,
+    "size_bytes": 874,
+    "zip_sha256": "7987ba65a274863b98760cf76682a69447a2a77707503e176f7725e39492af1f"
+  },
+  "hashes": {
+    "state_machine_sha256": "44fd443ffc6b9dccee055babff16e4542c6a1c1c6daa4ec8c078e79407494f5a",
+    "module_registry_sha256": "4862910002f0f70975574d8c520918775e063201c3405aaa140b02a16bd4c8bc",
+    "executable_witness_sha256": "e7ab8526d39c63f595fc8b1727eb1fd3ca61b201ccaf655b4f6441e13531d8aa",
+    "trajectory_log_sha256": "138585c63ba72dc0da3af526ad751291aa2b358ef81b83ba4f128bbbcfe9732b"
+  },
+  "verified_invariants": [
+    "no committed authority implies no dispatch",
+    "exact committed authority permits dispatch",
+    "DISPATCHED_UNKNOWN blocks blind replay",
+    "DISPATCHED_UNKNOWN blocks success claims",
+    "DISPATCHED_UNKNOWN blocks trusted-memory updates",
+    "foreign authority incarnation evidence is rejected and quarantined",
+    "exact NOT_COMMITTED evidence may reopen one replay authority",
+    "exact COMMITTED evidence closes replay",
+    "exact COMMITTED evidence creates a proof receipt",
+    "trusted memory updates only after exact committed reconciliation"
+  ],
+  "claim_boundary": {
+    "proof_class": "software-reference deterministic and fault-injected testing",
+    "not_rtl_or_formal_hardware": true,
+    "not_fpga_or_silicon": true,
+    "not_real_transport": true,
+    "not_cryptographic_evidence_authenticity": true,
+    "not_liveness_or_unbounded_correctness": true
+  },
+  "published_at": "2026-08-28"
+}
