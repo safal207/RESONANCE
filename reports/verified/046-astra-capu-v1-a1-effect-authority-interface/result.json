@@ -1,0 +1,110 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "046-astra-capu-v1-a1-effect-authority-interface",
+  "title": "ASTRA–CaPU v1.0-A1 — Accelerator Effect Authority Interface",
+  "status": "PASS",
+  "verification_class": "exact-head deterministic software-contract verification",
+  "verified_at": "2026-08-28",
+  "project": "safal207/CaPU",
+  "pull_request": 93,
+  "verified_content_head": "41ffe240cc7be0be2e614cba590851f84a63e949",
+  "architecture_base_head": "26790adb404686fc0e309ef165afbeb53e2caa5f",
+  "merge_ref": "d6f357ffd19528f026d37f3138d28cd96083641a",
+  "scope": "implementation-neutral accelerator-effect authority ticket, exact outcome-evidence reconciliation, canonical SHA-256 binding, stale-checkpoint recovery and fail-closed ambiguous completion",
+  "workflow": {
+    "name": "ASTRA-CaPU v1.0-A1 Effect Authority Interface",
+    "run_id": 33179590650,
+    "job_id": 98877058541,
+    "status": "success",
+    "tests_passed": 12,
+    "tests_total": 12,
+    "validate_examples_run_id": 33179590652,
+    "validate_examples_job_id": 98877058380,
+    "validate_examples_status": "success",
+    "core_rtl_workflow_expected": false
+  },
+  "authority_identity": [
+    "queue_incarnation",
+    "queue_epoch",
+    "slot_id",
+    "command_id",
+    "attempt_id",
+    "effect_id"
+  ],
+  "bound_commitments": [
+    "intent_commitment",
+    "state_commitment",
+    "policy_commitment",
+    "checkpoint_commitment"
+  ],
+  "lifecycle": [
+    "PROPOSED",
+    "GROUNDED",
+    "AUTHORIZED",
+    "COMMITTED",
+    "DISPATCHED",
+    "RECONCILED_NOT_COMMITTED",
+    "RECONCILED_COMMITTED",
+    "CONFLICT",
+    "SEALED"
+  ],
+  "core_invariant": {
+    "state": "UNKNOWN",
+    "forbidden": [
+      "blind_replay",
+      "retirement",
+      "success_claim",
+      "trusted_memory_update"
+    ]
+  },
+  "verified_cases": [
+    "committed_effect_seals_with_proof_receipt",
+    "unknown_blocks_replay_retire_and_seal",
+    "dispatch_before_commit_rejected",
+    "foreign_authority_id_rejected",
+    "foreign_or_stale_authority_identity_rejected",
+    "negative_evidence_authorizes_only_next_attempt",
+    "prior_attempt_evidence_rejected_for_new_attempt",
+    "conflict_fail_closed",
+    "stale_checkpoint_cannot_override_durable_unknown",
+    "stale_checkpoint_cannot_override_completion_receipt",
+    "cross_authority_recovery_mix_rejected",
+    "canonical_digest_binds_every_authority_dimension"
+  ],
+  "artifact": {
+    "name": "astra-capu-v1-a1-effect-authority-evidence",
+    "id": 9689108326,
+    "zip_sha256": "c5d956f5844d8fc5e954db9a607ededddfe85f086839dbad12e9f1c39846b24e"
+  },
+  "hashes": {
+    "reference_engine_sha256": "813a913035bae1e5ca358091dd3ce5c8e2e040d97e6dc2e0535282daf1c776a1",
+    "test_suite_sha256": "8327abfde44b109e9c41c6de46a7b3ec18222f02ef1047874a07d405e3270fb7",
+    "schema_sha256": "e7b18d94916ad5e1b9547c3775b882b0dfbe29fd0ea757732441b5ba92bef1cc",
+    "valid_fixture_sha256": "e157fdc36633388895de9d3d9dce0efc93b71b755f38f12b4f7a6fdc95cc5cd1",
+    "adversarial_fixture_sha256": "01b7ee05e572ddef56aa17fe9782d0a102aef983d17ab22c248d4feda1ac08d1",
+    "contract_document_sha256": "25ecd54e07821231cceae358722f741223e4733002e580e6cca0682ef9571569",
+    "test_log_sha256": "1d5c23a1d43587fc830222862d87f367c9c83b36aa1001cbffb9870d34af51a3"
+  },
+  "claim_boundary": {
+    "included": [
+      "deterministic software reference state machine",
+      "canonical SHA-256 authority binding",
+      "JSON schema and fixtures",
+      "exact identity-gated outcome reconciliation",
+      "stale-checkpoint dominance by newer durable authority evidence"
+    ],
+    "excluded": [
+      "real GPU TPU or NPU integration",
+      "synthesizable composed controller",
+      "FPGA or silicon implementation",
+      "performance or PPA claims",
+      "cryptographic evidence authenticity",
+      "arbitrary concurrency",
+      "liveness or fairness",
+      "formal RTL proof of A1",
+      "unbounded correctness",
+      "external certification"
+    ]
+  },
+  "next_milestone": "A2 synthetic accelerator command-queue and crash-injection benchmark"
+}
