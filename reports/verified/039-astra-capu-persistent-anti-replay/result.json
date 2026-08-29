@@ -1,0 +1,82 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "039-astra-capu-persistent-anti-replay",
+  "title": "ASTRA-CaPU v1.0-A5 — Restart-Safe Persistent Anti-Replay Frontier",
+  "status": "PASS",
+  "project": "safal207/CaPU",
+  "pull_request": 100,
+  "verified_content_head": "b90dda3fe604b8a642b62e75d7f32db63fb0bceb",
+  "base_content_head": "290df2599a476f271160660e47d9ef0d53fbfe21",
+  "merge_ref": "b6536990371d69b292e74a6d435116e203d5f41f",
+  "runs": {
+    "a5": 33230310578,
+    "core": 33230310560,
+    "validate": 33230310574,
+    "fcrp": 33230310858
+  },
+  "jobs": {
+    "deterministic": 99041862743,
+    "formal": 99041862630
+  },
+  "canonical_digest_sha256": "a3a16fa02149f260352780aa48806bba54320eef7f6bcbe31500e920d9545502",
+  "formal": {
+    "method": "bounded model checking",
+    "tag_width_bits": 3,
+    "identity_width_bits": 3,
+    "persistent_lineage_count": 1,
+    "depth": 24,
+    "cover_depth": 36,
+    "cover_witnesses": 5,
+    "commit_before_effect": true,
+    "logic_reset_persistence_model": true,
+    "a4_regression": "PASS",
+    "input_sha256": "24a1789ebdcef5e0644bfb5ea0f8803ca49828132f82b6f9f18bb203dfb97e9b",
+    "safety_sha256": "f232553a0e1c98d54a7cdab975a17f8d1fbe78adbdc042fcc0268ad049fbfa63",
+    "cover_sha256": "c486adad4cb184469bbced53d6729aef9118afadaf57621f3e294d53d622424b",
+    "a4_regression_sha256": "78a183cf1aef1bb312d8f9e7d5f164ee8ab26580b7db7245026b70d0cedecd61",
+    "sby_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be"
+  },
+  "artifacts": [
+    {
+      "id": 9708271101,
+      "name": "astra-capu-v1-a5-persistent-anti-replay-evidence",
+      "zip_sha256": "af0df4c5f351664a4dace903ad9352aa33139e73eab3fca2572632ee3180d933"
+    },
+    {
+      "id": 9708277793,
+      "name": "astra-capu-v1-a5-persistent-anti-replay-formal-evidence",
+      "zip_sha256": "1d4afe8ef2303272f1e5b5f91cf88f26947a06ce31ff4be78696becf77197bc1"
+    }
+  ],
+  "deterministic": {
+    "external_effect_count": 2,
+    "persistent_next_attempt": 2,
+    "restart_replay_reject_code": 8,
+    "future_attempt_reject_code": 8,
+    "unit_tests": 11,
+    "a4_unit_regression_tests": 10
+  },
+  "verified": [
+    "persistent attempt frontier advances before command forwarding",
+    "same full attempt identity cannot forward again after logic restart",
+    "persistent lineage must match exact authority lineage",
+    "only the exact frontier successor attempt may forward",
+    "future or skipped attempts fail closed",
+    "frontier exhaustion fails closed",
+    "A4 deterministic and bounded-safety semantics remain green"
+  ],
+  "out_of_scope": [
+    "actual NVRAM or complete power-loss persistence",
+    "atomic real persistent-media writes",
+    "cryptographic authority-tag verification",
+    "arbitrary concurrent lineages",
+    "attempt-counter wrap handling",
+    "real accelerator transport",
+    "CDC correctness",
+    "timing and PPA",
+    "liveness or fairness",
+    "production widths",
+    "unbounded correctness"
+  ],
+  "recovery_boundary": "If the frontier advances but the external effect does not commit or remains unknown, A5 may conservatively lose replay authority; durable outcome reconciliation for that window is a separate milestone."
+}
