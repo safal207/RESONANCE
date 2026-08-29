@@ -1,0 +1,93 @@
+{
+  "schema": "resonance.verified-report.v1",
+  "report_id": "041-astra-capu-authenticated-device-receipts",
+  "title": "ASTRA-CaPU v1.0-A7 — Authenticated Device Outcome Receipts",
+  "status": "PASS",
+  "project": "safal207/CaPU",
+  "pull_request": 102,
+  "verified_content_head": "5cdaa5280348841bf8448c5a7844c273df257c5d",
+  "base_content_head": "2cf971e6f9cdefd213e72b4e79d4840c6ed83808",
+  "merge_ref": "c8de47b9e2f4968bb72400854049b7cdc3325eec",
+  "runs": {
+    "a7": 33256771503,
+    "core": 33256771575,
+    "validate": 33256771604
+  },
+  "jobs": {
+    "deterministic": 99111772866,
+    "formal": 99111773047
+  },
+  "canonical_digest_sha256": "6781dbfbd1b529866709980a3a85a38bd37f505daaddd53fd7c8e106ab863d2f",
+  "formal": {
+    "method": "bounded model checking",
+    "device_width_bits": 2,
+    "tag_width_bits": 2,
+    "identity_width_bits": 2,
+    "auth_tag_width_bits": 4,
+    "trusted_device_count": 1,
+    "trusted_key_epoch_count": 1,
+    "max_unresolved_attempts": 1,
+    "depth": 32,
+    "cover_depth": 56,
+    "cover_witnesses": 9,
+    "synthetic_mac_model": true,
+    "monotonic_receipt_sequence": true,
+    "authenticated_semantic_reject_consumes_sequence": true,
+    "a6_regression": "PASS",
+    "input_sha256": "66c56e74e3ce48b29205e6d401e3175a2482cb3b1783db504dd249a4dcf36815",
+    "safety_sha256": "d80f67ea54c05bb494dd0cc4a9886b890e6863242704dc5a2c426fdec756d397",
+    "cover_sha256": "191d838f5a71acbf3cb06c26d3979c7205675833b6c8a9ee8449536584909dc1",
+    "a6_regression_sha256": "1686343dca7671a25fe1536f089bcdc4ecbf5f300ac79cd6888ede4766bd185e",
+    "sby_sha": "b1a1e98cba941ec8433f8dc27f416cd7bb7f14be"
+  },
+  "artifacts": [
+    {
+      "id": 9716040264,
+      "name": "astra-capu-v1-a7-authenticated-device-receipt-evidence",
+      "zip_sha256": "eb9e1c6c6a03642a83c8c395f6dea97e0eb230c1db03f9484f0c2863c0744268"
+    },
+    {
+      "id": 9716074483,
+      "name": "astra-capu-v1-a7-authenticated-device-receipt-formal-evidence",
+      "zip_sha256": "ad63eb4a1dfd4735a0c7294b179a1341582417d9e3635d75c26931a5162d11b5"
+    }
+  ],
+  "deterministic": {
+    "external_effect_count": 1,
+    "persistent_next_attempt": 2,
+    "next_receipt_sequence": 2,
+    "last_outcome": "COMMITTED",
+    "forged_receipt_reject_code": 5,
+    "stale_receipt_reject_code": 4,
+    "foreign_device_reject_code": 2,
+    "terminal_replay_reject_code": 11,
+    "unit_tests": 11,
+    "a6_unit_regression_tests": 13
+  },
+  "verified": [
+    "only an authenticated exact device receipt can drive A6 reconciliation",
+    "forged authentication tags do not advance receipt sequence or mutate A6 outcome state",
+    "foreign device and wrong key-epoch receipts fail closed",
+    "stale receipt sequences fail closed",
+    "authenticated receipts bind the complete attempt identity and outcome field",
+    "accepted receipts advance the trusted receipt sequence monotonically",
+    "authenticated but semantically stale receipts consume sequence without mutating A6 state",
+    "exact committed receipts terminally close later replay authority",
+    "A6 deterministic and bounded-safety semantics remain green"
+  ],
+  "out_of_scope": [
+    "production cryptographic unforgeability",
+    "key secrecy and secure provisioning",
+    "SPDM DICE TPM secure-element PKI or attestation conformance",
+    "key rotation and re-attestation",
+    "Byzantine-resistant multi-source reconciliation",
+    "actual NVRAM or complete power-loss persistence",
+    "real accelerator transport",
+    "CDC and memory ordering",
+    "timing and PPA",
+    "liveness and availability",
+    "production widths",
+    "unbounded correctness"
+  ],
+  "authentication_boundary": "The rotate/XOR keyed tag is a synthetic bounded authentication primitive used to verify envelope-binding and sequence semantics; it is not production cryptography."
+}
