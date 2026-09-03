@@ -1,0 +1,17 @@
+{
+  "status": "draft_pending_participant_review",
+  "signal": "020",
+  "slug": "what-counts-as-windows-proof",
+  "canonical": "https://safal207.github.io/RESONANCE/what-counts-as-windows-proof.html",
+  "goal": "Make exact-revision CI evidence discoverable and invite concrete merge-gate counterexamples without implying endorsement.",
+  "releaseGate": "Written participant approval of the PythiaLabs × Ota attribution boundary.",
+  "languages": {
+    "en": {
+      "url": "https://safal207.github.io/RESONANCE/what-counts-as-windows-proof.html",
+      "hotQuestion": "When CI replays code from another branch, fork or workflow, what exact identity and authority context must the result bind before it may influence a merge decision?",
+      "x": "Two Windows fixes were green in a fork—and still NOT_RUN for the repository-owned gate. One temporary workflow bound literal SHAs, Windows runners, targeted commands, logs and final identity checks without moving either reviewed head. What must a green run bind before it may influence merge?",
+      "linkedin": "A green CI result is not a property of code. It is a relationship between a subject revision, environment, command, evidence packet and decision authority. In this RESONANCE field note, two Windows-specific fixes move from HOLD / NOT_RUN to bounded PASS through a temporary repository-owned workflow—without changing either reviewed PR head or converting execution evidence into merge approval.",
+      "hackerNews": "What Counts as Windows Proof? Exact-revision CI without moving reviewed PR heads"
+    }
+  }
+}

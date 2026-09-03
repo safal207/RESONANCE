@@ -1,0 +1,27 @@
+    Updating crates.io index
+     Locking 11 packages to latest compatible versions
+ Downloading crates ...
+  Downloaded quote v1.0.47
+  Downloaded unicode-ident v1.0.24
+  Downloaded serde_derive v1.0.229
+  Downloaded serde_json v1.0.151
+  Downloaded memchr v2.8.3
+  Downloaded proc-macro2 v1.0.107
+  Downloaded syn v3.0.4
+  Downloaded zmij v1.0.23
+  Downloaded itoa v1.0.18
+  Downloaded serde_core v1.0.229
+  Downloaded serde v1.0.229
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.24
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling serde_json v1.0.151
+   Compiling serde v1.0.229
+   Compiling itoa v1.0.18
+   Compiling memchr v2.8.3
+   Compiling syn v3.0.4
+   Compiling serde_derive v1.0.229
+   Compiling solver_port v0.1.0 (D:\a\pythiaLabs\pythiaLabs\workers\solver_port)
+    Finished `release` profile [optimized] target(s) in 11.99s

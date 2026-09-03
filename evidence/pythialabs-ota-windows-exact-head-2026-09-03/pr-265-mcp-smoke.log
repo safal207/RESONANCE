@@ -1,0 +1,17 @@
+MCP smoke test:
+  ok    initialize returns server name
+  ok    initialize returns version
+  ok    tools/list contains pythia_evaluate
+  ok    tools/list contains pythia_describe_gate
+  ok    tools/list contains pythia_list_gates
+  ok    tools/list contains pythia_mcp_info
+  ok    pythia_list_gates returns the three gate ids
+  ok    describe_gate returns matching schema
+  ok    schema has action.required list
+  ok    describe_gate rejects unknown gate with -32602
+  ok    evaluate exits 0 against stub mix
+  ok    evaluate forwards stub stdout
+  ok    pythia_mcp_info reports supportedGates
+  ok    pythia_mcp_info reports schemasDir
+
+OK: all assertions passed.
