@@ -1,6 +1,6 @@
 # Engineering Signal 020 — Repository-Owned Windows Proof Without Moving the Reviewed Heads
 
-**Status:** DRAFT — participant attribution review required before publication
+**Status:** PUBLISHED — 2026-09-04
 
 **Observed:** 2026-09-03
 
@@ -106,7 +106,7 @@ This is a change in one evidence dimension. It is not a scalar approval of eithe
 The run does **not** establish:
 
 - merge approval for PR #265, #266 or #269;
-- Ota adoption or repository-global execution governance;
+- [Ota](https://ota.run) adoption or repository-global execution governance;
 - production Windows compatibility outside the two exercised surfaces;
 - credentialed provider calls, deployment or multi-repository lifecycle behavior;
 - absence of unrelated defects;
@@ -138,9 +138,9 @@ The important design choice is not the number of jobs. It is refusing to let evi
 
 ## Collaboration and attribution boundary
 
-This draft describes a public, bounded PythiaLabs × Ota collaboration. Bobai, founder of Ota, proposed the pressure-test package and agreed to keep the reviewed implementation heads unchanged while the repository-owned Windows gap was closed.
+This published signal describes a public, bounded PythiaLabs × Ota collaboration. Bobai, founder of Ota, proposed the pressure-test package and agreed to keep the reviewed implementation heads unchanged while the repository-owned Windows gap was closed.
 
-That attribution is included for participant review. The article must not be published, distributed or presented as an endorsement until Bobai has approved the attribution boundary in writing.
+Bobai approved that attribution in writing before publication. The approval acknowledges the stated contribution only; it does not imply merge approval, Ota adoption, product endorsement or a commercial claim.
 
 ## Open question
 

@@ -1,10 +1,11 @@
 {
-  "status": "draft_pending_participant_review",
+  "status": "published",
+  "published_at": "2026-09-04",
   "signal": "020",
   "slug": "what-counts-as-windows-proof",
   "canonical": "https://safal207.github.io/RESONANCE/what-counts-as-windows-proof.html",
   "goal": "Make exact-revision CI evidence discoverable and invite concrete merge-gate counterexamples without implying endorsement.",
-  "releaseGate": "Written participant approval of the PythiaLabs × Ota attribution boundary.",
+  "attributionBoundary": "Written participant approval received 2026-09-03; approval covers the stated contribution only and implies no merge approval, adoption, endorsement, or commercial claim.",
   "languages": {
     "en": {
       "url": "https://safal207.github.io/RESONANCE/what-counts-as-windows-proof.html",

@@ -32,7 +32,7 @@ const routes = [
   { id: 'article005-en', route: 'memory-can-be-true-and-still-be-unsafe.html' },
   { id: 'article005-ru', route: 'memory-can-be-true-and-still-be-unsafe.ru.html' },
   { id: 'article005-zh', route: 'memory-can-be-true-and-still-be-unsafe.zh.html' },
-  { id: 'windows-proof-draft', route: 'what-counts-as-windows-proof.html' },
+  { id: 'windows-proof', route: 'what-counts-as-windows-proof.html' },
   { id: 'quality', route: 'quality.html' },
   { id: 'corrections', route: 'corrections.html' },
   { id: 'measurement', route: 'measurement.html' },
