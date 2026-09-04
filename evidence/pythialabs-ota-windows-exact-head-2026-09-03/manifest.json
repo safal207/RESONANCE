@@ -1,0 +1,87 @@
+{
+  "schema": "resonance.exact-head-evidence.v1",
+  "repository": "safal207/pythiaLabs",
+  "workflow_pr": 269,
+  "workflow_definition_sha": "ddf622d859bde5de4dca815a5d288735f66628c5",
+  "run_id": "33766318986",
+  "run_attempt": "1",
+  "runner": "Windows",
+  "collected_at": "2026-09-03T14:23:00Z",
+  "targets": [
+    {
+      "pr": 265,
+      "expected_head_sha": "70d4a98a4801884b1c75df0166154e2d6d28853b",
+      "initial_head_sha": "70d4a98a4801884b1c75df0166154e2d6d28853b",
+      "final_head_sha": "70d4a98a4801884b1c75df0166154e2d6d28853b",
+      "command": "node integrations/mcp/smoke.mjs",
+      "result": "PASS",
+      "exit_code": 0,
+      "observation": "14 assertions passed"
+    },
+    {
+      "pr": 266,
+      "expected_head_sha": "e62820c8f3a22ec6f26b027805e2a0ff1a73f509",
+      "initial_head_sha": "e62820c8f3a22ec6f26b027805e2a0ff1a73f509",
+      "final_head_sha": "e62820c8f3a22ec6f26b027805e2a0ff1a73f509",
+      "command": "mix test test/port_worker_test.exs",
+      "result": "PASS",
+      "exit_code": 0,
+      "observation": "solver_port.exe built; 3 tests; 0 failures"
+    }
+  ],
+  "provider_artifacts": [
+    {
+      "artifact_id": "9897659571",
+      "name": "pr-265-windows-exact-head",
+      "size_bytes": 1310,
+      "expires_at": "2026-09-10T14:21:27Z",
+      "archive_sha256": "1be6e23525275d0c51d765a480fda70d5a415d6b51b57921f8cc963fb1c7457b",
+      "downloaded_archive_sha256": "1be6e23525275d0c51d765a480fda70d5a415d6b51b57921f8cc963fb1c7457b",
+      "integrity": "MATCH"
+    },
+    {
+      "artifact_id": "9897711320",
+      "name": "pr-266-windows-exact-head",
+      "size_bytes": 2302,
+      "expires_at": "2026-09-10T14:22:43Z",
+      "archive_sha256": "2e4b25cc1e109b68bdc9e77fa80c03a4a790a6b0f095d0628ac1116844652bb3",
+      "downloaded_archive_sha256": "2e4b25cc1e109b68bdc9e77fa80c03a4a790a6b0f095d0628ac1116844652bb3",
+      "integrity": "MATCH"
+    }
+  ],
+  "retained_files": [
+    {
+      "path": "README.md",
+      "size_bytes": 1163,
+      "sha256": "3b033d29a8fd4813d670ae2e5178131ddbb94309334080e10491ea0977fe00c8",
+      "role": "boundary and non-claims"
+    },
+    {
+      "path": "pr-265-mcp-smoke.log",
+      "size_bytes": 665,
+      "sha256": "992910d1e42e3bc5d726292205063416793df9a3b458cdeb4c14c7c73cd209ec",
+      "role": "extracted #265 execution log"
+    },
+    {
+      "path": "pr-266-cargo-build.log",
+      "size_bytes": 908,
+      "sha256": "b419cb9648b886dd3fc8da3f1bac1c8a1191d5c33a96c2de668d0152c71e4614",
+      "role": "extracted #266 build log"
+    },
+    {
+      "path": "pr-266-port-worker-test.log",
+      "size_bytes": 1660,
+      "sha256": "a547ba1cea75c8291dc06c8080a4bc2e415651b5642d72db5984a6309403b8f3",
+      "role": "extracted #266 targeted test log"
+    }
+  ],
+  "completion_state": "COMPLETE_FOR_BOUNDED_WINDOWS_GATE",
+  "advisory_status": "PASS",
+  "non_claims": [
+    "No merge approval",
+    "No product or commercial endorsement",
+    "No repository-global Windows compatibility claim",
+    "No GitHub runner attestation claim",
+    "No test-completeness claim"
+  ]
+}

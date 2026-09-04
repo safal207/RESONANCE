@@ -1,0 +1,52 @@
+==> stream_data
+Compiling 3 files (.ex)
+Generated stream_data app
+===> Analyzing applications...
+===> Compiling telemetry
+==> jason
+Compiling 10 files (.ex)
+Generated jason app
+==> rustler
+Compiling 7 files (.ex)
+     warning: :json.decode/1 is undefined (module :json is not available or is yet to be defined)
+     │
+ 224 │         data |> :json.decode() |> versions_from_parsed_json()
+     │                       ~
+     │
+     └─ lib/mix/tasks/rustler.new.ex:224:23: Mix.Tasks.Rustler.New.get_versions/1
+
+Generated rustler app
+==> liminal_pythia
+Compiling 15 files (.ex)
+    Updating crates.io index
+     Locking 15 packages to latest compatible versions
+      Adding rustler v0.33.0 (available: v0.38.0)
+ Downloading crates ...
+  Downloaded heck v0.5.0
+  Downloaded void v1.0.2
+  Downloaded aho-corasick v1.1.5
+  Downloaded rustler_codegen v0.33.0
+  Downloaded rustler_sys v2.4.3
+  Downloaded unreachable v1.0.0
+  Downloaded rustler v0.33.0
+  Downloaded regex v1.13.1
+  Downloaded syn v2.0.119
+  Downloaded regex-syntax v0.8.11
+  Downloaded regex-automata v0.4.18
+Compiling crate fast_kernels in release mode (native/fast_kernels)
+warning: unused import: `rustler::Encoder`
+ --> src\lib.rs:1:5
+  |
+1 | use rustler::Encoder;
+  |     ^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+Copying d:\a\pythiaLabs\pythiaLabs\native\fast_kernels\target\release\fast_kernels.dll to priv/native/fast_kernels.dll
+Compiling lib/pythia/kernels.ex (it's taking more than 10s)
+Generated liminal_pythia app
+...
+Finished in 0.07 seconds (0.00s async, 0.07s sync)
+3 tests, 0 failures
+
+Randomized with seed 735235

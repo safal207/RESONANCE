@@ -157,6 +157,12 @@ const metadata = {
     kind: 'article',
     keywords: ['revoked authority', 'AI agent authorization', 'agent verification'],
   },
+  'what-counts-as-windows-proof.html': {
+    title: 'What Counts as Windows Proof? | RESONANCE',
+    description: 'A repository-owned Windows workflow closed two exact-revision verification gaps without moving either reviewed pull-request head or widening the tested scope.',
+    kind: 'article',
+    keywords: ['Windows CI', 'exact revision verification', 'GitHub Actions', 'pull request evidence', 'exact-head governance'],
+  },
 };
 
 function canonicalFor(file) {
