@@ -1,0 +1,29 @@
+{
+  "schema": "resonance.temporal-policy-audit.v1",
+  "research_date": "2026-09-05",
+  "python_version": "3.13.5",
+  "synthetic": true,
+  "llm_runs": 0,
+  "independent_reviewers": 0,
+  "original_module_sha256": "43223dc69c148e0e637b01994bca2cff3d85b192ab1d518cc21a718663350936",
+  "case_count": 12,
+  "baseline_matches": 7,
+  "candidate_matches": 12,
+  "candidate_order_variants": 600,
+  "historical_release_checks": 24,
+  "boundary": "author-designed open dev cases; no population accuracy estimate; no security/action authorization; circular cases rejected, not resolved",
+  "rows": [
+    {"case_id":"C01_unconditional_withdrawal","expected":"UNKNOWN","baseline":"UNKNOWN","candidate":"UNKNOWN","baseline_match":true,"candidate_match":true,"episode_sha256":"8b89dbc029ac8e803f56d215bdb5dec9efede000f2c57cb7a9f5bdcbb93b6d97"},
+    {"case_id":"C02_valid_conditional_withdrawal","expected":"UNKNOWN","baseline":"UNKNOWN","candidate":"UNKNOWN","baseline_match":true,"candidate_match":true,"episode_sha256":"dd55b1a9d6a70b3a48dd5ad9ca41ca649e44199e1d0e66956a994a7328a6a721"},
+    {"case_id":"C03_expired_basis","expected":"SUPPORTED","baseline":"UNKNOWN","candidate":"SUPPORTED","baseline_match":false,"candidate_match":true,"episode_sha256":"1dd760c04680325ddc20c7b25484692269df89cf58e161eb900b22af9f8377d4"},
+    {"case_id":"C04_unaccepted_basis","expected":"SUPPORTED","baseline":"UNKNOWN","candidate":"SUPPORTED","baseline_match":false,"candidate_match":true,"episode_sha256":"f08a02819bcdb321cc1b6ecb08a75fcdc41bc5b1622eb3d1be455b38dec1c65e"},
+    {"case_id":"C05_revoked_basis","expected":"SUPPORTED","baseline":"UNKNOWN","candidate":"SUPPORTED","baseline_match":false,"candidate_match":true,"episode_sha256":"cbbfc7abfd337648a2f05a838a48d83fb0d58282b29ebf2140f47b4f2cad318f"},
+    {"case_id":"C06_future_withdrawal","expected":"SUPPORTED","baseline":"SUPPORTED","candidate":"SUPPORTED","baseline_match":true,"candidate_match":true,"episode_sha256":"25eb6dab0b7df97f116503d9ff2bfd8d7fe97ff5facca5cf1ae4b55407da89dc"},
+    {"case_id":"C07_wrong_context","expected":"SUPPORTED","baseline":"SUPPORTED","candidate":"SUPPORTED","baseline_match":true,"candidate_match":true,"episode_sha256":"ed33ea54770142fc5101cbeb102bc6e51171a9d01d3cb05827aab2249d6fd672"},
+    {"case_id":"C08_unauthorized_withdrawal","expected":"SUPPORTED","baseline":"SUPPORTED","candidate":"SUPPORTED","baseline_match":true,"candidate_match":true,"episode_sha256":"cb29b0f2d4dc9e7666843981fefd2ff63a7a17f0a765c60d37f1c37dcbde6f91"},
+    {"case_id":"C09_expired_withdrawal","expected":"SUPPORTED","baseline":"SUPPORTED","candidate":"SUPPORTED","baseline_match":true,"candidate_match":true,"episode_sha256":"6907d487433ab438b3b4befdbb8173cbfff1f63ad82f142865874965b6bac8d4"},
+    {"case_id":"C10_transitively_expired_basis","expected":"SUPPORTED","baseline":"UNKNOWN","candidate":"SUPPORTED","baseline_match":false,"candidate_match":true,"episode_sha256":"f54b6778f971e921ba9fc92eed79222f3e490cc7e5679750fbbb7a9469aa07cc"},
+    {"case_id":"C11_explicit_conflict","expected":"CONTESTED","baseline":"CONTESTED","candidate":"CONTESTED","baseline_match":true,"candidate_match":true,"episode_sha256":"bcc69fa4cb1dd1856f40574cc20e6430bf545bd9469819cdc03b27505f44751a"},
+    {"case_id":"C12_circular_justification","expected":"REJECTED","baseline":"UNKNOWN","candidate":"REJECTED","baseline_match":false,"candidate_match":true,"episode_sha256":"7309475527f4279f39e715853daebbc55babd229d0c6fb09373653e36245ccc4"}
+  ]
+}

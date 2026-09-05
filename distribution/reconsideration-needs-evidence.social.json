@@ -1,0 +1,13 @@
+{
+  "article_id":"RP-TEMP-20260905",
+  "status":"interim_research_note",
+  "canonical_url":"https://safal207.github.io/RESONANCE/reconsideration-needs-evidence.ru.html",
+  "localized_urls":{"ru":"https://safal207.github.io/RESONANCE/reconsideration-needs-evidence.ru.html"},
+  "title":{"ru":"Переосмысление тоже требует доказательств"},
+  "description":{"ru":"68 зелёных технических тестов не исключили ошибку в основаниях пересмотра. Публикуем контрпример, код и кандидата исправления. LLM-прогонов нет."},
+  "social_copy":{"telegram_ru":"Переосмысление тоже требует доказательств. Наш исходный набор прошёл 68/68, но новые граничные случаи выявили ошибку в проверке оснований условного отзыва. Публикуем воспроизводимый аудит и кандидат исправления. Это синтетические тесты кода, не доказательство превосходства режима ИИ."},
+  "target_channel":"Telegram; manual only, not sent",
+  "intended_response_metric":"Independent counterexample or reproduction with pinned revision, not impressions",
+  "share_behavior":"Copy text and canonical URL manually; no automatic posting",
+  "non_claims":["No LLM ranking","No independent review","No real-world accuracy estimate","No action authorization"]
+}
