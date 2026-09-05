@@ -1,0 +1,28 @@
+name: Payment recovery web proof
+on:
+  pull_request:
+    paths:
+      - 'site/payment-recovery-*'
+      - 'scripts/verify-payment-recovery-demo.py'
+      - '.github/workflows/payment-recovery-web.yml'
+  push:
+    branches: ['feat/payment-recovery-premium-web']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Check native HTML projection
+        run: python3 scripts/verify-payment-recovery-demo.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: payment-recovery-web-source
+          path: |
+            site/payment-recovery-demo.html
+            site/payment-recovery-demo.css
+            site/payment-recovery-native.css
+          if-no-files-found: error
+          retention-days: 7
