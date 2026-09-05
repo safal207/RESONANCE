@@ -48,11 +48,16 @@ def check() -> dict:
         s = replay(initial, [e], as_of=cp['known_at'], receipts={'evaluated': receipt})
         actual = card(s)['proof']['verdict']
         mapped_expected = {'CONTESTED': 'CONFLICTS'}.get(expected, expected)
-        assert actual == mapped_expected, (name, actual, mapped_expected)
-        assert card(s)['proof']['support'] == evaluated['support_ids']
-        assert card(s)['proof']['counterevidence'] == evaluated['refute_ids']
-        assert s['history'][0]['proof']['verdict'] == 'UNKNOWN'
-        assert not card(s)['external_action_authorized']
+        if not (actual == mapped_expected):
+            raise AssertionError((name, actual, mapped_expected))
+        if not (card(s)['proof']['support'] == evaluated['support_ids']):
+            raise AssertionError('integration_check.py:52: validation failed')
+        if not (card(s)['proof']['counterevidence'] == evaluated['refute_ids']):
+            raise AssertionError('integration_check.py:53: validation failed')
+        if not (s['history'][0]['proof']['verdict'] == 'UNKNOWN'):
+            raise AssertionError('integration_check.py:54: validation failed')
+        if not (not card(s)['external_action_authorized']):
+            raise AssertionError('integration_check.py:55: validation failed')
         rows.append({'case_id': name, 'expected': mapped_expected, 'actual': actual,
                      'receipt_created': True, 'match': True})
     return {'schema': 'resonance.r5p.temporal-bridge.v1', 'cases_reused': len(rows),

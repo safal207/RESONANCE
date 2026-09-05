@@ -62,13 +62,16 @@ def export(out):
                 'boundary':'6 open families x 3 arms x 1 repeat; balanced arm order; matched scripted feedback, not freely interacting users; no withheld-set or efficacy claim. Blinding codes do not conceal answer style.'}
     for name, payload in [('manifest.json',manifest),('operator-key.json',key),('assessor-oracle.json',oracle)]:
         (out/name).write_text(json.dumps(payload,indent=2)+'\n',encoding='utf-8')
-    hashes={str(p.relative_to(out)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(out.rglob('*.json')) if p.name!='fingerprints.json'}
+    hashes={p.relative_to(out).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(out.rglob('*.json')) if p.name!='fingerprints.json'}
     (out/'fingerprints.json').write_text(json.dumps(hashes,indent=2)+'\n',encoding='utf-8')
-    assert len(jobs)==18 and len(set(j['run_id'] for j in jobs))==18
+    if not (len(jobs)==18 and len(set(j['run_id'] for j in jobs))==18):
+        raise AssertionError('prepare_abc.py:67: validation failed')
     for d in (out/'jobs').iterdir():
         first=json.loads((d/'turn-0.json').read_text())
-        assert set(first)=={'instructions','input'}
-        assert not ({'expected','feedback','arm','family','id'} & set(first['input']))
+        if not (set(first)=={'instructions','input'}):
+            raise AssertionError('prepare_abc.py:70: validation failed')
+        if not (not ({'expected','feedback','arm','family','id'} & set(first['input']))):
+            raise AssertionError('prepare_abc.py:71: validation failed')
     return manifest
 
 if __name__ == '__main__':

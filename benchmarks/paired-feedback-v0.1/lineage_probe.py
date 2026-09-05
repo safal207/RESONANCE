@@ -50,8 +50,10 @@ def make_report(baseline):
     rows = []
     for name, n, brief in [('Full from start', 0, False), ('Compact from start', 0, True), ('Compact after issued answer', 1, False)]:
         old, new = path(baseline, n, initially_compact=brief), path(paired, n, initially_compact=brief)
-        assert new['card']['proof']['verdict'] == 'REFUTED'
-        assert not new['card']['external_action_authorized']
+        if not (new['card']['proof']['verdict'] == 'REFUTED'):
+            raise AssertionError('lineage_probe.py:53: validation failed')
+        if not (not new['card']['external_action_authorized']):
+            raise AssertionError('lineage_probe.py:54: validation failed')
         rows.append({'path': name, 'expected': 'REFUTED', 'baseline': old['card']['proof']['verdict'],
                      'candidate': new['card']['proof']['verdict'], 'trace_before': old, 'trace_after': new})
     matrix = []
@@ -61,7 +63,8 @@ def make_report(baseline):
             matrix.append({'presentation_changes': n, 'receipt_answer': f'a{bound}',
                            'baseline_correct': old['card']['proof']['verdict'] == 'REFUTED',
                            'candidate_correct': new['card']['proof']['verdict'] == 'REFUTED'})
-    assert len(matrix) == 21 and all(x['candidate_correct'] for x in matrix)
+    if not (len(matrix) == 21 and all(x['candidate_correct'] for x in matrix)):
+        raise AssertionError('lineage_probe.py:64: validation failed')
     outcome = {}
     es = [event('RESULT_REPORTED', {'result': 'fixture completed'}),
           event('PREFERENCE_FEEDBACK', {'detail': 'compact'}, id='e2', sequence=2, event_at=stamp(2), known_at=stamp(2))]
@@ -71,9 +74,12 @@ def make_report(baseline):
         outcome[label] = {'current_answer_id': c['answer_id'], 'current_outcome_basis': c['outcome_basis'],
                           'earlier_answer_records_visible': c.get('related_outcome_observations', []),
                           'historically_stored': state['outcomes']}
-    assert outcome['candidate']['current_outcome_basis'] == 'NOT_OBSERVED'
-    assert outcome['candidate']['earlier_answer_records_visible'][0]['answer_id'] == 'a1'
-    assert outcome['candidate']['historically_stored'] == outcome['baseline']['historically_stored']
+    if not (outcome['candidate']['current_outcome_basis'] == 'NOT_OBSERVED'):
+        raise AssertionError('lineage_probe.py:74: validation failed')
+    if not (outcome['candidate']['earlier_answer_records_visible'][0]['answer_id'] == 'a1'):
+        raise AssertionError('lineage_probe.py:75: validation failed')
+    if not (outcome['candidate']['historically_stored'] == outcome['baseline']['historically_stored']):
+        raise AssertionError('lineage_probe.py:76: validation failed')
     return {'schema': 'resonance.presentation-lineage.probe.v1', 'synthetic': True,
             'baseline_commit': BASELINE_COMMIT, 'baseline_sha256': BASELINE_SHA256,
             'candidate_sha256': hashlib.sha256(Path(paired.__file__).read_bytes()).hexdigest(),
