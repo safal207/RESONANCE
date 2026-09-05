@@ -70,6 +70,8 @@ payload.data.forEach((e,i)=>{const b=document.createElement('button');b.textCont
 
 
 def build(out: Path):
+    if out.suffix.lower() != '.html':
+        raise ValueError('--out must use an .html suffix')
     payload = examples()
     encoded = json.dumps(payload, ensure_ascii=False).replace('<', '\\u003c')
     out.parent.mkdir(parents=True, exist_ok=True)

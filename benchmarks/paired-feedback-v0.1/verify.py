@@ -10,7 +10,28 @@ from pathlib import Path
 
 import build_demo
 import integration_check
-import test_paired
+
+
+def test_counts(result):
+    """Count successful test methods without treating skips/expected failures as pass."""
+    if not result.wasSuccessful():
+        raise ValueError('failed run cannot produce a successful verification summary')
+    return {'unit_tests_run': result.testsRun,
+            'unit_tests_passed': result.testsRun - len(result.skipped) - len(result.expectedFailures),
+            'unit_tests_skipped': len(result.skipped),
+            'unit_tests_expected_failures': len(result.expectedFailures)}
+
+
+def validate_trace(payload):
+    """Validation is unconditional, including when Python optimization is enabled."""
+    expected = ['SUPPORTED', 'SUPPORTED', 'SUPPORTED', 'SUPPORTED', 'UNKNOWN', 'REFUTED', 'SUPPORTED', 'CONFLICTS']
+    for e, verdict in zip(payload['data'], expected, strict=True):
+        final = e['snapshots'][-1]['card']
+        if not (final['proof']['verdict'] == verdict):
+            raise AssertionError(e['name'])
+        if not (not final['reply_required'] and not final['external_action_authorized']):
+            raise AssertionError('verify.py:34: validation failed')
+    return expected
 
 
 def main():
@@ -19,7 +40,7 @@ def main():
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     log = io.StringIO()
-    suite = unittest.defaultTestLoader.loadTestsFromModule(test_paired)
+    suite = unittest.defaultTestLoader.discover(str(Path(__file__).resolve().parent), pattern='test_*.py')
     with contextlib.redirect_stdout(log), contextlib.redirect_stderr(log):
         result = unittest.TextTestRunner(stream=log, verbosity=2).run(suite)
     (args.out / 'unit-tests.log').write_text(log.getvalue(), encoding='utf-8')
@@ -27,17 +48,13 @@ def main():
         raise SystemExit(log.getvalue())
     bridge = integration_check.check()
     payload = build_demo.build(args.out / 'paired-feedback.html')
-    expected = ['SUPPORTED', 'SUPPORTED', 'SUPPORTED', 'SUPPORTED', 'UNKNOWN', 'REFUTED', 'SUPPORTED', 'CONFLICTS']
-    for e, verdict in zip(payload['data'], expected, strict=True):
-        final = e['snapshots'][-1]['card']
-        assert final['proof']['verdict'] == verdict, e['name']
-        assert not final['reply_required'] and not final['external_action_authorized']
+    expected = validate_trace(payload)
     root = Path(__file__).resolve().parent
     source_files = sorted(root.glob('*.py'))
     source_files += sorted(integration_check.UPSTREAM.glob('*.py'))
-    hashes = {str(p.relative_to(root.parent)): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_files}
+    hashes = {p.relative_to(root.parent).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in source_files}
     report = {'schema': 'resonance.r5p.dev-verification.v1', 'python': platform.python_version(),
-              'synthetic': True, 'unit_tests_run': result.testsRun, 'unit_tests_passed': result.testsRun,
+              'synthetic': True, **test_counts(result),
               'temporal_cases_reused': bridge['cases_reused'], 'trace_scenarios': len(payload['data']),
               'trace_endpoint_checks': len(expected), 'llm_runs': 0, 'human_participants': 0,
               'token_savings_measured': False, 'pressure_reduction_measured': False,

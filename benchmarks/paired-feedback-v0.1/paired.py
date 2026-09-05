@@ -86,7 +86,7 @@ def initial_state(*, episode_id: str, goal_id: str, recipient_id: str,
     if any(k in CONTEXT_KEYS or not isinstance(k, str) or not k.strip()
            or not isinstance(v, str) or not v.strip() for k, v in fields.items()):
         raise ValueError('known_fields must be nonempty strings outside context')
-    answer = {'answer_id': 'a1', 'context': context(target),
+    answer = {'answer_id': 'a1', 'fact_revision': 'a1', 'context': context(target),
               'proof': proof(evaluated_proof), 'detail': 'full', 'pending_review': False,
               'reason': 'initial evaluated snapshot', 'known_at': known_at}
     return {'episode_id': episode_id, 'goal_id': goal_id, 'recipient_id': recipient_id,
@@ -100,6 +100,10 @@ def _revise(state: dict, event: dict, reason: str, **changes: Any) -> None:
     answer.update(changes)
     answer.update(answer_id=f"a{len(state['history']) + 1}", reason=reason,
                   known_at=event['known_at'])
+    # An evidence/context revision is a new barrier, even when verdicts match.
+    # Presentation changes and pending-review markers keep their factual lineage.
+    if 'proof' in changes or 'context' in changes:
+        answer['fact_revision'] = answer['answer_id']
     state['history'].append(answer)
 
 
@@ -109,12 +113,15 @@ def _receipt(registry: dict, event: dict, state: dict, purpose: str) -> dict | N
     if not isinstance(r, dict) or r.get('accepted') is not True:
         return None
     answer = state['history'][-1]
+    bound = next((a for a in state['history'] if a['answer_id'] == event['answer_id']), None)
+    if bound is None or bound['fact_revision'] != answer['fact_revision']:
+        return None
     if (r.get('purpose') != purpose or r.get('context') != answer['context']
             or r.get('claim_id') != answer['proof']['claim_id']
             or r.get('episode_id') != state['episode_id']
             or r.get('goal_id') != state['goal_id']
             or r.get('recipient_id') != state['recipient_id']
-            or r.get('answer_id') != answer['answer_id']):
+            or r.get('answer_id') != bound['answer_id']):
         return None
     if timestamp(r['known_at']) > timestamp(event['known_at']):
         return None
@@ -188,8 +195,14 @@ def replay(initial: dict, events: list[dict], *, as_of: str,
             continue
         current = state['history'][-1]
         if e['answer_id'] != current['answer_id']:
-            audit['effect'] = 'STALE_ANSWER_IGNORED'
-            continue
+            bound = next(a for a in state['history'] if a['answer_id'] == e['answer_id'])
+            same_facts = bound['fact_revision'] == current['fact_revision']
+            # Carry evidence/results across presentation changes, never new facts.
+            # Receipt.answer_id must still match the event's original answer_id.
+            if not (same_facts and e['kind'] in {
+                    'EVIDENCE_CHALLENGE', 'RESULT_REPORTED', 'RESULT_OBSERVED'}):
+                audit['effect'] = 'STALE_ANSWER_IGNORED'
+                continue
         kind = e['kind']
         if kind == 'PREFERENCE_FEEDBACK':
             if payload['detail'] not in {'compact', 'full'}:
@@ -254,10 +267,17 @@ def card(state: dict, required_fields: tuple[str, ...] = ()) -> dict:
     known = {**state['known_fields'], **a['context']}
     missing = [key for key in required_fields if key not in known]
     outcome = copy.deepcopy(state['outcomes'].get(a['answer_id'], []))
-    return {'answer_id': a['answer_id'], 'detail': a['detail'],
+    related = []
+    for prior in state['history']:
+        if prior['answer_id'] != a['answer_id'] and prior['fact_revision'] == a['fact_revision']:
+            for record in state['outcomes'].get(prior['answer_id'], []):
+                related.append({**copy.deepcopy(record), 'answer_id': prior['answer_id']})
+    return {'answer_id': a['answer_id'], 'fact_revision': a['fact_revision'], 'detail': a['detail'],
             'context': copy.deepcopy(a['context']), 'proof': copy.deepcopy(a['proof']),
             'pending_review': a['pending_review'],
             'outcome_observations': outcome, 'outcome_basis': 'RECORDED' if outcome else 'NOT_OBSERVED',
+            'related_outcome_observations': related,
+            'related_outcome_basis': 'RECORDED_FOR_EARLIER_ANSWER' if related else 'NOT_OBSERVED',
             'question': (f"Please specify {missing[0]}." if missing and state['lifecycle'] == 'OPEN' else None),
             'reply_required': False, 'automatic_follow_up': False,
             'external_action_authorized': False, 'lifecycle': state['lifecycle']}
