@@ -20,12 +20,20 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
       - name: Verify contracts, temporal bridge and demo endpoints
         working-directory: benchmarks/paired-feedback-v0.1
         run: python verify.py --out results
+      - name: Reproduce pinned presentation-lineage audit
+        working-directory: benchmarks/paired-feedback-v0.1
+        run: |
+          git show 0d83d3e767756e40b5fceab4fe207a524c152ede:benchmarks/paired-feedback-v0.1/paired.py > "$RUNNER_TEMP/paired_before.py"
+          python lineage_probe.py --baseline "$RUNNER_TEMP/paired_before.py" --out results
+          python prepare_abc.py --out results/abc-smoke
       - name: Upload explicit research evidence
         if: always()
         uses: actions/upload-artifact@v4

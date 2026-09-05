@@ -19,7 +19,7 @@ def main():
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     log = io.StringIO()
-    suite = unittest.defaultTestLoader.loadTestsFromModule(test_paired)
+    suite = unittest.defaultTestLoader.discover(str(Path(__file__).resolve().parent), pattern='test_*.py')
     with contextlib.redirect_stdout(log), contextlib.redirect_stderr(log):
         result = unittest.TextTestRunner(stream=log, verbosity=2).run(suite)
     (args.out / 'unit-tests.log').write_text(log.getvalue(), encoding='utf-8')
