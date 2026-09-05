@@ -1,0 +1,47 @@
+name: Evidence Time Machine — replay and read-only connector
+on:
+  pull_request:
+    paths:
+      - 'benchmarks/evidence-time-machine-v0.1/**'
+      - 'site/evidence-time-machine.en.html'
+      - '.github/workflows/evidence-time-machine.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'benchmarks/evidence-time-machine-v0.1/**'
+      - 'site/evidence-time-machine.en.html'
+      - '.github/workflows/evidence-time-machine.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  checks: read
+jobs:
+  replay-and-connector:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Offline adapter tests and replay
+        working-directory: benchmarks/evidence-time-machine-v0.1
+        run: |
+          python -m unittest -v test_adapter
+          python study.py --out offline-ci-results.json
+      - name: Fresh read-only GitHub capture of the pinned historical check
+        working-directory: benchmarks/evidence-time-machine-v0.1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python adapter.py capture --out fresh-github-observation.json
+          python study.py --input fresh-github-observation.json --out fresh-ci-results.json
+      - name: Store observable evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidence-time-machine-replay
+          path: |
+            benchmarks/evidence-time-machine-v0.1/*ci-results.json
+            benchmarks/evidence-time-machine-v0.1/fresh-github-observation.json
+          if-no-files-found: warn
