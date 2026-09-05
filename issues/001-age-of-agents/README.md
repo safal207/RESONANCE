@@ -38,6 +38,7 @@ Issue 001 maps this transition.
 12. [`A Diagnostic Nobody Can See Is Not a Signal — почему ownership, reachability и causal awareness нельзя сжимать в один статус`](articles/12-a-diagnostic-nobody-can-see-is-not-a-signal.md) — **published 2026-08-15**
 13. [`Evidence Must Bind the Transition — почему AI-системе недостаточно доказательства, если оно не связано с конкретным переходом`](articles/13-evidence-must-bind-the-transition.md) — **published 2026-08-15** · [web edition](https://safal207.github.io/RESONANCE/evidence-must-bind-the-transition.ru.html)
 14. [`When the Feature Request Becomes Infrastructure — что происходит, когда проблема исчезает, а исследовательская граница сдвигается дальше`](articles/14-when-the-feature-request-becomes-infrastructure.md) — **published 2026-08-17**
+15. [`Стакан изменился. Разрешение осталось. — повторная проверка допуска в RESONANCE Verify`](articles/15-when-order-book-depth-changes.md) — **published 2026-09-05** · [web edition](https://safal207.github.io/RESONANCE/when-order-book-depth-changes.ru.html)
 
 The fourth feature extends the trust question beyond pre-action authorization: a consequential outcome needs its own observer identity, vantage and evidence so decision provenance and outcome provenance remain separately inspectable.
 
@@ -60,6 +61,8 @@ The twelfth feature separates ownership, reachability, causal read basis and pre
 The thirteenth feature generalizes a shared failure shape exposed independently in the CrewAI authorization/revalidation discussion and the LangGraph cancellation/durability discussion: correct evidence and correct temporal ordering are not enough when a consequential transition is not explicitly bound to the exact evidence occurrence that authorizes, validates or settles it. It introduces Evidence-Bound Transitions, Execution Binding and Terminality Binding as a compact causal contract between proof and change.
 
 The fourteenth feature records a product-level boundary shift in Claude Code: persistent memory, compact/session lifecycle seams and cross-session/team coordination are now represented by native primitives in three discussions closed as completed on 2026-08-17. It explicitly avoids claiming implementation causality from community discussion; instead it turns the former workaround layer into a source of falsification cases for the next frontier — memory applicability, collector liveness, authority-aware handoff and evidence-bound dependency admission.
+
+The fifteenth feature isolates a synthetic order-book depth change at unchanged prices: a fresh boundary check rejects a 1,000 USDT route when first-leg capacity falls to 600 USDT. Seven deterministic cases and twelve focused tests preserve both the admission result and the unresolved observation-to-arrival gap; no exchange execution or external validation is claimed.
 
 ## Agent operating line
 

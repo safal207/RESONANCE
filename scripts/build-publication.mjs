@@ -16,6 +16,7 @@ const existingWebRoutes = new Map([
   ['03-when-agents-fail.md', 'when-agents-fail.html'],
   ['04-who-saw-the-outcome.md', 'who-saw-the-outcome.html'],
   ['13-evidence-must-bind-the-transition.md', 'evidence-must-bind-the-transition.ru.html'],
+  ['15-when-order-book-depth-changes.md', 'when-order-book-depth-changes.ru.html'],
 ]);
 
 function routeFor(filename) {
