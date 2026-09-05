@@ -83,6 +83,8 @@ The publication now has first-class entry points for:
 
 Article #004 is published in all three languages with `hreflang`, localized structured data, localized Open Graph locale metadata, share tools and a common market-intake path.
 
+Article #015 is maintained as one publication with three complete editions: [English](https://safal207.github.io/RESONANCE/when-order-book-depth-changes.html), [Русский](https://safal207.github.io/RESONANCE/when-order-book-depth-changes.ru.html), and [简体中文](https://safal207.github.io/RESONANCE/when-order-book-depth-changes.zh.html). Updates must preserve its claims, numbers, reproduction commands, evidence links and limitations across all three editions. Translation-parity and phone/tablet/desktop geometry checks cover the triplet.
+
 ## Research protocol
 
 ### Transactional Trust Protocol v1.0

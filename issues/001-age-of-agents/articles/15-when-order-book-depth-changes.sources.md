@@ -56,3 +56,15 @@ multi-level fill, queue, partial-fill or system-wide security claim is made.
 The publication does not upgrade a deterministic replay or a hash into source
 authenticity, completeness, execution authority or independent review.
 Claim status: UNASSESSED_REPLAY_SOURCE. Fill model: NONE_ADMISSION_ONLY.
+
+## Publication editions
+
+- Russian master: 15-when-order-book-depth-changes.md.
+- Complete English translation: translations/15-when-order-book-depth-changes.en.md.
+- Complete Simplified Chinese translation: translations/15-when-order-book-depth-changes.zh.md.
+
+The three web editions share the same seven cases, decision meanings, twelve-test
+claim, exact source revision, reproduction commands, report digest and limitations.
+Translation does not change the verification status or introduce another run.
+The language switcher, reciprocal hreflang links, common evidence destinations
+and semantic outline are covered by the publication's translation-parity gate.

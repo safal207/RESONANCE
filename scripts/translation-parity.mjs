@@ -17,6 +17,15 @@ const BASE = 'https://safal207.github.io/RESONANCE/';
 
 const groups = [
   {
+    id: 'article015',
+    profile: 'article-semantic',
+    files: {
+      en: 'when-order-book-depth-changes.html',
+      ru: 'when-order-book-depth-changes.ru.html',
+      'zh-CN': 'when-order-book-depth-changes.zh.html',
+    },
+  },
+  {
     id: 'homepage',
     profile: 'locale-shell',
     files: { en: 'index.html', ru: 'index.ru.html', 'zh-CN': 'index.zh.html' },

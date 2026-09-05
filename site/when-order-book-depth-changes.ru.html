@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Как повторная проверка RESONANCE Verify обнаруживает нехватку глубины перед условной отправкой заявки — и почему состояние после последнего наблюдения остаётся отдельным риском." />
   <meta property="article:published_time" content="2026-09-05" />
+  <link rel="alternate" hreflang="en" href="https://safal207.github.io/RESONANCE/when-order-book-depth-changes.html" />
+  <link rel="alternate" hreflang="ru" href="https://safal207.github.io/RESONANCE/when-order-book-depth-changes.ru.html" />
+  <link rel="alternate" hreflang="zh-CN" href="https://safal207.github.io/RESONANCE/when-order-book-depth-changes.zh.html" />
+  <link rel="alternate" hreflang="x-default" href="https://safal207.github.io/RESONANCE/when-order-book-depth-changes.html" />
   <title>Стакан изменился. Разрешение осталось. | RESONANCE</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="article.css" />
@@ -12,6 +16,10 @@
   <style>
     .depth-article .article-title{font-size:clamp(2.8rem,7.6vw,7rem);line-height:1.02;letter-spacing:-.055em;max-width:1100px;text-wrap:balance}
     .depth-article .article-body h2{font-size:clamp(2rem,4vw,3.25rem);line-height:1.12;letter-spacing:-.035em;margin-top:64px;overflow-wrap:normal}
+    .depth-article .language-switcher{margin-bottom:28px}
+    .depth-article #replay{scroll-margin-top:150px}
+    .depth-article .market-question{margin:0;padding:0;border:0;background:none}
+    .depth-article:lang(zh-CN) .article-title{letter-spacing:-.025em;line-height:1.14}
     .depth-article .article-body>p:first-child{margin-top:0}
     .depth-article .article-body a{text-underline-offset:3px}
     .depth-article .article-body blockquote{margin:42px 0;padding:8px 0 8px 24px;border-left:3px solid var(--accent);font-size:1.5rem;line-height:1.4}
@@ -45,6 +53,7 @@
   </header>
   <main id="article">
     <header class="article-hero wrap">
+      <div class="language-switcher" aria-label="Язык"><a href="when-order-book-depth-changes.html" hreflang="en">EN</a><a href="when-order-book-depth-changes.ru.html" hreflang="ru" aria-current="page">RU</a><a href="when-order-book-depth-changes.zh.html" hreflang="zh-CN">中文</a></div>
       <a class="back-link" href="issue-001.html">← Выпуск 001 · Эпоха агентов</a>
       <div class="article-meta-row">
         <p class="section-label">Статья #015 · RESONANCE Verify</p>
@@ -91,6 +100,7 @@
 <p>Повторный запуск воспроизводит полный JSON-результат с тем же SHA-256. Отчёт связывает фикстуру, правила, параметры затрат, состояния и байты семи модулей реализации. Это позволяет заметить изменение входов или кода.</p>
 <p>Пять остановленных синтетических вариантов не дают статистической оценки качества обнаружения. Двенадцать пройденных тестов не подтверждают поведение реальной биржи. Хеши удостоверяют совпадение данных, а не подлинность рыночных наблюдений.</p>
 <p>Статус результата — <code>UNASSESSED_REPLAY_SOURCE</code>. Модель — <code>NONE_ADMISSION_ONLY</code>: проверяется допуск в памяти. Здесь нет исполнения по нескольким уровням стакана, позиции в очереди, частичных исполнений, реальной прибыли или измеренной экономии средств. Системы Quantilan не тестировались; публикация опирается на открытый синтетический пример и не заявляет одобрения со стороны команды.</p>
+<section class="market-question">
 <h2 id="replay">Воспроизвести результат</h2>
 <p>Нужен Python 3.11 или новее. Проверка выполнена на Linux с Python 3.12.13. Установка Python-пакетов и доступ к сети во время самого прогона не требуются.</p>
 <p>Получите репозиторий и выберите точную версию демо:</p>
@@ -106,6 +116,8 @@ git checkout d6317c30833fed7d19edbcaf4f9f7467faa58519</code></pre>
 <p>Для запуска 12 тестов:</p>
 <pre><code class="language-bash">PYTHONPATH=src python3 -m unittest discover \
   -s tests -p test_exchange_state_demo.py -v</code></pre>
+<p><a class="button" href="https://github.com/safal207/resonance-arbitrage-graph/tree/d6317c30833fed7d19edbcaf4f9f7467faa58519" target="_blank" rel="noreferrer">Открыть фикстуру и код на GitHub ↗</a></p>
+</section>
 <h2>Следующий вопрос к реальному процессу</h2>
 <p>Демо даёт небольшую, конкретную отправную точку для обсуждения интеграции: какой снимок состояния доступен непосредственно перед допуском и какие ограничения остаются проверяемыми в момент приёма заявки исполнителем?</p>
 <p>Следующий полезный эксперимент — один публичный или синтетический пример от другой команды с явно определёнными полями состояния и временными метками. По нему можно сравнить ожидаемый отказ, фактическую причину и воспроизводимость результата. Ключи доступа и закрытая стратегия для этого не нужны.</p>
@@ -121,7 +133,7 @@ git checkout d6317c30833fed7d19edbcaf4f9f7467faa58519</code></pre>
       </article>
     </div>
   </main>
-  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Issue 001</p><p>The Age of Agents · Article 15</p></div><div><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Issue 001</p><p>Issue 001 · Article 015</p></div><div><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
   <script src="app.js"></script>
 </body>
 </html>

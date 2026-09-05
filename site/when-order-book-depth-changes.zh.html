@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RESONANCE Verify 如何在模拟提交订单前通过重新检查发现深度不足，以及为什么最后一次观测之后的状态变化仍然构成独立风险。包含七个合成场景、12项测试及复现命令。" />
+  <meta property="article:published_time" content="2026-09-05" />
+  <link rel="alternate" hreflang="en" href="https://safal207.github.io/RESONANCE/when-order-book-depth-changes.html" />
+  <link rel="alternate" hreflang="ru" href="https://safal207.github.io/RESONANCE/when-order-book-depth-changes.ru.html" />
+  <link rel="alternate" hreflang="zh-CN" href="https://safal207.github.io/RESONANCE/when-order-book-depth-changes.zh.html" />
+  <link rel="alternate" hreflang="x-default" href="https://safal207.github.io/RESONANCE/when-order-book-depth-changes.html" />
+  <title>订单簿变了，许可还在。 | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+  <link rel="stylesheet" href="market.css" />
+  <style>
+    .depth-article .article-title{font-size:clamp(2.8rem,7.6vw,7rem);line-height:1.02;letter-spacing:-.055em;max-width:1100px;text-wrap:balance}
+    .depth-article .article-body h2{font-size:clamp(2rem,4vw,3.25rem);line-height:1.12;letter-spacing:-.035em;margin-top:64px;overflow-wrap:normal}
+    .depth-article .language-switcher{margin-bottom:28px}
+    .depth-article #replay{scroll-margin-top:150px}
+    .depth-article .market-question{margin:0;padding:0;border:0;background:none}
+    .depth-article:lang(zh-CN) .article-title{letter-spacing:-.025em;line-height:1.14}
+    .depth-article .article-body>p:first-child{margin-top:0}
+    .depth-article .article-body a{text-underline-offset:3px}
+    .depth-article .article-body blockquote{margin:42px 0;padding:8px 0 8px 24px;border-left:3px solid var(--accent);font-size:1.5rem;line-height:1.4}
+    .depth-article .article-body pre{padding:22px;background:var(--night);color:var(--paper);border-radius:12px;font-size:.85rem;line-height:1.6}
+    .depth-article .table-wrap{max-width:100%;overflow-x:auto;margin:32px 0;border:1px solid var(--line);border-radius:12px}
+    .depth-article table{width:100%;min-width:560px;border-collapse:collapse;font-family:var(--sans);font-size:.82rem;line-height:1.5}
+    .depth-article th,.depth-article td{padding:16px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+    .depth-article th{background:var(--paper-deep);font-weight:650}
+    .depth-article tr:last-child td{border-bottom:0}
+    .depth-article .rail-dark strong{color:var(--paper);font-size:2.1rem}
+    .depth-article .rail-card a{line-height:1.6}
+    .depth-article .table-wrap:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+    @media(max-width:620px){.depth-article .article-title{font-size:clamp(2.7rem,11.5vw,4.1rem)}.depth-article .article-body h2{margin-top:48px}.depth-article .article-body pre{padding:16px}.depth-article .article-body blockquote{padding-left:18px;font-size:1.3rem}}
+  </style>
+</head>
+<body class="depth-article">
+  <a class="skip-link" href="#article">跳转到正文</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.zh.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">菜单</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="导航">
+      <a href="ai-agents.html">AI</a>
+      <a href="science.html">科学</a>
+      <a href="open-problems.html">开放问题</a>
+      <a href="verified-workflow.html">核查流程</a>
+      <a href="issue-001.html">第 001 期</a>
+    </nav>
+  </header>
+  <main id="article">
+    <header class="article-hero wrap">
+      <div class="language-switcher" aria-label="语言"><a href="when-order-book-depth-changes.html" hreflang="en">EN</a><a href="when-order-book-depth-changes.ru.html" hreflang="ru">RU</a><a href="when-order-book-depth-changes.zh.html" hreflang="zh-CN" aria-current="page">中文</a></div>
+      <a class="back-link" href="issue-001.html">← 第 001 期 · 智能体时代</a>
+      <div class="article-meta-row">
+        <p class="section-label">第 015 篇 · RESONANCE Verify</p>
+        <p class="article-status">已发布 · 2026年9月5日</p>
+      </div>
+      <h1 class="article-title">订单簿变了，许可还在。</h1>
+      <p class="article-dek">RESONANCE Verify 如何在模拟提交订单前通过重新检查发现深度不足，以及为什么最后一次观测之后的状态变化仍然构成独立风险。</p>
+      <div class="byline-row"><p>作者 <strong>Aleksei Safonov</strong></p><p>第 001 期 · 智能体时代</p></div>
+    </header>
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="文章结果与材料">
+        <div class="rail-card rail-dark"><p class="section-label">合成场景</p><strong>1 000 → 600</strong><span>需要 1,000 USDT，第一档只剩 600，价格没有变化。</span></div>
+        <div class="rail-card"><p class="section-label">本地核查</p><strong>12 项测试通过</strong><span>七种状态情况。只检查内存中的准入，不提交订单。</span><a href="#replay">复现结果 ↓</a></div>
+        <div class="rail-card"><p class="section-label">源文件</p><a href="https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/translations/15-when-order-book-depth-changes.zh.md" target="_blank" rel="noreferrer">中文文章源文件 ↗</a><a href="https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/15-when-order-book-depth-changes.sources.md" target="_blank" rel="noreferrer">证据清单 ↗</a></div>
+      </aside>
+      <article class="article-body generated-markdown-article">
+<p>交易智能体找到一条路径，估算了成本，并通过了检查。几十毫秒后，它准备将订单传递给下一个环节。屏幕上的价格没有变化，模型计算的收益空间也没有变化，但可用数量已经不足。</p>
+<p>最初的决定究竟允许什么：在当时观测到的条件下执行动作，还是允许之后任何参数相似的动作？</p>
+<p>我们用一个小型、开放的 RESONANCE Verify 示例分析了这个问题。所有价格、状态和时间戳均为合成数据。示例只检查内存中的准入标志，不连接交易所，也不创建订单。读者可以使用<a href="https://github.com/safal207/resonance-arbitrage-graph/tree/d6317c30833fed7d19edbcaf4f9f7467faa58519" target="_blank" rel="noreferrer">固定版本的源代码</a>复现结果。</p>
+<h2>一笔订单，两种状态</h2>
+<p>示例路径从 1,000 USDT 开始，经过 BTC 和 ETH，再回到 USDT。模型在每一跳计入 5 个基点的手续费和 5 个基点的模拟滑点。扣除这些成本后的准入阈值为 30 个基点。</p>
+<p>初次检查通过：模型计算的净收益空间约为 +94.66 个基点。引擎将其标记为 <code>EXECUTE_SIM</code>，表示仅在模拟中获得准入。</p>
+<p>第一跳的最优卖价为每 BTC 80,000 USDT。最初，该价格上的可用数量为 2 BTC，因此第一档的容量为 160,000 USDT。随后，数量降至 0.0075 BTC，容量变为 600 USDT，低于所需的 1,000 USDT。</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="场景时间线；表格可横向滚动"><table><thead><tr><th scope="col">测试夹具中的时间</th><th scope="col">观测到的状态</th><th scope="col">结果</th></tr></thead><tbody><tr><td>1,000 毫秒：初次检查</td><td>第一跳容量为 160,000 USDT</td><td><code>EXECUTE_SIM</code></td></tr><tr><td>1,075 毫秒：下一份快照</td><td>价格不变；容量已降至 600 USDT</td><td>新的输入数据</td></tr><tr><td>1,080 毫秒：重新检查</td><td>需要 1,000 USDT；仅有 600 可用</td><td><code>REJECT</code>，<code>CAPACITY_EXCEEDED:0</code></td></tr></tbody></table></div>
+<p>这里的 80 毫秒是场景设定的时间间隔，并非真实交易系统的延迟测量值。做出决定时，新快照的年龄为 5 毫秒，允许的最大值为 100 毫秒。</p>
+<h2>新鲜度不能替代容量</h2>
+<p>在主要场景中，价格和成本模型保持不变。模型计算的净收益空间仍为正，快照也通过了年龄检查。发生变化的是第一跳的可用数量，因此拒绝的确切原因是容量不足。</p>
+<p>这样的设置使结果可以被核查：我们能够将数量的影响与价格、时间的影响区分开来。单靠新鲜度规则无法阻止这一情况，因为新的快照确实是新鲜的。</p>
+<p>复用旧许可时，示例会在内存中记录允许准入。重新检查时，引擎根据当前快照重建路径，并返回 <code>CAPACITY_EXCEEDED:0</code>，撤销准入。两种路径都不会实际调用交易所的订单提交接口。</p>
+<blockquote><p>许可的含义，与授予许可时所依据的条件相伴而存。</p></blockquote>
+<h2>对照场景也必须能够通过</h2>
+<p>一个拒绝所有情况的示例，无法充分说明检查是否有用。因此，除了变化后的订单簿，我们还加入了一个正向对照：新鲜且未发生变化的快照会保留 <code>EXECUTE_SIM</code>。</p>
+<p>完整测试夹具包含七种情况。五种预先选定的不利状态会撤销准入，第七种情况则展示这一方法的边界。</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="七个场景与准入结果；表格可横向滚动"><table><thead><tr><th scope="col">场景</th><th scope="col">最终判定</th><th scope="col">内存中的准入</th></tr></thead><tbody><tr><td>新鲜且未变化的订单簿</td><td><code>EXECUTE_SIM</code></td><td>允许</td></tr><tr><td>第一跳容量降至 600 USDT</td><td><code>REJECT</code></td><td>不允许</td></tr><tr><td>价格变化使模型计算的净收益空间不再为正</td><td><code>REJECT</code></td><td>不允许</td></tr><tr><td>模型计算的净收益空间仍为正，但低于阈值</td><td><code>OBSERVE</code></td><td>不允许</td></tr><tr><td>夹具中的交易状态变为 <code>HALTED</code></td><td><code>REJECT</code></td><td>不允许</td></tr><tr><td>快照年龄超过上限</td><td><code>REJECT</code></td><td>不允许</td></tr><tr><td>深度在最后一次检查之后发生变化</td><td><code>EXECUTE_SIM</code></td><td>允许；后续诊断返回 <code>REJECT</code></td></tr></tbody></table></div>
+<p>容量、价格、成本和年龄由现有引擎检查。<code>HALTED</code> 条件由专为此夹具添加的独立包装层处理，核心函数 <code>evaluate_route</code> 不接收交易所状态。报告分别保留这两个层次的决定。</p>
+<p><code>OBSERVE</code> 同样不授予准入。重新检查不能将最初较严格的决定变为许可：初始的 <code>REJECT</code> 或 <code>OBSERVE</code> 不会仅因后续快照改善而升级为 <code>EXECUTE_SIM</code>。</p>
+<h2>再过二十毫秒</h2>
+<p>在最后一个场景中，重新检查在 1,080 毫秒时看到足够的数量，因此保留准入。随后，这部分数量消失。到了模拟到达时刻，即 1,100 毫秒，同一模型会返回 <code>REJECT</code>。</p>
+<p>这是一个预期内、尚未解决的情况。决定不会使用未来数据，到达时的快照只会在之后用于诊断。另一个测试专门验证：更改到达时的数据，不会改变更早的判定。</p>
+<p>重新检查只能基于它能够获得的观测。它不会预留流动性，也不会将决定与交易所状态进行原子绑定。未被观测到的变化，也可能发生在最后一份快照与检查本身之间。</p>
+<p>对集成而言，实际含义是需要单独说明：执行端在接受订单时能够检查哪些约束，以及用什么可观测结果结束该动作。一份新鲜的本地快照不会自动回答这些问题。</p>
+<h2>这些检查究竟确认了什么</h2>
+<p>在核查的版本中，演示的 12 项测试全部通过。它们覆盖复现、判定的确切原因、快照年龄边界、第二跳的容量单位、拒绝使用未来快照、保留更严格的初始决定，以及发现报告被修改。</p>
+<p>再次运行会得到完整且相同的 JSON 结果，SHA-256 也保持一致。报告绑定了夹具、规则、成本参数、状态以及七个实现模块的字节，因此能够发现输入或代码发生变化。</p>
+<p>五个被阻止的合成场景，不能提供检测质量的统计估计。十二项测试通过，也不能证明真实交易所的行为。哈希只能确认数据是否一致，不能认证市场观测的真实性。</p>
+<p>结果状态为 <code>UNASSESSED_REPLAY_SOURCE</code>，模型为 <code>NONE_ADMISSION_ONLY</code>：检查对象仅是内存中的准入。这里不模拟跨多个价格档位的成交、队列位置或部分成交，也不涉及真实利润或实测节省的资金。我们没有测试 Quantilan 的系统；本篇文章基于开放的合成示例，不声称获得其团队认可。</p>
+<section class="market-question">
+<h2 id="replay">复现结果</h2>
+<p>需要 Python 3.11 或更新版本。本次核查在 Linux 上使用 Python 3.12.13 完成。运行本身不需要安装额外 Python 包，也不需要网络访问。</p>
+<p>获取仓库，并选择演示的确切版本：</p>
+<pre><code class="language-bash">git clone https://github.com/safal207/resonance-arbitrage-graph.git
+cd resonance-arbitrage-graph
+git checkout d6317c30833fed7d19edbcaf4f9f7467faa58519</code></pre>
+<p>检查已保存的报告：</p>
+<pre><code class="language-bash">PYTHONPATH=src python3 -m resonance_arbitrage_graph.exchange_state_demo \
+  --fixture examples/quantilan/fixture.json \
+  --check examples/quantilan/expected-report.json</code></pre>
+<p>预期输出：</p>
+<pre><code class="language-text">Replay matches: 313084ae4464b057423496f800225015a4a2b565a0ae81be748aed02c0f5bad0</code></pre>
+<p>运行 12 项测试：</p>
+<pre><code class="language-bash">PYTHONPATH=src python3 -m unittest discover \
+  -s tests -p test_exchange_state_demo.py -v</code></pre>
+<p><a class="button" href="https://github.com/safal207/resonance-arbitrage-graph/tree/d6317c30833fed7d19edbcaf4f9f7467faa58519" target="_blank" rel="noreferrer">在 GitHub 上查看夹具与代码 ↗</a></p>
+</section>
+<h2>面向真实流程的下一个问题</h2>
+<p>这个演示为集成讨论提供了一个小而具体的起点：准入决定之前能够获得哪份状态快照，而执行端接受订单时又能检查哪些约束？</p>
+<p>下一项有用的实验，是由另一个团队提供一个公开或合成的示例，明确规定状态字段和时间戳。借助它，可以比较预期拒绝、实际原因以及结果是否可复现。这个实验不需要访问凭据或私有策略。</p>
+<p>一个在历史上正确的决定，只有在系统确实能够检查的条件范围内，才适用于下一次动作。</p>
+<h2>来源与核查边界</h2>
+<ol><li><a href="https://github.com/safal207/resonance-arbitrage-graph/blob/d6317c30833fed7d19edbcaf4f9f7467faa58519/docs/QUANTILAN_EXCHANGE_STATE_DEMO.md" target="_blank" rel="noreferrer">演示说明及其限制</a>。</li><li><a href="https://github.com/safal207/resonance-arbitrage-graph/blob/d6317c30833fed7d19edbcaf4f9f7467faa58519/examples/quantilan/fixture.json" target="_blank" rel="noreferrer">合成测试夹具</a>。</li><li><a href="https://github.com/safal207/resonance-arbitrage-graph/blob/d6317c30833fed7d19edbcaf4f9f7467faa58519/examples/quantilan/expected-report.json" target="_blank" rel="noreferrer">完整的预期报告</a>。</li><li><a href="https://github.com/safal207/resonance-arbitrage-graph/blob/d6317c30833fed7d19edbcaf4f9f7467faa58519/src/resonance_arbitrage_graph/exchange_state_demo.py" target="_blank" rel="noreferrer">决定比较模块</a>。</li><li><a href="https://github.com/safal207/resonance-arbitrage-graph/blob/d6317c30833fed7d19edbcaf4f9f7467faa58519/tests/test_exchange_state_demo.py" target="_blank" rel="noreferrer">十二项测试</a>。</li><li><a href="https://github.com/safal207/resonance-arbitrage-graph/blob/d6317c30833fed7d19edbcaf4f9f7467faa58519/src/resonance_arbitrage_graph/engine.py" target="_blank" rel="noreferrer">核心路径检查引擎</a>。</li></ol>
+<p>作者：Aleksei Safonov。源文件核查与本地复现日期：2026 年 9 月 5 日。结果仅适用于所引用的提交和本夹具；本篇文章不声称已有独立的外部复现。</p>
+        <section class="sources-block">
+          <p class="section-label">来源与证据</p>
+          <p><a href="https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/15-when-order-book-depth-changes.md" target="_blank" rel="noreferrer">GitHub 上的俄文原稿 ↗</a></p>
+          <p><a href="https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/15-when-order-book-depth-changes.sources.md" target="_blank" rel="noreferrer">来源与已核查主张清单 ↗</a></p>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>找到信号。验证路径。理解未来。</p></div><div><p class="footer-title">第 001 期</p><p>Issue 001 · Article 015</p></div><div><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
