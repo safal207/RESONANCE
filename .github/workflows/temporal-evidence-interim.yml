@@ -1,0 +1,35 @@
+name: Temporal evidence interim audit
+on:
+  pull_request:
+    paths:
+      - 'benchmarks/temporal-evidence-interim-2026-09-05/**'
+      - '.github/workflows/temporal-evidence-interim.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'benchmarks/temporal-evidence-interim-2026-09-05/**'
+      - '.github/workflows/temporal-evidence-interim.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  synthetic-policy-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - name: Reproduce all 12 cases (no models or external services)
+        working-directory: benchmarks/temporal-evidence-interim-2026-09-05
+        run: |
+          python3 audit.py --out /tmp/temporal-evidence-results.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          expected = json.loads(Path('results.json').read_text())
+          actual = json.loads(Path('/tmp/temporal-evidence-results.json').read_text())
+          expected.pop('python_version')
+          actual.pop('python_version')
+          if actual != expected:
+              raise SystemExit('Saved result differs from this CI reproduction')
+          print('All case verdicts, fingerprints and invariant counts reproduced.')
+          PY

@@ -1,0 +1,23 @@
+{
+  "research_date": "2026-09-05",
+  "status": "interim_local_synthetic_no_llm",
+  "original_archive_sha256": "3e03a257c796afe57e9f42db909c3ab3651e64bc3aad51b12822d44483d0a167",
+  "original_module_sha256": "43223dc69c148e0e637b01994bca2cff3d85b192ab1d518cc21a718663350936",
+  "original_manifest_entries": 107,
+  "original_manifest_mismatches": 0,
+  "baseline_existing_suite": {"tests":68,"failures":0,"errors":0},
+  "candidate_existing_suite": {"tests":68,"failures":0,"errors":0},
+  "unchanged_previous_checkpoints": 36,
+  "new_boundary_cases": 12,
+  "baseline_matches": 7,
+  "candidate_matches": 12,
+  "same_root_cause_variants": ["C03", "C04", "C05", "C10"],
+  "additional_explicit_policy_boundary": "C12 circular justification -> REJECTED; not a pre-existing guaranteed result",
+  "candidate_record_order_variants": 600,
+  "future_append_snapshot_checks": 24,
+  "llm_runs": 0,
+  "independent_reviewers": 0,
+  "real_world_episodes": 0,
+  "public_reproduction_scope": "12 new cases via audit.py; the original full 68-test archive remains a separately fingerprinted conversation artifact",
+  "warning": "SUPPORTED is not authorization; no live deployment, source authentication, policy-universal revocation semantics or LLM ranking"
+}
