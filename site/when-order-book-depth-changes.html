@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="How a RESONANCE Verify recheck detects insufficient depth before simulated order submission—and why state changes after the last observation remain a separate risk." />
+  <meta property="article:published_time" content="2026-09-05" />
+  <link rel="alternate" hreflang="en" href="https://safal207.github.io/RESONANCE/when-order-book-depth-changes.html" />
+  <link rel="alternate" hreflang="ru" href="https://safal207.github.io/RESONANCE/when-order-book-depth-changes.ru.html" />
+  <link rel="alternate" hreflang="zh-CN" href="https://safal207.github.io/RESONANCE/when-order-book-depth-changes.zh.html" />
+  <link rel="alternate" hreflang="x-default" href="https://safal207.github.io/RESONANCE/when-order-book-depth-changes.html" />
+  <title>The Order Book Changed. Permission Remained. | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+  <link rel="stylesheet" href="market.css" />
+  <style>
+    .depth-article .article-title{font-size:clamp(2.8rem,7.6vw,7rem);line-height:1.02;letter-spacing:-.055em;max-width:1100px;text-wrap:balance}
+    .depth-article .article-body h2{font-size:clamp(2rem,4vw,3.25rem);line-height:1.12;letter-spacing:-.035em;margin-top:64px;overflow-wrap:normal}
+    .depth-article .language-switcher{margin-bottom:28px}
+    .depth-article #replay{scroll-margin-top:150px}
+    .depth-article .market-question{margin:0;padding:0;border:0;background:none}
+    .depth-article:lang(zh-CN) .article-title{letter-spacing:-.025em;line-height:1.14}
+    .depth-article .article-body>p:first-child{margin-top:0}
+    .depth-article .article-body a{text-underline-offset:3px}
+    .depth-article .article-body blockquote{margin:42px 0;padding:8px 0 8px 24px;border-left:3px solid var(--accent);font-size:1.5rem;line-height:1.4}
+    .depth-article .article-body pre{padding:22px;background:var(--night);color:var(--paper);border-radius:12px;font-size:.85rem;line-height:1.6}
+    .depth-article .table-wrap{max-width:100%;overflow-x:auto;margin:32px 0;border:1px solid var(--line);border-radius:12px}
+    .depth-article table{width:100%;min-width:560px;border-collapse:collapse;font-family:var(--sans);font-size:.82rem;line-height:1.5}
+    .depth-article th,.depth-article td{padding:16px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+    .depth-article th{background:var(--paper-deep);font-weight:650}
+    .depth-article tr:last-child td{border-bottom:0}
+    .depth-article .rail-dark strong{color:var(--paper);font-size:2.1rem}
+    .depth-article .rail-card a{line-height:1.6}
+    .depth-article .table-wrap:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+    @media(max-width:620px){.depth-article .article-title{font-size:clamp(2.7rem,11.5vw,4.1rem)}.depth-article .article-body h2{margin-top:48px}.depth-article .article-body pre{padding:16px}.depth-article .article-body blockquote{padding-left:18px;font-size:1.3rem}}
+  </style>
+</head>
+<body class="depth-article">
+  <a class="skip-link" href="#article">Skip to article</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.html" aria-label="RESONANCE home">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="Navigation">
+      <a href="ai-agents.html">AI</a>
+      <a href="science.html">Science</a>
+      <a href="open-problems.html">Open Problems</a>
+      <a href="verified-workflow.html">Verified Workflow</a>
+      <a href="issue-001.html">Issue 001</a>
+    </nav>
+  </header>
+  <main id="article">
+    <header class="article-hero wrap">
+      <div class="language-switcher" aria-label="Language"><a href="when-order-book-depth-changes.html" hreflang="en" aria-current="page">EN</a><a href="when-order-book-depth-changes.ru.html" hreflang="ru">RU</a><a href="when-order-book-depth-changes.zh.html" hreflang="zh-CN">中文</a></div>
+      <a class="back-link" href="issue-001.html">← Issue 001 · The Age of Agents</a>
+      <div class="article-meta-row">
+        <p class="section-label">Article #015 · RESONANCE Verify</p>
+        <p class="article-status">Published · 5 Sep 2026</p>
+      </div>
+      <h1 class="article-title">The Order Book Changed. Permission Remained.</h1>
+      <p class="article-dek">How a RESONANCE Verify recheck detects insufficient depth before simulated order submission—and why state changes after the last observation remain a separate risk.</p>
+      <div class="byline-row"><p>By <strong>Aleksei Safonov</strong></p><p>Issue 001 · The Age of Agents</p></div>
+    </header>
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="Article result and materials">
+        <div class="rail-card rail-dark"><p class="section-label">Synthetic scenario</p><strong>1 000 → 600</strong><span>1,000 USDT required. Only 600 remains at the first price level. The price is unchanged.</span></div>
+        <div class="rail-card"><p class="section-label">Local verification</p><strong>12 tests passed</strong><span>Seven state cases. Admission in memory; no orders submitted.</span><a href="#replay">Reproduce the result ↓</a></div>
+        <div class="rail-card"><p class="section-label">Source materials</p><a href="https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/translations/15-when-order-book-depth-changes.en.md" target="_blank" rel="noreferrer">English article source ↗</a><a href="https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/15-when-order-book-depth-changes.sources.md" target="_blank" rel="noreferrer">Evidence ledger ↗</a></div>
+      </aside>
+      <article class="article-body generated-markdown-article">
+<p>A trading agent finds a route, estimates its costs and passes a check. A few dozen milliseconds later, it is ready to hand the order onward. The displayed price is unchanged. So is the modeled edge. But the available volume is no longer sufficient.</p>
+<p>What does the original decision authorize: an action under the observed conditions, or any later action with similar parameters?</p>
+<p>We examined this question in a small, open RESONANCE Verify example. Every price, state and timestamp is synthetic. The example checks an admission flag in memory; it does not connect to an exchange or create orders. It can be reproduced from the <a href="https://github.com/safal207/resonance-arbitrage-graph/tree/d6317c30833fed7d19edbcaf4f9f7467faa58519" target="_blank" rel="noreferrer">pinned source code</a>.</p>
+<h2>One order, two states</h2>
+<p>The illustrative route starts with 1,000 USDT and goes through BTC and ETH back to USDT. The model charges a 5-basis-point fee and 5 basis points of modeled slippage on each leg. The admission threshold is 30 basis points after these costs.</p>
+<p>The initial check passes: the modeled net edge is about +94.66 basis points. The engine calls this <code>EXECUTE_SIM</code>: admission exclusively within the simulation.</p>
+<p>On the first leg, the best ask is 80,000 USDT per BTC. Initially, 2 BTC is available at that price, giving the first price level a capacity of 160,000 USDT. The quantity then falls to 0.0075 BTC. Capacity becomes 600 USDT—less than the required 1,000.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Scenario timeline; scroll the table horizontally"><table><thead><tr><th scope="col">Fixture time</th><th scope="col">Observed state</th><th scope="col">Result</th></tr></thead><tbody><tr><td>1,000 ms: initial check</td><td>First-leg capacity: 160,000 USDT</td><td><code>EXECUTE_SIM</code></td></tr><tr><td>1,075 ms: next snapshot</td><td>Same price; capacity is now 600 USDT</td><td>New input data</td></tr><tr><td>1,080 ms: recheck</td><td>1,000 USDT required; 600 available</td><td><code>REJECT</code>, <code>CAPACITY_EXCEEDED:0</code></td></tr></tbody></table></div>
+<p>This 80-ms interval is specified by the scenario. It is not a measured latency of a real trading system. At the decision point, the new snapshot is 5 ms old; the maximum permitted age is 100 ms.</p>
+<h2>Freshness does not replace capacity</h2>
+<p>In the main scenario, both price and the cost model are held constant. The modeled net edge remains positive. The snapshot passes the age check. What changes is the available volume on the first leg, and insufficient capacity is precisely why the decision becomes a rejection.</p>
+<p>This makes the result inspectable: we can separate the effect of volume from the effects of price and time. A freshness rule alone does not stop this case, because the new snapshot really is fresh.</p>
+<p>When the old permission is reused, the example records admission in memory. With a new check, the engine rebuilds the route from the current snapshots and returns <code>CAPACITY_EXCEEDED:0</code>. Admission is withdrawn. Neither path makes an actual submission call to an exchange.</p>
+<blockquote><p>Permission retains its meaning together with the conditions under which it was granted.</p></blockquote>
+<h2>A control must also be able to pass</h2>
+<p>An example that rejects everything says little about a check&#39;s usefulness. Alongside the changed order book, we therefore include a positive control: a fresh, unchanged snapshot preserves <code>EXECUTE_SIM</code>.</p>
+<p>The complete fixture contains seven cases. Five deliberately selected adverse states remove admission. The seventh case exposes the limit of the approach.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Seven cases and admission results; scroll the table horizontally"><table><thead><tr><th scope="col">Case</th><th scope="col">Final verdict</th><th scope="col">Admission in memory</th></tr></thead><tbody><tr><td>Fresh, unchanged order book</td><td><code>EXECUTE_SIM</code></td><td>Yes</td></tr><tr><td>First-leg capacity falls to 600 USDT</td><td><code>REJECT</code></td><td>No</td></tr><tr><td>A price change removes the positive modeled net edge</td><td><code>REJECT</code></td><td>No</td></tr><tr><td>Modeled net edge remains positive but falls below the threshold</td><td><code>OBSERVE</code></td><td>No</td></tr><tr><td>Trading status in the fixture changes to <code>HALTED</code></td><td><code>REJECT</code></td><td>No</td></tr><tr><td>Snapshot age exceeds the limit</td><td><code>REJECT</code></td><td>No</td></tr><tr><td>Depth changes after the last check</td><td><code>EXECUTE_SIM</code></td><td>Yes; later diagnosis returns <code>REJECT</code></td></tr></tbody></table></div>
+<p>The existing engine checks capacity, prices, costs and age. The <code>HALTED</code> condition is added by a separate wrapper specifically for this fixture: the core <code>evaluate_route</code> does not accept exchange status. The report preserves these two decision layers separately.</p>
+<p><code>OBSERVE</code> also withholds admission. Rechecking cannot turn a stricter original decision into permission: an initial <code>REJECT</code> or <code>OBSERVE</code> cannot become <code>EXECUTE_SIM</code> merely because a later snapshot improves.</p>
+<h2>Another twenty milliseconds</h2>
+<p>In the final case, the recheck sees sufficient volume and retains admission at 1,080 ms. The volume then disappears. At the simulated arrival time, 1,100 ms, the same model returns <code>REJECT</code>.</p>
+<p>This is an expected, unresolved case. The decision does not use future data. The arrival snapshot is analyzed afterward, solely as a diagnostic. A separate test verifies that changing arrival data does not change the earlier verdict.</p>
+<p>A recheck works with the observation available to it. It does not reserve liquidity or bind its decision atomically to exchange state. An unobserved change can also happen between the last snapshot and the check itself.</p>
+<p>The practical implication for integration is to specify separately which constraints the executor can check when accepting an order and which observable result completes the action. A fresh local snapshot does not automatically answer those questions.</p>
+<h2>What the checks actually establish</h2>
+<p>All 12 demo tests passed for the inspected revision. They cover replay, exact decision reasons, the snapshot-age boundary, capacity units on the second leg, rejection of future snapshots, preservation of a stricter original decision and detection of report changes.</p>
+<p>A repeat run reproduces the complete JSON result with the same SHA-256. The report binds the fixture, policy, cost parameters, states and bytes of seven implementation modules. This makes changes to the inputs or code detectable.</p>
+<p>Five stopped synthetic cases do not provide a statistical detection-quality estimate. Twelve passing tests do not establish the behavior of a real exchange. Hashes establish that data matches; they do not authenticate market observations.</p>
+<p>The result status is <code>UNASSESSED_REPLAY_SOURCE</code>. Its model is <code>NONE_ADMISSION_ONLY</code>: the check concerns admission in memory. It does not model fills across multiple price levels, queue position, partial fills, real profit or measured money saved. Quantilan systems were not tested; this publication relies on an open synthetic example and claims no endorsement by the team.</p>
+<section class="market-question">
+<h2 id="replay">Reproduce the result</h2>
+<p>Python 3.11 or newer is required. Verification was performed on Linux with Python 3.12.13. No Python package installation or network access is required during the run itself.</p>
+<p>Obtain the repository and select the exact demo revision:</p>
+<pre><code class="language-bash">git clone https://github.com/safal207/resonance-arbitrage-graph.git
+cd resonance-arbitrage-graph
+git checkout d6317c30833fed7d19edbcaf4f9f7467faa58519</code></pre>
+<p>Check the saved report:</p>
+<pre><code class="language-bash">PYTHONPATH=src python3 -m resonance_arbitrage_graph.exchange_state_demo \
+  --fixture examples/quantilan/fixture.json \
+  --check examples/quantilan/expected-report.json</code></pre>
+<p>Expected output:</p>
+<pre><code class="language-text">Replay matches: 313084ae4464b057423496f800225015a4a2b565a0ae81be748aed02c0f5bad0</code></pre>
+<p>Run the 12 tests:</p>
+<pre><code class="language-bash">PYTHONPATH=src python3 -m unittest discover \
+  -s tests -p test_exchange_state_demo.py -v</code></pre>
+<p><a class="button" href="https://github.com/safal207/resonance-arbitrage-graph/tree/d6317c30833fed7d19edbcaf4f9f7467faa58519" target="_blank" rel="noreferrer">Open the fixture and code on GitHub ↗</a></p>
+</section>
+<h2>The next question for a real workflow</h2>
+<p>The demo provides a small, concrete starting point for an integration discussion: which state snapshot is available immediately before admission, and which constraints remain checkable when the executor accepts the order?</p>
+<p>The next useful experiment is one public or synthetic example from another team with explicitly defined state fields and timestamps. It would let us compare the expected rejection, the actual reason and reproducibility. Neither access credentials nor a private strategy is needed for that experiment.</p>
+<p>A historically correct decision becomes usable for the next action only within conditions that the system can actually check.</p>
+<h2>Sources and verification boundary</h2>
+<ol><li><a href="https://github.com/safal207/resonance-arbitrage-graph/blob/d6317c30833fed7d19edbcaf4f9f7467faa58519/docs/QUANTILAN_EXCHANGE_STATE_DEMO.md" target="_blank" rel="noreferrer">Demo description and limitations</a>.</li><li><a href="https://github.com/safal207/resonance-arbitrage-graph/blob/d6317c30833fed7d19edbcaf4f9f7467faa58519/examples/quantilan/fixture.json" target="_blank" rel="noreferrer">Synthetic fixture</a>.</li><li><a href="https://github.com/safal207/resonance-arbitrage-graph/blob/d6317c30833fed7d19edbcaf4f9f7467faa58519/examples/quantilan/expected-report.json" target="_blank" rel="noreferrer">Complete expected report</a>.</li><li><a href="https://github.com/safal207/resonance-arbitrage-graph/blob/d6317c30833fed7d19edbcaf4f9f7467faa58519/src/resonance_arbitrage_graph/exchange_state_demo.py" target="_blank" rel="noreferrer">Decision comparison module</a>.</li><li><a href="https://github.com/safal207/resonance-arbitrage-graph/blob/d6317c30833fed7d19edbcaf4f9f7467faa58519/tests/test_exchange_state_demo.py" target="_blank" rel="noreferrer">The twelve tests</a>.</li><li><a href="https://github.com/safal207/resonance-arbitrage-graph/blob/d6317c30833fed7d19edbcaf4f9f7467faa58519/src/resonance_arbitrage_graph/engine.py" target="_blank" rel="noreferrer">Core route verification engine</a>.</li></ol>
+<p>Author: Aleksei Safonov. Source-file verification and local reproduction: 5 September 2026. The result applies to the cited commit and this fixture; this publication does not claim an independent external run.</p>
+        <section class="sources-block">
+          <p class="section-label">Source and evidence</p>
+          <p><a href="https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/15-when-order-book-depth-changes.md" target="_blank" rel="noreferrer">Original article in Russian on GitHub ↗</a></p>
+          <p><a href="https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/15-when-order-book-depth-changes.sources.md" target="_blank" rel="noreferrer">Sources and verified-claim ledger ↗</a></p>
+        </section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Issue 001</p><p>Issue 001 · Article 015</p></div><div><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>

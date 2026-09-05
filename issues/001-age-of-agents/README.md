@@ -38,7 +38,7 @@ Issue 001 maps this transition.
 12. [`A Diagnostic Nobody Can See Is Not a Signal — почему ownership, reachability и causal awareness нельзя сжимать в один статус`](articles/12-a-diagnostic-nobody-can-see-is-not-a-signal.md) — **published 2026-08-15**
 13. [`Evidence Must Bind the Transition — почему AI-системе недостаточно доказательства, если оно не связано с конкретным переходом`](articles/13-evidence-must-bind-the-transition.md) — **published 2026-08-15** · [web edition](https://safal207.github.io/RESONANCE/evidence-must-bind-the-transition.ru.html)
 14. [`When the Feature Request Becomes Infrastructure — что происходит, когда проблема исчезает, а исследовательская граница сдвигается дальше`](articles/14-when-the-feature-request-becomes-infrastructure.md) — **published 2026-08-17**
-15. [`Стакан изменился. Разрешение осталось. — повторная проверка допуска в RESONANCE Verify`](articles/15-when-order-book-depth-changes.md) — **published 2026-09-05** · [web edition](https://safal207.github.io/RESONANCE/when-order-book-depth-changes.ru.html)
+15. [`Стакан изменился. Разрешение осталось. — повторная проверка допуска в RESONANCE Verify`](articles/15-when-order-book-depth-changes.md) — **published 2026-09-05** · [EN](https://safal207.github.io/RESONANCE/when-order-book-depth-changes.html) · [RU](https://safal207.github.io/RESONANCE/when-order-book-depth-changes.ru.html) · [中文](https://safal207.github.io/RESONANCE/when-order-book-depth-changes.zh.html)
 
 The fourth feature extends the trust question beyond pre-action authorization: a consequential outcome needs its own observer identity, vantage and evidence so decision provenance and outcome provenance remain separately inspectable.
 
