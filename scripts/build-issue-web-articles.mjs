@@ -9,6 +9,7 @@ const existingWebRoutes = new Map([
   ['03-when-agents-fail.md', 'when-agents-fail.html'],
   ['13-evidence-must-bind-the-transition.md', 'evidence-must-bind-the-transition.ru.html'],
   ['15-when-order-book-depth-changes.md', 'when-order-book-depth-changes.ru.html'],
+  ['16-how-repositories-constrain-hallucinations.md', 'how-repositories-constrain-hallucinations.ru.html'],
 ]);
 
 function escapeHtml(value = '') {
@@ -57,7 +58,7 @@ function renderTable(lines) {
   return `<div class="table-wrap"><table><thead><tr>${headers.map((cell) => `<th>${inline(cell)}</th>`).join('')}</tr></thead><tbody>${body.map((row) => `<tr>${row.map((cell) => `<td>${inline(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 }
 
-function renderMarkdown(markdown) {
+export function renderMarkdown(markdown) {
   const lines = markdown.replace(/\r\n/g, '\n').split('\n');
   const out = [];
   let index = 0;

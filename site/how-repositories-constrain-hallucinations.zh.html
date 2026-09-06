@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="CML、ContractGraph-QA、PythiaLabs 和 LiminalQA 已经能够检查什么，以及如何设计实验来衡量 AI 智能体错误的减少。" />
+  <meta property="article:published_time" content="2026-09-06" />
+  <link rel="canonical" href="https://safal207.github.io/RESONANCE/how-repositories-constrain-hallucinations.zh.html" />
+  <link rel="alternate" hreflang="en" href="https://safal207.github.io/RESONANCE/how-repositories-constrain-hallucinations.html" />
+  <link rel="alternate" hreflang="ru" href="https://safal207.github.io/RESONANCE/how-repositories-constrain-hallucinations.ru.html" />
+  <link rel="alternate" hreflang="zh-CN" href="https://safal207.github.io/RESONANCE/how-repositories-constrain-hallucinations.zh.html" />
+  <link rel="alternate" hreflang="x-default" href="https://safal207.github.io/RESONANCE/how-repositories-constrain-hallucinations.html" />
+  <title>如何减少 AI 幻觉：证据、检查与可验证结果 | RESONANCE</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="article.css" />
+  <link rel="stylesheet" href="article016.css" />
+</head>
+<body class="evidence-article">
+  <a class="skip-link" href="#article">阅读文章</a>
+  <header class="site-header">
+    <div class="masthead wrap">
+      <a class="brand" href="index.zh.html" aria-label="RESONANCE">RESONANCE</a>
+      <p class="masthead-line">Journal of Intelligence, Technology & Human Progress</p>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">菜单</button>
+    </div>
+    <nav class="nav wrap" id="main-nav" aria-label="导航"><a href="ai-agents.html">AI</a><a href="science.html">Science</a><a href="open-problems.html">Open Problems</a><a href="verified-workflow.html">Verified Workflow</a><a href="issue-001.html">Issue 001</a></nav>
+  </header>
+  <main id="article">
+    <header class="article-hero wrap">
+      <div class="language-switcher" aria-label="语言"><a href="how-repositories-constrain-hallucinations.html" hreflang="en">EN</a><a href="how-repositories-constrain-hallucinations.ru.html" hreflang="ru">RU</a><a href="how-repositories-constrain-hallucinations.zh.html" hreflang="zh-CN" aria-current="page">中文</a></div>
+      <a class="back-link" href="issue-001.html">← 第 001 期 · 智能体时代</a>
+      <div class="article-meta-row"><p class="section-label">第 016 篇 · 智能体可靠性</p><p class="article-status">发布 · 2026年9月6日</p></div>
+      <h1 class="article-title">如何减少幻觉：从回答走向可验证的结果</h1>
+      <p class="article-dek">CML、ContractGraph-QA、PythiaLabs 和 LiminalQA 已经能够检查什么，以及如何设计实验来衡量 AI 智能体错误的减少。</p>
+      <div class="byline-row"><p>作者：Aleksei Safonov</p><p>Issue 001 · Article 016</p></div>
+    </header>
+    <div class="article-layout wrap">
+      <aside class="article-rail" aria-label="证据与范围">
+        <div class="rail-card rail-dark"><p class="section-label">本地复现</p><strong>6 个案例</strong><span>三个正例通过，三个反例被发现。没有调用 LLM。</span><a href="#replay">重放证据</a></div>
+        <div class="rail-card"><p class="section-label">测量边界</p><span>模型幻觉率的降低尚未测量。</span></div>
+        <div class="rail-card"><p class="section-label">来源与证据</p><a href="https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/translations/16-how-repositories-constrain-hallucinations.zh.md" target="_blank" rel="noreferrer">文章源文件</a><a href="https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/16-how-repositories-constrain-hallucinations.sources.md" target="_blank" rel="noreferrer">断言与来源登记表</a></div>
+      </aside>
+      <article class="article-body generated-markdown-article">
+<h2>智能体说“完成了”，究竟发生了什么？</h2>
+<p>设想一个智能体报告：“所有检查均已通过，可以发布这个变更。”链接指向一份真实报告。但报告属于上一个提交，有些检查从未执行，也没有人授予发布许可。文字很有说服力，实际结论却缺少依据。</p>
+<p>这里存在几种不同的问题。编造测试结果属于无依据的断言；将旧报告用于新代码属于适用性错误；把验证当作许可属于权限错误。分别检查这些问题，才能看见被一个笼统的“智能体可靠性”分数掩盖的断点。</p>
+<p>我们的工程假设是：明确的来源、验证规则、当前适用范围和结果观测，可以减少系统接受并据以行动的无依据结论。这是对模型外围系统的设计建议。本文没有测量模型本身幻觉率的变化。</p>
+<h2>检索是第一层</h2>
+<p>Lewis 等人的 Retrieval-Augmented Generation 将检索得到的文档与参数记忆结合。在作者评估的任务中，其生成内容比所选基线更符合事实。这支持使用外部来源，但不能证明每个 RAG 应用的每个回答都真实。 <a href="#source-1">[S1]</a></p>
+<p>FActScore 将长回答分解为原子事实，并评估其中有多少得到可靠来源的支持。对我们有用的原则是：逐项检查重要断言。早期研究的结果不能直接套用于当前模型或我们的代码仓库。 <a href="#source-2">[S2]</a></p>
+<p>一个实际延伸是，将每项断言绑定到具体片段、版本和观测时间。附上链接本身并不能说明文档支持该结论。来源过时或解释错误仍然可能发生。</p>
+<h2>四个仓库，四个问题</h2>
+<div class="table-wrap" tabindex="0" role="region" aria-label="文章表格；需要时可水平滚动"><table><thead><tr><th scope="col">组件</th><th scope="col">已检查版本中的能力</th><th scope="col">如何提供帮助</th><th scope="col">仍然存在的边界</th></tr></thead><tbody><tr><td>Causal-Memory-Layer</td><td>父节点及可配置批准祖先的审计；已重放两个案例</td><td>发现某项决定缺少所要求的批准记录祖先</td><td>读取轨迹；自身不阻止动作，也不认证记录真伪 <a href="#source-3">[S3]</a></td></tr><tr><td>ContractGraph-QA</td><td>支付恢复轨迹评估；已重放四个种子案例</td><td>发现结果未明确时的重试，以及重试身份的不连续</td><td>检查提供的事件；不证明来源完整性或接收方的实际效果 <a href="#source-4">[S4]</a></td></tr><tr><td>PythiaLabs</td><td>文档描述的工具调用前 ALLOW / BLOCK / ESCALATE 准入 MVP</td><td>为动作条件提供明确的决策模式</td><td>本文检查了文档源文件，未执行 PythiaLabs；ALLOW 不会执行动作 <a href="#source-5">[S5]</a></td></tr><tr><td>LiminalQA</td><td>包含 Unknown 和 ObserveOnly 的类型化决策包</td><td>以机器可读形式呈现测试信号和数据不足的结果</td><td>类型和启发式规则不能证明根因；本文未运行 Rust 组件 <a href="#source-6">[S6]</a></td></tr></tbody></table></div>
+<p>这些角色相互补充。但它们存在于不同仓库中，并不证明从回答验证到执行的完整流程已经集成。下文的组合属于集成方案。已有组件与本地执行证据分别标明。</p>
+<h2>一项断言应附带什么？</h2>
+<p>第一个原型可以使用一个小型断言登记表。这是建议的集成格式，并非四个项目已经共同实现的 API。</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="文章表格；需要时可水平滚动"><table><thead><tr><th scope="col">字段</th><th scope="col">含义</th></tr></thead><tbody><tr><td>claim_id, claim_text</td><td>正在检查的具体断言</td></tr><tr><td>evidence_refs</td><td>支持该断言的原始片段或产物</td></tr><tr><td>source_commit, subject_id</td><td>已检查的来源版本和对象</td></tr><tr><td>observed_at, applicable_until</td><td>证据取得时间，以及何时或在什么条件下需要重新检查</td></tr><tr><td>status</td><td>SUPPORTED / CONTRADICTED / UNKNOWN：证据支持状态</td></tr><tr><td>decision_ref</td><td>单独引用动作准入决定</td></tr><tr><td>result_ref</td><td>如果执行了动作，单独引用结果观测</td></tr></tbody></table></div>
+<p>系统先获取证据并保存版本，再把回答分解为可检查的断言，为每项断言匹配依据。执行动作之前，重新检查对象、时间、条件和权限。执行之后，记录观测到的结果，或将其保留为 UNKNOWN。</p>
+<p>缺少证据时，智能体可以请求补充产物、继续安全的信息收集，或明确缩小回答范围。对于重要动作，必需条件不完整时应停止或交由人工决定。这是拟议集成的规则；被动审计器本身不会执行这一规则。</p>
+<p>有效的 JSON 结构检查的是形式。哈希帮助发现字节变化。连通图检查的是已记录数据中的关系。这些性质都不能单独证明原始消息真实。回执有效性、两份回执与同一调用的关联、效果次数以及 exactly-once 保证，需要不同的证据。</p>
+<h2>本次已经复现了什么？</h2>
+<p>2026 年 9 月 6 日，我们运行了现有的 CML 批准示例和四个现有 CGQA 固定测试数据案例。源代码版本已固定，输入和完整输出均已保存。预期分类在执行前记录。连续两次计算得到相同结果。 <a href="#source-7">[S7]</a></p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="文章表格；需要时可水平滚动"><table><thead><tr><th scope="col">场景</th><th scope="col">观测结果</th></tr></thead><tbody><tr><td>CML：缺少必需的批准祖先</td><td>FAIL；CML-AUDIT-R5-EXEC_REQUIRES_HUMAN_APPROVAL 和 CML-AUDIT-R7-ML_ACTION_REQUIRES_POLICY_APPROVAL</td></tr><tr><td>CML：存在批准记录</td><td>PASS；无发现项</td></tr><tr><td>CGQA：committed，随后 stop</td><td>pass</td></tr><tr><td>CGQA：failed，随后保持身份连续地重试</td><td>pass</td></tr><tr><td>CGQA：结果确认之前重试</td><td>fail；APR-001_UNRESOLVED_AMBIGUITY_FINANCIAL_ACTION 和 APR-009_TRACE_ENDS_UNRESOLVED</td></tr><tr><td>CGQA：failed 之后更换重试键</td><td>fail；APR-004_IDEMPOTENCY_CHANGED_ON_RETRY</td></tr></tbody></table></div>
+<p>预先设定的 6 项分类全部匹配：三个反例被发现，三个正例通过。这检验的是规则区分所选示例的能力。没有调用 LLM，也没有执行真实工具动作或支付。因此，“6 项全部匹配”不能改写为“幻觉已消除”，也不能作为生产环境的有效率。</p>
+<p>尤其需要明确：本次 CML 和 CGQA 是在轨迹构建完成后，发现提供给它们的轨迹中的问题。要阻止未来的调用，仍须将检查结果正确连接到执行器。</p>
+<h2>如何重放？</h2>
+<p>在包含本文的 RESONANCE checkout 中，获取两个固定的源代码版本。本次执行环境为 Linux、Python 3.12.13 和 PyYAML 6.0.3。PyYAML 是此示例唯一的外部 Python 依赖，请安装到自己的虚拟环境中。重放本身在本地运行。</p>
+<pre><code class="language-bash">git clone https://github.com/safal207/Causal-Memory-Layer.git ../cml-article016
+git -C ../cml-article016 checkout 7a3a98c60a402d394e4d286da956823898454b8a
+git clone https://github.com/safal207/ContractGraph-QA.git ../cgqa-article016
+git -C ../cgqa-article016 checkout f861b934d77e64fd35f768e2a33bb4a00963bc19
+python -m pip install PyYAML==6.0.3
+python scripts/reproduce-article016.py --cml ../cml-article016 --cgqa ../cgqa-article016 --output article016-replay.json</code></pre>
+<p>预期字段：matched_cases = 6，repeat_equal = true。规范化结果数组的 SHA-256 为 7a391291204b358bc1c2323186d981e1d993d1d86ef91d7dcf509a361d6e7ff1。完整文件还包含环境版本、Python 源文件哈希、输入事件和原生诊断结果。这是作者侧的本地复现，并未声称已经获得独立外部复现。</p>
+<h2>如何衡量实际错误是否减少？</h2>
+<p>下一项实验需要真实的模型输出。我们建议先进行 30 个预先标注任务的试验：证据充分、来源缺失、证据矛盾、证据过时、动作结果未知，各六个。这个起始规模用于发现问题，并非统计功效的论证。</p>
+<p>比较三个模式：普通提示下的模型；同一模型加检索；相同检索和相同检索文档加断言登记表与明确检查。后两个模式固定共用证据集。保存模型版本、设置、提示、可用工具和预算；每项任务运行三次，即每个模式 90 次运行。随机安排模式顺序，并在隐藏模式标签的情况下评价回答。</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="文章表格；需要时可水平滚动"><table><thead><tr><th scope="col">指标</th><th scope="col">计算方式</th></tr></thead><tbody><tr><td>无依据断言</td><td>已接受回答中无支持的原子断言数 / 全部原子断言数</td></tr><tr><td>任务覆盖率</td><td>完整且正确解决的任务数 / 全部任务数</td></tr><tr><td>不必要的停止</td><td>证据充分却被停止的任务数 / 全部证据充分的任务数</td></tr><tr><td>准入违规</td><td>缺少必需条件却获准进入模拟执行器的提议数 / 全部此类提议数</td></tr><tr><td>验证成本</td><td>每项任务的响应时间与成本，包括重复检查</td></tr></tbody></table></div>
+<p>UNKNOWN 计为弃答，而非事实错误。若没有任何被接受的断言，第一个比例是未定义，不是零。拒绝所有任务的系统不能赢得实验。应报告原始数量、五类任务各自的结果以及任务间差异；同一任务的重复运行不应视为独立任务。</p>
+<p>如果额外检查相较于相同检索不能减少无依据断言的接受，或者只能以大幅损失有用回答为代价实现减少，假设就会被削弱。可接受的覆盖率损失与预算应在运行前确定。本文尚未执行这一实验。</p>
+<h2>第一个有用的集成</h2>
+<p>从一个场景开始：智能体读取固定提交的 CI 产物并准备报告。它必须区分“检查已通过”“检查未执行”和“报告属于另一个版本”。输出是一张带来源的断言表，以及一个有依据的下一步。在验证该原型之后，再分别增加工具准入与结果观测。</p>
+<p>我们的实际目标是：每项重要断言都有可检查的依据，每个动作都有当前有效的准入条件，每个宣称的结果都有观测。能够平静地说“这一点我们还不知道”，是一项有用的产品能力。</p>
+<p>作者参与所讨论仓库的开发。本文是对自身项目的工程分析，并非独立认证。AI 协助了起草和翻译；事实依据来自固定版本的源文件、原始研究论文和已保存的本地运行结果。</p>
+        <section class="market-question" id="replay"><h2>重放证据</h2><p>查看预先记录的计划、重放脚本和完整的原生输出。</p><p><a href="https://github.com/safal207/RESONANCE/blob/main/evidence/article016/plan.md" target="_blank" rel="noreferrer" class="text-link">复现计划</a> · <a href="https://github.com/safal207/RESONANCE/blob/main/scripts/reproduce-article016.py" target="_blank" rel="noreferrer" class="text-link">重放脚本</a> · <a href="https://github.com/safal207/RESONANCE/blob/main/evidence/article016/native-replay.json" target="_blank" rel="noreferrer" class="text-link">原生结果</a></p></section>
+        <section class="sources-block"><h2>来源与证据</h2><ol><li id="source-1"><a href="https://arxiv.org/abs/2005.11401" target="_blank" rel="noreferrer">S1 · Lewis et al. · Retrieval-Augmented Generation · 2020</a></li><li id="source-2"><a href="https://aclanthology.org/2023.emnlp-main.741/" target="_blank" rel="noreferrer">S2 · Min et al. · FActScore · EMNLP 2023</a></li><li id="source-3"><a href="https://github.com/safal207/Causal-Memory-Layer/blob/7a3a98c60a402d394e4d286da956823898454b8a/examples/agent_approval_lineage_audit.py" target="_blank" rel="noreferrer">S3 · CML · approval-lineage example · 7a3a98c</a></li><li id="source-4"><a href="https://github.com/safal207/ContractGraph-QA/blob/f861b934d77e64fd35f768e2a33bb4a00963bc19/contractgraph_qa/payment_recovery.py" target="_blank" rel="noreferrer">S4 · ContractGraph-QA · payment-recovery evaluator · f861b93</a></li><li id="source-5"><a href="https://github.com/safal207/pythiaLabs/blob/dadc0f18a0c4e5d65fe50a3bab32ee34512975b9/docs/LIMITATIONS.md" target="_blank" rel="noreferrer">S5 · PythiaLabs · limitations · dadc0f1</a></li><li id="source-6"><a href="https://github.com/safal207/LiminalQAengineer/blob/fb1fc7771e7ba29d4edc30ee38b09b4d9dce3c86/liminalqa-core/src/decision.rs" target="_blank" rel="noreferrer">S6 · LiminalQA · typed decisions · fb1fc77</a></li><li id="source-7"><a href="https://github.com/safal207/RESONANCE/blob/main/evidence/article016/native-replay.json" target="_blank" rel="noreferrer">S7 · RESONANCE · Article 016 · native replay JSON</a></li></ol><p><a href="https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/16-how-repositories-constrain-hallucinations.sources.md" target="_blank" rel="noreferrer">断言与来源登记表</a></p></section>
+      </article>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="wrap footer-grid"><div><div class="brand footer-brand">RESONANCE</div><p>Find the signal. Verify the path. Understand the future.</p></div><div><p class="footer-title">Issue 001</p><p>Issue 001 · Article 016</p></div><div><p>© <span id="year">2026</span> RESONANCE</p></div></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>

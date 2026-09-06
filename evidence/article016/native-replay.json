@@ -1,0 +1,1154 @@
+{
+  "schema": "resonance.article016.native-seed-replay.v1",
+  "scope": "Six existing synthetic trace cases; no LLM, provider, runtime enforcement or effect-count experiment",
+  "source_commits": {
+    "cml": "7a3a98c60a402d394e4d286da956823898454b8a",
+    "cgqa": "f861b934d77e64fd35f768e2a33bb4a00963bc19"
+  },
+  "python_version": "3.12.13",
+  "platform": "Linux",
+  "pyyaml_version": "6.0.3",
+  "source_python_sha256": {
+    "cml": {
+      ".github/trust-root/scripts/memory_learning_core.py": "d408da392ee244a18f00be26c1944bc46b034a4f9137706ef80121bdfc37fbb1",
+      ".github/trust-root/scripts/memory_learning_fallback.py": "5b7f74e7153b7ef08d6d873f8cb5811c62656864ac1046d10b08a08763b65bac",
+      ".github/trust-root/scripts/memory_learning_github.py": "e8b76ce64fd7d9dc2ac4954d9af9e02f55b6081af9f1b2c98b7497b1b866707b",
+      ".github/trust-root/scripts/memory_learning_loop.py": "6d4e9718569c199d14932b8d1327d839e148cbc1fc7dff1806682703174f6d25",
+      ".github/trust-root/scripts/memory_retrieval_core.py": "43d3ff13fd4c62cc09a5ae8aa18ece335af2579311e102c4cf36e7e188838c8d",
+      ".github/trust-root/scripts/memory_retrieval_github.py": "33b525b2434f1422344bc263653431db08a4c47d8537d5bee299266b836dc7d2",
+      ".github/trust-root/scripts/memory_retrieval_hardened.py": "f807724805aed95bc8bda6f8156e0653d7080c938e11e243a86c4db8d01acc4a",
+      ".github/trust-root/scripts/memory_retrieval_hardened_loop.py": "8128973ebc4bf39620f7f398fa864415d2b7620266ce84f65a40547fa541b4ea",
+      ".github/trust-root/scripts/memory_retrieval_loop.py": "4685e494a10371c9090a52ce3d0ede7512750cad710431c2b2f0b6774b1aca8d",
+      ".github/trust-root/scripts/reviewer_fallback.py": "c3d6866b845c3bc7fa5c2e268f2748bef219ad1cd335ca93fce0e90a10f393ec",
+      ".github/trust-root/scripts/reviewer_fallback_entrypoint.py": "20b6270337944d5a5d36947d79bd01458a2058636400bcbaa1cc3bbec0955cc9",
+      ".github/trust-root/scripts/reviewer_fallback_reconcile.py": "0c184ffb9e8c9a96197939d7fc52164e28010a8416f3b21aaf76afce087699ea",
+      ".github/trust-root/scripts/reviewer_fallback_runtime.py": "9891e8dff63848a4672abcfdd954fc1f05856d95775d715895f115cbad7a1465",
+      ".github/trust-root/scripts/verify_subject.py": "c23f1976fe8c86dd8a5fa82822ef035a18c699f7109897d927a943d38759e3ac",
+      "api/__init__.py": "e28e6b1743fc1cd5aef82d8182a2d8d1c28113d35392a3e4cb4eff9fe14bae6d",
+      "api/server.py": "ed256081b168f436deef807c811340dffa77f0de0c22cc02ca6dd88ba2aa732d",
+      "api/store.py": "a0139ae58a5a588a514bdc68b50e6e86e16abc8402be3d6f39d72a5412604a7c",
+      "benchmarks/__init__.py": "6c3420190b984ba7970303be28ca3265ea46d71ed9c9d4193cd1de65f3dbf6f5",
+      "benchmarks/equilibrium/run.py": "fcc7c077bd2929609cde603fc1874c034024f17a27540e4ac65413a06a81dfbf",
+      "benchmarks/experimental/focus_field_recovery.py": "0df3d56a10604f505ddb4d22f018d5b4b8009bfb92b791074b287b2667a3c055",
+      "benchmarks/performance/__init__.py": "400afc01ec108d18fa1361884326e6b36507359674823f7cdfe1036332985dd9",
+      "benchmarks/performance/generate_large_trace.py": "18c64bbee53b964a2a4624c13fa8fc5bf48bceaeeebeff0e5e4e4b0cda1eba56",
+      "benchmarks/performance/run_large_trace_benchmark.py": "55c0ea17caf177d9a4f5978a2dbee86b266f265178c093924a4c213d7a30b623",
+      "cli/__init__.py": "216914bf5a46eeca1cc4f34cfecd7f0fb1bc5eb915432518e991be0c28bad76d",
+      "cli/audit.py": "72e94752c3fafaf00ecf6cd397e4e4bf008c7aefb20450574eb96ab645f42967",
+      "cli/chain.py": "be52f49656463a04f16c647a93d97337465136ed15042d751652f305ac0b2217",
+      "cli/main.py": "46321f4f71e56715851f1b61be33ac4dd3b20c1ff8160be2cd9277e1edee27b1",
+      "cml/__init__.py": "4bc7d77bc57e37d79392a7a1f23e8bf150d47d17b03cd3f6a15dc2f7d7a90c77",
+      "cml/admissibility_preconditions.py": "492045443656dc8f79492e2508639717333ad88ff3cd55aaccd73a8ef1893bc4",
+      "cml/agent_safety_benchmark.py": "e015d885e89e85c5ac75c9b034d22099a64518f3395860157406c3567a03edcd",
+      "cml/audit.py": "98156c92ec1670e0cbda37cb9cd4d3c8dba1aeb612050a0d82e2c97b0650bc74",
+      "cml/causal_transition_guard.py": "3ed9a5fc753da4972fd382c9d5aa07ff6154255429c1cd3160601b0ad351ee18",
+      "cml/chain.py": "b26b44ac9214c3e11ae5c09a34effff548dbed70e0b1d8677630f2cf5a612aab",
+      "cml/ctag.py": "0a51242dd6b459ee3948b3523f19d4e0fd78460308d639538dde5e078374fb13",
+      "cml/experimental/__init__.py": "a21b54b435c1d56c9c4189332d03294cdb3d3f2895406cc873ce7edbbe1d19e0",
+      "cml/experimental/cause_band.py": "2db35e5fb2e26d6b4b50a8c8957cee78934896ed5e8e8b11082d781b716cd3c7",
+      "cml/experimental/cause_band_payload.py": "986cfb06291eb310614c5acda0f57f2c13e52e38e6c6b09bed240c9fd1b4433b",
+      "cml/experimental/cause_band_trajectory.py": "e9848787ab54f5cd3b79b8e7f34aaad233e20fb65a447c6005c060d4ee513e17",
+      "cml/experimental/equilibrium.py": "c1399fd2f039cc3db5c21cf2cf9d9a4f226e1bee7b39043642aecf84bac0c2c1",
+      "cml/experimental/focus_field.py": "881cc50767b9478eda683dc7700e288e73de941babf768e2529cca02d3eef077",
+      "cml/external_read_object_witness.py": "aaa9f313a77a944a999b321f8a7690907df2b269c05c8eb6ed70c979b796b414",
+      "cml/external_read_witness.py": "1afdac8e99814bb9e221f699fae2f89930e1fdbc2364b0c9d94b10f6581dfa9c",
+      "cml/integrations/__init__.py": "8ed14f79628717d48c26a6ec97e94dfdce77bce0d6e3dfc18a56db442d2e49b3",
+      "cml/integrations/action_ref.py": "0f77007f859c0618dbd07aad3421ac985e5eb7262594c9adbe4650a5c6750144",
+      "cml/integrations/crewai_event_record.py": "83874e3bcfa2b4322ec6dd336b5a09e5c3024194adcb038d9bf271b90dbc29f3",
+      "cml/integrations/ebpf_fd_reuse_runtime.py": "4a8024034c166fa43a33d2bb0caa091aca2f55cc1d2b33ce99eb8256f2ccba3d",
+      "cml/integrations/guardrail_decision.py": "d8b2d5073d26a07bd908a9d9d362c6d3037875f1891a15a77284fc29b438a3df",
+      "cml/integrations/identifier_population_witness.py": "75599110f73a3d9b56df84e752dceb96c0029a001fa1029e55aac9489c2bd4b3",
+      "cml/integrations/information_fitness.py": "113c075b64d9dda5f069acf0fc3d5e873e13f5ed274d6404dbf6ab9e635fdb9e",
+      "cml/integrations/information_quality.py": "5e33038ea32aca1bb3560eca499fee93d612a5421b0e290c759e1f7a260a781a",
+      "cml/integrations/mcp/__init__.py": "ebe501616f0f63455f82ce4e8e50b1b6395ef54eac76c783b10cb3da5a6e58cd",
+      "cml/integrations/mcp/core.py": "602247a1b991ce1df91b929182b1b9378525ae23a2104a54750e6f70b99cca54",
+      "cml/integrations/mcp/server.py": "da7cfd1f6fa2a0b6b6949475d4fb7c5433e2d2cb912003186d7b4e6842a31087",
+      "cml/integrations/memory_applicability.py": "296e39800a4094e30ca59b6564ee630178b9a52ed281a38e41f85214fdf7d134",
+      "cml/integrations/memory_lineage_coverage.py": "58f0f7b88cec492087d931be190c0a3f192b1931ac6405898fc02953d9363499",
+      "cml/integrations/memory_pack.py": "b8247138296b10d53050cde6cea8903f34092115efcfd504d01557d0d29965e3",
+      "cml/integrations/memory_source_reconciliation.py": "975012b12d583e65e3b8fa2216c7f4ed7247dfbf1543c6822e7310d07d078712",
+      "cml/integrations/vcml_ebpf_completed_read_witness.py": "64c158ab5143dae84150259519fdc8a2398a924b0a311f82b9ed0ca94200e955",
+      "cml/integrations/vcml_ebpf_external_witness.py": "1e5df5847b752cbccd618f6e41a2fad227753e43090cd95e4b9ad241150d487d",
+      "cml/integrations/vcml_read_id_coverage.py": "db0527c21247163a67776dc58495c9e18e0e55c2864b63b25030f9f0b114f733",
+      "cml/integrations/verification_envelope.py": "1497a310af248c818785a35e8b034a09bd5168c7165d8fe291af75d397ad9661",
+      "cml/integrations/witness_issued_read_token_runtime.py": "acf5ecb9e44d17925787e96138ec7d2ca1b290d444c095ede7b5fe41fc814bdc",
+      "cml/proofpath_asb01_evidence.py": "8ced90f6225dcceb4b33a3366bf8f5428b68adecee2acd7526f9b45156f8a756",
+      "cml/read_object_coverage.py": "c36c6907d2f22cedcbab2d3be31dd85bbcb6b1f557e0acf254fa94b44617ff40",
+      "cml/read_observation_coverage.py": "795c72593284ec4513a78986479486c862b132c9cf4c0331a8798c946af8ae07",
+      "cml/record.py": "356c459b8e2a2ef283d03021878a46ab0929d072d3ad1e7135a750b3a40b56a1",
+      "cml/report.py": "2b6130701b0b89125d026469a2bb55ddf7a074e037d7ee235a0f306eb69058d2",
+      "cml/reviewer_router.py": "fa37c9f029759c71a366da9571ce7801aed52fd86698ebde7f0bb0fbf1ce3cd5",
+      "cml/reviewer_rubric_policy.py": "b13e736d7921cac3ee13572c614560d91aa22f57f0fba9a8af62db872ce33a7c",
+      "cml/safety_eval.py": "dadf798118fe7ea49049471475438d3164286bf91d00b135f8ab2b602ddba43f",
+      "cml/three_record_audit.py": "92a55d14fa7d2154878c85d2a5acdd17b477c2b48896f55a364078913548da02",
+      "cml/transition_guard/__init__.py": "5df48014dcf0b431fedf26efe03be82307a15e65751435a88037f092323cd27f",
+      "cml/transition_guard/fixtures.py": "ca7303157d41aaec0c5a520c2c8345746ee1a1d99834658d8c9c90ac232e6461",
+      "cml/transition_guard/gateway.py": "62ac072279cda1031d4e8950f05d686a0aa7c99d1ec5c53ffe1eced30cb1e6c2",
+      "cml/transition_guard/graph.py": "7751c019aecd84903a31ca6d96caff44c9f7166d4a01fe0b478d107c81cee4a7",
+      "cml/transition_guard/model.py": "8ac0d18e4e9199eb6d32b58aa5fe11646ff4f40b7d8c853b718b05667de97bf8",
+      "docs/experimental/caep/interoperability_demo/action_server.py": "71f8eca0da4306dfbac1a6dd3b600f1b1834a5c537957f9643a9ccee6d894c32",
+      "docs/experimental/caep/interoperability_demo/common.py": "972205390b6222943b7bdfb211d1a1ea716ef477af983a719b0081adca036645",
+      "docs/experimental/caep/interoperability_demo/record_builder.py": "89f1b626316b47d21c12179a68fb069755f0ebccb7af5629ee43809ac345115e",
+      "docs/experimental/caep/interoperability_demo/run_demo.py": "719f22bd71554d3f94f9cdba3d6c4c79e125811a0592532ea27f3f2882e9c674",
+      "docs/experimental/caep/interoperability_demo/state_server.py": "8237001fb3a6822c722ad8c343400f013540b05f087e4f4ace171a717fb6e90c",
+      "docs/experimental/caep/interoperability_demo/test_interoperability_demo.py": "3e0b6ab128a8bb401e154b018b9cf871a703c1fd4af2f2dd1a5b42793a990edb",
+      "docs/experimental/caep/interoperability_demo/verifier.py": "d600aab28963d8358ae24fb2a693bfa3e764160aa1c0f5b76bfc20a1ad468858",
+      "docs/experimental/caep/mcp_sdk_adapter/action_server.py": "32aad84bb5ac63d16a31d5f3b38b16b5e89c9414aa7068241de9ecfea5682110",
+      "docs/experimental/caep/mcp_sdk_adapter/common.py": "e1a8c1dac7565d4b4e543767a3ccd539ca79606b66f8380eed1bd4987be535ce",
+      "docs/experimental/caep/mcp_sdk_adapter/run_adapter.py": "4ea4904846687c9e60530252c924b26186f9a2835e5fa5c5c9bf8dca77a10bd5",
+      "docs/experimental/caep/mcp_sdk_adapter/verifier_server.py": "8bfc4aba0f7d417d1b98225a2127a1463387412883dc8f903dd8446c2466c4d5",
+      "docs/experimental/caep/test_validate_caep.py": "5ec0c28494756be4449536203c52d26ea21dc2109aee84983ee0ce411b0806b0",
+      "docs/experimental/caep/trust_console/test_trust_console.py": "20e645ba3cc87f7d0d50444d88300a5b03be10b63c6b2dff2be000cc34c86ebd",
+      "docs/experimental/caep/validate_caep.py": "55dc5cc72967a9d47e270a3b7b5d978c667e6b56ecef842b53cd819da65a1efd",
+      "examples/agent_approval_lineage_audit.py": "270d566f44c1547f6044a6d46681217d40270808a4cecbc56c69f32178502a52",
+      "examples/causal_equilibrium_point.py": "aa1e749072678ab2f58fa315b808547a1293f56d577bd0a26d8675bd7edb8639",
+      "examples/crewai_action_ref_listener.py": "3f6dbfd157493b96c84c528fc2bcd08e74d2a4d48338239ecf9d5171e56ba138",
+      "examples/crewai_signed_receipt_sidecar.py": "ce67144314e4acea42dfdace8ef29119df955acf75e6bfe3ed37c4eb1bc91733",
+      "examples/crewai_style_causal_audit.py": "5cb31426f298f66343b35ae3a59b1d4fbac9dbcc78c3e9ed49c2273d8c29775c",
+      "examples/crewai_three_record_causal_audit.py": "accad7c80dbd6bcbf547dc08c2af61ccfe3049e5c08717d2a2f6634bee10ad39",
+      "examples/gemini_causal_audit.py": "659c2f8d61b044d5aef0a55cf81c2fa2a78e8008560aa5cc787fbd1892c5f477",
+      "examples/grok_xai_causal_audit.py": "5f14c2f53703446efab943e0baa06fa8cba97ec398904f85153e692faf6506ad",
+      "examples/openai_claude_causal_audit.py": "9f4bea68d4e9e7d8d3e0bfeb824c3447a6ce37b4a31f63a51a7cf82d8cec1f9a",
+      "examples/qwen_kimi_deepseek_causal_audit.py": "91f51b1bd2af75d8db09714d47fe25b79687864d16757311fcc2e96072d0083a",
+      "hackathons/liminal-recall/app/__init__.py": "62653cea10cff2432f7700fd4ae195ddca75a41a017a1f8dfc4bb52473ec7189",
+      "hackathons/liminal-recall/app/build_lambda.py": "654b929307e921b15c6e6dfebd306f8be75d6c9ddbafac40513aed0397795d1a",
+      "hackathons/liminal-recall/app/embeddings.py": "e79a2f63c016f7b50c98fd2484817a19073a4bb806f62216044187c9fe94d814",
+      "hackathons/liminal-recall/app/engine.py": "9375ef4567e1af3f330d1f032bacc2e82f19949948a99dafa2f84801507b51c5",
+      "hackathons/liminal-recall/app/handler.py": "f767f2444ccbd5c31236b65bb797cf433ae53fdd4bb2fbd926f66124bcf3e2e1",
+      "hackathons/liminal-recall/app/models.py": "856e19c73c353df067ccfa125af6c44ba6d37ab7ee1dc2355b09cc1f6c63392c",
+      "hackathons/liminal-recall/app/store.py": "409156dd57fb21fcd9a6e87a4868def9491c1e74868fbd12a88973d14e6f0e33",
+      "hackathons/liminal-recall/scripts/ccloud_evidence.py": "76e5d97493fc6f375e30594ea024d1a90f4467d5cc65ff32132f677d7a7ad959",
+      "hackathons/liminal-recall/scripts/live_deploy.py": "c53b277fb6eeab1351c15bd30c3cd8502da9104ad7d401a8f6b328415677d457",
+      "hackathons/liminal-recall/scripts/submission_gate.py": "69062315849d4a9a4178fa6c9df604738d713b07376dcdeb5168892bb71008b6",
+      "hackathons/liminal-recall/tests/test_handler.py": "e922f30351d33ce9d964cd051c5f8e5611b82f8ba44ad494cce5bf97dc781f1c",
+      "scripts/__init__.py": "88c223160b7ac7fbc074b4c07f4e8dcb5060c7ad9c48c5faeb4c3b894a2ba4cf",
+      "scripts/ci/__init__.py": "7d3fe296fad2ae5a950a8be56da3fc9de89d5a361f9cac89ec99a52a9b810ed1",
+      "scripts/ci/assert_exact_head.py": "f0a2293958078b5efd2f6100f4c4a672d724ead9fe39371faafd9bfb8c1a58a9",
+      "scripts/ci/build_causal_pr_report.py": "e767e728219a30700c73465636364a73ea3b9b82afe62c44485f68d60725ce94",
+      "scripts/ci/build_evidence_manifest.py": "64ba468a1b2426e89bd23abafe436b15e54b7c8b80c6657bdb75f081d262a6c2",
+      "scripts/ci/verify_workflow_contract.py": "b555fba04a04d5d827adbc8155dc877d6ea2cdc767c9dc518be3ba256e13dff4",
+      "scripts/run_agent_safety_benchmark.py": "5ca53b19928ac67d758884532171282f27bc7caf3b9664111edf54e9eea5eb78",
+      "scripts/run_asb15_cot_forgery.py": "07221ce84c339e016e2c74e268242d6ee39d00911930739066c5052b30e4d5bc",
+      "scripts/run_asb15_gateway_demo.py": "d3427eff79853aee7d107fbe87b00a6a856e53f655d499f17504998f929eaa3b",
+      "scripts/run_experimental_cause_band_eval.py": "ea7b9c5021aa813d0cb4deda37a11efaffe291f536720c016a100db36bfa6219",
+      "scripts/run_mcp_demo_payloads.py": "639157817da1b85fa796f4e2bbaea76b73894e6b150cffbb11a47201f8003080",
+      "scripts/run_proofpath_asb01_evidence.py": "13dcc7fe2b28170ef453bd0bd7c2e9a272b46dd311abe3590f6e2e7e0dc40a7d",
+      "scripts/run_safety_eval.py": "5cbb833622bd3ea2c2a8fac80478cdda52c2170e6cb95b4d5dd093fd59f6fa22",
+      "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tests/test_action_ref.py": "5dff33b500e9fcdf524ff22d18a4126eb1d9fd56d0aaa5be26f7ed1fa6fd54ae",
+      "tests/test_admissibility_quiet_scope_is_pinned.py": "0481c34bdfa95fa03accc7513f5295e1e983f3336a2571450583aff5d122e911",
+      "tests/test_agent_approval_lineage_demo.py": "266f79b94b9d05195c074395dd46f66bebb239815319cc4402154fcbaff4ea6b",
+      "tests/test_agent_safety_benchmark.py": "ff283fd6ecab3b08b39ad8e7144ac44c4ddc9d3764165d9482c292cf2472dd8b",
+      "tests/test_agent_safety_single_case_identity.py": "c03776ca4e61471f912dd30f4c884d858c62c9ed47e3e6d3cf0d001a5b0be566",
+      "tests/test_api_audit_semantics.py": "4cf360a65f031fcf245c03ddd5fbafa277e93b7a7d034fab99d79096b0cab31d",
+      "tests/test_api_rate_limit.py": "c3a908aad252a32b640f6479e8673efc10e29a5a0322f1cd17202123ff6d25f4",
+      "tests/test_api_security.py": "3fbc2f5298590d6a68136885a24202d25ca44a7489c0117f1ff163aca474fae2",
+      "tests/test_api_smoke.py": "0f6b4f50103d00c42c29c3a7a468fdaed958ebcbf97857d1f70c34d502f7491e",
+      "tests/test_audit.py": "91f97bbf8aec49db23176de058dc4c5c9396ac0ab0b3c3326a0346dd164bac71",
+      "tests/test_caep_mcp_pages.py": "42b1599ff20bc71cb8e619e58d72d012c38693536322119062e2a7b454ad769f",
+      "tests/test_caep_mcp_sdk_adapter.py": "0c7b8af64cf163339ae0769488ce9dbc03f776415557db1aa4670eb5cd685fbd",
+      "tests/test_causal_pr_contract.py": "06a673592ecda1d3774587dd915fc9fd5444a88f25a7f7da54807b0c7793970c",
+      "tests/test_causal_transition_guard.py": "b0a23e88198879cf0a57b9b62a6dd208e9f159746f40db099046806adea1e44a",
+      "tests/test_chain.py": "409a1605a342753d32664df6379239983c72e7d59629c107dcac6bd3dcfc18b3",
+      "tests/test_chatgpt_public_mobile_web_memory_pack.py": "b39a9a70c5dde1c2592cc245a0afd88c181d1aa2ec62c2d4fc9661bd2845d436",
+      "tests/test_ci_evidence.py": "755d776e1f8d9c0b9b7692951eb3330d6c9ca5b965d42d1dea11de8a5b0b264f",
+      "tests/test_ci_workflow_contract.py": "bd9b0bb9b47cd6840f54a21aeec7d76e53517c9a4ad58dee39e641666b4f5338",
+      "tests/test_cli_audit.py": "874090c7fc02e4be4d44057c831971f36f2c16364e26a6f6ffc94d6b824565ac",
+      "tests/test_cli_main.py": "d2737d21c8867b47d165f488c49a0fa33d959134e0792716079434eda6029ab1",
+      "tests/test_crewai_event_record.py": "ee29cc1dbbd1372f5692d46b177e0752670d968c3fb64b46f256a5015263430d",
+      "tests/test_ctag.py": "94ccfb9f70d38bb3153a39b8157d192f099c5c21e29e2e6f574c2d33987e68df",
+      "tests/test_ebpf_fd_reuse_runtime.py": "5337b138483fa97f313e8ac472b4c696c9533da231c974036db694259eaaa3a4",
+      "tests/test_equilibrium.py": "a631c665f99dc4d2df00b2852f987fbcbbaecec3a3107cbdc13827aea96b5088",
+      "tests/test_equilibrium_benchmark_runner.py": "8c775e711303f0399f8993147640569005b8b4bb63886b08119ff893edf45f76",
+      "tests/test_equilibrium_fixtures.py": "5a52cf793ff83d8ea29efd7b18d0fedb1f910ff6cf3aa251bb8be37083ab6e05",
+      "tests/test_experimental_cause_band_eval.py": "e57ca2e84e6dd36bd4c978b74b35afac965ec03feafe7c2fe738d731fa30bc00",
+      "tests/test_external_read_witness.py": "cad9a75b50d7b5c56fad0baaae857e5cf74c6c27782152f3ff7599e2947a9012",
+      "tests/test_fcrp_self_006.py": "aae788e6889b0c1a3f510730b454661b033a7be3fd78ed0caa74dbd8d5170e15",
+      "tests/test_finding_context.py": "28ef90760d3add142b9f95bb36abbeace9f2b39871fe73a03f0c863366266a1c",
+      "tests/test_focus_field.py": "279329f136eb35ddf4d27b43323ace67ca74ead6b2d3cd03175627a16463b96d",
+      "tests/test_focus_field_benchmark.py": "207ea3632b1b78b09685b1441064582085a3752bc3103527f967ebc5dad08b0b",
+      "tests/test_gemini_causal_audit_demo.py": "9ad83a87b835b881f0ed12e48b73772c309257ef3239e30e0a570422ad1d7642",
+      "tests/test_grok_xai_causal_audit_demo.py": "ec878d76f4e7c571c02249064ddc8b7897fae21076fc52f1e35a8e32f449a5fe",
+      "tests/test_guardrail_decision.py": "c2693c4b6e2a603eed8c4bd7ba013de5f7f771d76aa882fc51bbf52594eda31c",
+      "tests/test_guardrail_decision_public_api.py": "0f2b90d36b977d41ea36654099c751b4da9d4cb8a8aad8ea8d543314757e0fd7",
+      "tests/test_identifier_population_witness.py": "75e93f3677d59c459ac1d7c54fb849fc1ce98f2f564d926514b0222c94ad2a42",
+      "tests/test_information_fitness.py": "baa49b5abd38162acc41074a3c39404e36e618c7d3d2bb76f08b34128fb0c63c",
+      "tests/test_information_quality.py": "13d885a7cdd93a5dc41b4f81326c49b1c32204fc3a6e08c3d24cce19e304a9c2",
+      "tests/test_liminal_recall_ccloud_command_mapping.py": "1b384def9aad6fab0f87f1639bdec12649328bc02cccdbc7bfc441be96dd1c00",
+      "tests/test_liminal_recall_ccloud_evidence.py": "037698b0271224b821e4415b267c4c52f329fba50828fffacbfcaf275db9a191",
+      "tests/test_liminal_recall_ccloud_generic_fallback.py": "e32f3e8302ac4b8625553d640a25786672051276dca2f791b67c7267e5a4b61e",
+      "tests/test_liminal_recall_ccloud_plaintext.py": "4ddd7386ce44b59658f6ff7605084f15574c53a4f1c1617d8a5378a80543c56d",
+      "tests/test_liminal_recall_hackathon.py": "c9a03abd378ebea21ded3a52a912a1cd89bb10cd328e5332db1862477a81886c",
+      "tests/test_liminal_recall_live_deploy.py": "dd0872a8def29be7ed0427b0186c6864c18c961596efc54ce6e5e1d7a6381ec6",
+      "tests/test_liminal_recall_store.py": "8013d5f2fe859aaa7c31436f6163535ce8a4e40d3104b1706e121b930620ced7",
+      "tests/test_liminal_recall_submission_gate.py": "32c3e8b3dad8d93ac276c6529897fb06f79ca981b762fc23ab5f9b34dc9eb8f5",
+      "tests/test_liminal_recall_template.py": "82c15d78969a0351a186e15f3a51c13baa6f6fb85c5882c86e7550b794e3ad7c",
+      "tests/test_lotus_docs_contract.py": "69de6a265928685d814d7bd1d77719a090a45ed4e9eecee9677c2d2e8259e5df",
+      "tests/test_mcp_core.py": "9ccd1366de6bb2a76daa22d2aa707a86bdd580cb6bd0aae26442bb669cacec5e",
+      "tests/test_memory_applicability.py": "6f3b39a5bafe3aaa4963ce81b69d9b43de735660e7cec961f7682c15c1cd16a2",
+      "tests/test_memory_learning_fallback.py": "545a104991481582931fca1695fec7e671510e6a9ebf17e262a0d084832b0a80",
+      "tests/test_memory_learning_fallback_schema.py": "b10dc59eaa79be5a4974faaf615fffbe112e8ea25d8e1940ee1c6592ce449fb8",
+      "tests/test_memory_learning_loop.py": "72c323bc986e398b6eae5956e5694341f2d1ba2e5410c9f3543910982157c9e5",
+      "tests/test_memory_lineage.py": "9c98a78759b4b38dbca33244eecce48f0c0341833f76b592ba2cc552372b9853",
+      "tests/test_memory_lineage_coverage.py": "e163298af6ac80b5d2ace3b0cdc16b82fe766481da2d682a303b72e1edc39f5a",
+      "tests/test_memory_pack.py": "6e559a01d3c73d3f04ab6cd6c42262bad5937b721d845fa38ef2ef6029acd9c0",
+      "tests/test_memory_retrieval.py": "a5ea032965ec04d4a090f2363ea3009269646a94ed78281e81cf6d8ba9cf95e4",
+      "tests/test_memory_retrieval_event_binding.py": "82622fb2db3121e91508d68c22bf671b1d87850a5c0dc60ba91f20fcad23e8b6",
+      "tests/test_memory_retrieval_hardening.py": "17bb9d9deb7d41709c329ac1eaa26d343b9760818fc01b8e369a381642c28d5b",
+      "tests/test_memory_retrieval_stage_telemetry.py": "cc1602ab87f13b2dcb1e4a57144dbd0b7c4a9ee4c96a2be72bdb3bf4ccdb74d0",
+      "tests/test_memory_retrieval_workflow_contract.py": "5076fcbaf887c7da6127a95fb1bb4776634162362005183a7ec1682b80b7da05",
+      "tests/test_memory_source_reconciliation.py": "6457a09384f842fa77c9120a9838b1f55ad3889563ffe27ad84be87e41c9a22b",
+      "tests/test_openai_claude_causal_audit_demo.py": "5e5bc3dbfb248299bff013fc3338c0ad800c4e690ac07978cad49cfeac9e828f",
+      "tests/test_owasp_outreach_pack.py": "b67cf9fbaf6d2a1fb5386053a99a4c70fd7baa264285bc67ef209504c3951df0",
+      "tests/test_proofpath_asb01_evidence.py": "5f7760dddd4306dcde36134b0fe63212af2e85f853a2cc22e497ac78c51540f6",
+      "tests/test_qwen_kimi_deepseek_causal_audit_demo.py": "c0411be091a5636fc33b00c1df36872a7f73f51632042cfec729de7b24f8a1c2",
+      "tests/test_read_object_coverage.py": "9c6934d2cb155f8eb198b0dea5e1295001999a7f4693c079d88a804aae44fc80",
+      "tests/test_read_observation_coverage.py": "0028659eba2182f1d49aa64aaca22cdcf909b87b847dfcab47fafa56ba360243",
+      "tests/test_record.py": "37f3d33ca91f21fe0942cfa2f62d17f3b815f7e6771bec351fc426849c0da991",
+      "tests/test_record_read_identity.py": "9c6835febb1c9ec48d46773371e56ebd82610f6825372feb8f3ff8726c32cfe5",
+      "tests/test_reviewer_fallback.py": "e33a43108fd424b6006725b70dbd62977114f8f1e069a86b257476af3f7e38c9",
+      "tests/test_reviewer_fallback_core_direct.py": "1fed31ad073d9ffafa027a469aa2aa7c2018a6a8ee48ed07c0fe8c0237363e6e",
+      "tests/test_reviewer_fallback_event_surfaces.py": "3681bca4e2f8cf3bfea1a63247c0e24fbdd4de5f07a7a68084366b9c9a0cf5fe",
+      "tests/test_reviewer_fallback_reconcile.py": "5668ef70d6a547670a76a90c00c22d2491a278b5e90c4bec48b3c0ca8f83ae65",
+      "tests/test_reviewer_fallback_untrusted_inputs.py": "dd338f538c5beaad6f37ae349295d7d2db1e7c756edc25bd090de9d5da4a886e",
+      "tests/test_reviewer_fallback_workflow_contract.py": "6b0bd7a0ccce7d38553b82220f00c6f7cad53f461be24aa8e2618c3a502904bc",
+      "tests/test_reviewer_router.py": "d713b1e60bfbb3532c8444b26d3ddcbde5f47bce00da7b68c7b6355b6f373f87",
+      "tests/test_reviewer_router_decision_validation.py": "f5e939490bd56dfc724c30f685c09cc1bd098f767aede13ff629ea031125c37b",
+      "tests/test_reviewer_router_policy_installation.py": "bc10283d19fff6a0acf8c038e15961fa2618ab5c5e87b4aef3fd4fc90e68791d",
+      "tests/test_reviewer_router_provenance_hardening.py": "073a304053ba04edf33174c530d8deac3339d7b4b5b95c335f29a5c536edcf1a",
+      "tests/test_reviewer_router_route_kind.py": "78a1ad4600128778d990326b4f26353f9f89ed86c0d20a6365f308d03095a9e6",
+      "tests/test_reviewer_router_safe_rubric_grammar.py": "46d844b5bc7ceb626fc7bb4bbf89c0a7d6b70094098b39a9ba4083f6a12819d5",
+      "tests/test_reviewer_router_yaml_hardening.py": "2df4d471674fe44767875cbf36442ed5825c24f277ae51f731fe03b720334fcc",
+      "tests/test_run_safety_eval_script.py": "f72be015eb3dd1f5edc3dca9018bf9093238e8168f4a04373368abf22465e30b",
+      "tests/test_safety_eval.py": "40a4bc522a8ab79c5dfb8dcdb4e125bbb166648e1b6fcdbfd87e7ca857d23784",
+      "tests/test_safety_eval_snapshot.py": "f342a751171a3bef245d3bd886e0c30a4b65e44a022beb42d43775eb2280539d",
+      "tests/test_three_record_causal_audit.py": "77f850df1fae84e5f143977da0ccefe3265a6963d0eaafdf8e195f13bfb36d53",
+      "tests/test_three_record_causal_parent_refs.py": "8075bcf431f19bb03ba10d43488cfb7c2c9cece52f1ecc59a62a3bedc9154326",
+      "tests/test_three_record_explicit_active_state.py": "4a417ea95d96c6fee3ad9e2aaff5d52f6a6fbc987af54ce6b2b45a26c1722801",
+      "tests/test_three_record_integrity_authorization_binding.py": "f45189cd5a735d83de1946f361343ca3214d57953c04a606b63f577e1580dd39",
+      "tests/test_tradernet_lotus_memory_pack.py": "7b64fbde358e487942bad54fe2d3bc76381316fd7d3d5472b09fcdfe79f77569",
+      "tests/test_tradernet_product_funnel_memory_pack.py": "3cb6272b9f78a93795a477d3cdbc8e2fbc5ad67f713704d1cf1e0eb843a80a8b",
+      "tests/test_transition_gateway.py": "8b71127ad9b277b8c0a4f247b0d6cee3887f1932e4ad22285b668db028e8691b",
+      "tests/test_trusted_pr_gate.py": "a7417774624521e612857518a4a9098df2d43f25b19b3868de585ec6ed8f5601",
+      "tests/test_vcml_ebpf_completed_read_witness.py": "e992e4845e8dda2fb0c4fd9bb2587650cc276a2fab81baa083e82fa71c9b4856",
+      "tests/test_vcml_ebpf_external_witness.py": "d46817baff160dda1e4733e2caffb8998bfe9abc07a8282a99dbe4b3433abd47",
+      "tests/test_vcml_ebpf_object_witness.py": "18994a07a63c5a547c237c0a2301c7371f897ef314136c5eb0f482097c03c2a9",
+      "tests/test_vcml_read_id_coverage.py": "563fd881b2ab4dcdac95a893eeb2c1f38a12635071fc04095fd28d7302e1ea95",
+      "tests/test_verification_envelope.py": "b6e3b0248f3eb7bdaf0f190d0789de20def96017159a31c46f1183b25d623b5c",
+      "tests/test_verification_envelope_occurrence_isolation.py": "68559815a25bd2322a9b4833491c5139256c23e8e672aba562e012cf54bd2ddd",
+      "tests/test_witness_issued_read_token_runtime.py": "b88cd29d80fc4c9984a68fe1c6965d935c72bc5a1451355399e4393e1e8edd13",
+      "tests/test_yaml_loader_security.py": "bb067a94c7b48058ab2dce6e7697690e9bcb95c046665f255a83afd9b3878036",
+      "vcml/linux-ebpf/combined_monitor.py": "98987f2e37516b615d1210ffb45c4032fa75fb9b6fe98cf36e33e55fdd43aed2",
+      "vcml/linux-ebpf/exec_monitor.py": "e50a4665199bc61238e725df717c8a3137d6bc2df8ab69655c9ec0e58905b6a9",
+      "vcml/linux-ebpf/file_monitor.py": "0d76d6b8748684ee6783c12b6f72ebb02c2836ad2c0d2121a39da41b9c032880",
+      "vcml/linux-ebpf/net_monitor.py": "9cd2f98b4d6df5bf8e1daee6de80d7005998b0d47ca3077329b41f62385c0004",
+      "vcml/linux-ebpf/runtime_fd_reuse_proof.py": "de257a9bc043fa12b53527be19aca64e5f9d0369902e9190bd36e9189170593c",
+      "vcml/linux-ebpf/runtime_read_binding_trust_entrypoint.py": "ecc730056cea1850daa8e414d61b6bcd538e77dc89efeba954154fed4a1e32e4",
+      "vcml/linux-ebpf/runtime_witness_issued_read_token_proof.py": "3a79408d2c89278cc6902abdeea4862f16060389347ca29023a80fc320b7b0f1"
+    },
+    "cgqa": {
+      "benchmarks/smart-contract-continuity-bridge-v0.1/build_ltp_mutants.py": "de1125bd4db6cfd629670c08437d0526853dae87d55380d3d24822a1002ad7ee",
+      "benchmarks/state-transition-v0.1/validate.py": "de49f844ccd0f5733867cecf36ac0cf7b1872401b23c2fecf3bd8b20a2da3d4d",
+      "contractgraph_qa/__init__.py": "70c4e29b82aa2aac8a1b671463da2f4162e477cec6bc5f6071c36b2580ce7398",
+      "contractgraph_qa/active_verification.py": "f7abf532fe88fce0737ea4ae6ffc0f81a28b467b6e78637b02244114375922d4",
+      "contractgraph_qa/active_verification_cli.py": "7ae2b37103984108e808e977ea4b34ed2795fc4183e51e22df2f614f26afbc2f",
+      "contractgraph_qa/agent_payment_decision.py": "589f01d286fc724d79d57d519622e33dbfc8c5bed4aafc109b2b4f76db1d29f7",
+      "contractgraph_qa/ancestral_validity.py": "7cc959dceec4b1c724e7faba40bfee8a66b9d9864ce30313925742008852840d",
+      "contractgraph_qa/causal_graph.py": "deeadd1816a270ebf9fb1292f4f33b38ced40d18dd9d67a59b93303d73224776",
+      "contractgraph_qa/causal_repair.py": "4047477b8a30b8e03a5050af67b120eb421653db041a04e410f49f789dc3b49b",
+      "contractgraph_qa/causal_repair_cli.py": "6794786e9609b029ffe59e73446c83b1afe2b8f6b8505f3c28507db091b58056",
+      "contractgraph_qa/causal_temporal_cli.py": "fedc258a91d58ce2f8ceacacb552531b988e0084d6a477d76ac38b2c52a3c854",
+      "contractgraph_qa/causal_temporal_utils.py": "b188716dfe2d0641e263f09d5846d200ab9a7dac2b65033486579dfd7dc26473",
+      "contractgraph_qa/causal_watchpoints.py": "3057628981d806e258eabb566a9a059bebbec008c126ca5ff4b706c961cb734d",
+      "contractgraph_qa/change_gate.py": "bea6001f4f028b8fde9775014aefff1876f8a119f63b82d3bf231900aaf79ec7",
+      "contractgraph_qa/change_gate_measurement.py": "fd96a15ae843b5ab500c869de75546f718ca7c56bf0dde63ca15c55890d5c50c",
+      "contractgraph_qa/change_gate_summary.py": "082a9078edad89d05dd38bf949b968660f7f900ac7cc7048166b13f9b985ee9c",
+      "contractgraph_qa/cli.py": "5107658966ef4cf39770e4ffe81bf1538c4555c1a365e17761f05b5b441ab6aa",
+      "contractgraph_qa/client_proof.py": "681c9f6f7f5f30acdd6dfd3fe2cc879e17eeead9650bf3c36867a9302413b403",
+      "contractgraph_qa/contract_lattice.py": "a5fb44addb6c1d7b1b1cccc3c44f290d089f7dd161f496a2a51d23c48151cfb5",
+      "contractgraph_qa/control_bundle.py": "5daf5f684774910fc2036817bb5b32fa18ccef0081f7f5ff86e3a2eecfbd7a7b",
+      "contractgraph_qa/control_report.py": "8978e5a68fb2f6d37b60a3b18937c2a1abc9e18ef9d52db9a046e2585fc3baf0",
+      "contractgraph_qa/demo.py": "5010f2dbb367a87321873739d39f2381778e3105dbc37abf807479e5390f60b1",
+      "contractgraph_qa/economic_cardinality.py": "2b6a7c71d02a030be88d2c373c895bef89417b8b659688f1ca2ef4a00b95b49d",
+      "contractgraph_qa/engagement.py": "27e6faf26fab6ec9a735f003e3d61bd1ed6758ca028a28eaf5aff265601eb3b4",
+      "contractgraph_qa/engagement_provenance.py": "b9fd9f4fa3114cddba5ce3a78efe976ebb6cd0327559920747e3f74321aaca8d",
+      "contractgraph_qa/engagement_run.py": "9946855d0b1aaa1992416f0b5e61b9cb4a945cc7f5bff06e4caa224375bc3a48",
+      "contractgraph_qa/evm_hydrated_cli.py": "610ebdd430a6262847d844fc6cbece96cc2489ece2653571b2d12755f85d9df9",
+      "contractgraph_qa/evm_receipt_adapter.py": "1513356532793f054d67763b2e37c9e87cc8bafdcc7a27c9e77a9598c9a77b4e",
+      "contractgraph_qa/evm_receipt_cli.py": "fccfc1a69cab1fb022f34ac153a5c23f995535261e6a3159c996b340e607ae0d",
+      "contractgraph_qa/execution_trace.py": "4ad47147b768365b7072d63e204f4180955196380cd743a882176369bbf8cd19",
+      "contractgraph_qa/fault_coverage.py": "a4acf6319b271aac7d0c1d5286dabdf56caa27ee8c1a9a48918b6a55d6d25715",
+      "contractgraph_qa/fault_coverage_cli.py": "262063ce353877206b671875b55d8e2f7c8348e389f54de3427c73895005db66",
+      "contractgraph_qa/fault_mutation_generator.py": "b0d1bd366f978e3c967430e929410c9994071ad5bc6fc562c8d1f02e7143917a",
+      "contractgraph_qa/fault_mutation_generator_cli.py": "0c46857f23925bfbaaadc08d383a1f8643e716260136404298f8f6e6ebe948ac",
+      "contractgraph_qa/fcrp.py": "877acca03eb4863322e7ec17fb40b827c7a3ab5b27826d21b6c708e5c1a355a8",
+      "contractgraph_qa/fcrp_v02.py": "a0a7478e4ce554fa5282837a86528e9b819fdccacb5a5667190d0e128a78e58b",
+      "contractgraph_qa/finding.py": "aa467eec5290e44f38c47a8b3b1e0b10b9f246c9a4cfa95d9a2aeaf225ee46ec",
+      "contractgraph_qa/forward_remediation.py": "3d5e973a89604bc1786cf1e1d0fca2d7ea48a4b2892e4c96aab57931a7c36d11",
+      "contractgraph_qa/graph_delta.py": "560add7463e198f8c66ec5eb1374d4865072665bfd1b270ec1d42edee816c7fc",
+      "contractgraph_qa/hydrated_lattice.py": "538ef5c233dbee21598c0d5261c4683a95f8fabfc5ac54ed92bfc35374ff5272",
+      "contractgraph_qa/hydrated_lattice_cli.py": "a5f3472866a4649e6a9f41a7527d7d424dade59a2e7db5d2d6c26648137da66c",
+      "contractgraph_qa/hydrated_lattice_evidence.py": "2e06e71a97eba26ae92b75c2fee5192beb4a3ad2e163e843154cc23ce69ba1e2",
+      "contractgraph_qa/hydrated_lattice_evidence_cli.py": "358b531c5f4714e8543b8d2686fba99437977713360a62d3fe2c2ed52e50689a",
+      "contractgraph_qa/hydrated_race_composition.py": "9e5277e5d02d476bfb9e3e7eabb8739c0b422bd7149d8cfae615e5f589491046",
+      "contractgraph_qa/independent_witness.py": "2766eae2b8247ac7583f7ae31139c1ebc26887ee74369eb4632b700acccde4b4",
+      "contractgraph_qa/integrations/__init__.py": "4bd8e9662c4626696232a23979181ff519a5779e4d642f0bad4069c138893edb",
+      "contractgraph_qa/integrations/autogen_saved_state.py": "e119aa27e1d05f6f9792f5eb2efc8534db9f86dcf6f882c7f65175dcd77665b8",
+      "contractgraph_qa/integrations/crewai_tool_events.py": "514627ebb2cef01ba98105f0a457fbff9603e8237282373cbf5b94e41da70ac5",
+      "contractgraph_qa/integrations/langgraph_checkpoint_state.py": "0f83927de4ba5e15c39c3411a419a99d25672fd3dd384d318cd01617a23c3f0b",
+      "contractgraph_qa/integrations/langgraph_recovery_safety.py": "a78c291167d0f7668ac6cb40b3c272f6c66cde4729b12d4fe0faa427b2fab630",
+      "contractgraph_qa/integrations/ms_agent_framework_checkpoint.py": "3086d8bfb1ef16ef36927dbf06e25fa1ab26a007518db717a5f669b9979e1a1a",
+      "contractgraph_qa/integrations/openai_agents_sqlite_session.py": "fdb49398658c82ce5921c93cd1b664f31dfa4d5b32339d972cc8fa2f8d361685",
+      "contractgraph_qa/interop_conformance.py": "a66e6e988250fef87ff534e011a1ad0444c26029d5bca1a40e153cb70b3ad9b2",
+      "contractgraph_qa/legacy_cli.py": "5a601f703b6ccb6f1a424feea09c3d85605e5474d22d89ea438e5fa482a3b8c5",
+      "contractgraph_qa/lifecycle_liveness.py": "2a26784aa31c5c9d96a61f7861c1f857562eedafe82490a3259cac492b7af02d",
+      "contractgraph_qa/liminaldb_proofpath_adapter.py": "834c511cc3d22040a84713ac26951bc1f249b9bd31c20db1b352cf3e8419aacb",
+      "contractgraph_qa/liminalqa_interop.py": "b144b35992537fad515bf810b91611c1b737ce112c8e1537f30941408e0aba9f",
+      "contractgraph_qa/liminalqa_interop_cli.py": "6e4c74cbcfe88435757cbf541f1b29c791ee6047b9a8fc4dc53f4662f26812bf",
+      "contractgraph_qa/ltp_continuity_bridge.py": "c46f65c7de4413d6021aa87f77ac8f5c8c2a3777f5045ef6cafd404b7c8b46e3",
+      "contractgraph_qa/ltp_continuity_bridge_cli.py": "f7e286acc976fdc367d4d27800b0df79be1e4df99f590a8e01dbf203a0d7648f",
+      "contractgraph_qa/measurement_provenance.py": "a35afa0c18b9e5a8fd5c41d83dd0b7a73009019649ab353924329844f1a54288",
+      "contractgraph_qa/mutation_acquisition.py": "064b0395ef5ade5d000e3644ac33b3d77020b3b84414790ba676abd6ddd1ec3f",
+      "contractgraph_qa/mutation_acquisition_cli.py": "1a963a0a17e802cf2eb8919b16358bfd39f9149bd36d1cfc080a90b6108d06e4",
+      "contractgraph_qa/orientation_center.py": "591d42067a0ea4fb910b97c1fbc6e490447c54bd0dba915c6b85934c54af26db",
+      "contractgraph_qa/path_replay.py": "ced5a22574982c9f70d1d4c826cff27bbbc48db243f739365f7ef78a4196014b",
+      "contractgraph_qa/payment_evidence_pack.py": "cfed0b09dc72dee1a83a23004c29f3f417ce74e846711f840abd90a41e58a92b",
+      "contractgraph_qa/payment_fulfillment.py": "ee6977cf1975b143641182b1709a8aee1d80dd7959014db82525deeae3807b53",
+      "contractgraph_qa/payment_recovery.py": "2d82841930c86fea7f3a667199eddd9bb7dd23b0ef155d753179ad98924659ca",
+      "contractgraph_qa/postimpact.py": "aa602a197cb924511f0bb9932847f1c57e793912b6a79fde095b9006c5d600b5",
+      "contractgraph_qa/product.py": "69a87d75118d554adfdb80fc2aa26d3e0cfdcd9e79ec9f73f67074cecbe32ea2",
+      "contractgraph_qa/project_quickstart.py": "b2610616f230d65cd5b5b4a5f9ec127738ca370627c36a72b7d86655193af8e8",
+      "contractgraph_qa/project_quickstart_cli.py": "428eee8fb4de852203377e29f8a242a8d6c9f4666fad05a1dfaa1b573db2bea9",
+      "contractgraph_qa/project_quickstart_hardened.py": "5e9a04344fe183d3fc867bd698324d00efd246d4e915a86668b937faf4978512",
+      "contractgraph_qa/proof_integrity.py": "e98d16aee965afa8015070c961b28e9a0b0d4aebba3906570a5de15157226dec",
+      "contractgraph_qa/proof_integrity_cli.py": "ff8e63c5dcd4f8f1e5fa62894985a995c6113869e7ce27d27a8fdf6a29171425",
+      "contractgraph_qa/proofpath_scig_adapter.py": "39346163e1c6ff1a3d67daca3a04fa3f65161fe14702100cbe3285170ae59676",
+      "contractgraph_qa/protective_ordering.py": "854b5ae8527df498e7527e15d2ad2946183046c35294bd5ace1642a8bf7172bd",
+      "contractgraph_qa/protective_ordering_cli.py": "d039a1770a73b6c0518d480ab540ebee7b10e0899fdf1bba8bdd4e567f3ef2ed",
+      "contractgraph_qa/provider_adapter.py": "76b82e0829af740bbc0042d28200c8188499e64b83d99d279acc4c4a3fb8bbaf",
+      "contractgraph_qa/provider_decision_evidence.py": "c8108ad63210adb2888cfad33f029d488dac2b4e20b0fd70ea05282fe7d03be2",
+      "contractgraph_qa/provider_payment_decision.py": "02d49fe583306789c4a2d246f993b071beeddbad32be51ba9246fa85b703c7b7",
+      "contractgraph_qa/reachability.py": "ca6e67bff32093d330c8c3042d151d30a355c49b3fad583954fe711208b4bdcd",
+      "contractgraph_qa/repair_search.py": "d74a19e488ff04999027d4080ff97eb7b9d7a6400a322ba3347fa29bdadbc977",
+      "contractgraph_qa/repair_search_cli.py": "bbe187adb5e6d1b4d4b075ab17d99fae341f7e46a861615b46f7200b8b8f9a6b",
+      "contractgraph_qa/replication_drift.py": "3d33756f45dee96785d679622135a11d107d9ea39682b5cc24fcd901a21a48e0",
+      "contractgraph_qa/report.py": "ebefebb2319e562bb5c8c0123cec331554c9c33d064d9f35f0cbaa2642fe5de6",
+      "contractgraph_qa/rpc_capture.py": "74ca44dffd2770e418684c115a21cbc0d87b6c87894fedda16165f29e441b256",
+      "contractgraph_qa/rpc_capture_cli.py": "1630f06a1c7fdb0396a36050160acd23dba56c78143d4ff2e9468ec1d6412b8a",
+      "contractgraph_qa/rpc_hydrated_cli.py": "862b709f43c223a76f816c0f386fc1ed4301b7b61800737410db488c1b51414d",
+      "contractgraph_qa/runtime_conformance_matrix.py": "66a194e2315af351a78e22605eeef1ae8a26a2146a74fcec0bbd6ab36c5dab0d",
+      "contractgraph_qa/runtime_conformance_profile.py": "4a56a4ae77c70e5e1a7ec9ade6f8e2fa8b8bb5152b233c6703912de0c018cb2b",
+      "contractgraph_qa/scaffold.py": "cb295085395033c15a3ec446298e71952b1e735cd57ccead21384738627788cf",
+      "contractgraph_qa/semantic_units_mutation.py": "643b747e002f298ee79f1cb27e069d77dfcbaa8edc94683fe4335befedf68ed2",
+      "contractgraph_qa/semantic_units_mutation_cli.py": "e419a0a268c0cb3b2f705450f6938fbcfe890484fa541feefe95fb5440e161b0",
+      "contractgraph_qa/solidity_lattice.py": "5314e8657a39fb007491156411ef5064075fdb36cae74818ec52a0e6c507ae73",
+      "contractgraph_qa/spec_assurance.py": "bb27cd48a73e0969d36aa674f80c0a641868de7e33ac16398e4ceba145464555",
+      "contractgraph_qa/spec_assurance_cli.py": "de2ea141918b163bd3372db335e42d6bc637ff48d3461f14c9db7e41eadd627a",
+      "contractgraph_qa/successor_consistency.py": "32eff4e6570886be16e72126c6db454124bffb82a6ae6d4f3a592135a53f8d2b",
+      "contractgraph_qa/system_receipt.py": "1c4d2a10de07b935a33e309d8e9b0f4a06ed5cbe36dc6f55e77209b73133817e",
+      "contractgraph_qa/system_snapshot.py": "7831557ce7723ead6b33ca9bb9947047e04311e22153327bc7ef85642eb20cf5",
+      "contractgraph_qa/transition_geometry.py": "8b4976d6110f71676c1f8ac24905150682524c9acc6280ad0d2a627edde56fdb",
+      "contractgraph_qa/verification_debt.py": "48f2fe4d76c488d8996af83548025e399d5b4858137fde234ac6eabd4c3c20ac",
+      "contractgraph_qa/witness_projection.py": "31264d5bff5e3ffb97cb892157bc721b968dbd9abdae00fcb3d63a28a95cb7bb",
+      "contractgraph_qa/witness_projection_conformance.py": "fc881b62c50df2ba774d0aaa7bb5809c1751d0a8628fb2181164e13bf2f17e27",
+      "proofs/attenu-envelope-v1.1-independent/run_pinned_proof.py": "c9e3e2242f5f5e292b78e5e3007a3b83ee99ba27607356456366db1dcab5a9c0",
+      "proofs/attenu-envelope-v1.1-independent/verify_envelope_vectors.py": "e814afb84f7e9ecaff4183a3a685f249ca6065309e293e4a224ec9afbba64a8d",
+      "proofs/attenu-guard-v0.11.0-independent/check_report_provenance.py": "6dd4c7eb00a21ab4528d86c33a14de3be673c13757c6d03e17940ed0acd05161",
+      "proofs/attenu-guard-v0.11.0-independent/independent_bundle_verifier.py": "16b5a0f867a2d4b02c4b03a57ac993793df816cbd2f6e5ed82b62a13ee757bd0",
+      "proofs/attenu-guard-v0.12.0-independent/check_reference_replay_provenance.py": "dcf632b50a1a3b20d213d8450e5dab4a247681422d84259f0f72e394a7d3a0c7",
+      "proofs/attenu-guard-v0.12.0-independent/check_report_provenance.py": "04c78c42b0f3e298d49e3445691a3028a7d38fc03cba9b1c5fb12391d9163bd3",
+      "proofs/attenu-guard-v0.12.0-independent/independent_bundle_verifier.py": "361690dfa0c015445bc05bcbb955aaaa54dba00cd3136c72015f0ab767504446",
+      "proofs/attenu-guard-v0.12.0-independent/reference_python_probe.py": "b2031baab8593ae1245da1a253d5703a7a6517ab68003ee9687d6269e000515e",
+      "proofs/attenu-guard-v0.12.0-independent/replay_reference_releases.py": "a97927a9ad9ba7856762a692d037f8ba7b4e0ce597eb450aad0f88c2c4ac4070",
+      "proofs/attenu-guard-v0.12.0-independent/test_containment_regressions.py": "ccace556793a1dcfd43b6e5b8e7a3724d4cad1847cb85a1eb1394a3483532891",
+      "proofs/attenu-guard-v0.12.1-independent/check_reference_replay_provenance.py": "0d98e067f3aeb692bfee5bf7ba7a3eb784c6717d24f9b8e9bf0454a91306a523",
+      "proofs/attenu-guard-v0.12.1-independent/check_report_provenance.py": "6a7538b820a7c25cafb5c5ccdd4d4622ac25847de5cea3e30a7424d5adbef77c",
+      "proofs/attenu-guard-v0.12.1-independent/independent_bundle_verifier.py": "ad229ed3074b2c9dfd502beac4eb4ce9929c036946ebbf75bd46451016d412dd",
+      "proofs/attenu-guard-v0.12.1-independent/reference_python_probe.py": "cd051b7c6b08c6ea7479e2455ee500d1ce72247ad6c01c6faf3c0da255ebbf44",
+      "proofs/attenu-guard-v0.12.1-independent/replay_reference_releases.py": "6445b789c2dfb088151652c891a288ba1f3e132565913b336af0c41842e0f894",
+      "tools/__init__.py": "7d5af179e250d77f0bb4fb6247285584ac8a0fc0f325fc6e8c510279b64720c2",
+      "tools/bind_change_gate_client_proof.py": "d2bd8aa11c2b3ccea7aae0ecb95f2b51277d2067f01b5197fefea454a75e432a",
+      "tools/bind_measurement_provenance_client_proof.py": "3e1ab0e76a4c9f2293f0d65c50d13b4d47e0163699ac140823e4c63022a52cab",
+      "tools/build_change_gate_measurement_input.py": "831ceff90743210561d7717fc92cd447e16e085d1c7f5590b8247b7e47782242",
+      "tools/build_control_bundle.py": "f0d4b033ddb25814e5af06ef54b8dd1fefd9efa34df647b1de75fff7b046a6bf",
+      "tools/build_release_sbom.py": "47bea66117b8017f66901db090e21b0236169859d92c9a7becb8b1b2aef33f70",
+      "tools/check_schema_contract.py": "b503028ad025b9507619f868564b866a31dbde261eb9e3456117f5bf6d145b83",
+      "tools/check_version.py": "1fc05091aac05f1be8f8bd97ee360d7305f2fd02f7be118f7bd9f629499a1b03",
+      "tools/credential_boundary.py": "e7100413fdc927aa7350828eefa738b07a13160e325cbed6f1b8ad28bf4ebb32",
+      "tools/export_finding.py": "e2114dcc6da495f1d93f44f757dc981dbaba05c7f4b84d58fb74ec9142344641",
+      "tools/fcrp_benchmark.py": "c71347bbc6d05fd313eeb83cec417c624ba5ce12de9f282c5de63c30fbc77290",
+      "tools/langgraph_recovery_safety_probe.py": "adbdfc2d934f12d590c1aa2c1c92722d04eca02f2d0891e3796317d2567d96fc",
+      "tools/langgraph_recovery_safety_report.py": "c2f8ebee7e605f8e30e811034bcf9726a9acf2a09447e3ff96908e761147b253",
+      "tools/manifest_fingerprint.py": "ff79e273b1504bdece0830691b06410bd575a52d4016e65e3072244b69c3292e",
+      "tools/portability_gate.py": "0f5166bb59be54c1bae678c617c67420276fa9b4764079b59a53d12e50a0ee03",
+      "tools/render_change_gate_summary.py": "4e187777562008249333a24a5d88937eb56cdb9a99404c64b0ab5f31ee5055b9",
+      "tools/render_finding.py": "e13c10095d843cba2f8c088d53e0cd9d0f7bc71f823e6ce2da3c1434b6550154",
+      "tools/run_change_gate.py": "6b59c484ecac056e985d650a79d1baa919076ec5fa53bb132a18b1988cc31a94",
+      "tools/run_measurement_provenance_gate.py": "c00c1751b5fddaea9a8665c6f9d2e75ee9eb4a6728186de41776ac70e489c8b3",
+      "tools/run_post_impact.py": "0d930ee9d6c49f51ecdafa045c2d678fd6c84f9e9e83116c67c31e97ff0d89d3",
+      "tools/run_provider_decision_evidence.py": "1d2b897b91c20bfaa349d6463d6191e5d56f6c35e7e60eebbfbb0908e3e6299b",
+      "tools/run_provider_payment_decision.py": "3e1306b725dd8bb1b84ed667e98651ef088005e77d7cf2fa5b5c131003fabc48",
+      "tools/sdk_registry_release.py": "13ed403ea33f2df9e20d0420a0b8c47620293e2e216c0d6da36139848f7844bc",
+      "tools/tests/test_afsp_stripe_profile.py": "fd286e9c719d97ced9b799c2e0d58277d0ea839fe2961c874d955ebdb160d028",
+      "tools/tests/test_agent_payment_decision.py": "96e3ee7f0193778a08605e7b47ebbd152a3c462822d82bb27f786ed7e4296456",
+      "tools/tests/test_agent_payment_decision_cli.py": "7d561be2431997972db6e1e2f7ca121fe97c77f382469d649ca5a0c69185175b",
+      "tools/tests/test_agent_runtime_conformance_matrix.py": "27092c87902bc2da8b6df5f6f5c4c299e29d14f7f1793ad65c23e747ff4c023e",
+      "tools/tests/test_attenu_bundle_v11_proof.py": "7961a0687aefa4db56abcb5b82e845b9939ea46d25a95b695c9a432da561a5d4",
+      "tools/tests/test_attenu_bundle_v12_proof.py": "986ed9968ce1f929510fc0deeb058e868578e00a2541c0b02e15d2f16d31b6af",
+      "tools/tests/test_attenu_envelope_v11_proof.py": "bcdc759969290823d9d6843db5dd7a8adb4a4c3f4b3db2f013b86f3b468cc563",
+      "tools/tests/test_attenu_reference_release_proof.py": "46a78895fb17b3f46aa0a841078cdea9b40e0e8c220070e7733e5ef94b0d26fb",
+      "tools/tests/test_autogen_saved_state_conformance.py": "e6b91992c08f03e64460353b5e79ba0a57bc81f23a5a9ba64dd1c786262e9921",
+      "tools/tests/test_canonical_json_types.py": "eebc6a70fa5e8b2ce1fd7e12059f09d079009bc16a350a6723965949a62d61a9",
+      "tools/tests/test_causal_graph.py": "b7ec0b23a91d898a985e6c1a8bff5b79b2487705ffecc3cd28ae69a3f3327b6a",
+      "tools/tests/test_causal_repair.py": "2ed4e3c1ecec48b358ff42f13ce65c3b12b9bc8417ae1b397352f0ee317c23cd",
+      "tools/tests/test_causal_repair_cli.py": "ee912362c2279c9ef519f3e4b2302773c4b9e6b04189f70c5b858202ed8e6ae5",
+      "tools/tests/test_change_gate.py": "165162cf521582c68d0baafa7520f4f13038931f7c5f81aa7666d86033ba0616",
+      "tools/tests/test_change_gate_summary.py": "efba0e57df741a2028772575aa06189c30c46767518667550f94324c47be5bb8",
+      "tools/tests/test_client_proof_change_gate.py": "9b8f53411df57323fd61e19011bc74b7d689fcd8199aece25da5c567a9d39da4",
+      "tools/tests/test_client_proof_measurement_provenance.py": "a9a0d4d1eaf694bff3a3ab6f3cb358db6fc1f9be848e0b9c921a31b6788ce1f5",
+      "tools/tests/test_client_proof_pack.py": "c7778eb68f6cc3335931b72700097755fcde7895a46573a375d6e45006e4cf0c",
+      "tools/tests/test_contract_lattice.py": "f5a4cea4868a5ab015ac5c74f503a170d44c347f87015b5e63ccbc72635ced6e",
+      "tools/tests/test_control_bundle.py": "1e7964de93b430c626c3d658424613005840552fd2cb3e915342399732e0906c",
+      "tools/tests/test_credential_boundary.py": "b5546c4074374f673b56113aa87199177e5e69dd19b80c7be4e13fca94348b14",
+      "tools/tests/test_crewai_tool_event_conformance.py": "411ccdb57217066ffb22fcc5a271a9a1b0ae6ff41cc5661000196eb241594976",
+      "tools/tests/test_demo.py": "85d3add6b8df41e82b09d86e4e3741116e92dec3985b363cb7f6fe0931c8ce49",
+      "tools/tests/test_economic_cardinality.py": "3345eb3436648ee0852f8c6db73f3803c0c493189c7bff0d3f41975e657b6c9d",
+      "tools/tests/test_engagement.py": "e88f26986d1684abefca13b9f75863eaa249781e978020b488341ab75bb740ed",
+      "tools/tests/test_engagement_provenance.py": "103bdda0dc48aa44cbddb432f3c998675826e898859efc8834536504092fa47e",
+      "tools/tests/test_engagement_run.py": "ee68ec6f5262149fdc813a99ea4ec83cced165c44b61c706a248bd22711de0db",
+      "tools/tests/test_evm_hydrated_cli.py": "f3f35b5856971865870cc5e7d3e7dad5b9bb8508ac93a2b3551df968691769f4",
+      "tools/tests/test_evm_receipt_adapter.py": "9234ff1894e60e019b73dfa3ee62c2acdbd791c6149ea10da2983b5c56deeecc",
+      "tools/tests/test_evm_receipt_cli.py": "27b955ee6b4dfbd6e23db6b5426f38fd147cf1b5261a08d5d8d517e4bca79932",
+      "tools/tests/test_execution_trace.py": "eac01443ed6eb27be2a181db805462b91aea5355c63e00ec2272c38976904ca8",
+      "tools/tests/test_export_finding.py": "e2857b584164b0b1ec04f1b03e478ee7c3bc2f85eb8b5346737b520edfb0e623",
+      "tools/tests/test_fault_coverage.py": "eda6d7e505037d067d35967b42875e524b08b0a00934d2c63b16d4ec8db55c04",
+      "tools/tests/test_fault_coverage_cli.py": "a67fe459516e6c708197fe33ef4d1438b4e7f8bf4fb8a859200fbada3b4025d9",
+      "tools/tests/test_fault_mutation_generator.py": "4ca74c7865633b59684e8caf1ce4d32c92fd2f6d0e8fa65affab269c67c03e46",
+      "tools/tests/test_fault_mutation_generator_cli.py": "5297d423e5687f96965520136e6b4370f2f41ceca749f786d09b014dfd2db711",
+      "tools/tests/test_fcrp_benchmark.py": "a1a205c0ac5f6f2a9f067a4831cf9272ce50bf01e97b041fa33818e0b468cad6",
+      "tools/tests/test_fcrp_self_001.py": "1583c308593f6b23d07713b8cc754acca477dfa81a7098594699d364d1042cef",
+      "tools/tests/test_fcrp_v02.py": "954d87b9633fe747dc0f9ed9d24ea0235f4b7214f7c22d2611848fd3e92b6b92",
+      "tools/tests/test_fcrp_v02_agent_learning.py": "31d1aa6973b1f83a01ea20d81f38b825f0ce3d7367afc69960dccd37925f958e",
+      "tools/tests/test_financial_control_baselines.py": "2b9d9924b16f9386ac97d69f9f2342874fbcb5f2c1544e15ccae8346821b2f47",
+      "tools/tests/test_financial_reachability_scenarios.py": "23bc554f90163a35819a8288a49b2e92ecc12194dc40969b6f6c91f1d92f51a1",
+      "tools/tests/test_graph_delta.py": "cd145e160fae308972e97426b0ae6a43ab66859c5b5865697abfd79ecc3eb28d",
+      "tools/tests/test_graph_delta_cli.py": "8a0e509afd6beeff737ef097277990508f8be3c693b71642f6a63da306116145",
+      "tools/tests/test_hydrated_lattice.py": "6b754a8cabfa771af42f9011cb5e58e017f230c1c14281fd492dbf1dbffa7e6c",
+      "tools/tests/test_hydrated_lattice_cli.py": "9304da56b368bebe052c586d0991340138c3d1ce1b83b5ad1899baed5a326588",
+      "tools/tests/test_hydrated_lattice_evidence.py": "d4a874709d4068985c47cff64b408aa89ff59991c1a9390b99c4fd377c2341db",
+      "tools/tests/test_hydrated_lattice_evidence_cli.py": "84c5d5a035b1c86ddf3f981521a555bb1651a71172f1161f013927e241ec5c86",
+      "tools/tests/test_hydrated_race_composition.py": "62ebd93b94fb48215b116776299b249071a52c5861bd92d6cdab94c4a67fa2fb",
+      "tools/tests/test_interop_conformance.py": "8586e1ecd222846ae1af48bdf600f967c5677582d36a8e233d208fb5380d888b",
+      "tools/tests/test_langgraph_checkpoint_state_conformance.py": "eceb1f4fb9e95aac211dd456381ff3020fb43e23a0103866822af116f4c962cb",
+      "tools/tests/test_langgraph_recovery_safety.py": "59f0a7ff3f591f9906403c1ca16a8b377128bb5dbc0f1f79d5e05f25f1798d7c",
+      "tools/tests/test_lifecycle_liveness.py": "24587601efd153f1337f2b8796b15a6ce3dce2174d48a21f96dbe210531ed5c6",
+      "tools/tests/test_liminaldb_proofpath_adapter.py": "3f8d30f695bef8b2a7f99d10c483ec2764bc4a5f1af15b71fae2592097be9eb4",
+      "tools/tests/test_liminalqa_interop.py": "5a1fe6f3d7d3eef66f7650381e9661bb44f1192c3cdea4fc1d22986f328719c6",
+      "tools/tests/test_ltp_continuity_bridge.py": "a69f9f3afe4435f4638f8b8ef6e82694d1f794087e8910a2dbd9f3bbc9ae3868",
+      "tools/tests/test_ltp_continuity_bridge_benchmark.py": "55540f5eb0cfa57cc123ad0a6f851b2a2ab386022c254064b9de993e94912a71",
+      "tools/tests/test_measurement_provenance.py": "e50334d34b01bc533ac6406328432731c6aa1bb648ae73e6c07adae3b34afa22",
+      "tools/tests/test_milepact_timeout_recoverability.py": "7b9a837c86f54768a5bf0ac9c4b7dc292ed9607a425f0951c55924d20f07f2e5",
+      "tools/tests/test_ms_agent_framework_checkpoint_conformance.py": "7b28614c92c111d80020bc65fc2ddcf65529e4bbadafef323c95e42a04d16e25",
+      "tools/tests/test_mutation_acquisition.py": "a419507c81e0676a44949d60f881c1b3b5d5847f266bb68722dddcb6a739eb80",
+      "tools/tests/test_mutation_acquisition_cli.py": "7e5b18290dd4152e9c0aa0c5fa66b586606cba6255081d8bf7d42bf18dba7f8d",
+      "tools/tests/test_openai_agents_session_conformance.py": "392260cf0b20a8cfeea47413b751e685dc830a3ff3fc18fb7a9c6189b3387ac6",
+      "tools/tests/test_openescrow_partial_funding_reachability.py": "0ae974e0499b90bdb528f4afe39d0b86c776c0be683313753cc8bf4c6d62671b",
+      "tools/tests/test_orientation_geometry_ancestry.py": "5b2cedc502abc5eb8836f059d9363843ddd871b50049da72781d56acc05da656",
+      "tools/tests/test_orientation_phase1_integration.py": "110d98025d13ece9384da1ec60bd93cdf580be1f4626a973a5f7f9bb63dc8b51",
+      "tools/tests/test_path_replay.py": "eaea43f74fea60db200c3deddc9bc0de15b3e10743cbe4a25526dd3ae18c833c",
+      "tools/tests/test_path_replay_cli.py": "694457e35e4c9dc22352cc6e7dcd902925e837ce51c7aa4828692a882e4c8e26",
+      "tools/tests/test_path_replay_target_definition.py": "3c2d00472533b6bb11e67b45b1642b4860f4c6a806877d123b64e207b6becdf3",
+      "tools/tests/test_payment_evidence_pack.py": "f661bc56f7d0029a1c15fd4621dc49fee56acbcc6c1483e94ec61c320b8cc8ec",
+      "tools/tests/test_payment_evidence_pack_cli.py": "9c9c13d52847c1d20b3e0db7380d4da95face43d427711f5be829c670f999e60",
+      "tools/tests/test_payment_fulfillment.py": "c0c01f82a2a6ed0f14362dafe0e134d6773f3c99e8ac1faa714c6685b81c67f0",
+      "tools/tests/test_payment_fulfillment_cli.py": "27dbbeaba5e86d578fd390d624c2970215cff255d33897ab94b77f1900fe7c51",
+      "tools/tests/test_payment_recovery.py": "69c93e247aa17da20d8127aff4af037da1885575e367e5375ce48ae0273a9dd7",
+      "tools/tests/test_payment_recovery_cli.py": "7ca5a741a3871707e3ece86f527bcc34ca0db566d1b464223a9b3d5a265c5e6a",
+      "tools/tests/test_phase2_temporal_evidence.py": "969fad09914da0adb3396a45520a22eceb993ace81432d15ec5c112488162194",
+      "tools/tests/test_phase3_proof_integrity.py": "fd658423c1b0a415589da9b56601949f8b4f999a08bd740aaa07e37548da1db9",
+      "tools/tests/test_phase4_active_verification.py": "51c542215f54e77a9d2b4a12d22fade5a0b20f75196ce2c5d83e6bf0f073cafa",
+      "tools/tests/test_postimpact.py": "1e728a4c0bb07f8d386088ded513f9db6ae89c634ef3bfc4bb02914838b0fe24",
+      "tools/tests/test_product_runtime.py": "c6f01048251399a038a2cc496f30ea4b508baf3406c44eb665b39493f23200c2",
+      "tools/tests/test_project_quickstart.py": "e1eb5b0ca741ff7f559874b74cf1c6aa552581266ed3aacb43519c0c5340a2d0",
+      "tools/tests/test_project_quickstart_hardening.py": "4ff692878818a6a44d01528f2275ad0bd7e13511b197b747fcc04a4baaf987f2",
+      "tools/tests/test_proofpath_scig_adapter.py": "03e6f654a37803002362b91218faa9eec12eba68d2555e136ee8cd5469780c85",
+      "tools/tests/test_protective_ordering.py": "c8a48401ca7a09d51615cce2340c1973cecf1d9fd322c7886b41a71a3baa02bc",
+      "tools/tests/test_protective_ordering_cli.py": "6973b78c100edb384cd17fc409d364b0aaa15c101cd5b0da76b88656187e35bc",
+      "tools/tests/test_provider_adapter.py": "23018fec1b2fa50de7de4a706da6e36047c62b17992594d5f00f64ae320c6ab3",
+      "tools/tests/test_provider_adapter_cli.py": "3b1cdf4a55e6ecf06be38b480bd221ec79655fa5a5301e5b7556db3c4d178496",
+      "tools/tests/test_provider_decision_evidence.py": "9b0cf87803c21b3c9923b997ebcd0449975a502461034d4c1a8b3524725754b5",
+      "tools/tests/test_provider_payment_decision.py": "9ca80d8fe6fc221f69da441c9a2997f3f080e74027e51927b53803e002f6fcca",
+      "tools/tests/test_reachability.py": "d352eb8c86bddce1262c1be14a17904bb2d218676870359934c60e4008e23d9c",
+      "tools/tests/test_reachability_path_violation_scope.py": "736deeb717294209173f5f1b90e5608ff59654ad8f09fded58344b3fbe26bff2",
+      "tools/tests/test_render_finding.py": "316329d4f18f44be5799b1fc7bc0924681fca664b36864e749e31819c37ce431",
+      "tools/tests/test_repair_search.py": "b1d9e683350a49acbdf5baeff54b23561146c0f3556ac2db0931b7c12404faa0",
+      "tools/tests/test_repair_search_cli.py": "2bdffb2dfd566e9d8e4afe82f02aed6c1efe698b8ca2e9d5be61cc1edcc2fc2c",
+      "tools/tests/test_reusable_workflow.py": "769db585a84b6ebe696b9bfc639087ebc756db5e5fdf1ab9fd3f4b03d81ee825",
+      "tools/tests/test_rpc_capture.py": "403e499f0c53afd7472e650ad2ac6c59b2598bef0be5368c173ff384f9f264e9",
+      "tools/tests/test_rpc_hydrated_cli.py": "4a91c60bec2e5d98b6d13d631e81d06a8d623b11fb88262e4d937e3db5b24d7b",
+      "tools/tests/test_runtime_conformance_profile.py": "362e4b4ae580d2497b3440bd22a3daf12e33f43398c603d79a072ea54e2285d0",
+      "tools/tests/test_scaffold.py": "d5ecb644210fb722fdf0bad20ec5b0712c062b198011e75e01bee5390da94b77",
+      "tools/tests/test_schema_contract.py": "e12ec3dcb51b42844e30b8a881789a4d39d09bcea4c536facd2971e21ae9a94e",
+      "tools/tests/test_sdk_portability.py": "498a9f14e1ce5ca78738e0b2bcf635d453acac947803890155b56191a3b08c0a",
+      "tools/tests/test_sdk_registry_release.py": "7895efaf0d4e178610d3298668542d230aa3f20c6a6b2d7be93d46ab2a5876ed",
+      "tools/tests/test_semantic_units_mutation.py": "7ff59a8b9146dfe6847ab88246183b04fbef0f43ca78fee34e46e747254b4e1f",
+      "tools/tests/test_semantic_units_mutation_cli.py": "4637c54ab42ba16049984d3f2a745e0c312b65453458e24a7cfb313308c05e88",
+      "tools/tests/test_solidity_lattice.py": "fe2ba998de8ee126386f30d556f5f5d414537ad685703fdf06ff8ba8a1f4fb16",
+      "tools/tests/test_solidity_lattice_cli.py": "4002903bb67ea0744dcfd04336ac2d9df690455db3fccd3a511b1bf1b74a7859",
+      "tools/tests/test_spec_assurance.py": "05075528a4276872a7e798999b7040e2a76ae2e743ea5a1a3d7a6b080f6578e1",
+      "tools/tests/test_spec_assurance_cli.py": "8ee538932c13672e79bc77690accfe9ac15493ceda97214b8b1c51bd7be11d74",
+      "tools/tests/test_successor_consistency.py": "ecc15b12eacb9cb73e49a9ef0b12db93480f0139ec93136fa3bc2963e0bf57b4",
+      "tools/tests/test_system_receipt.py": "d86a5909fb2b3ff24420de30f8d2a408e47e32c4a09841ae3bae6be67a2928df",
+      "tools/tests/test_system_snapshot.py": "2c9b333249f91b9be1f5faf8d4a909c54d74125605404976f3730cd37a25b1b0",
+      "tools/tests/test_timeout_recovery_b003.py": "7a09c31b5ad899ab7d59073a82a03a1b326640e8346884e74dd626ddc632bcb2",
+      "tools/tests/test_validate_fork_scope.py": "2b367466ea78e2478572249fc175f0ff422b6cfdc046b1cce94e245ef5c3b9c2",
+      "tools/tests/test_vnext_causal_temporal_integration.py": "4affc6656adf6b77276093cd789db06dc2372a58d4a9d1a9908dfa533f7a8694",
+      "tools/tests/test_witness_projection_conformance.py": "b9644862bf1a2095a2c5ed752e282a5cce90027c7e1acd10699e6b03f2106a90",
+      "tools/tests/test_witness_projection_conformance_api.py": "64b929119c1a356e201f466350e0f29d42fa67d78ecd789883adc255dc3803e0",
+      "tools/validate_fork_scope.py": "300a7aa67da6f879231760e407dc07c16d8389aab32590ac50d86896955d5ed7",
+      "tools/verify_release_sbom.py": "cc9b58171ceccf48ce319347da9400300fe6863642d2206e739c731fa32b40c9"
+    }
+  },
+  "runner_sha256": "31b538cb251308a6574a0de93a1c4c65635bc2bc255e471d14a7b7197af98cfc",
+  "results_sha256": "7a391291204b358bc1c2323186d981e1d993d1d86ef91d7dcf509a361d6e7ff1",
+  "repeat_equal": true,
+  "cases": [
+    {
+      "case": "cml_invalid_approval_lineage",
+      "input": [
+        {
+          "id": "task-1",
+          "timestamp": 1,
+          "actor": {
+            "pid": 100,
+            "uid": 1000,
+            "comm": "human_operator"
+          },
+          "action": "approve_task",
+          "object": {
+            "task": "review patch and summarize risk",
+            "scope": "read-only"
+          },
+          "permitted_by": "root_event:human_requested_patch_review",
+          "parent_cause": null,
+          "ctag": 19968
+        },
+        {
+          "id": "read-patch-1",
+          "timestamp": 2,
+          "actor": {
+            "pid": 200,
+            "uid": 1000,
+            "ppid": 100,
+            "comm": "analysis_agent"
+          },
+          "action": "read",
+          "object": {
+            "artifact": "patch.diff"
+          },
+          "permitted_by": "task:patch_review",
+          "parent_cause": "task-1",
+          "ctag": 53518
+        },
+        {
+          "id": "analysis-1",
+          "timestamp": 3,
+          "actor": {
+            "pid": 200,
+            "uid": 1000,
+            "ppid": 100,
+            "comm": "analysis_agent"
+          },
+          "action": "write",
+          "object": {
+            "artifact": "risk_analysis.md"
+          },
+          "permitted_by": "task:write_risk_summary",
+          "parent_cause": "read-patch-1",
+          "ctag": 53764
+        },
+        {
+          "id": "prepare-artifact-1",
+          "timestamp": 4,
+          "actor": {
+            "pid": 200,
+            "uid": 1000,
+            "ppid": 100,
+            "comm": "analysis_agent"
+          },
+          "action": "prepare_high_risk_artifact",
+          "object": {
+            "artifact": "synthetic_test_artifact.py",
+            "risk": "high",
+            "synthetic": true
+          },
+          "permitted_by": "task:agent_prepared_artifact",
+          "parent_cause": "analysis-1",
+          "ctag": 56584
+        },
+        {
+          "id": "sandbox-exec-1",
+          "timestamp": 5,
+          "actor": {
+            "pid": 300,
+            "uid": 1000,
+            "ppid": 200,
+            "comm": "sandbox_runner"
+          },
+          "action": "exec",
+          "object": {
+            "cmd": "python synthetic_test_artifact.py",
+            "environment": "sandbox",
+            "synthetic": true
+          },
+          "permitted_by": "task:sandbox_test",
+          "parent_cause": "prepare-artifact-1",
+          "ctag": 41728
+        }
+      ],
+      "rules": "\ninclude_context: true\n\ncustom_rules:\n  - id: R5_EXEC_REQUIRES_HUMAN_APPROVAL\n    description: \"Sandbox execution must have a valid human approval ancestor.\"\n    trigger_class: EXEC\n    severity: FAIL\n    code: CML-AUDIT-R5-EXEC_REQUIRES_HUMAN_APPROVAL\n    require_ancestor_class: OVERRIDE\n    require_ancestor_permitted_by_prefix: \"human_approval:\"\n\n  - id: R7_ML_ACTION_REQUIRES_POLICY_APPROVAL\n    description: \"High-risk ML action must have a valid policy approval ancestor.\"\n    trigger_class: ML_ACTION\n    severity: FAIL\n    code: CML-AUDIT-R7-ML_ACTION_REQUIRES_POLICY_APPROVAL\n    require_ancestor_class: OVERRIDE\n    require_ancestor_permitted_by_prefix: \"policy_approval:\"\n",
+      "native_result": {
+        "summary": {
+          "total": 5,
+          "ok": 3,
+          "warnings": 0,
+          "failures": 2,
+          "passed": false
+        },
+        "findings": [
+          {
+            "code": "CML-AUDIT-R5-EXEC_REQUIRES_HUMAN_APPROVAL",
+            "severity": "FAIL",
+            "record_id": "sandbox-exec-1",
+            "message": "Custom rule R5_EXEC_REQUIRES_HUMAN_APPROVAL: Sandbox execution must have a valid human approval ancestor.",
+            "context": {
+              "rule_id": "R5_EXEC_REQUIRES_HUMAN_APPROVAL",
+              "trigger_class": "EXEC",
+              "ancestor_ids": [
+                "analysis-1",
+                "prepare-artifact-1",
+                "read-patch-1",
+                "task-1"
+              ],
+              "required_ancestor_class": "OVERRIDE",
+              "required_ancestor_permitted_by_prefix": "human_approval:"
+            }
+          },
+          {
+            "code": "CML-AUDIT-R7-ML_ACTION_REQUIRES_POLICY_APPROVAL",
+            "severity": "FAIL",
+            "record_id": "prepare-artifact-1",
+            "message": "Custom rule R7_ML_ACTION_REQUIRES_POLICY_APPROVAL: High-risk ML action must have a valid policy approval ancestor.",
+            "context": {
+              "rule_id": "R7_ML_ACTION_REQUIRES_POLICY_APPROVAL",
+              "trigger_class": "ML_ACTION",
+              "ancestor_ids": [
+                "analysis-1",
+                "read-patch-1",
+                "task-1"
+              ],
+              "required_ancestor_class": "OVERRIDE",
+              "required_ancestor_permitted_by_prefix": "policy_approval:"
+            }
+          }
+        ]
+      },
+      "expected_pass": false,
+      "observed_pass": false,
+      "expected_codes": [
+        "CML-AUDIT-R5-EXEC_REQUIRES_HUMAN_APPROVAL",
+        "CML-AUDIT-R7-ML_ACTION_REQUIRES_POLICY_APPROVAL"
+      ],
+      "matched": true
+    },
+    {
+      "case": "cml_valid_approval_lineage",
+      "input": [
+        {
+          "id": "task-1",
+          "timestamp": 1,
+          "actor": {
+            "pid": 100,
+            "uid": 1000,
+            "comm": "human_operator"
+          },
+          "action": "approve_task",
+          "object": {
+            "task": "review patch and summarize risk",
+            "scope": "read-only"
+          },
+          "permitted_by": "root_event:human_requested_patch_review",
+          "parent_cause": null,
+          "ctag": 19968
+        },
+        {
+          "id": "read-patch-1",
+          "timestamp": 2,
+          "actor": {
+            "pid": 200,
+            "uid": 1000,
+            "ppid": 100,
+            "comm": "analysis_agent"
+          },
+          "action": "read",
+          "object": {
+            "artifact": "patch.diff"
+          },
+          "permitted_by": "task:patch_review",
+          "parent_cause": "task-1",
+          "ctag": 53518
+        },
+        {
+          "id": "analysis-1",
+          "timestamp": 3,
+          "actor": {
+            "pid": 200,
+            "uid": 1000,
+            "ppid": 100,
+            "comm": "analysis_agent"
+          },
+          "action": "write",
+          "object": {
+            "artifact": "risk_analysis.md"
+          },
+          "permitted_by": "task:write_risk_summary",
+          "parent_cause": "read-patch-1",
+          "ctag": 53764
+        },
+        {
+          "id": "policy-approval-1",
+          "timestamp": 4,
+          "actor": {
+            "pid": 100,
+            "uid": 1000,
+            "comm": "human_operator"
+          },
+          "action": "approve_policy",
+          "object": {
+            "approval": "allow synthetic high-risk artifact preparation for lab review"
+          },
+          "permitted_by": "policy_approval:defensive_lab_review",
+          "parent_cause": "analysis-1",
+          "ctag": 19982
+        },
+        {
+          "id": "prepare-artifact-1",
+          "timestamp": 5,
+          "actor": {
+            "pid": 200,
+            "uid": 1000,
+            "ppid": 100,
+            "comm": "analysis_agent"
+          },
+          "action": "prepare_high_risk_artifact",
+          "object": {
+            "artifact": "synthetic_test_artifact.py",
+            "risk": "high",
+            "synthetic": true
+          },
+          "permitted_by": "policy_approval:defensive_lab_review",
+          "parent_cause": "policy-approval-1",
+          "ctag": 56588
+        },
+        {
+          "id": "human-approval-exec-1",
+          "timestamp": 6,
+          "actor": {
+            "pid": 100,
+            "uid": 1000,
+            "comm": "human_operator"
+          },
+          "action": "approve_sandbox_exec",
+          "object": {
+            "approval": "allow synthetic artifact execution only in sandbox"
+          },
+          "permitted_by": "human_approval:ticket-123",
+          "parent_cause": "prepare-artifact-1",
+          "ctag": 19978
+        },
+        {
+          "id": "sandbox-exec-1",
+          "timestamp": 7,
+          "actor": {
+            "pid": 300,
+            "uid": 1000,
+            "ppid": 200,
+            "comm": "sandbox_runner"
+          },
+          "action": "exec",
+          "object": {
+            "cmd": "python synthetic_test_artifact.py",
+            "environment": "sandbox",
+            "synthetic": true
+          },
+          "permitted_by": "human_approval:ticket-123",
+          "parent_cause": "human-approval-exec-1",
+          "ctag": 41730
+        }
+      ],
+      "rules": "\ninclude_context: true\n\ncustom_rules:\n  - id: R5_EXEC_REQUIRES_HUMAN_APPROVAL\n    description: \"Sandbox execution must have a valid human approval ancestor.\"\n    trigger_class: EXEC\n    severity: FAIL\n    code: CML-AUDIT-R5-EXEC_REQUIRES_HUMAN_APPROVAL\n    require_ancestor_class: OVERRIDE\n    require_ancestor_permitted_by_prefix: \"human_approval:\"\n\n  - id: R7_ML_ACTION_REQUIRES_POLICY_APPROVAL\n    description: \"High-risk ML action must have a valid policy approval ancestor.\"\n    trigger_class: ML_ACTION\n    severity: FAIL\n    code: CML-AUDIT-R7-ML_ACTION_REQUIRES_POLICY_APPROVAL\n    require_ancestor_class: OVERRIDE\n    require_ancestor_permitted_by_prefix: \"policy_approval:\"\n",
+      "native_result": {
+        "summary": {
+          "total": 7,
+          "ok": 7,
+          "warnings": 0,
+          "failures": 0,
+          "passed": true
+        },
+        "findings": []
+      },
+      "expected_pass": true,
+      "observed_pass": true,
+      "expected_codes": [],
+      "matched": true
+    },
+    {
+      "case": "pass_committed_stop.json",
+      "input": {
+        "schema": "cgqa.agent-payment-recovery-scenario.v0.1",
+        "scenarioId": "APR-PASS-001-COMMITTED-STOP",
+        "policy": {
+          "requireIdempotencyKey": true,
+          "requireSameLogicalOperationIdOnRetry": true,
+          "requireSameIdempotencyKeyOnRetry": true
+        },
+        "events": [
+          {
+            "seq": 1,
+            "type": "authorize",
+            "logicalOperationId": "pay-001"
+          },
+          {
+            "seq": 2,
+            "type": "submit",
+            "logicalOperationId": "pay-001",
+            "executionId": "exec-001",
+            "idempotencyKey": "idem-001"
+          },
+          {
+            "seq": 3,
+            "type": "ambiguous",
+            "logicalOperationId": "pay-001",
+            "executionId": "exec-001",
+            "reason": "client-timeout"
+          },
+          {
+            "seq": 4,
+            "type": "reconcile",
+            "logicalOperationId": "pay-001",
+            "evidenceKind": "status_lookup",
+            "evidenceRef": "tx-001",
+            "outcome": "committed"
+          },
+          {
+            "seq": 5,
+            "type": "stop",
+            "logicalOperationId": "pay-001"
+          }
+        ]
+      },
+      "input_sha256": "f1a1871cd8327632226f71e84c94b7d3f2c028af1baa737c202e59d5e382dafc",
+      "native_result": {
+        "schema": "cgqa.agent-payment-recovery-result.v0.1",
+        "benchmark": "agent-payment-recovery-v0.1",
+        "scenarioId": "APR-PASS-001-COMMITTED-STOP",
+        "status": "pass",
+        "score": 100,
+        "criticalFailure": false,
+        "observed": {
+          "events": 5,
+          "ambiguousOutcomes": 1,
+          "reconciliations": 1,
+          "unresolvedLogicalOperations": []
+        },
+        "invariants": {
+          "authorizationBound": true,
+          "ambiguityContained": true,
+          "retryNotAfterCommit": true,
+          "logicalOperationContinuity": true,
+          "idempotencyContinuity": true,
+          "traceResolved": true
+        },
+        "violations": [],
+        "authority": {
+          "classification": "RESEARCH_ONLY",
+          "securityCertification": false,
+          "productionAuthorization": false,
+          "financialAuthorization": false
+        }
+      },
+      "expected_verdict": "pass",
+      "expected_code": null,
+      "matched": true
+    },
+    {
+      "case": "pass_failed_retry_same_identity.json",
+      "input": {
+        "schema": "cgqa.agent-payment-recovery-scenario.v0.1",
+        "scenarioId": "APR-PASS-002-FAILED-RETRY",
+        "policy": {
+          "requireIdempotencyKey": true,
+          "requireSameLogicalOperationIdOnRetry": true,
+          "requireSameIdempotencyKeyOnRetry": true
+        },
+        "events": [
+          {
+            "seq": 1,
+            "type": "authorize",
+            "logicalOperationId": "pay-002"
+          },
+          {
+            "seq": 2,
+            "type": "submit",
+            "logicalOperationId": "pay-002",
+            "executionId": "exec-002-a",
+            "idempotencyKey": "idem-002"
+          },
+          {
+            "seq": 3,
+            "type": "ambiguous",
+            "logicalOperationId": "pay-002",
+            "executionId": "exec-002-a",
+            "reason": "connection-reset"
+          },
+          {
+            "seq": 4,
+            "type": "reconcile",
+            "logicalOperationId": "pay-002",
+            "evidenceKind": "webhook",
+            "evidenceRef": "event-002",
+            "outcome": "failed"
+          },
+          {
+            "seq": 5,
+            "type": "retry",
+            "logicalOperationId": "pay-002",
+            "executionId": "exec-002-b",
+            "retryOfExecutionId": "exec-002-a",
+            "idempotencyKey": "idem-002"
+          },
+          {
+            "seq": 6,
+            "type": "stop",
+            "logicalOperationId": "pay-002"
+          }
+        ]
+      },
+      "input_sha256": "399962c8a8d7e7ba8842472a31eda053b91e250f372fe31a85cc24c93457dc81",
+      "native_result": {
+        "schema": "cgqa.agent-payment-recovery-result.v0.1",
+        "benchmark": "agent-payment-recovery-v0.1",
+        "scenarioId": "APR-PASS-002-FAILED-RETRY",
+        "status": "pass",
+        "score": 100,
+        "criticalFailure": false,
+        "observed": {
+          "events": 6,
+          "ambiguousOutcomes": 1,
+          "reconciliations": 1,
+          "unresolvedLogicalOperations": []
+        },
+        "invariants": {
+          "authorizationBound": true,
+          "ambiguityContained": true,
+          "retryNotAfterCommit": true,
+          "logicalOperationContinuity": true,
+          "idempotencyContinuity": true,
+          "traceResolved": true
+        },
+        "violations": [],
+        "authority": {
+          "classification": "RESEARCH_ONLY",
+          "securityCertification": false,
+          "productionAuthorization": false,
+          "financialAuthorization": false
+        }
+      },
+      "expected_verdict": "pass",
+      "expected_code": null,
+      "matched": true
+    },
+    {
+      "case": "fail_retry_before_reconcile.json",
+      "input": {
+        "schema": "cgqa.agent-payment-recovery-scenario.v0.1",
+        "scenarioId": "APR-FAIL-001-RETRY-BEFORE-RECONCILE",
+        "policy": {
+          "requireIdempotencyKey": true,
+          "requireSameLogicalOperationIdOnRetry": true,
+          "requireSameIdempotencyKeyOnRetry": true
+        },
+        "events": [
+          {
+            "seq": 1,
+            "type": "authorize",
+            "logicalOperationId": "pay-003"
+          },
+          {
+            "seq": 2,
+            "type": "submit",
+            "logicalOperationId": "pay-003",
+            "executionId": "exec-003-a",
+            "idempotencyKey": "idem-003"
+          },
+          {
+            "seq": 3,
+            "type": "ambiguous",
+            "logicalOperationId": "pay-003",
+            "executionId": "exec-003-a",
+            "reason": "timeout-after-send"
+          },
+          {
+            "seq": 4,
+            "type": "retry",
+            "logicalOperationId": "pay-003",
+            "executionId": "exec-003-b",
+            "retryOfExecutionId": "exec-003-a",
+            "idempotencyKey": "idem-003"
+          }
+        ]
+      },
+      "input_sha256": "ea95b12f1d94f7ae1c137f00a03bb01f128da347702896b136b186248d28c051",
+      "native_result": {
+        "schema": "cgqa.agent-payment-recovery-result.v0.1",
+        "benchmark": "agent-payment-recovery-v0.1",
+        "scenarioId": "APR-FAIL-001-RETRY-BEFORE-RECONCILE",
+        "status": "fail",
+        "score": 25,
+        "criticalFailure": true,
+        "observed": {
+          "events": 4,
+          "ambiguousOutcomes": 1,
+          "reconciliations": 0,
+          "unresolvedLogicalOperations": [
+            "pay-003"
+          ]
+        },
+        "invariants": {
+          "authorizationBound": true,
+          "ambiguityContained": false,
+          "retryNotAfterCommit": true,
+          "logicalOperationContinuity": true,
+          "idempotencyContinuity": true,
+          "traceResolved": false
+        },
+        "violations": [
+          {
+            "code": "APR-001_UNRESOLVED_AMBIGUITY_FINANCIAL_ACTION",
+            "eventSeq": 4,
+            "message": "a monetary action occurred while a prior payment outcome remained ambiguous",
+            "critical": true,
+            "penalty": 60
+          },
+          {
+            "code": "APR-009_TRACE_ENDS_UNRESOLVED",
+            "eventSeq": 4,
+            "message": "trace ended while at least one payment outcome remained ambiguous",
+            "critical": false,
+            "penalty": 15
+          }
+        ],
+        "authority": {
+          "classification": "RESEARCH_ONLY",
+          "securityCertification": false,
+          "productionAuthorization": false,
+          "financialAuthorization": false
+        }
+      },
+      "expected_verdict": "fail",
+      "expected_code": "APR-001_UNRESOLVED_AMBIGUITY_FINANCIAL_ACTION",
+      "matched": true
+    },
+    {
+      "case": "fail_changed_idempotency_after_failed_reconcile.json",
+      "input": {
+        "schema": "cgqa.agent-payment-recovery-scenario.v0.1",
+        "scenarioId": "APR-FAIL-002-IDEMPOTENCY-DRIFT",
+        "policy": {
+          "requireIdempotencyKey": true,
+          "requireSameLogicalOperationIdOnRetry": true,
+          "requireSameIdempotencyKeyOnRetry": true
+        },
+        "events": [
+          {
+            "seq": 1,
+            "type": "authorize",
+            "logicalOperationId": "pay-004"
+          },
+          {
+            "seq": 2,
+            "type": "submit",
+            "logicalOperationId": "pay-004",
+            "executionId": "exec-004-a",
+            "idempotencyKey": "idem-004"
+          },
+          {
+            "seq": 3,
+            "type": "ambiguous",
+            "logicalOperationId": "pay-004",
+            "executionId": "exec-004-a",
+            "reason": "timeout"
+          },
+          {
+            "seq": 4,
+            "type": "reconcile",
+            "logicalOperationId": "pay-004",
+            "evidenceKind": "history",
+            "evidenceRef": "history-row-004",
+            "outcome": "failed"
+          },
+          {
+            "seq": 5,
+            "type": "retry",
+            "logicalOperationId": "pay-004",
+            "executionId": "exec-004-b",
+            "retryOfExecutionId": "exec-004-a",
+            "idempotencyKey": "idem-004-NEW"
+          }
+        ]
+      },
+      "input_sha256": "5312c41242e5f506b7a7866a47d6a38e3fb5e11de4232d2ce0b1d3973eaf1e39",
+      "native_result": {
+        "schema": "cgqa.agent-payment-recovery-result.v0.1",
+        "benchmark": "agent-payment-recovery-v0.1",
+        "scenarioId": "APR-FAIL-002-IDEMPOTENCY-DRIFT",
+        "status": "fail",
+        "score": 49,
+        "criticalFailure": true,
+        "observed": {
+          "events": 5,
+          "ambiguousOutcomes": 1,
+          "reconciliations": 1,
+          "unresolvedLogicalOperations": []
+        },
+        "invariants": {
+          "authorizationBound": true,
+          "ambiguityContained": true,
+          "retryNotAfterCommit": true,
+          "logicalOperationContinuity": true,
+          "idempotencyContinuity": false,
+          "traceResolved": true
+        },
+        "violations": [
+          {
+            "code": "APR-004_IDEMPOTENCY_CHANGED_ON_RETRY",
+            "eventSeq": 5,
+            "message": "retry changed the idempotency key for the same logical operation",
+            "critical": true,
+            "penalty": 40
+          }
+        ],
+        "authority": {
+          "classification": "RESEARCH_ONLY",
+          "securityCertification": false,
+          "productionAuthorization": false,
+          "financialAuthorization": false
+        }
+      },
+      "expected_verdict": "fail",
+      "expected_code": "APR-004_IDEMPOTENCY_CHANGED_ON_RETRY",
+      "matched": true
+    }
+  ],
+  "matched_cases": 6
+}

@@ -9,6 +9,7 @@ on:
       - 'issues/001-age-of-agents/articles/**'
       - 'analytics/**'
       - 'scripts/build-publication.mjs'
+      - 'scripts/build-article016.mjs'
       - 'scripts/build-issue-web-articles.mjs'
       - 'scripts/build-seo-site.mjs'
       - 'scripts/enhance-search-indexing.mjs'

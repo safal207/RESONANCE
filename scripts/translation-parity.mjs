@@ -17,6 +17,15 @@ const BASE = 'https://safal207.github.io/RESONANCE/';
 
 const groups = [
   {
+    id: 'article016',
+    profile: 'article-semantic',
+    files: {
+      en: 'how-repositories-constrain-hallucinations.html',
+      ru: 'how-repositories-constrain-hallucinations.ru.html',
+      'zh-CN': 'how-repositories-constrain-hallucinations.zh.html',
+    },
+  },
+  {
     id: 'article015',
     profile: 'article-semantic',
     files: {
