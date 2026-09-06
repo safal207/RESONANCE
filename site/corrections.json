@@ -1,6 +1,6 @@
 {
   "schema": "resonance.corrections.v1",
-  "updatedAt": "2026-08-13",
+  "updatedAt": "2026-09-06",
   "publications": [
     {
       "id": "article004",
@@ -38,6 +38,20 @@
       },
       "currentVersions": {
         "en": "1.0.1"
+      }
+    },
+    {
+      "id": "article016",
+      "title": "Reducing Hallucinations: From Answers to Verifiable Outcomes",
+      "routes": {
+        "en": "how-repositories-constrain-hallucinations.html",
+        "ru": "how-repositories-constrain-hallucinations.ru.html",
+        "zh-CN": "how-repositories-constrain-hallucinations.zh.html"
+      },
+      "currentVersions": {
+        "en": "1.0.0",
+        "ru": "1.0.0",
+        "zh-CN": "1.0.0"
       }
     }
   ],
@@ -117,6 +131,41 @@
       "evidence": [
         "https://github.com/safal207/RESONANCE/pull/46",
         "https://github.com/safal207/RESONANCE/commit/a32955ef396f80b97daaf5f952fdd3f0f4eb7138"
+      ]
+    },
+    {
+      "id": "article016-v1.0.0",
+      "effectiveAt": "2026-09-06",
+      "type": "publication",
+      "claimImpact": "none",
+      "summary": "Initial RU / EN / zh-CN publication of Article 016 with six reproduced seed classifications and an explicitly unexecuted model-evaluation proposal.",
+      "reason": "Explain repository-level evidence checks without presenting trace consistency as source truth or measured hallucination reduction.",
+      "affected": [
+        {
+          "publication": "article016",
+          "locale": "en",
+          "path": "how-repositories-constrain-hallucinations.html",
+          "fromVersion": null,
+          "toVersion": "1.0.0"
+        },
+        {
+          "publication": "article016",
+          "locale": "ru",
+          "path": "how-repositories-constrain-hallucinations.ru.html",
+          "fromVersion": null,
+          "toVersion": "1.0.0"
+        },
+        {
+          "publication": "article016",
+          "locale": "zh-CN",
+          "path": "how-repositories-constrain-hallucinations.zh.html",
+          "fromVersion": null,
+          "toVersion": "1.0.0"
+        }
+      ],
+      "evidence": [
+        "https://github.com/safal207/RESONANCE/blob/main/evidence/article016/native-replay.json",
+        "https://github.com/safal207/RESONANCE/blob/main/issues/001-age-of-agents/articles/16-how-repositories-constrain-hallucinations.sources.md"
       ]
     }
   ]

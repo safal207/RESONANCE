@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { buildIssueWebArticles } from './build-issue-web-articles.mjs';
+import { buildArticle016 } from './build-article016.mjs';
 
 const ROOT = process.cwd();
 const SITE_DIR = path.join(ROOT, 'site');
@@ -17,6 +18,7 @@ const existingWebRoutes = new Map([
   ['04-who-saw-the-outcome.md', 'who-saw-the-outcome.html'],
   ['13-evidence-must-bind-the-transition.md', 'evidence-must-bind-the-transition.ru.html'],
   ['15-when-order-book-depth-changes.md', 'when-order-book-depth-changes.ru.html'],
+  ['16-how-repositories-constrain-hallucinations.md', 'how-repositories-constrain-hallucinations.ru.html'],
 ]);
 
 function routeFor(filename) {
@@ -46,6 +48,7 @@ function rewriteGeneratedLinks(html, canonicalFiles) {
 }
 
 const canonicalFiles = canonicalArticleFiles();
+buildArticle016(ROOT);
 const allGenerated = buildIssueWebArticles({ rootDir: ROOT, distDir: SITE_DIR });
 const generated = [];
 
