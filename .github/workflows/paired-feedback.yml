@@ -1,0 +1,36 @@
+name: R5+P paired feedback — development contracts
+on:
+  pull_request:
+    paths:
+      - 'benchmarks/paired-feedback-v0.1/**'
+      - 'benchmarks/temporal-evidence-interim-2026-09-05/**'
+      - '.github/workflows/paired-feedback.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'benchmarks/paired-feedback-v0.1/**'
+      - 'benchmarks/temporal-evidence-interim-2026-09-05/**'
+      - '.github/workflows/paired-feedback.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contracts-and-temporal-bridge:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Verify contracts, temporal bridge and demo endpoints
+        working-directory: benchmarks/paired-feedback-v0.1
+        run: python verify.py --out results
+      - name: Upload explicit research evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: paired-feedback-dev-evidence
+          path: benchmarks/paired-feedback-v0.1/results/
+          if-no-files-found: error
+          retention-days: 14
