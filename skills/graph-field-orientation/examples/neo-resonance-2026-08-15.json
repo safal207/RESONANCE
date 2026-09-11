@@ -1,0 +1,121 @@
+{
+  "schema": "resonance.graph-field-dynamics.input.v0.1",
+  "diffusion_alpha": 0.10,
+  "nodes": [
+    {
+      "id": "p2-1-trust-spine-cost-latency",
+      "label": "P2-1 — measure trust-spine cost and latency",
+      "divergence": 0.90,
+      "uncertainty": 0.65,
+      "blast_radius": 1.00,
+      "freshness_gap": 0.40,
+      "open_pressure": 0.70,
+      "opportunity": 1.00,
+      "blockedness": 0.05,
+      "evidence": [
+        "RESONANCE PR #53 explicitly names P2-1 as the next transition after P1-7, P1-8 and P2-4 are VERIFIED."
+      ],
+      "next_safe_transition": "Define a read-only benchmark for end-to-end cost/latency and bind results to exact component subjects."
+    },
+    {
+      "id": "cml-memory-proposal-pressure",
+      "label": "CML — proposed-memory queue pressure",
+      "divergence": 0.70,
+      "uncertainty": 0.75,
+      "blast_radius": 0.90,
+      "freshness_gap": 0.55,
+      "open_pressure": 1.00,
+      "opportunity": 0.80,
+      "blockedness": 0.15,
+      "evidence": [
+        "Multiple open automatic learning PRs remain status=proposed with no merge or execution authority."
+      ],
+      "next_safe_transition": "Measure proposal duplication, age, ancestry overlap and acceptance/rejection outcomes before changing memory policy."
+    },
+    {
+      "id": "proofpath-external-independence",
+      "label": "ProofPath — external organizational independence",
+      "divergence": 0.95,
+      "uncertainty": 0.40,
+      "blast_radius": 0.90,
+      "freshness_gap": 0.25,
+      "open_pressure": 0.80,
+      "opportunity": 0.95,
+      "blockedness": 0.90,
+      "evidence": [
+        "The organizational-independence path is intentionally HOLD while all current domains share the same owner and an external operator is absent."
+      ],
+      "next_safe_transition": "Preserve HOLD and prepare/route the external witness package; do not fabricate independence."
+    },
+    {
+      "id": "credential-boundary-rollout",
+      "label": "Credential-boundary rollout across trust-spine repositories",
+      "divergence": 0.50,
+      "uncertainty": 0.25,
+      "blast_radius": 0.80,
+      "freshness_gap": 0.70,
+      "open_pressure": 0.70,
+      "opportunity": 0.35,
+      "blockedness": 0.25,
+      "evidence": [
+        "Several trust-spine repositories have open credential-boundary rollout PRs."
+      ],
+      "next_safe_transition": "Revalidate exact provider revision and consumer heads, then close or supersede stale rollout proposals."
+    },
+    {
+      "id": "liminaldb-codeql-dependency",
+      "label": "LiminalDB — CodeQL dependency maintenance",
+      "divergence": 0.25,
+      "uncertainty": 0.10,
+      "blast_radius": 0.60,
+      "freshness_gap": 0.55,
+      "open_pressure": 0.25,
+      "opportunity": 0.20,
+      "blockedness": 0.05,
+      "evidence": [
+        "A CodeQL dependency update remains open; this is useful maintenance but not a current system-design bottleneck."
+      ],
+      "next_safe_transition": "Run exact-head dependency/security checks and merge only through the repository's normal authority path."
+    },
+    {
+      "id": "capu-adjacent-execution-boundary",
+      "label": "CaPU — adjacent execution-control boundary",
+      "divergence": 0.55,
+      "uncertainty": 0.65,
+      "blast_radius": 0.50,
+      "freshness_gap": 0.50,
+      "open_pressure": 0.30,
+      "opportunity": 0.70,
+      "blockedness": 0.35,
+      "evidence": [
+        "Current Neo Resonance design keeps CaPU adjacent to, not inside, the primary proof route."
+      ],
+      "next_safe_transition": "Specify the interface contract without granting CaPU semantic or proof authority."
+    },
+    {
+      "id": "graph-field-extraction",
+      "label": "Graph–Field Dynamics — extract field semantics from existing Liminal/Resonance work",
+      "divergence": 0.50,
+      "uncertainty": 0.70,
+      "blast_radius": 0.60,
+      "freshness_gap": 0.20,
+      "open_pressure": 0.10,
+      "opportunity": 1.00,
+      "blockedness": 0.10,
+      "evidence": [
+        "Liminal already contains resonance-oriented implementation/research surfaces, while the current trust spine is predominantly graph/contract oriented."
+      ],
+      "next_safe_transition": "Extract historical field semantics as evidence and compare them against the executable GFD scoring model."
+    }
+  ],
+  "edges": [
+    {"source": "p2-1-trust-spine-cost-latency", "target": "cml-memory-proposal-pressure", "weight": 0.9},
+    {"source": "p2-1-trust-spine-cost-latency", "target": "proofpath-external-independence", "weight": 0.8},
+    {"source": "p2-1-trust-spine-cost-latency", "target": "credential-boundary-rollout", "weight": 0.7},
+    {"source": "p2-1-trust-spine-cost-latency", "target": "liminaldb-codeql-dependency", "weight": 0.6},
+    {"source": "p2-1-trust-spine-cost-latency", "target": "capu-adjacent-execution-boundary", "weight": 0.6},
+    {"source": "p2-1-trust-spine-cost-latency", "target": "graph-field-extraction", "weight": 0.8},
+    {"source": "cml-memory-proposal-pressure", "target": "graph-field-extraction", "weight": 0.8},
+    {"source": "credential-boundary-rollout", "target": "proofpath-external-independence", "weight": 0.6}
+  ]
+}

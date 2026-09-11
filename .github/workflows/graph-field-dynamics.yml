@@ -1,0 +1,221 @@
+name: Graph-Field Dynamics v0.2
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'protocols/GRAPH_FIELD_DYNAMICS_V0_1.md'
+      - 'protocols/GRAPH_FIELD_OPERATOR_FAMILY_V0_1.md'
+      - 'protocols/GRAPH_FIELD_CALIBRATION_V0_2.md'
+      - 'protocols/GRAPH_FIELD_OUTCOME_INTAKE_V0_2.md'
+      - 'protocols/GRAPH_FIELD_PROSPECTIVE_ROUTING_AB*.md'
+      - 'skills/graph-field-orientation/**'
+      - '.github/workflows/graph-field-dynamics.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout exact subject
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Run focused tests
+        run: |
+          python3 -m unittest discover \
+            -s skills/graph-field-orientation/tests \
+            -p 'test_*.py' \
+            -v
+
+      - name: Run canonical orientation snapshot
+        run: |
+          python3 skills/graph-field-orientation/score_graph_field.py \
+            skills/graph-field-orientation/examples/neo-resonance-2026-08-15.json \
+            --pretty > /tmp/gfd-result.json
+          cat /tmp/gfd-result.json
+
+      - name: Verify advisory authority boundary and top hotspot
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(Path('/tmp/gfd-result.json').read_text())
+          assert result['mode'] == 'ADVISORY_ONLY'
+          assert result['authority_granted'] is False
+          assert result['ranking'][0]['id'] == 'p2-1-trust-spine-cost-latency'
+          assert result['ranking'][0]['field_score'] == 0.800588
+          assert result['ranking'][-1]['id'] == 'proofpath-external-independence'
+          assert result['ranking'][-1]['tension'] == 0.71
+          PY
+
+      - name: Record first real P2-1 outcome without post-hoc calibration
+        run: |
+          python3 skills/graph-field-orientation/record_graph_field_outcome.py \
+            skills/graph-field-orientation/examples/p2-1-real-outcome-unpaired-v0.2.json \
+            --pretty > /tmp/gfd-real-outcome.json
+          cat /tmp/gfd-real-outcome.json
+
+      - name: Verify real outcome remains unpaired and non-authorizing
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(Path('/tmp/gfd-real-outcome.json').read_text())
+          assert result['schema'] == 'resonance.graph-field-outcome.intake.v0.2'
+          assert result['decision'] == 'RECORDED_UNPAIRED'
+          assert result['mode'] == 'ADVISORY_ONLY'
+          assert result['authority_granted'] is False
+          assert result['weight_update_allowed'] is False
+          assert result['calibration_eligibility'] == 'BASELINE_REQUIRED'
+          assert result['selection_id'] == 'p2-1-trust-spine-cost-latency'
+          assert result['field_score'] == 0.800588
+          assert result['source_workflow_run_id'] == 31879737027
+          assert result['verification_workflow_run_id'] == 31883970399
+          assert result['dominant_measurement_group'] == 'liminaldb'
+          assert result['dominant_group_observed_seconds'] == 23
+          assert result['job_elapsed_seconds'] == 45
+          assert result['substantive_window_seconds'] == 35
+          assert result['source_evidence_artifact_bytes'] == 28222
+          assert result['monetary_cost_status'] == 'NOT_MEASURED'
+          PY
+
+      - name: Freeze prospective GFD versus FIFO routing experiment
+        run: |
+          python3 skills/graph-field-orientation/prospective_routing_ab.py \
+            skills/graph-field-orientation/examples/prospective-routing-ab-2026-08-15.json \
+            --pretty > /tmp/gfd-routing-ab-freeze.json
+          cat /tmp/gfd-routing-ab-freeze.json
+
+      - name: Verify prospective selections are frozen before outcomes
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(Path('/tmp/gfd-routing-ab-freeze.json').read_text())
+          assert result['schema'] == 'resonance.graph-field-routing-ab.freeze-receipt.v0.1'
+          assert result['status'] == 'FROZEN_BEFORE_OUTCOME'
+          assert result['mode'] == 'ADVISORY_ONLY'
+          assert result['authority_granted'] is False
+          assert result['treatment']['selection_id'] == 'cml-memory-proposal-pressure'
+          assert result['treatment']['field_score'] == 0.728913
+          assert result['baseline']['selection_id'] == 'liminaldb-codeql-dependency'
+          assert result['baseline']['ready_since'] == '2026-07-31T14:45:26Z'
+          assert result['calibration_allowed'] is False
+          assert result['weight_update_allowed'] is False
+          PY
+
+      - name: Evaluate first real prospective routing pair
+        run: |
+          python3 skills/graph-field-orientation/evaluate_prospective_routing_ab.py \
+            skills/graph-field-orientation/examples/prospective-routing-ab-2026-08-15.json \
+            skills/graph-field-orientation/examples/prospective-routing-ab-outcomes-2026-08-15.json \
+            --pretty > /tmp/gfd-routing-ab-result.json
+          cat /tmp/gfd-routing-ab-result.json
+
+      - name: Verify observed utility and prepare real calibration batch
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(Path('/tmp/gfd-routing-ab-result.json').read_text())
+          assert result['schema'] == 'resonance.graph-field-routing-ab.result.v0.1'
+          assert result['decision'] == 'PAIRED_OBSERVED'
+          assert result['mode'] == 'ADVISORY_ONLY'
+          assert result['authority_granted'] is False
+          assert result['treatment']['utility'] == 0.75
+          assert result['baseline']['utility'] == 0.70
+          assert result['advantage'] == 0.05
+          assert result['winner'] == 'TREATMENT'
+          assert result['paired_observation_count'] == 1
+          assert result['calibration_confidence'] == 'INSUFFICIENT'
+          assert result['weight_update_allowed'] is False
+
+          batch = {
+              'schema': 'resonance.graph-field-calibration.batch.v0.2',
+              'learning_rate': 0.05,
+              'current_weights': {
+                  'divergence': 0.25,
+                  'uncertainty': 0.20,
+                  'blast_radius': 0.20,
+                  'freshness_gap': 0.15,
+                  'open_pressure': 0.10,
+                  'opportunity': 0.10,
+              },
+              'observations': [result['calibration_observation']],
+          }
+          Path('/tmp/gfd-real-calibration-batch.json').write_text(
+              json.dumps(batch, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
+          PY
+
+      - name: Run first real paired calibration proposal
+        run: |
+          python3 skills/graph-field-orientation/calibrate_graph_field.py \
+            /tmp/gfd-real-calibration-batch.json \
+            --pretty > /tmp/gfd-real-calibration.json
+          cat /tmp/gfd-real-calibration.json
+
+      - name: Verify first real calibration remains insufficient and proposal-only
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(Path('/tmp/gfd-real-calibration.json').read_text())
+          assert result['schema'] == 'resonance.graph-field-calibration.proposal.v0.2'
+          assert result['mode'] == 'ADVISORY_ONLY'
+          assert result['authority_granted'] is False
+          assert result['apply_recommended'] is False
+          assert result['observation_count'] == 1
+          assert result['confidence'] == 'INSUFFICIENT'
+          assert result['mean_advantage'] == 0.05
+          PY
+
+      - name: Verify published prospective result anchors
+        run: |
+          grep -F 'sha256:07b089e583e6b24c9d6e4544cc1e1537808b4a4e8b85da370f087970c2d5d7dc' \
+            protocols/GRAPH_FIELD_PROSPECTIVE_ROUTING_AB_RESULT_2026_08_15.md
+          grep -F 'U_GFD = 0.75' protocols/GRAPH_FIELD_PROSPECTIVE_ROUTING_AB_RESULT_2026_08_15.md
+          grep -F 'U_FIFO = 0.70' protocols/GRAPH_FIELD_PROSPECTIVE_ROUTING_AB_RESULT_2026_08_15.md
+          grep -F 'Adv = U_GFD - U_FIFO' protocols/GRAPH_FIELD_PROSPECTIVE_ROUTING_AB_RESULT_2026_08_15.md
+          grep -F 'apply_recommended = false' protocols/GRAPH_FIELD_PROSPECTIVE_ROUTING_AB_RESULT_2026_08_15.md
+
+      - name: Run synthetic calibration control
+        run: |
+          python3 skills/graph-field-orientation/calibrate_graph_field.py \
+            skills/graph-field-orientation/examples/synthetic-calibration-v0.2.json \
+            --pretty > /tmp/gfd-calibration.json
+          cat /tmp/gfd-calibration.json
+
+      - name: Verify calibration remains proposal-only
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(Path('/tmp/gfd-calibration.json').read_text())
+          assert result['schema'] == 'resonance.graph-field-calibration.proposal.v0.2'
+          assert result['mode'] == 'ADVISORY_ONLY'
+          assert result['authority_granted'] is False
+          assert result['apply_recommended'] is False
+          assert result['confidence'] == 'INSUFFICIENT'
+          assert result['observation_count'] == 2
+          assert result['proposed_weights']['open_pressure'] < result['current_weights']['open_pressure']
+          PY

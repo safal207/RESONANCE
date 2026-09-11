@@ -1,0 +1,64 @@
+{
+  "schema": "resonance.graph-field-routing-ab.observations.v0.1",
+  "experiment_id": "gfd-routing-ab-2026-08-15-001",
+  "observation_mode": "READ_ONLY_INVESTIGATION",
+  "treatment": {
+    "selection_id": "cml-memory-proposal-pressure",
+    "finding": "The current learning loop is documented as one reviewable proposal per merged PR with per-source idempotency. Seven open proposal PRs are simultaneously awaiting review. The safe next transition is therefore a queue-level read-only audit/grouping/revalidation pass before spending review effort on the oldest individual pack.",
+    "raw": {
+      "actionable_finding": true,
+      "state_confirmation_only": false,
+      "affected_work_items": 7,
+      "blocked_or_stale_actions_avoided": 0,
+      "stale_evidence_drift_found": false,
+      "downstream_reviews_or_actions_redirected": 7
+    },
+    "evidence": [
+      "safal207/Causal-Memory-Layer@90c7fdaaf31ad7c17ddc0c3c55b7ccd33f6affc2:docs/integrations/MEMORY_LEARNING_LOOP.md",
+      "safal207/Causal-Memory-Layer#271",
+      "safal207/Causal-Memory-Layer#273",
+      "safal207/Causal-Memory-Layer#275",
+      "safal207/Causal-Memory-Layer#277",
+      "safal207/Causal-Memory-Layer#279",
+      "safal207/Causal-Memory-Layer#282",
+      "safal207/Causal-Memory-Layer#284"
+    ],
+    "non_claims": [
+      "the seven packs are not claimed to be semantically duplicate",
+      "current-main drift does not by itself invalidate a historical memory pack",
+      "no proposal is merged, closed or accepted by this observation"
+    ]
+  },
+  "baseline": {
+    "selection_id": "liminaldb-codeql-dependency",
+    "finding": "LiminalDB PR #111 remains semantically relevant because current main still uses github/codeql-action@v4, but the PR head has diverged from current main: current main carries seven commits after the proposal base while the dependency PR contributes one side commit. The safe next transition is recreate/rebase and exact-head revalidation rather than treating the old PR head as directly merge-ready.",
+    "raw": {
+      "actionable_finding": true,
+      "state_confirmation_only": false,
+      "affected_work_items": 1,
+      "blocked_or_stale_actions_avoided": 1,
+      "stale_evidence_drift_found": true,
+      "downstream_reviews_or_actions_redirected": 1
+    },
+    "evidence": [
+      "safal207/LiminalDB#111",
+      "safal207/LiminalDB@61b02fc81e0cb5cf1f1ed4658ecff58f683cb728:.github/workflows/security.yml",
+      "compare:b8cf0528187c6d3fac3b28dbb9e90f1a2fb740e7...61b02fc81e0cb5cf1f1ed4658ecff58f683cb728",
+      "compare:f1a5d352cca01c09723063d8eb4db9b1804e0222...61b02fc81e0cb5cf1f1ed4658ecff58f683cb728"
+    ],
+    "non_claims": [
+      "mergeable=false is not assigned a speculative root cause",
+      "the CodeQL update is not claimed unnecessary",
+      "no dependency PR is rebased, recreated or merged by this observation"
+    ]
+  },
+  "authority": {
+    "mode": "ADVISORY_ONLY",
+    "authority_granted": false,
+    "may_execute": false,
+    "may_mutate": false,
+    "may_merge": false,
+    "may_close_pr": false,
+    "may_change_weights": false
+  }
+}

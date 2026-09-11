@@ -1,0 +1,22 @@
+{
+  "source_contract": "cml.focus-field.recovery-decision.v0.2",
+  "source_revision": "2a649903693fc61a560ee056834127ada3120206",
+  "state": "reanchored",
+  "selected_anchor_id": "node-8",
+  "score": 0.81,
+  "rewind_steps_saved": 16,
+  "trusted_continuation": true,
+  "authority_granted": false,
+  "ranked_candidates": [
+    {
+      "anchor_id": "node-8",
+      "total": 0.81,
+      "verification_ready": true
+    },
+    {
+      "anchor_id": "node-17",
+      "total": 0.42,
+      "verification_ready": true
+    }
+  ]
+}
